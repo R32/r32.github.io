@@ -1,0 +1,35 @@
+name: Your New Jekyll Site
+
+markdown: redcarpet
+
+pygments: true
+
+destination: /cygdrive/r/_site
+
+include: []
+
+exclude: ['*.md','*.less','assets/css/metro-bootstrap.css','bootstrap.css']
+
+keep_files: ['.git','.svn','_test']
+
+encoding: utf-8
+
+
+
+
+custom_menu:
+  - name: home
+    url: index.html
+    label: 主页
+  - name: haxe
+    url: haxe.html
+    label: Haxe
+  - name: other
+    url: other.html
+    label: 其它
+  - name: person
+    url: person.html
+    label: 个人
+  - name: forum
+    url: forum.html
+    label: 留言

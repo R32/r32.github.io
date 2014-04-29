@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<title>Sticky footer</title>
+
+<link href="../assets/css/metro-bootstrap.min.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+
+html,
+body {
+  height: 100%;
+  /* The html and body elements cannot have any padding or margin. */
+}
+
+/* Wrapper for page content to push down footer */
+#wrap {
+  min-height: 100%;
+  height: auto;
+  /* Negative indent footer by its height */
+  margin: 0 auto -60px;
+  /* Pad bottom by footer height */
+  padding: 0 0 60px;
+}
+
+/* Set the fixed height of the footer here */
+#footer {
+  height: 60px;
+  background-color: #f5f5f5;
+}
+
+
+/* Custom page CSS
+-------------------------------------------------- */
+/* Not required for template or sticky footer method. */
+
+.container {
+  width: auto;
+  max-width: 680px;
+  padding: 0 15px;
+}
+.container .text-muted {
+  margin: 20px 0;
+}
+</style>
+<!--[if lt IE 9]>
+	<script type="text/javascript" src="../assets/js/html5shiv.js"></script>
+    <script type="text/javascript" src="../assets/js/css3-mediaqueries.js"></script>
+<![endif]-->
+<!--  需要修改 bootstrap-responsive.css 的 @media 为 @media screen and...-->
+</head>
+<body>
+ <div id="wrap">
+ 	<div class="container">
+    	<div class="page-header">
+        	<h1>Sticky footer</h1>    
+        </div>
+        <p class="lead">Pin a fixed-height footer to the bottom of the viewport in desktop browsers with this custom HTML and CSS.</p>
+        <p>Use <a href="#">the sticky footer with a fixed navbar</a> if need be, too.</p>	
+    </div><!-- end container -->
+ </div>
+ 
+ <div id="footer">
+ 	<div class="container">
+    	<p class="text-muted">Place sticky footer content here.</p>
+    </div>
+ </div>
+<!-- alloyui 不支持 bootstrap3 -->
+<script type="text/javascript" src="../assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="../assets/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+</script>
+</body>
+</html>
