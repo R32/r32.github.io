@@ -19,6 +19,9 @@ timezone: CN
 
 excerpt_separator: <!-- more -->
 
+# 计划用这个来实现 别人帮助 编辑
+doc_url_path: https://github.com/R32/blog/edit/master/
+
 #permalink: none
 # header menu config
 
@@ -27,16 +30,16 @@ custom_menu:
     url: /
     label: 主页
   - name: haxe
-    url: /haxe
+    url: /haxe/
     label: Haxe
   - name: other
-    url: /other
+    url: /other/
     label: 其它
   - name: person
-    url: /person
+    url: /person/
     label: 个人
   - name: forum
-    url: /forum
+    url: /forum/
     label: 留言
 # powered by ...
 powered_by:

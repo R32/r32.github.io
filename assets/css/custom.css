@@ -4,7 +4,7 @@
 * Code hightliht
 */
 .highlight  { background: #ffffff; }
-.highlight .c { color: #999988; font-style: italic } /* Comment */
+.highlight .c { color: #777777; } /* Comment */
 .highlight .err { color: #a61717; background-color: #e3d2d2 } /* Error */
 .highlight .k { font-weight: bold } /* Keyword */
 .highlight .o { font-weight: bold } /* Operator */
@@ -114,7 +114,10 @@ body {
 }
 /* Set the fixed height of the footer here */
 #footer {
-  height: 60px;
+  height: 45px;
+}
+#footer > div.container{
+  margin-top: 15px;
 }
 
 
