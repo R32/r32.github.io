@@ -1,9 +1,21 @@
----
-layout: default
----
-<h2>{{ page.title }}</h2>
-<p class="meta">{{ page.date | date_to_string }}</p>
+{% if page.fluid %}{% assign container = 'container-fluid' %}{% else %}{% assign container = 'container' %}{% endif %}{% include global-var.cfg %}<!DOCTYPE html>
+<html>
+    {% include head.html %}    
+    <body>
+      <div id="wrap">
+          {% include header.html %}
+         <div id="mainContainer" class="{{container}}">       
+          <h3>{{ page.title }}</h3>
+		  <p class="text-muted">{{ page.date | date: '%Y年%m月%d日 %H:%M%Z' }}</p>
+		  <div class="post">{{ content }}</div>
+         </div>  
+      </div>
+      {% include footer.html %}
+      <script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+      <script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
+    </body>
+</html>
 
-<div class="post">
-{{ content }}
-</div>
+
+
+

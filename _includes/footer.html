@@ -1,8 +1,11 @@
 <div id="footer">
 	<div class="{{container}}">
 		<p class="text-muted">
-			Copyright &copy; •
-			Powered by <a target="_blank" href="http://pages.github.com/">GitHub Pages</a>
+			<span>Using</span>
+				{% for item in site.powered_by%}
+					<a href="http://{{item.url}}" target="_blank" class="label{% cycle ' label-primary',' label-success',' label-default' %}">{{ item.name }}</a>
+				{% endfor %}
 		</p>
 	</div>
+
 </div>

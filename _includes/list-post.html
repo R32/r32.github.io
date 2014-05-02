@@ -1,0 +1,48 @@
+
+<!-- 用 map 的过滤 categories 如果是多值将不准确,因为 这里只拿第一个而丢弃后边的 -->
+{% assign p_cats_exists = false %}
+
+
+
+{% assign p_cats_list = (site.categories[p_category] %}
+
+{% for post in p_cats_list %}
+    {% if post.categories[0] ==  p_category %}
+		{% assign p_cats_exists = true %}
+	{% break %}	
+    {%endif%}
+{%  endfor %}
+
+{% if p_cats_exists %}
+	<div class="row-fluid">
+		<div class="col-md-3">
+			<div class="bs-sidebar hidden-print affix-top" role="complementary" data-spy="affix">
+				<ul class="nav bs-sidenav"> <!-- 列出sidebar -->
+	{% for post in p_cats_list %}
+	    {% if post.categories[0] ==  p_category %}
+			<li><a href="#{{ post.url | replace:'\','/' | split:'/' | last | remove_first: '.html' }}"> {{ post.title }}</a></li>
+	    {%endif%}
+	{%  endfor %}				
+				</ul>
+			</div>		
+		</div>
+	
+		
+		<div class="col-md-9" role="main">
+		{% for post in p_cats_list %}
+		    {% if post.categories[0] ==  p_category %}
+				<div class="bs-docs-section" id="{{ post.url | replace:'\','/' | split:'/' | last | remove_first: '.html' }}">
+					<a href="{{ post.url }}" target="_blank"><h3>{{ post.title }}</h3></a>
+					<div class="excerpt">{{ post.excerpt }}<p class="text-muted" style="font-family: 'Glyphicons Halflings';">......</p></div>
+					<p class="text-muted">{{ post.date | date: '%Y年%m月%d日 %H:%M%Z' }}</p>
+				</div>
+		    {%endif%}
+		{%  endfor %}
+		</div>
+	</div>
+{% else %}
+<div class="jumbotron">
+  <h3 style="font-family:'微软雅黑'">{{page.title}}</h3>
+  <br />
+</div>
+{% endif %}

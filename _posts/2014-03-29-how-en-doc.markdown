@@ -1,0 +1,33 @@
+---
+layout: post
+title:  查看英文文档小技巧
+date:   2014-03-29 13:50:10
+categories: other
+---
+#### 前言
+
+  1. 虽然 Chrome 自带了翻译,但是对于计算机方面的文档翻译质量不如 微软 Bing.
+
+  2. Chrome 自带的翻译还会打乱网页内容排版.
+
+<!-- more -->
+ 
+#### 方法
+
+ * 1.用浏览器打开微软的 http://labs.microsofttranslator.com/bookmarklet/ 网页:
+ 
+ > 推荐使用 Chrome 或 Firefox,IE中不太好用,其它浏览器未测试.
+ 
+ * 2.在下拉菜单框中选择 相关语言.这里我们选择 **简体中文**
+ 
+  > ![image-step2](/assets/img/step2.png) 
+ 
+ * 3.用鼠标拖曳 **翻译** 的按钮到 浏览器 收藏夹栏就完成了.(如果使用IE则右键添加到收藏夹栏)
+ 
+  > ![image-step3](/assets/img/step3.png) 	
+ 
+ * 4.在任何英文页面,直接用鼠标点击 **翻译**.
+ 
+ > ![image-demo](/assets/img/demo1.png)
+ 
+ * 注意:因为安全问题不能翻译链接以 **https://** 开头的网页.

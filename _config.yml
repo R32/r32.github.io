@@ -4,6 +4,7 @@ markdown: redcarpet
 
 pygments: true
 
+# 更改这个配置文件需要重启一下
 destination: /cygdrive/r/_site
 
 include: []
@@ -14,22 +15,33 @@ keep_files: ['.git','.svn','_test']
 
 encoding: utf-8
 
+timezone: CN
 
+excerpt_separator: <!-- more -->
 
+#permalink: none
+# header menu config
 
 custom_menu:
   - name: home
-    url: index.html
+    url: /
     label: 主页
   - name: haxe
-    url: haxe.html
+    url: /haxe
     label: Haxe
   - name: other
-    url: other.html
+    url: /other
     label: 其它
   - name: person
-    url: person.html
+    url: /person
     label: 个人
   - name: forum
-    url: forum.html
+    url: /forum
     label: 留言
+# powered by ...
+powered_by:
+  - name: Github Pages
+    url: pages.github.com
+  - name: Metro Bootstrap
+    url: talkslab.github.io/metro-bootstrap
+

@@ -3,10 +3,25 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	<title>{{ page.title }}</title>
-	<link rel="stylesheet" type="text/css" href="assets/css/metro-bootstrap.min.css" />
-	<link rel="stylesheet" type="text/css" href="assets/css/custom.css">
+	<link rel="stylesheet" type="text/css" href="/assets/css/metro-bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="/assets/css/custom.css" />
+	{%if page.layout == 'post' %}<style type="text/css">
+	@media all and (min-width: 1200px) {
+  		.container {
+    		width: 970px;
+  		}
+	}
+	div.post{font-size:15px}
+	div.post blockquote p {
+		color:#666666;
+		font-size: 14px
+	}
+	div.post li{
+		margin: 15px 0;
+	}	
+	</style>{% elsif page.layout == 'default' %} {%endif%}
 	<!--[if lt IE 9]>
-		<script type="text/javascript" src="assets/js/html5shiv.js"></script>
-    	<script type="text/javascript" src="assets/js/css3-mediaqueries.js"></script>
+		<script type="text/javascript" src="/assets/js/html5shiv.js"></script>
+    	<script type="text/javascript" src="/assets/js/css3-mediaqueries.js"></script>
 	<![endif]-->
-</head>
+</head>{% assign p_categories = page.url | replace: "\", "/" | split:"/" %}{% if p_categories[1] == 'index.html' %}{% assign p_category = 'home' %}{% else %}{% assign p_category = p_categories[1] %}{% endif %}

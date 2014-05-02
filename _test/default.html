@@ -16,31 +16,106 @@
 <![endif]-->
 <!--  需要修改 bootstrap-responsive.css 的 @media 为 @media screen and...-->
 </head>
-<body data-spy="scroll" data-target=".subnav" data-offset="50" screen_capture_injected="true">
-	
+<body> 
+	<!-- data-spy="scroll" data-target=".bs-sidebar" data-offset="10" -->
 	<div id="wrap">
             <div id="header" class="navbar navbar-default navbar-static-top">
-            <div class="container">
-  				<div class="navbar-header">
+                <div class="container">
+                    <div class="navbar-header">
                       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">   
 						<span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                       </button>
-                      <a href="#" class="navbar-brand"><h1>^_^</h1></a>
+                      <a href="#" class="navbar-brand"><h3 class="zh-tf">从哪里开始 从哪里失去</h3></a>
                     </div>
                 </div>
-                <div class="navbar-collapse collapse"><ul class="nav navbar-nav navbar-right">
-                        	<li class="active"><a href="#">主页</a></li>
+
+                <div class="container">    
+                    <div class="navbar-collapse collapse">
+                        <ul class="nav navbar-nav navbar-right">
+                            <li class="active"><a href="#">主页</a></li>
                             <li><a href="#">Haxe</a></li>
                             <li><a href="#">其它</a></li>
                             <li><a href="#">个人</a></li>
                             <li><a href="#">留言</a></li>
                         </ul>
+                    </div>
                 </div>
-            </div>    
+            </div>        
         <div id="mainContainer" class="container">
-                <h1>简单模板</h1>
+            <div class="row">
+                <!-- sider bar -->
+                <div class="col-md-3">
+                    <div class="bs-sidebar hidden-print affix-top" role="complementary" data-spy="affix">
+                    <!-- data-spy="affix" -->
+                        <ul class="nav bs-sidenav">
+                            <li><a href="#abc">欢迎</a></li>
+                            <li><a href="#bcd">写一些中文字符会是</a></li>
+                            <li><a href="#cde">cde</a></li>
+                            <li><a href="#efg">efg</a></li>
+                            <li><a href="#fgh">fgh</a></li>
+                        </ul>
+                    </div>        
+                </div>
+                <!-- right content -->
+                <div class="col-md-9" role="main">
+                    
+                    <div class="bs-docs-section" id="abc">
+                        <h2>欢迎</h2>
+                        <p class="well well-lg">你给我一场戏 你看着我入迷
+被你从心里剥落的感情
+痛得不知怎么舍去
+
+不要这场记忆 不要问我结局
+心底的酸楚和脸上的笑容
+早就合而为一
+迟迟不能相信这感觉
+象自己和自己分离
+而信誓旦旦的爱情 在哪里
+
+我一言难尽 忍不住伤心
+衡量不出爱与不爱之间的距离
+你说你的心 不再温热如昔
+从哪里开始 从哪里失去
+我一言难尽 忍不住伤心
+衡量不出爱或不爱之间的距离
+隐隐约约中明白你的决定
+不敢勉强你 只好为难自己
+我为难我自己</p>
+                        <p class="text-muted">2014年3月25日 16:38</p> 
+                    </div>
+                    
+                    <div class="bs-docs-section">
+                        <div>
+                            <h1 id="bcd">bcd</h1>
+                            <div style="height:500px"></div>
+                        </div>
+                    </div>
+
+                    <div class="bs-docs-section">
+                        <div>
+                            <h1 id="cde">cde</h1>
+                            <div style="height:500px"></div>
+                        </div>
+                    </div>
+
+                    <div class="bs-docs-section">
+                        <div>
+                            <h1 id="efg">efg</h1>
+                            <div style="height:500px"></div>
+                        </div>
+                    </div>
+
+                    <div class="bs-docs-section">
+                        <div>
+                            <h1 id="fgh">fgh</h1>
+                            <div style="height:500px"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
         </div>
     </div>
     <div id="footer">
@@ -60,6 +135,16 @@
 <script type="text/javascript" src="../assets/js/jquery.min.js"></script>
 <script type="text/javascript" src="../assets/js/bootstrap.min.js"></script>
 <script type="text/javascript">
+/*jQuery('div.bs-sidebar:first').affix({
+    offset:{
+        top:50
+    }
+});*/
+
+jQuery('body').scrollspy({
+    target:'div.bs-sidebar:first',
+    offset: $('div.navbar-static-top:first').outerHeight(true) + 10
+})
 </script>
 </body>
 </html>
