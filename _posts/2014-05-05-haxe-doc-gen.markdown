@@ -9,9 +9,9 @@ categories: haxe
 
  * 一些参考 [all.hxml] , [ImportAll.hx] , [haxepunk doc]
 
-[haxepunk doc]:(https://github.com/HaxePunk/HaxePunk/blob/dev/doc/doc.hxml)
-[all.hxml]:(https://github.com/HaxeFoundation/haxe/blob/development/extra/all.hxml)
-[ImportAll.hx]:(https://github.com/HaxeFoundation/haxe/blob/development/extra/ImportAll.hx)
+[haxepunk doc]:https://github.com/HaxePunk/HaxePunk/blob/dev/doc/doc.hxml
+[all.hxml]:https://github.com/HaxeFoundation/haxe/blob/development/extra/all.hxml
+[ImportAll.hx]:https://github.com/HaxeFoundation/haxe/blob/development/extra/ImportAll.hx
 
  * 这里是我用h3d做的一个样例:
  {% highlight bash %}
