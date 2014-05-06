@@ -29,6 +29,7 @@ haxe 命令主要用于编译 .hx 文件,如果你使用 flashdevelop 或其它�
 [haxe completion]:http://haxe.org/manual/completion
 
 
+<br />
 #### haxelib
 
 haxelib 用于管理 haxe库
@@ -71,6 +72,7 @@ haxelib 用于管理 haxe库
  * 开发并上传库 见:[http://haxe.org/com/haxelib]()
 
 
+<br />
 #### nekotools
 
 nekotools 是一个安装 haxe 时附带的强力工具,nekotools 很简单只有二个命令
@@ -87,5 +89,13 @@ nekotools 是一个安装 haxe 时附带的强力工具,nekotools 很简单只�
 	nekotools server -p 80 -h 0.0.0.0 -d d:\dev
 	{% endhighlight %}
  * **`nekotools boot`**	将 neko平台的 .n 文件转换成独立的 exe 文件
+
+
+<br />
+#### haxe doc
+
+  haxedoc这个命令好像已经被放弃了,而改用了另一个叫haxe dox,**但是** 生成 xml 还是用的 haxe -xml 命令
+
+  * [如何生成 Haxe API 文档]({% post_url 2014-05-5-haxe-doc-gen %})
 
 
