@@ -69,7 +69,7 @@ haxelib 用于管理 haxe库
 	haxelib run libname #运行 libname库目录下 编译为neko平台的 libname.n 文件
 {% endhighlight %}
 
- * 开发并上传库 见:[http://haxe.org/com/haxelib]()
+ * 开发并上传库 见:[haxe.org/com/haxelib](http://haxe.org/com/haxelib)
 
 
 <br />

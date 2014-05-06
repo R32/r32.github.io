@@ -18,7 +18,7 @@ categories: haxe
 
 
 
-本文档源文件为: [http://haxeflixel.com/documentation/game-development-tools/]()
+本文档源文件为: [haxeflixel.com/documentation/game-development-tools/](http://haxeflixel.com/documentation/game-development-tools/)
 
 
 <!-- more -->

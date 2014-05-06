@@ -36,11 +36,14 @@ categories: haxe
  * 最后命令行输入 `haxe genxml.html` 就完成了 `pkgs.xml`
 
 
+
 <br />
+
+
 
 #### 2.然后用 haxe dox,编译 xml 文件为 html
 
- * haxe dox 的 `Github` 网址为 [https://github.com/dpeek/dox]()
+ * haxe dox 的 `Github` 网址为 [github.com/dpeek/dox](https://github.com/dpeek/dox)
 
  * 其实不用重新编译,只要用到 theme文件夹和 run.n 文件就可以了
 
@@ -80,24 +83,26 @@ categories: haxe
 
 <br />
 
-#### other
 
- * 一个makefile文件样例.这个文件只使用包含 用 haxe dox 编译 xml 文件.
+
+#### 其它
+
+ * 一个makefile文件样例. 注:这个 makefile **不是必须**的.
 
 {% highlight makefile %}
-# 到 https://github.com/dpeek/dox 自载 run.n.这里我改了名字为:gendoc.n
+# 到 https://github.com/dpeek/dox 下载 run.n.这里我改了名字为:gendoc.n
 # 需要下载 theme 目录
-# 
+ 
 
 CC	:= neko gendoc.n
 
-# 发现 haxe dox  不支持 跨磁盘的 cygwin 的目录
+# --> 修改 TARGET_DIR 为你要输出的目录,注意: haxe dox  不支持 cygwin环境下跨磁盘的的目录
 TARGET_DIR	:=	./api-h3d
 
-# 这个文件需要用 haxe -xml 生成.
+# --> 修改 FILES 为 你用 haxe -xml 生成的 xml 文件. 目录/文件名
 FILES	:= pkgs.xml
 
-# 只需要指定一个文件就可以了
+
 TARGET	:=	$(TARGET_DIR)/index.html
 
 
@@ -122,3 +127,10 @@ clean:
 	@rm -rf $(TARGET_DIR)
 
 {% endhighlight %}
+
+
+<br />
+
+ * 生成的结果
+
+![结果](/assets/img/gen-haxe-doc-demo.png)
