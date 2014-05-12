@@ -5,7 +5,7 @@ date:   2014-03-29 19:21:10
 categories: other
 ---
 
-本文档源文件来自: [http://nathanielstory.com/2013/12/28/jekyll-on-windows-with-cygwin.html]()
+本文档源文件来自: [nathanielstory.com/2013/12/28/jekyll-on-windows-with-cygwin.html](http://nathanielstory.com/2013/12/28/jekyll-on-windows-with-cygwin.html)
 
 
 #### 简介
