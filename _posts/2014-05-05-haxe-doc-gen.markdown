@@ -49,36 +49,37 @@ categories: haxe
 
  * 命令为: `neko run.n -i export.xml`
 {% highlight bash %}
-	#haxe dox 没有 `--help` 这个参数,下边选项从源码中复制过来的
-  	-r  --document-root
 
-	#Set the output path for generated pages
-	-o  --output-path
+#haxe dox 没有 `--help` 这个参数,下边选项从源码中复制过来的
+-r  --document-root
+
+#Set the output path for generated pages
+-o  --output-path
 	
-	#Set the xml input path
-	-i  --input-path
+#Set the xml input path
+-i  --input-path
 
-	#Add template directory
-	-t  --template-path
+#Add template directory
+-t  --template-path
 
-	#Add a resource directory whose contents are copied to the output directory
-	-res  --resource-path
+#Add a resource directory whose contents are copied to the output directory
+-res  --resource-path
 
-	#Add a path include filter
-	-in  --include
+#Add a path include filter
+-in  --include
 
-	#Add a path exclude filter
-	-ex  --exclude
+#Add a path exclude filter
+-ex  --exclude
 
-	#Set the page main title
-	--title
+#Set the page main title
+--title
 
-	#Set the theme name or path
-	-theme
+#Set the theme name or path
+-theme
 
-	#Defines key = value
-	-D  --defines
-  {% endhighlight %}
+#Defines key = value
+-D  --defines
+{% endhighlight %}
 
 
 <br />

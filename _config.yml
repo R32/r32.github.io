@@ -1,8 +1,9 @@
-name: Your New Jekyll Site
+name: 5515544's Blog
 
-markdown: redcarpet
+#markdown: redcarpet
+markdown: kramdown
 
-pygments: true
+#pygments: true
 
 # 更改这个配置文件需要重启一下
 destination: /cygdrive/r/_site
@@ -23,7 +24,7 @@ excerpt_separator: <!-- more -->
 doc_url_path: https://github.com/R32/blog/blob/master/
 
 #permalink: none
-# header menu config
+#header menu config
 
 custom_menu:
   - name: home

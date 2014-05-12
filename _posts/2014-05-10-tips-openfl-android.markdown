@@ -10,8 +10,8 @@ categories: haxe
  * 命令运创建,原链接为:[create certificate]
 
 {% highlight bash %}
-	#Requires keytool part of the Java JDK (For me found in C:\Development\Java JDK\bin):
-	keytool -genkey -v -keystore "my_name.keystore" -alias my_name -keyalg RSA -keysize 2048 -validity 10000
+#Requires keytool part of the Java JDK (For me found in C:\Development\Java JDK\bin):
+keytool -genkey -v -keystore "my_name.keystore" -alias my_name -keyalg RSA -keysize 2048 -validity 10000
 {% endhighlight %}	
 
  * 然后`openfl` `xml` 配置文件
@@ -22,9 +22,11 @@ categories: haxe
 {% endhighlight %}
 
 [create certificate]:http://www.openfl.org/archive/community/general-discussion/openfl-android-singing-guide/
-
 <!-- more -->
+
+
 <br />
+
 
 #### 版本兼容
 
@@ -33,11 +35,14 @@ categories: haxe
 {% highlight xml %}
 <!-- 在 xml 文件中添加下行 -->
 <architecture name="armv6" />
+
 <!-- 排除armv7以获得更小的文件尺寸,文件大小将减小一半 -->
 <architecture name="armv6" exclude="armv7" />
 {% endhighlight %}
 
+
 <br />
+
 
 #### 自定义模板
 
@@ -51,7 +56,9 @@ categories: haxe
 <template path="path/build.xml" rename="build.xml" if="android" />	
 {% endhighlight %}
 
+
 <br />
+
 
 #### 其它
 
@@ -69,26 +76,26 @@ categories: haxe
  * 当丢失焦点时:
 
 {% highlight as %}
+Lib.current.stage.addEventListener(Event.DEACTIVATE, doSomething);
+
+private function doSomething (e:Event) {
+	trace('Bye');
+	//you could turn off the music
+	//pause game
+	//or reduce fps to 1: Lib.current.stage.frameRate = 1;
+	//or save anything
+	Lib.current.stage.removeEventListener(Event.DEACTIVATE, doSomething);
+	Lib.current.stage.addEventListener(Event.ACTIVATE, doAnotherThing);
+}
+
+private function doAnotherThing (e:Event) {
+	trace('Hello');
+	//you could turn on the music
+	//unpause game
+	//or reput fps to regular;
+	Lib.current.stage.removeEventListener(Event.ACTIVATE, doAnotherThing);
 	Lib.current.stage.addEventListener(Event.DEACTIVATE, doSomething);
-
-	private function doSomething (e:Event) {
-      trace('Bye');
-      //you could turn off the music
-      //pause game
-      //or reduce fps to 1: Lib.current.stage.frameRate = 1;
-      //or save anything
-      Lib.current.stage.removeEventListener(Event.DEACTIVATE, doSomething);
-      Lib.current.stage.addEventListener(Event.ACTIVATE, doAnotherThing);
-	}
-
-	private function doAnotherThing (e:Event) {
-	      trace('Hello');
-	      //you could turn on the music
-	      //unpause game
-	      //or reput fps to regular;
-	      Lib.current.stage.removeEventListener(Event.ACTIVATE, doAnotherThing);
-	      Lib.current.stage.addEventListener(Event.DEACTIVATE, doSomething);
-	}
+}
 {% endhighlight %}
 
  * 其它的以后再添加....
