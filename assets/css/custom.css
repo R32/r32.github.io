@@ -189,7 +189,7 @@ body {
 
 /* First level of nav */
 .bs-sidenav {
- margin-top: 20xp; /* 右边内容区域由于 h3 的 margin-top 为 20px  */
+ margin-top: 20px; /* 右边内容区域由于 h3 的 margin-top 为 20px  */
 /*margin-bottom: 20px;
 padding-top:    10px;
 padding-bottom: 10px; */
