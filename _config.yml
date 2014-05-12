@@ -5,12 +5,15 @@ markdown: kramdown
 
 #pygments: true
 
+gems:
+  - jekyll-sitemap
+
 # 更改这个配置文件需要重启一下
 destination: /cygdrive/r/_site
 
 include: []
 
-exclude: ['*.md','*.less','assets/css/metro-bootstrap.css','bootstrap.css']
+exclude: ['*.md','*.less','assets/css/metro-bootstrap.css','assets/css/bootstrap.css']
 
 keep_files: ['.git','.svn','_test']
 
