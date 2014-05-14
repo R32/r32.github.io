@@ -1,9 +1,10 @@
 name: 5515544's Blog
 
-#markdown: redcarpet
-markdown: kramdown
-
-#pygments: true
+# 下边二行可以用 backticks 替换 {% highlight %} 的代码高亮方式
+# 但是如果混在 html 标签中,还是得用 {% highlight %}
+markdown: redcarpet
+extensions: [fenced_code_blocks]
+#markdown: kramdown
 
 gems:
   - jekyll-sitemap

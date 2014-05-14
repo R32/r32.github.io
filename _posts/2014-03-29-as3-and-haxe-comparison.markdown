@@ -24,29 +24,29 @@ categories: haxe
   <div class="col-md-6 as3">
   <h4>AS3</h4>
 
-  {% highlight as %}
-  Boolean
-  int
-  Number
-  Object
-  void
-  Array
-  Vector.<String>
-  {% endhighlight %}
+{% highlight as %}
+Boolean
+int
+Number
+Object
+void
+Array
+Vector.<String>
+{% endhighlight %}
   </div>
 
   <div class="col-md-6 hx3">
   <h4>Haxe</h4>
 
-  {% highlight as %}
-  Bool
-  Int
-  Float
-  Dynamic
-  Void
-  Array<Dynamic>
-  Array<String>
-  {% endhighlight %}
+{% highlight as %}
+Bool
+Int
+Float
+Dynamic
+Void
+Array<Dynamic>
+Array<String>
+{% endhighlight %}
   </div>
 </div>
 

@@ -1,10 +1,7 @@
 
-<!-- 用 map 的过滤 categories 如果是多值将不准确,因为 这里只拿第一个而丢弃后边的 -->
 {% assign p_cats_exists = false %}
 
-
-
-{% assign p_cats_list = (site.categories[p_category] %}
+{% assign p_cats_list = site.categories[p_category] %}
 
 {% for post in p_cats_list %}
     {% if post.categories[0] ==  p_category %}

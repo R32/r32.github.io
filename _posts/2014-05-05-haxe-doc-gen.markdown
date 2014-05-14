@@ -14,23 +14,24 @@ categories: haxe
 [ImportAll.hx]:https://github.com/HaxeFoundation/haxe/blob/development/extra/ImportAll.hx
 
  * 这里是我用h3d做的一个样例:
- {% highlight bash %}
- #我在 h3d 的目录中建了一个叫 doc 的目录,并建立一个叫 genxml.hxml 的文件,内容如下:
- #主要是参考主目录的 engine.hxml 改的
- --no-output
- -cp ../
- --macro include('h3d')
- --macro include('h2d')
- --macro include('hxd',true,['hxd.res.FileTree'])
 
- -swf haxedoc.swf
- -swf-version 11.8
- -lib hxsl
- -D resourcesPath=../samples/res
- -D h3d
- 
- -xml pkgs.xml
-{% endhighlight %}
+	```bash
+	#我在 h3d 的目录中建了一个叫 doc 的目录,并建立一个叫 genxml.hxml 的文件,内容如下:
+	#主要是参考主目录的 engine.hxml 改的
+	--no-output
+	-cp ../
+	--macro include('h3d')
+	--macro include('h2d')
+	--macro include('hxd',true,['hxd.res.FileTree'])
+
+	-swf haxedoc.swf
+	-swf-version 11.8
+	-lib hxsl
+	-D resourcesPath=../samples/res
+	-D h3d
+	 
+	-xml pkgs.xml
+	```
 
 <!-- more -->
  * 最后命令行输入 `haxe genxml.html` 就完成了 `pkgs.xml`
@@ -48,38 +49,38 @@ categories: haxe
  * 其实不用重新编译,只要用到 theme文件夹和 run.n 文件就可以了
 
  * 命令为: `neko run.n -i export.xml`
-{% highlight bash %}
 
-#haxe dox 没有 `--help` 这个参数,下边选项从源码中复制过来的
--r  --document-root
+	```bash
+	#haxe dox 没有 `--help` 这个参数,下边选项从源码中复制过来的
+	-r  --document-root
 
-#Set the output path for generated pages
--o  --output-path
-	
-#Set the xml input path
--i  --input-path
+	#Set the output path for generated pages
+	-o  --output-path
+		
+	#Set the xml input path
+	-i  --input-path
 
-#Add template directory
--t  --template-path
+	#Add template directory
+	-t  --template-path
 
-#Add a resource directory whose contents are copied to the output directory
--res  --resource-path
+	#Add a resource directory whose contents are copied to the output directory
+	-res  --resource-path
 
-#Add a path include filter
--in  --include
+	#Add a path include filter
+	-in  --include
 
-#Add a path exclude filter
--ex  --exclude
+	#Add a path exclude filter
+	-ex  --exclude
 
-#Set the page main title
---title
+	#Set the page main title
+	--title
 
-#Set the theme name or path
--theme
+	#Set the theme name or path
+	-theme
 
-#Defines key = value
--D  --defines
-{% endhighlight %}
+	#Defines key = value
+	-D  --defines
+	```
 
 
 <br />
@@ -88,9 +89,9 @@ categories: haxe
 
 #### 其它
 
- * 一个makefile文件样例. 注:这个 makefile **不是必须**的.
+一个 `makefile` 文件样例.仅供参考.
 
-{% highlight makefile %}
+```makefile
 # 到 https://github.com/dpeek/dox 下载 run.n.这里我改了名字为:gendoc.n
 # 需要下载 theme 目录
  
@@ -127,11 +128,11 @@ clean:
 	@echo clean...
 	@rm -rf $(TARGET_DIR)
 
-{% endhighlight %}
+```
 
 
 <br />
 
  * 生成的结果
 
-![结果](/assets/img/gen-haxe-doc-demo.png)
+	![结果](/assets/img/gen-haxe-doc-demo.png)
