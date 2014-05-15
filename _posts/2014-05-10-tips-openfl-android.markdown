@@ -82,7 +82,10 @@ categories: haxe
  * 显示中文字符,需要设置相关字体为`system/fonts/DroidSansFallback.ttf`
 
  * `textFiled` 中文输入.
- > Bug 未解决,有通过 JNI 来调用 android 原生 `EditText`.
+
+	> 不光是 输入,如果不将 `textField`的 `selectable` 设为 `false`, `[lime 0.9.7]` 很容易把字符变成方块
+
+	> 使用 `android` 原生 `EditText` 来替代 `textField` 输入也是一个很好的方法. [简单示例](https://github.com/R32/my-test/tree/master/test/android-zh-input)
 
 
 <br />
@@ -123,6 +126,15 @@ categories: haxe
 		Lib.current.stage.removeEventListener(Event.ACTIVATE, doAnotherThing);
 		Lib.current.stage.addEventListener(Event.DEACTIVATE, doSomething);
 	}
-	```
+
+ * 调试 `android Log` 
+
+	```bash
+	# 这样只输出 trace 的信息
+	adb logcat -s "trace"
+
+	# 指定多个 -s
+	adb logcat -s "trace" -s "MyActivity"
+	```  	
 
  * 其它的以后再添加....

@@ -22,6 +22,7 @@ var muline = '
 
 <!-- more -->
 
+
 <br />
 
 #### `Null`
@@ -125,6 +126,31 @@ class Helo{
 
 
 <br />
+
+
+#### `General metadata` 
+
+ [Tips and Tricks](http://haxe.org/manual/tips_and_tricks)
+
+ ```bash
+ Starting from Haxe 3.0 , you can get the list of supported compiler flags by running haxe --help-metas
+ ``` 
+ * `@:overload`
+
+ 	> can be used when interfacing an external class method with arguments of different types. You can have several overload declarations, the return type of the first one that is matched will be used. Overload metadata is only useful for extern classes, it is most likely not usable for user-written Haxe classes. A simple example: 
+
+ 	```as
+	// 参考 Reflect.makeVarArgs 
+	@:overload(function(i:String):Bool{})
+	function foo( i : Int ) : Void;
+ 	```
+
+
+ <br />
+
+ #### `Reflect`
+
+  > [haxe 3.1.3] `Reflect.hasField` 在静态平台上当对象是类实例时,大多数会返回 `false`, `Reflect.field` 才能返回正确的值
 
 
 
