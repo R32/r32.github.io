@@ -65,6 +65,32 @@
 .highlight .il { color: #009999 } /* Literal.Number.Integer.Long */
 
 
+code, tt {
+    background-color: #F8F8F8;
+    border-radius: 3px;
+    border: 1px solid #DDD;
+    margin: 0px 2px;
+    padding: 0px 5px;
+    font-family: Consolas,"Liberation Mono",Courier,monospace;
+    color:#333;
+    font-size:13px;
+    white-space: nowrap;
+}
+
+.highlight code,.highlight tt{
+	border: 0;
+}
+
+em code{
+	color:#C7254E;
+	font-style: normal;
+}
+
+h1 code,h2 code,h3 code,h4 code,h5 code,h6 code{
+	font-size: inherit;
+}
+
+
 /*
  for IE 
 */
@@ -73,6 +99,8 @@
 @-ms-viewport       { width: device-width; }
 @-o-viewport        { width: device-width; }
 @viewport           { width: device-width; }
+
+
 
 
 

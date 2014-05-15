@@ -15,7 +15,7 @@ categories: other
 
 #### Installing Jekyll
 
-Jekyll is installed as a Ruby gem. Installation is as simple as:
+*`Jekyll`* is installed as a Ruby gem. Installation is as simple as:
 
  1. Run Cygwin's `setup.exe`
  2. Install the package ruby
