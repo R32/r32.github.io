@@ -148,13 +148,36 @@ class Helo{
 
  <br />
 
- #### `Reflect`
+#### `Reflect`
 
-  > [haxe 3.1.3] `Reflect.hasField` 在静态平台上当对象是类实例时,大多数会返回 `false`, `Reflect.field` 才能返回正确的值
+> [haxe 3.1.3] `Reflect.hasField` 在静态平台上当对象是类实例时,大多数会返回 `false`, `Reflect.field` 才能返回正确的值
+
+<br />
 
 
 
 
+### `openfl`
+
+就和 haxe 写在同一页算了,很多时候我也没细分,把 openfl 和 haxe 的内容混在一起了. 
+
+<br />
+
+#### `openfl xml` 配置文件
+
+[openfl xml 配置参考](http://www.openfl.org/documentation/projects/project-files/xml-format/)
+
+
+也可以参看 `lime-tools\1,4,0\project\ProjectXMLParser.hx` 这个文件源码各标签到底有哪些属性
+
+
+ * `swf lib` 跨平台使用 swf 内部的元件
+	
+	The SWF release on haxelib is compatible with the older openfl-html5-dom backend
+
+	you can use `<set name="html5-backend" value="openfl-html5-dom />` before using `<haxelib name="openfl" />`
+
+<br />
 
 
 

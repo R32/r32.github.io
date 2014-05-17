@@ -25,6 +25,7 @@ categories: haxe
 <!-- more -->
 
 
+
 <br />
 
 
@@ -53,8 +54,53 @@ categories: haxe
 <template path="templates" if="android" />
 
 <!-- 如果只想更改单一的一个文件,可以像下边 -->
-<template path="path/build.xml" rename="build.xml" if="android" />
+<!-- rename 时需要对应其相应的目录如.才能正确覆盖 -->
+<template path="path/AndroidManifest.xml" rename="AndroidManifest.xml" if="android" />
+<template path="path/to/GameActivity.java" rename="src/org/haxe/lime/GameActivity.java" if="android" />
+
+
+<!-- openfl 编译的android 当不是横屏时,在加载时会先显示 ActionBar 然后接着显示 应用 -->
+<!-- 似乎在 openfl xml 里没有相应设置,而需要改模板 修改 AndroidManifest.xml  -->
+<!-- 在 lime\0,9,7\templates\android\template\ 下复制相应文件到工程文件夹 -->
+<!-- 然后在自定义的AndroidManifest.xml 的 activity 标签中添加属性 -->
+<activity android:theme="@android:style/Theme.Holo.NoActionBar" >
 ```
+
+
+<br />
+
+#### `openfl JNI`
+
+下边示例需要在 `openfl xml` 文件中用 `template` 指定包含 `static` 方法 `sampleFunction1` 的`SampleClassName.java`
+
+
+`(Ljava/lang/String;)V` [签名格式参看](http://blog.csdn.net/freedom2028/article/details/7772141)
+
+ 
+ * 使用 `openfl.utils.JNI` 能很容易创建 从 Haxe 调用 `android`以及回调.
+ 
+	```as
+	// 详细实例参看下边  `textFiled`中文输入.
+	class SampleClassName{
+		 static var _sampleFunction1 = openfl.utils.JNI.createStaticMethod("SampleClassName", "sampleFunction1", "(Ljava/lang/String;Lorg/haxe/lime/HaxeObject;)V", true);
+		 
+		 static public function sampleFunction1(text:String,obj:Dynamic):void{
+		 	var a = new Array<Dynamic>();
+			a.push(text);
+			a.push(obj);
+			_sampleFunction1(a);
+		 }
+	 }
+	```
+ * [更简单的方法](https://github.com/player-03/haxeutils#jniclassbuilderhx)
+
+	```as
+	#if !macro @:build(com.player03.haxeutils.JNIClassBuilder.build()) #end
+	class SampleClassName {
+	    @jni public static function sampleFunction1(var1:String, var2:Dynamic):Bool;
+	}
+	```
+
 
 
 <br />
@@ -138,3 +184,6 @@ categories: haxe
 	```  	
 
  * 其它的以后再添加....
+
+
+ <br />
