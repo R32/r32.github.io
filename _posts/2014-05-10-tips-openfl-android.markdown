@@ -84,7 +84,7 @@ categories: haxe
 	class SampleClassName{
 		 static var _sampleFunction1 = openfl.utils.JNI.createStaticMethod("SampleClassName", "sampleFunction1", "(Ljava/lang/String;Lorg/haxe/lime/HaxeObject;)V", true);
 		 
-		 static public function sampleFunction1(text:String,obj:Dynamic):void{
+		 static public function sampleFunction1(text:String,obj:Dynamic):Void{
 		 	var a = new Array<Dynamic>();
 			a.push(text);
 			a.push(obj);
@@ -97,9 +97,15 @@ categories: haxe
 	```as
 	#if !macro @:build(com.player03.haxeutils.JNIClassBuilder.build()) #end
 	class SampleClassName {
-	    @jni public static function sampleFunction1(var1:String, var2:Dynamic):Bool;
+	    @jni public static function sampleFunction1(var1:String, var2:Dynamic):Void;
 	}
 	```
+
+ * `NDK` 原生扩展
+
+	> `lime create extension demo`
+
+	>
 
 
 
@@ -127,11 +133,9 @@ categories: haxe
 
  * 显示中文字符,需要设置相关字体为`system/fonts/DroidSansFallback.ttf`
 
- * `textFiled` 中文输入.
+ * `textFiled` 无法中文输入. 只有调用 JNI 的原生输入框解决.[简单示例](https://github.com/R32/my-test/tree/master/test/android-zh-input)
 
-	> 不光是 输入,如果不将 `textField`的 `selectable` 设为 `false`, `[lime 0.9.7]` 很容易把字符变成方块
-
-	> 使用 `android` 原生 `EditText` 来替代 `textField` 输入也是一个很好的方法. [简单示例](https://github.com/R32/my-test/tree/master/test/android-zh-input)
+	> [lime 0.9.7] Bug ??? 如果不将 `textField`的 `selectable` 设为 `false`,字符很容易会变成方块
 
 
 <br />
@@ -172,6 +176,7 @@ categories: haxe
 		Lib.current.stage.removeEventListener(Event.ACTIVATE, doAnotherThing);
 		Lib.current.stage.addEventListener(Event.DEACTIVATE, doSomething);
 	}
+	```
 
  * 调试 `android Log` 
 

@@ -171,9 +171,6 @@ class TheClass {
 
 #### 简单记些 Java
 
- * [安装JDK](http://www.oracle.com/technetwork/java/javase/downloads/index.html) 和 [教程](http://www.w3cschool.cc/java/java-tutorial.html)
- > 实际上 如果安装了 `openfl android`,不用再重新下载 JDK 了.
-
  * 变量定义
 
 	```java
