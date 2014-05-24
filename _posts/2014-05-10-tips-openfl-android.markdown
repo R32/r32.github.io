@@ -187,6 +187,11 @@ categories: haxe
 	# 指定多个 -s
 	adb logcat -s "trace" -s "MyActivity"
 	```  	
+ * 当设置 `<window fullscreen="false" />` 时.
+
+	> `android` 平台的 `stage.stageHeight` 仍然和全屏时相等. 没有减去顶栏的高度
+
+	> `ios` 未测
 
  * 其它的以后再添加....
 

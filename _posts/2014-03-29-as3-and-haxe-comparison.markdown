@@ -537,6 +537,104 @@ public var x (default, null):Float;
 
 </div>
 
+
+</div>
+
+<hr />
+<h3>延时</h3>
+
+<div class="row">
+<div class="col-md-6 as3">
+<h4>AS3</h4>
+
+{% highlight as %}
+var cancelID:uint = setTimeout(calllback,delay_time_ms);
+
+clearTimeout(cancelID);// 取消
+
+{% endhighlight %}
+</div>
+
+<div class="col-md-6 hx3">
+<h4>Haxe</h4>
+{% highlight as %}
+// 重要: haxe.Timer 原生 Haxe 只支持 flash 以及 Javascript 平台
+// 使用 openfl 时, haxe.Timer 才是跨平台的.参看 HaxeToolkit\haxe\lib\openfl-native\1,n,n\haxe\Timer.hx
+// 使用 openfl 时, haxe.Timer 和 flash.utils.Timer 不是同一个类.
+var timer = haxe.Timer.delay(calllback,delay_time_ms); // return Type haxe.Timer
+
+timer.stop(); // 取消
+
+{% endhighlight %}
+</div>
+
+</div>
+
+<hr />
+<h3>类实例对比</h3>
+
+<div class="row">
+<div class="col-md-6 as3">
+<h4>AS3</h4>
+{% highlight as %}
+// AS 中对比二个实例是否为一个很简单,和普通类型变量一样
+
+trace(this == root);
+
+//或, AS 或 JS 都可以用 === 三个等号来表示全等于
+
+trace(this === root);
+{% endhighlight %}
+</div>
+
+<div class="col-md-6 hx3">
+<h4>Haxe</h4>
+{% highlight as %}
+// Haxe 则需要类型一致,  或者A的类型是 B 的 父类或子类
+
+// 假如 this => Main,  root => MovieClip
+trace(this == cast(root,Sprite)); //
+
+//或,强制转换成另一个父类
+
+trace(this == cast(root,DisplayObject));
+{% endhighlight %}
+</div>
+
+</div>
+
+<hr />
+<h3>条件编译</h3>
+
+<div class="row">
+<div class="col-md-6 as3">
+<h4>AS3</h4>
+{% highlight as %}
+
+// divillysausages.com/blog/as3_conditional_compilation
+CONFIG::DEBUG{
+  trace("debug");
+}
+
+{% endhighlight %}
+</div>
+
+<div class="col-md-6 hx3">
+<h4>Haxe</h4>
+{% highlight as %}
+
+// 细节参看页尾的 宏条件编译
+#if debug
+  trace("debug");
+#end
+
+{% endhighlight %}
+</div>
+
+</div>
+
+
+
 #### Additional Features
 
 Haxe 增加了一些 Actionscript 3 没有的语法特性:
