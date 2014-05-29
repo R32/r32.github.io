@@ -26,9 +26,28 @@ categories: haxe
 	<!-- 下边示例使用了 `openfl/flash`的 xml 配置.其它可以自行设置相关编绎选项. -->
 	<haxeflag name="-swf-lib" value="pathto/libname.swc" if="flash" />
 	```
+	
+	> 常见错误 1. `You cannot have both a static and a non static member or function with the same name...`
+
+	> [问题解决原文](http://labe.me/en/blog/posts/2012-12-17-flash-haxe-gaming-sdk.html#.U4dTP3Y3mcM)
+
+
+	```haxe
+	// haxe 调用 starling.swc 示例
+	// 将这个文件 保存为 Starling.patch 或其它任意文件名.
+	// 项目中添加 haxeflag 编译选项 --macro "patchTypes('Starling.patch')"
+
+	-starling.core.RenderSupport.clear
+	-starling.core.Starling.context
+	-starling.core.Starling.juggler
+	-starling.core.Starling.contentScaleFactor
+	```
+
+
+
 
 [参看-A]:https://github.com/jcward/HaxeSWCExample
-[参看-B]:http://haxe.org/manual/swc?lang=cn
+[参看-B]:http://old.haxe.org/manual/swc?lang=cn
 
 <!-- more -->
 <br />

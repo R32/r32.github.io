@@ -639,7 +639,7 @@ CONFIG::DEBUG{
 
 Haxe 增加了一些 Actionscript 3 没有的语法特性:
 
-* [宏条件编译](http://haxe.org/manual/macros?lang=cn)
+* [宏条件编译](http://old.haxe.org/manual/macros?lang=cn)
 * [enums](http://haxe.org/ref/enums)
 * [type parameters](http://haxe.org/ref/type_params)
 * [structures](http://haxe.org/ref/type_advanced)
