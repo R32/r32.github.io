@@ -31,7 +31,7 @@ categories: haxe
 
 	> [问题解决原文](http://labe.me/en/blog/posts/2012-12-17-flash-haxe-gaming-sdk.html#.U4dTP3Y3mcM)
 
-
+	
 	```haxe
 	// haxe 调用 starling.swc 示例
 	// 将这个文件 保存为 Starling.patch 或其它任意文件名.
@@ -42,6 +42,8 @@ categories: haxe
 	-starling.core.Starling.juggler
 	-starling.core.Starling.contentScaleFactor
 	```
+
+	> 当使用 调用 `swc` 时,使用编绎标记 `-dce full` 很可能将会报错
 
 
 

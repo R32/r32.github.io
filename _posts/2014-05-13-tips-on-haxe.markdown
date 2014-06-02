@@ -5,6 +5,48 @@ date:   2014-05-13 12:26:10
 categories: haxe
 ---
 
+
+#### 对于`-dce full` 和  `@:keep`
+
+为了避免编译时 `-dce full` 产生的错误,需要用 `@:keep` 或 `--macro keep` 来防止被编绎器删除.
+
+当使下边的些语法时,相关地方需要添加 `@:keep`, 
+
+ > 使用 `Class<Dynamic>` 或 `Class<SomeName>` 作为参数.例如: `Type.createInstance(_customSoundTray, [])` 这样的语法;
+
+ > 由于 `-dce full` 的关系,最好不要同时使用 `Class<Dynamic>` 和 `Type.createInstance`.
+
+<!-- more -->
+
+
+<br />
+
+#### 遇见的一些错误
+
+ * `Reflect.hasField`
+
+	> 对于类字段这个方法在和 `C++` 相关的平台上会返回 `false`, 需要检测 `Reflect.field` 的返回值是否为 `null` 就行了.
+
+
+ * 编译 `Nape` 目标为 `neko` 时,报错 `Uncaught exception - std@module_read`.
+
+ 	> 通常 `neko` 编绎不能通过,意味着所有基于 `c++` 平台的编绎都将出现异常用.
+
+ 	```xml
+ 	<!-- 加入下边这一行将能正常运行 -->
+ 	<haxeflag name="-dce full" />
+ 	
+ 	<!-- optional 可选 -->
+ 	<haxedef name="NAPE_RELEASE_BUILD" />
+
+ 	<!-- 对于 `haxeflixel` 的 demo 如果添加了 `-dce full`,则需要添加下行 -->
+ 	<!-- 注意下行的 PlayState 为 flixel-demo 示例中的一个类 -->
+ 	<haxeflag name="--macro keep(null,['PlayState','flixel.system.FlxAssets','flixel.system.ui','flixel.ui'])" />
+ 	```
+
+<br />
+
+
 #### 单引号
 
 Haxe 中可以用**单**或**双**引号来包话字符.使用**单**引号时可以定义多行字符串,还可以用 `${}` 嵌入一些变量或表达式
@@ -22,7 +64,19 @@ var muline = '
 
 ```
 
-<!-- more -->
+<br />
+
+#### `Null`
+
+```haxe
+// 当 想把 null 值赋值给 int 变量时,
+var i:Null<Int> = null; 
+
+// 其它**基础类型**需要检测是否为 `null`,声明和上边类似
+```
+
+
+
 
 
 
@@ -192,25 +246,12 @@ trace(s); // 2
 ```
 
 
-
-<br />
-
-#### `Null`
-
-```haxe
-// 当 想把 null 值赋值给 int 变量时,
-var i:Null<Int> = null; 
-
-// 其它**基础类型**需要检测是否为 `null`,声明和上边类似
-```
-
-
 <br />
 
 
 #### `Class` 
 
-当把一个 `Class` 赋值给一个变量时.实际上不推荐使用这种把类赋值给一个变量的怪异语法.
+当把一个 `Class` 赋值给一个变量时.实际上不推荐使用这种把类赋值给一个变量的怪异语法.因为当添加 `-dce full` 时很容易引起错误
 
 但是 如果使用 `as3hx` 转换 `AS3` 的源码时,就会经常碰到这样的代码.
 
@@ -316,22 +357,9 @@ class Helo{
  	```
 
 
- <br />
-
-#### `Reflect`
-
-> [haxe 3.1.3] `Reflect.hasField` 在静态平台上当对象是类实例时,大多数会返回 `false`, `Reflect.field` 才能返回正确的值
-
 <br />
 
 
-
-
-### `openfl`
-
-就和 haxe 写在同一页算了,很多时候我也没细分,把 openfl 和 haxe 的内容混在一起了. 
-
-<br />
 
 #### `openfl xml` 配置文件
 
