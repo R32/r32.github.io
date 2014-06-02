@@ -5,6 +5,25 @@ date:   2014-05-10 15:16:10
 categories: haxe
 ---
 
+#### 跨域安全沙箱错误
+
+`crossdomain.xml` 用于跨域加载数据.很可能需要添加 `-D network-sandbox`
+
+注意: 使用 `Workder` 时,子线程总是为 **只访问网络**.
+
+```xml
+<?xml version="1.0"?>
+<!DOCTYPE cross-domain-policy SYSTEM "http://www.adobe.com/xml/dtds/cross-domain-policy.dtd">
+<cross-domain-policy> 
+	<site-control permitted-cross-domain-policies="all" />
+    <allow-access-from domain="*" />
+    <allow-http-request-headers-from domain="*" headers="*"/>
+</cross-domain-policy>
+```
+<!-- more -->
+ <br />
+
+
 #### 使用 `swc`
 
  * 导出 `haxe` 代码为 `swc` 库. [参看-A] - [参看-B]
@@ -51,7 +70,7 @@ categories: haxe
 [参看-A]:https://github.com/jcward/HaxeSWCExample
 [参看-B]:http://old.haxe.org/manual/swc?lang=cn
 
-<!-- more -->
+
 <br />
 
 #### 自定义 `openfl/flash` `Preloader`
@@ -62,6 +81,9 @@ categories: haxe
 <!-- 源码中必须能查找得到MyPreloader这个类,也可以指定包名如: -->
 <app preloader="com.myname.Preloader" />
 ```
+
+
+
 
 <br />
 

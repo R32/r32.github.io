@@ -30,7 +30,7 @@ categories: haxe
 
  * 编译 `Nape` 目标为 `neko` 时,报错 `Uncaught exception - std@module_read`.
 
- 	> 通常 `neko` 编绎不能通过,意味着所有基于 `c++` 平台的编绎都将出现异常用.
+ 	> 通常 `neko` 编绎不能通过,意味着所有基于 `c++` 平台的编绎都将出现异常.
 
  	```xml
  	<!-- 加入下边这一行将能正常运行 -->
