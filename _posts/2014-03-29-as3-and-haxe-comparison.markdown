@@ -17,9 +17,7 @@ categories: haxe
 这个文档源文来自: [Haxeflixel's guide](http://haxeflixel.com/documentation/as3-and-haxe-comparison/).
 
 <!-- more -->
-
-### Basic Types
-
+<h3>Basic Types</h3>
 <div class="row">
   <div class="col-md-6 as3">
   <h4>AS3</h4>
@@ -114,7 +112,6 @@ class MyClass {
 
 <hr />
 <h3>Loops</h3>
-
 <div class="row">
 <div class="col-md-6 as3">
 <h4>AS3</h4>
@@ -151,8 +148,6 @@ for (propertyName in fields) {
 }
 {% endhighlight %}
 </div>
-
-
 </div>
 
 <hr />
@@ -504,9 +499,8 @@ function set_x(value:Float):Float {
 }
 {% endhighlight %}
 </div>
-
-
 </div>
+
 
 <hr />
 <h3>Read-Only Properties</h3>
@@ -534,11 +528,8 @@ public var x (default, null):Float;
 // never would restrict all access
 {% endhighlight %}
 </div>
-
 </div>
 
-
-</div>
 
 <hr />
 <h3>延时</h3>
@@ -604,8 +595,8 @@ trace(this == cast(root,DisplayObject));
 </div>
 
 <hr />
-<h3>条件编译</h3>
 
+<h3>条件编译</h3>
 <div class="row">
 <div class="col-md-6 as3">
 <h4>AS3</h4>
@@ -630,9 +621,8 @@ CONFIG::DEBUG{
 
 {% endhighlight %}
 </div>
-
 </div>
-
+<br />
 
 
 #### Additional Features
@@ -647,3 +637,4 @@ Haxe 增加了一些 Actionscript 3 没有的语法特性:
 * [conditional compilation](http://haxe.org/ref/conditionals)
 * [inlining](http://haxe.org/ref/inline)
 * and more!
+

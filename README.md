@@ -1,8 +1,7 @@
 blog
 ----
 
-个人博客.使用jekyll
+[r32.github.io](http://r32.github.io)
 
-由于 github page 不支持 plugin 所以,gh-page 分支将全是静态文件
+由于 github page 不支持 plugin 所以自已在机器编译好后再传至gh-pages
 
-[blog页面](http://aoninu.com)
