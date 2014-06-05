@@ -7,7 +7,7 @@ categories: haxe
 
 ---
 
-标题应该改成如何将 `.swf` 文件打包成 `air` 更为合适.
+标题改成如何将 `.swf` 文件打包成 `air` 更为合适.
 
 
 最简单的方法是用 `flashdevelop` 创建一个 `haxe/air` 的示例.
