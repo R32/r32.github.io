@@ -78,16 +78,16 @@ code, tt {
 }
 
 .highlight code,.highlight tt{
-	border: 0;
+  border: 0;
 }
 
 em code{
-	color:#C7254E;
-	font-style: normal;
+  color:#C7254E;
+  font-style: normal;
 }
 
 h1 code,h2 code,h3 code,h4 code,h5 code,h6 code{
-	font-size: inherit;
+  font-size: inherit;
 }
 
 
@@ -127,7 +127,7 @@ body {
 }
 
 #header{
-	border-bottom:0;
+  border-bottom:0;
 }
 
 #header .navbar-toggle .icon-bar{
@@ -142,6 +142,19 @@ body {
 .zh-tf{
   font-family:"微软雅黑","宋体" !important;
 }
+
+
+@media(max-width:768px){
+  
+  #header .navbar-brand h3{
+    margin:0; 
+    padding:0;
+    font-size:20px;
+  }
+
+}
+
+
 /* Set the fixed height of the footer here */
 #footer {
   height: 45px;
@@ -156,18 +169,17 @@ div.excerpt blockquote p {
 
 @media all and (min-width: 768px) {
 
-
   #header .navbar-nav > li > a {
-	font-size:15px;  
+    font-size:15px;  
     padding: 10px 24px;
     font-family:"微软雅黑","宋体";
     border:0;
-}
   }
+
   
   .navbar-default .navbar-nav > li > a:focus,.navbar-default .navbar-nav > li.active > a {
-   	background-color:#FFF;
-		color:#2980b9;
+    background-color:#FFF;
+    color:#2980b9;
   }
 
   #mainContainer div.excerpt{
@@ -180,16 +192,6 @@ div.excerpt blockquote p {
 
 
 
-@media all and (max-width: 768px) {
-  
-  #header .navbar-brand h3{
-  	margin:0; 
-  	padding:0;
-  	font-size:20px;
-  }
-
-}
-
 
 /*!
  *  Documentation Styles
@@ -197,14 +199,11 @@ div.excerpt blockquote p {
  */
 
 .navbar-static-top {
-  margin-bottom: 19px;
-}
-.navbar{
-  /*min-height:124px;*/
+ /* margin-bottom: 19px;*/
 }
 
-.bsnavbar
-{
+
+.bsnavbar{
   margin-bottom: 19px;
   min-height:124px;
 }
@@ -260,7 +259,7 @@ padding-bottom: 10px; */
 }
 
 /* Show and affix the side nav when space allows it */
-@media (min-width: 992px) {
+@media all and(min-width: 992px) {
   .bs-sidebar .nav > .active > ul {
     display: block;
   }
@@ -283,7 +282,7 @@ padding-bottom: 10px; */
   }
 }
 
-@media (min-width: 1200px) {
+@media all and(min-width: 1200px) {
   /* Widen the fixed sidebar again */
   .bs-sidebar.affix-bottom,
   .bs-sidebar.affix {
