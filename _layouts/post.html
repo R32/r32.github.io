@@ -5,7 +5,7 @@
           {% include header.html %}
          <div id="mainContainer" class="{{container}}">       
           <h3>{{ page.title }} <a href="{{site.doc_url_path | append: page.path}}" target="_blank" class="badge doc-edit" data-toggle="tooltip" title=" 如果你发现错误可以尝试修改 ">改正错误...</a></h3> 
-		  <p class="text-muted"><span>{{ page.date | date: '%Y年%m月%d日' }}  - 最后修改: {% last_modified_at %Y-%m-%d %H:%M%Z %}</span></p>
+		  <p class="text-muted"><span>{{ page.date | date: '%Y年%m月%d日 %H:%M%Z'}}</span></p>
 
 		  <div class="post">{{ content }}</div>
           
