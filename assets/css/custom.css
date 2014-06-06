@@ -151,7 +151,6 @@ body {
     padding:0;
     font-size:20px;
   }
-
 }
 
 
@@ -186,7 +185,7 @@ div.excerpt blockquote p {
       padding: 5px 0;
   }
   
-  #mainContainer div.bs-docs-section{padding-left:25px;}
+  #mainContainer div.bs-docs-section{padding-left:25px}
   
 }
 
@@ -259,7 +258,7 @@ padding-bottom: 10px; */
 }
 
 /* Show and affix the side nav when space allows it */
-@media all and(min-width: 992px) {
+@media all and (min-width: 992px) {
   .bs-sidebar .nav > .active > ul {
     display: block;
   }
@@ -280,9 +279,10 @@ padding-bottom: 10px; */
     margin-top: 0;
     margin-bottom: 0;
   }
+
 }
 
-@media all and(min-width: 1200px) {
+@media all and (min-width: 1200px) {
   /* Widen the fixed sidebar again */
   .bs-sidebar.affix-bottom,
   .bs-sidebar.affix {

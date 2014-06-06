@@ -82,7 +82,37 @@ categories: haxe
 <app preloader="com.myname.Preloader" />
 ```
 
+<br />
 
+#### `override` flash 原生方法
+
+覆盖 `flash` 的 `setter` 时要注意 返回值类型应该为 Void, 而 `Haxe` 的 `setter` 却应返回对应类型.
+
+```haxe
+class LEByteArray extends ByteArray{
+	
+	public function new(len:UInt) {
+		super();
+		super.length = len;
+		super.endian = Endian.LITTLE_ENDIAN;
+	}
+	
+	override public function clear():Void {}
+	
+	@:setter(length) function set_length(len:UInt):Void {
+		if(len > super.length){
+		  super.length = len;
+		}else if(len < super.length ){
+			throw 'You are not allowed to change the length.';	
+		}
+	}
+	
+	@:setter(endian) function set_endian(endian:String):Void {
+		//throw new Error( 'You are not allowed to change the endian.' );
+		throw 'You are not allowed to change the endian.';
+	}
+}
+```
 
 
 <br />

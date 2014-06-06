@@ -8,7 +8,6 @@ extensions: [fenced_code_blocks]
 
 gems:
   - jekyll-sitemap
-#  - jekyll-last-modified-at     #gem search jekyll-last-modified-at --remote
 
 # 更改这个配置文件需要重启一下
 destination: /cygdrive/r/_site
