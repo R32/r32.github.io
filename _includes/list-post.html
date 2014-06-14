@@ -29,9 +29,9 @@
 		{% for post in p_cats_list %}
 		    {% if post.categories[0] ==  p_category %}
 				<div class="bs-docs-section" id="{{ post.url | replace:'\','/' | split:'/' | last | remove_first: '.html' }}">
-					<h3 style="margin-top:30px; margin-bottom:0">{{ post.title }}</h3>
+					<h3 style="margin-top:30px; margin-bottom:0" class="text-primary">{{ post.title }}</h3>
 					<div class="excerpt">{{ post.excerpt }}</div>
-					<p><a class="btn btn-success zh-ht" href="{{post.url}}" >查看更多 &raquo;</a></p>
+					<p><a class="btn btn-default zh-ht" href="{{post.url}}" >查看更多 &raquo;</a></p>
 				</div>
 		    {%endif%}
 		{%  endfor %}

@@ -5,6 +5,16 @@ date:   2014-05-13 12:26:10
 categories: haxe
 ---
 
+#### Haxe 3 Migration
+
+http://old.haxe.org/manual/haxe3/migration
+
+
+http://old.haxe.org/manual/haxe3/features
+
+
+<!-- more -->
+<br />
 
 #### 对于`-dce full` 和  `@:keep`
 
@@ -16,7 +26,18 @@ categories: haxe
 
  > 由于 `-dce full` 的关系,最好不要同时使用 `Class<Dynamic>` 和 `Type.createInstance`.
 
-<!-- more -->
+
+
+
+<br />
+
+#### 区分 编译标记 和 编译定义
+
+ 如果使用 openfl 的 xml 配置文件能更好的理解 编译标记(haxeflag) 和 编译定义(haxedef)
+
+ haxedef 属于 haxeflag 的 `-D <var>`,因此在 openfl 的 xml 配置文件中
+
+ `<haxedef name="foo" />` 等于 <haxeflag name="-D" value="foo" />
 
 
 <br />
@@ -363,11 +384,7 @@ class Helo{
 
 #### `openfl xml` 配置文件
 
-[openfl xml 配置参考](http://www.openfl.org/documentation/projects/project-files/xml-format/)
-
-
-也可以参看 `lime-tools\1,4,0\project\ProjectXMLParser.hx` 这个文件源码各标签到底有哪些属性
-
+[openfl xml 配置参考](http://www.openfl.org/documentation/projects/project-files/xml-format/) ,也可以查看 `lime-tools\1,4,0\project\ProjectXMLParser.hx`
 
  * `swf lib` 跨平台使用 swf 内部的元件
 	

@@ -193,6 +193,12 @@ categories: haxe
 
 	> `ios` 未测
 
+ * 写文件
+
+ 	```haxe
+ 	File.write(SystemPath.applicationStorageDirectory + '/yourpath/filename',true);
+ 	```
+
  * 其它的以后再添加....
 
 

@@ -37,15 +37,15 @@ custom_menu:
   - name: haxe
     url: /haxe/
     label: Haxe
+  - name: haxelib
+    url: /haxelib/
+    label: Haxelib    
   - name: other
     url: /other/
     label: 其它
   - name: person
     url: /person/
     label: 个人
-  - name: forum
-    url: /forum/
-    label: 留言
 # powered by ...
 powered_by:
   - name: Github Pages

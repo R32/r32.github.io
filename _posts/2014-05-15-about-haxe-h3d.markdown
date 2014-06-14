@@ -3,7 +3,7 @@
 layout: post
 title:  简单描述 h3d
 date:   2014-05-13 8:26:10
-categories: haxe
+categories: haxelib
 
 ---
 
