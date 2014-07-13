@@ -53,11 +53,17 @@ trace("flash player version >= 11.4"); // 如果目标为flash,且指定的编�
 
 <br />
 
-### 定义条件编译标记 `-D <var>: define a conditional compilation flag`
+### 定义条件编译标记
 
-条件编译标记 除了用于 宏条件编译,还可以用于传值:
+ `-D <var>: define a conditional compilation flag`
 
-例如 宏函数 只支持常量不支持使用变量传值,这时使用 条件编译标记 来赋值,然后在代码使用 `haxe.macro.Compiler.getDefine(flag)` 来获得
+ * 条件编译标记 除了用于 宏条件编译,还可以用于传值:
+
+	> 例如 宏函数 只支持常量不支持使用变量传值,这时使用 条件编译标记 来赋值,
+
+	> 然后在代码使用 `haxe.macro.Compiler.getDefine(flag)` 来获得
+	
+	> 对于 Compiler.define 的定义,只能通过 Context 类下的方法获得
 
  * 这里假设需定义一个叫 hello 的标记, 并且将 hello 赋值为 world.
 
@@ -212,7 +218,6 @@ trace("flash player version >= 11.4"); // 如果目标为flash,且指定的编�
 	}
 
 	```
-
 
 
 
