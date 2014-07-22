@@ -123,7 +123,15 @@ class LEByteArray extends ByteArray{
 
  * 一些编绎相关选项参看 [编译-flag](http://haxe.org/doc/compiler) 和 [编译-define](http://haxe.org/manual/tips_and_tricks)
 
- * ......
+ * Haxe 语法的 private 只限制 Haxe 语法编译器自身,编译成 flash 后,在swf中所有private成员都是 public 可见的.
+
+	> 编译定义(-D) `swf-protected` : by default the compiler turns all private fields public in SWF output. This flag will keep them protected instead.(Haxe private == AS3 protected) 
+
+ 	> 但添加了这个编译定义,haxe3.1.3 无法通过编译.
+	```
+  	TypeError: Error #1006: start 不是函数。
+  	at boot_19ea()
+ 	```
 
 <br />
 

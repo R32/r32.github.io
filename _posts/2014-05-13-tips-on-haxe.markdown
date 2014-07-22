@@ -5,15 +5,110 @@ date:   2014-05-13 12:26:10
 categories: haxe
 ---
 
-#### Haxe 3 Migration
+#### Intro
 
-http://old.haxe.org/manual/haxe3/migration
+[Haxe3 迁移指南](http://old.haxe.org/manual/haxe3/migration)
 
 
-http://old.haxe.org/manual/haxe3/features
+[Haxe3 新特性](http://old.haxe.org/manual/haxe3/features)
 
+
+[黑魔法](http://old.haxe.org/doc/advanced/magic)
+
+ > 使用这些特殊语法前缀要添加 untyped 否则会报 `Unknown identifier` 错误
+
+ > `untyped` 可以放在整个语句块`{}`前,如函数块之前 参看 `Date.hx` 最后
 
 <!-- more -->
+<br />
+
+
+#### 其它
+
+ * `$type(express)` 是一个类似于`console.warn(typeof(express))`的方法,会在编译时输出警告信息:显示表达式的类型
+
+<br />
+
+
+#### 对于 [`enum`](http://haxe.org/manual/types-enum-instance.html) 的理解
+
+像是一种抽像的数据类型,只是用来描述数据结构.
+
+比如写一个特殊的文件格式解析器时, 可以用 `enum` 标记各字节的抽象意义,使代码更好理解.
+
+参考 `format` 库的和 `data.hx` 以及 下边的 `switch`
+
+对于 EnumValue 类型的数据,从IDE智能提示上能看方法:`getName(),getIndex(),getParameters(),equals()`,来自 `haxe.EnumValueTools`.
+
+对 Type.typeof(EnumValue) 返回的结果为 'TEnum',属于 macro.Type 包.
+
+<br />
+
+#### `typedef` 和 [`abstract`](http://haxe.org/manual/abstracts) 理解
+
+`typedef` 用来定义一种数据结构,包含变量,及方法(**没有方法体**),也没有 `public` `private` 以及 `static` 这些访问控制,
+
+所以 `typedef` 定义的类型不可以 `new`(实例化).
+
+`typedef` 象是一种别名的工具.像定义了一个 接口,但是不需要写 `implements`,可直接赋值包含有 `typedef` 对象.
+
+如上, `typedef` 像是 C语言 中用 `typedef struct` 定义的一个数据块. C 中可以强制转换结构指针,同样 Haxe 也用 cast 来强制转换.
+
+`typedef struct` 在*静态平台*在[性能](http://haxe.org/manual/types-structure-performance.html)上不如其它静态定义(感觉hxcpp应该改进这个问题)，但动态平台却没有影响.
+
+如果你想把一个 直接结构量`{x:0,y:0,width:100}` 赋值给一个变量, typedef struct 是最好的选择了.
+
+```haxe
+typedef Abc = {
+	var name:String;
+	function f():Void;
+}
+// 可选字段
+typedef Window = { 
+	@:optional var width:Int;
+	@:optional var height:Int;
+	@:optional var x:Float;
+	@:optional var y:Float;
+}
+```
+
+
+`abstract` 用来抽象化数据结构, 可以用 new 实例化, 可以有方法体,**不可以有成员变量**
+
+从示例中可以看到,和 `typedef` 的区别是抽象类型是要有原形(小括号Int)的,并且 `abstract` 可以有方法体,和一些类型写类型转换规则
+
+从 new 方法体中发现,即然修改 `this`的值,所以`abstract` 更象是编译器帮你自动化了的一些代码,从 'haxe -js' 可以查看得到.
+
+[个人 abstract demo](https://github.com/R32/my-test/blob/master/test/hx-syntax-test/abstract/Source/Main.hx)
+```haxe
+abstract Bcd(Int){
+	inline public function new(i:Int):Void {
+		this = i;
+	}
+}
+```
+
+
+`abstract` 是编译器智能帮你完成一些重复和烦琐的定义,配合 `inline` 相当于做了宏替换.
+
+'typedef struct' 只是给匿名结构加个标记而已,估计是因为由于要兼容动态平台,所以静态平台上 'typedef struct' == 'dynamic'
+
+
+```haxe
+typedef Window = { 
+	@:optional var width:Int;
+	@:optional var height:Int;
+	@:optional var x:Float;
+	@:optional var y:Float;
+}
+//...
+var w:Window = {x:0,y:0};	
+```
+
+
+
+
+
 <br />
 
 #### 对于`-dce full` 和  `@:keep`
@@ -296,6 +391,8 @@ class Helo{
 
 [Dynamic 参考](http://haxe.org/ref/dynamic). `Dynamic variables` , `Type Casting` , `Untyped` , `Unsafe Cast` 和 `Dynamic Methods`
 
+把一个 [匿名结构](http://haxe.org/manual/types-anonymous-structure.html) 赋值给声明为 Dynamic 的变量,就像 AS3或JS 的 `{}`,如果 变量没有声明为 Dynamic,则变量类型为 匿名结构,
+
  * `Parameterized Dynamic Variables`
 
  	```haxe
@@ -345,20 +442,19 @@ class Helo{
  
  	> 实际上 `{}` 可以看成类型,然后这个类型只要包含 `prev next` 属性 或 `hasCode` 方法就行了
 
+ 	> 分析 `haxe.macro.Type.hx` 的 `Ref`
+ 	```haxe
+ 	typedef Ref<T> = {
+		public function get() : T;
+		public function toString() : String;
+	}
+
+	// 只要一个类型它包含了 get 及 toString ,就可以看成是 Ref
+ 	``` 
+
 
 
 <br />
-
-
-#### `abstract`
-
-[抽像类型](http://haxe.org/manual/abstracts): `Implicit cast` , `Opaque types` , `Operator overloading` 和 `Array access overloading`
-
- * `Opaque types` 需要注意很多地方需要用 `inline` 关键字
-
-
-<br />
-
 
 #### `General metadata` 
 

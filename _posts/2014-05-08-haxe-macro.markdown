@@ -91,11 +91,18 @@ trace("flash player version >= 11.4"); // 如果目标为flash,且指定的编�
 
 ### 宏方法
 
-这个章节的内容,只适用于 haxe 3. 由于之前版本想写个简单的宏方法还是很复杂的,因此 haxe 3 中对宏进行了改进.
+内容只适用于 haxe 3.
 
 **注意:** 通常应该把宏函数和其它函数分开放在不同文件,否则代码中的很多地方要加上**`#if macro`** 这样的条件编译才能通过编译.
 
-**注意:** 给宏函数传参数时,参数只可以是常量,不能是变量.或者 `haxe.macro.Compiler.getDefine(flag)`
+**注意:** 给宏函数传参数时,**参数应该是常量**, 不可以是成员变量.
+
+	> (对于静态或局部变量),在宏函数内部只能获得标识符(`ExprTools.toString()`), 或行号,不可以取得变量的值
+
+	> 因为宏编译时,这些赋值还不存在. 总结: 通过宏函数传递一个变量毫无意义;
+
+	> 如果觉得 常量 不够灵活,可以过过 -D ABC=123 ,然后调用 macro.Context 或 macro.Compiler 的相关方法取值.
+
 
  * 最简单, `macro 常量`
 
@@ -134,20 +141,32 @@ trace("flash player version >= 11.4"); // 如果目标为flash,且指定的编�
 
 	```
 
- * Expr类型变量, `macro $Expr变量`, 加前缀 $ 就行了,但只能出现在 macro 的语句后边
+ * Expr类型变量, `macro $Expr变量`, 加前缀 $ 就行了,只能出现在 macro 的语句后边
+
+ 	> 你应该注意到了,即使宏函数参数声明为 Expr 类型,在调用这个函数时传的值却是 字符串类型.
+
+ 	> 如果参数为 Expr 时,编译器会自动转换这些直接常量为 Expr,然后在宏函数内部 这个变量将会是 Expr 类型.
 
 	```haxe
+	// trace( tut_param('456') );	=> trace('123456');
 	macro public static function tut_param(param:Expr) {
 
 		var str:String = "123"; 
 	        
-		return macro $v{str} + $param; // $param 只能出现在 macro 语句后边,否则报错
+		return macro $v{str} + $param;
 	}
 
 	// 这有个复杂的示例:
 	// trace( repeat(10,5) )	=>		[10,10,10,10,10]
 	macro public static function repeat(e : Expr, eN : Expr) {
 		return macro [for( x in 0...$eN ) $e];
+	}
+
+	// Tips: 在宏函数体中获得 Expr 的值
+	// getValue("hello");	then val = 'hello';
+	macro public static function getValue(ep:Expr){
+		var val = haxe.macro.ExprTools.getValue(ep)); //或者 using haxe.macro.ExprTools;
+		return macro null;
 	}
 	```
 
@@ -216,7 +235,6 @@ trace("flash player version >= 11.4"); // 如果目标为flash,且指定的编�
 			}()';
 		return  haxe.macro.Context.parseInlineString(code,haxe.macro.Context.currentPos());
 	}
-
 	```
 
 
@@ -229,33 +247,76 @@ The syntax for reification is `macro expr`, where `expr` is any valid Haxe expre
 
 宏方法小节使用的就是这类语法, 不详写了,[参考](http://haxe.org/manual/macro-reification-expression.html) 相关小节
 
- * `macro expr`
+ * 所有下列 **$引用** 需要必须在 macro 语句后边
+
+ 	> `${}` 或 `$e{}`: `Expr -> Expr`
+
+ 	> `$a{}` : `Expr -> Array<Expr>`
+
+ 	> `$b{}` : `Array<Expr> -> Expr`
+
+ 	> `$i{}` : `String -> Expr` 注: 这里的 String 指的是标识符即变量名.
 
  	```haxe
-	var ex = macro 'hello';
-	var ret:String;
-	switch(ex.expr){
-		case EConst(CString(s)):
-			ret = s;
-		case EConst(CInt(v)):
-			ret = v;
-		case EConst(CFloat(f)):
-			ret = f;
-		case EConst(CIdent(s)): // 标识符,即变量什么的
-			ret = s;				
-		default:
-			throw "Type error";
+	function main(){
+		var abc = 100;
+		trace( getIdent() ); // 宏替后将为 trace(abc);
 	}
-	trace(ret);
-	```
+ 	macro static function getIdent(){
+ 		return macro $i{"abc"};
+ 	}
+ 	```
+
+ 	> `$p{}` : `Array<String> -> Expr` 同上. String 指的是变量名.
+
+ 	> `$v{}` : `Dynamic -> Expr` 这个应该是使用频率最多的标记.
+ 
+ * haxe 3.1
+
+ 	> 字段名 {$name : 1} 
+
+ 	> 函数名 function $name(){}
+
+ 	> `try/catch` try{e()}catch($name:Dynamic){}
+
+ 	```haxe
+	class Main {
+		macro static function generateClass(funcName:String) {
+			var c = macro class MyClass {
+				public function new() { }
+				public function $funcName() { //函数名
+					trace({ $funcName : "was called" }); //字段名
+				}
+			}
+			haxe.macro.Context.defineType(c); // 动态定义的类需要通过定义,外边才可以引用.
+    		return macro new MyClass();
+    	}
+
+    	public static function main() {
+    		var c = generateClass("myFunc");
+    		c.myFunc();
+    	}
+    }
+ 	```
+<br />
 
 ### 宏构建`@:build`
 
 通过宏的方式动态构建 `class` 或 `enum`.
 
-需要理解 AST,以前了解 haxe.macro 包中的所有类. 
+需要理解 AST,以前了解 haxe.macro 包中的所有类. [新参考](http://haxe.org/manual/macro-type-building.html) [参考](http://old.haxe.org/manual/macros/build) 
 
-[参考](http://old.haxe.org/manual/macros/build)
+build宏函数 与 普通的宏函数不一样的地方:
+
+ * 返回的类型不是 `Expr` ,而是 `Array<Field>`. (`haxe/macro/Expr.hx` 文件中定义了 `Field`)
+
+ * build 宏函数内部的 macro.Context 没有 getLocalMethid 和 getLocalVars. 
+
+ * build 宏函数内部的 macro.Context 有方法 getBuildFields()
+
+ * 不是直接调用,而是将元标记 `@:build` 或 `@:autoBuild` 放在一个 `class` 或 `enum` 定义中.
+
+
 
 
 ### 宏高级特性
@@ -302,6 +363,23 @@ The syntax for reification is `macro expr`, where `expr` is any valid Haxe expre
 	> openfl 示例: `<haxeflag name="--macro keep('PlayState')" />`
 
  * 基准测试 / 优化 (Benchmarking / Optimization)
+
+
+ #### 其它
+
+	* `Context.unify(t1,t2)` 检测二个类型是否能(统一?),难道是类似于 二个数字的公约数的东西?? **未知**
+
+ 	* `Context.follow(t,notRecursion=false)` ,在调用 unify() 之后调用这个方法,提升到 unify ??? **同上**
+
+	```haxe
+	using haxe.macro.TypeTools;
+	//....
+	var t = Context.typeof(macro null); // TMono(<mono>)    
+	var ts = Context.typeof(macro "foo"); //TInst(String,[])
+	Context.unify(t, ts);
+	trace(t); // TMono(<mono>)
+	trace(t.follow()); //TInst(String,[])
+	```
 
 
 
