@@ -330,6 +330,10 @@ padding-bottom: 10px; */
 @media all and (min-width: 1200px) {
   /* Widen the fixed sidebar again */
   .bs-sidebar.affix-bottom,
+  .bs-sidebar.affix {
+    width: 263px;
+    margin-top: 26px;
+  }
 }
 
 
@@ -373,7 +377,7 @@ div.excerpt blockquote,div.excerpt code{
 }
 
 a.artice-list{
-   color: #563D7C;
+  color: #563D7C;
   font-size: 16px;
   font-family: "微软雅黑";
   font-weight: 800;
