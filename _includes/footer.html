@@ -1,9 +1,9 @@
 <div id="footer">
 	<div class="{{container}}">
-		<p class="text-muted">
+		<p class="small" style="color:#777">
 			<span>Using</span>
 				{% for item in site.powered_by%}
-					<a href="http://{{item.url}}" target="_blank" class="label{% cycle ' label-primary',' label-success',' label-default' %}">{{ item.name }}</a>
+					<a href="http://{{item.url}}" target="_blank">{{ item.name }}</a>
 				{% endfor %}
 		</p>
 	</div>

@@ -27,6 +27,7 @@ categories: haxe
 
  * `$type(express)` 是一个类似于`console.warn(typeof(express))`的方法,会在编译时输出警告信息:显示表达式的类型
 
+ * 所有 `EnumValue` 都会以 二个大写字母开头.
 <br />
 
 
