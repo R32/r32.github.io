@@ -1,0 +1,51 @@
+---
+
+layout: post
+title:  git 常用操作
+date:   2014-03-21 9:50:10
+categories: other
+
+---
+
+[Git](https://github.com/git/git) - the stupid content tracker
+
+[window 版本下载](http://git-scm.com/)
+
+<!-- more -->
+
+
+#### 克隆
+
+ * 首先在 github 上 fork 别人的分支
+
+ * 打开 Git Gui,有克隆的选项,输入自已 fork 的 SSH 链接
+
+ > `git clone git@github.com:yss/rrestjs.git rrest`
+
+ > `rrest` 为目录名称
+
+
+#### 更新
+
+ * `远端(remote) -> Add` 输入 fork 的原始分支, bob名字任意
+ 
+ > `git remote add bob https://github.com/DoubleSpout/rrestjs.git`
+
+ * `远端(remote) -> 从获取(fetch)` , 选择相应的名字如bob
+
+ > `git fetch bob`
+
+ * `合并(merge) -> 本地合并`
+
+ > `git merge bob/master`
+
+ * 可能需要手动调整合并冲突
+ 
+ > GUI 这里需要自已单击已经修改了的冲突文件,而不是点击 缓存 按钮
+
+
+#### 上传
+
+ * 本地提交后点 `上传` 就行了
+
+ > `git push origin master`
