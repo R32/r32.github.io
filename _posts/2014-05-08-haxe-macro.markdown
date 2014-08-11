@@ -7,12 +7,11 @@ categories: haxe
 
 ---
 
-#### 前言
+> 宏可以在编译时通过计算初使化一些值,比如 UI 的配置等等.
 
-宏主要用于在编译时通过计算初使化一些值,比如 UI 的配置等等.
+> 宏可以扫描资源文件夹,用于自动嵌入文件或者 IDE 智能提示
 
-最新的[官网参考](http://haxe.org/manual/macro.html)
-
+> 最新的[官网参考](http://haxe.org/manual/macro.html)
 
 <!-- more -->
 
@@ -40,7 +39,7 @@ trace("flash player version >= 11.4"); // 如果目标为flash,且指定的编�
 	trace(" haxe version < 3.10");
 #end
 
-// 支持逻辑运算符：&& 和 || 
+// 支持逻辑运算符：&& 和 || ,需要有小括号
 #if (neko && debug)
 // 只有在当平台为neko并且为debug模式
 #end
@@ -237,7 +236,34 @@ trace("flash player version >= 11.4"); // 如果目标为flash,且指定的编�
 	}
 	```
 
+### 小抄
 
+ * 如何从宏方法返回一个 bytes
+
+	```haxe
+	// 源文件 h3d/hxd/res/Embed.hx
+	// 先字符串序列化 bytes ,然后 反序列化就行了
+ 	public static macro function getResource( file : String ) {
+		var path = Context.resolvePath(file);
+		var m = Context.getLocalClass().get().module;
+		Context.registerModuleDependency(m, path);	// 参考 Haxe 命令行, haxe -wait
+		var str = haxe.Serializer.run(sys.io.File.getBytes(path));
+		return macro hxd.res.Any.fromBytes($v{file},haxe.Unserializer.run($v{str}));
+	}
+	```
+
+ * macro 关键字后可以接任意 haxe 代码. [AST](http://haxe.org/manual/macro.html)	
+
+	```haxe
+	// 轻松获得一个类型. 对于宏构建(@:build) 非常有帮助.
+	var loaderType = macro : hxd.res.Loader;
+	
+	
+	// 轻松获得一个函数体. 对于宏构建(@:build) 非常有帮助.
+	var method = macro {
+		return flash.Lib.current.stage;
+	}
+	```
 
 ### Reification Escaping
 
@@ -300,7 +326,7 @@ The syntax for reification is `macro expr`, where `expr` is any valid Haxe expre
  	```
 <br />
 
-### 宏构建`@:build`
+#### 宏构建`@:build`
 
 通过宏的方式动态构建 `class` 或 `enum`.
 

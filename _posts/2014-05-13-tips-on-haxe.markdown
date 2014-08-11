@@ -19,10 +19,34 @@ categories: haxe
 
 #### 其它
 
+ * $type
+
  > `$type(express)` 是一个类似于`console.warn(typeof(express))`的方法,会在编译时输出警告信息:显示表达式的类型
 
-<br />
+ * 。。。
 
+ > 在 `getter/setter` 的方法前添加 `inline` 关键字,如果这些方法不复杂的话.
+
+ > `std` , 例如:当你写一个 叫 `Math` 的类时,可以通过 `std.Math` 调用标准的 `Math`
+
+ > `typedef SString<Const> = String`. 语法
+
+	```haxe
+	//这行在 sys.db.Type.hx 文件中.于是可以有如下定义
+	var name:SString<10>; // SQL VARCHAR(10)
+	```
+	
+ * flashdevelop -> 项目属性 -> 编译器选项 -> Additional Compiler Options
+
+ > 例如: `--macro openfl.Lib.includeBackend('native')` 如果 native 使双引号将会出错.
+
+ > 而在 hxml 文件中,单双引号无所谓  
+
+ * `openfl`` 的 neko`或`cpp` 其实可以不带显示窗口的.
+
+ > 参考 `lime-tools`. `helpers.IconHelper` 中调用 `SVG`
+
+<br />
 
 #### 对于 [`enum`](http://haxe.org/manual/types-enum-instance.html) 的理解
 
@@ -71,7 +95,9 @@ typedef Window = {
 ```
 
 
-`abstract` 用来抽象化数据结构, 可以用 new 实例化, 可以有方法体,**不可以有成员变量**
+`abstract` 用来抽象化数据结构, 可以用 new 实例化, 可以有方法体,一般情况下不可以有成员变量
+
+ > 改正: 通过添加 `@:enum` 可以使 abstract 类有成员变量.成员变量会被当成常量处理,或者`getter`
 
  > 从示例中可以看到,和 `typedef` 的区别是抽象类型是要有原形(小括号Int)的,并且 `abstract` 可以有方法体,和一些类型写类型转换规则
 

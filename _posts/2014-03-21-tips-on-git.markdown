@@ -35,9 +35,11 @@ categories: other
 
  > `git fetch bob`
 
- * `合并(merge) -> 本地合并`
+ * `合并(merge) -> 本地合并` 
 
  > `git merge bob/master`
+
+ > **注:**`git rebase bob/master` 这个命令比 merge 要好,如果 fork 别的人项目
 
  * 可能需要手动调整合并冲突
  

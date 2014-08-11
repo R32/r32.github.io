@@ -132,7 +132,7 @@ class LEByteArray extends ByteArray{
   	TypeError: Error #1006: start 不是函数。
   	at boot_19ea()
  	```
-
+ * haxe 不对持 `otf` 的字符嵌入
 <br />
 
 
