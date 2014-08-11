@@ -40,15 +40,15 @@ categories: haxe
 
  > C 源码的写法请参照 project/common 下的 cpp 文件
 
- ```bash
- cd project
- haxelib run hxcpp Build.xml	#如windows系统 则在 ndll/windows/ 生成 .ndll 文件	
- haxelib run hxcpp Build.xml -Dandroid	# 在ndll/android/下 生成 .so 文件
- haxelib run hxcpp Build.xml -Dandroid -DHXCPP_ARMV7	# armv7 
-
- # mac 系统
- haxelib run hxcpp Build.xml -Diphoneos -DHXCPP_ARMV7	#需要 Xcode 环境
- ```
+	 ```bash
+	 cd project
+	 haxelib run hxcpp Build.xml	#如windows系统 则在 ndll/windows/ 生成 .ndll 文件	
+	 haxelib run hxcpp Build.xml -Dandroid	# 在ndll/android/下 生成 .so 文件
+	 haxelib run hxcpp Build.xml -Dandroid -DHXCPP_ARMV7	# armv7 
+	
+	 # mac 系统
+	 haxelib run hxcpp Build.xml -Diphoneos -DHXCPP_ARMV7	#需要 Xcode 环境
+	 ```
  
 ##### 一： `.hx` 编译为 `cpp或neko` __不使用 openfl__
 
@@ -56,92 +56,92 @@ categories: haxe
 
  > 即使是命令行程序也是能引用 ndll lime,虽然没有界面. lime-tools 就是这样一个程序
  
- ```haxe
- #if neko
- import neko.Lib;
- #else
- import cpp.Lib;
- #end
- class Test1 {
+	 ```haxe
+	 #if neko
+	 import neko.Lib;
+	 #else
+	 import cpp.Lib;
+	 #end
+	 class Test1 {
+		
+		public static function main(){
+			Sys.println(myext_sample_method(16));
+		}
+		//ext_sample_method() 参考 project/common 目录下的 cpp 文件
+		static var myext_sample_method = Lib.load ("myext", "ext_sample_method", 1);
+	 }
+	 ```
+
+	 ```bash
+	 #编译到 hbin 目录中去
+	 haxe -cpp hbin -main Test1
 	
-	public static function main(){
-		Sys.println(myext_sample_method(16));
-	}
-	//ext_sample_method() 参考 project/common 目录下的 cpp 文件
-	static var myext_sample_method = Lib.load ("myext", "ext_sample_method", 1);
- }
- ```
-
- ```bash
- #编译到 hbin 目录中去
- haxe -cpp hbin -main Test1
-
- #复制 ndll文件到 hbin下 dos
- copy ndll\windows\ext.ndll hbin\
- ```
+	 #复制 ndll文件到 hbin下 dos
+	 copy ndll\windows\ext.ndll hbin\
+	 ```
  
 ##### 二： `.hx` 编译多平台 __使用 openfl__
 
  * 需要将 myext 添加到 haxelib 本地库.否则oepnfl在分析 ndll 路径时将出错.
  
- ```bash
- #小数点为当前目录
- haxelib dev myext .
- ``` 
+	 ```bash
+	 #小数点为当前目录
+	 haxelib dev myext .
+	 ``` 
  
  * 修改 include.xml 将与 android java 的原生扩展相关代码注释掉
 
  > __重要:__ 因为那些是 haxe 与 java 的相互调用. 与这个章节的 cpp 无关
 
- ```xml
- <?xml version="1.0" encoding="utf-8"?>
-  <!-- inclucde.xml -->
-  <project>
-	<ndll name="myext" />
-	<!-- dependency name="myext" path="dependencies/android" if="android" / -->
-	<!-- android extension="org.haxe.extension.Myext" / -->
-  </project>
- ```
+	 ```xml
+	 <?xml version="1.0" encoding="utf-8"?>
+	  <!-- inclucde.xml -->
+	  <project>
+		<ndll name="myext" />
+		<!-- dependency name="myext" path="dependencies/android" if="android" / -->
+		<!-- android extension="org.haxe.extension.Myext" / -->
+	  </project>
+	 ```
 
  * `project.xml` 和 `Main.hx`
  
- ```xml
- <?xml version="1.0" encoding="utf-8"?>
- <!-- project.xml -->
- <project>
-  <meta title="TestApp" package="me.lab.test" version="1.0.0" company="R.U.N" />
-  <app main="Main" path="bin" file="TestApp" />
-  <source path="." />
-  <haxelib name="openfl" />
-  <haxelib name="myext" />
- </project>
- ```
+	 ```xml
+	 <?xml version="1.0" encoding="utf-8"?>
+	 <!-- project.xml -->
+	 <project>
+	  <meta title="TestApp" package="me.lab.test" version="1.0.0" company="R.U.N" />
+	  <app main="Main" path="bin" file="TestApp" />
+	  <source path="." />
+	  <haxelib name="openfl" />
+	  <haxelib name="myext" />
+	 </project>
+	 ```
  
- ```haxe
- // Main.hx
- #if neko
- import neko.Lib;
- #else
- import cpp.Lib;
- #end
- class Main {	
-	public static function main(){	
-		var t = new flash.text.TextField();
-		t.text = Std.string(myext_sample_method(16));
-		flash.Lib.current.addChild(t);
-	}
-	static var myext_sample_method = Lib.load ("myext", "ext_sample_method", 1);
- }
- ```
+	 ```haxe
+	 // Main.hx
+	 #if neko
+	 import neko.Lib;
+	 #else
+	 import cpp.Lib;
+	 #end
+	 class Main {	
+		public static function main(){	
+			var t = new flash.text.TextField();
+			t.text = Std.string(myext_sample_method(16));
+			flash.Lib.current.addChild(t);
+		}
+		static var myext_sample_method = Lib.load ("myext", "ext_sample_method", 1);
+	 }
+	 ```
 
  * 编译
 
- ```bash
-
- lime test project.xml windows
- lime test project.xml neko
- lime test project.xml android
- ```
+	 ```bash
+	
+	 lime test project.xml windows
+	 lime test project.xml neko
+	 lime test project.xml android
+	 ```
 
  * 小技巧
 
@@ -155,7 +155,7 @@ categories: haxe
 
  * 参考 cpp 的前部分.`dependencies/` 目录就是属于 android 原生扩展 
  
- [haxe android JNI]({% post_url 2014-05-10-tips-openfl-android %})
+ * [haxe android JNI]({% post_url 2014-05-10-tips-openfl-android %})
  
 
 <br /> 

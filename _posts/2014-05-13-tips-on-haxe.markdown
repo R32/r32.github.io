@@ -5,9 +5,9 @@ date:   2014-05-13 12:26:10
 categories: haxe
 ---
 
-[Haxe3 迁移指南](http://old.haxe.org/manual/haxe3/migration)  [新特性](http://old.haxe.org/manual/haxe3/features)
+ > [Haxe3 迁移指南](http://old.haxe.org/manual/haxe3/migration)  [新特性](http://old.haxe.org/manual/haxe3/features)
 
-[黑魔法](http://old.haxe.org/doc/advanced/magic)
+ > [黑魔法](http://old.haxe.org/doc/advanced/magic)
 
  > 使用这些特殊语法前缀要添加 untyped 否则会报 `Unknown identifier` 错误
 
@@ -31,6 +31,7 @@ categories: haxe
 
  > `typedef SString<Const> = String`. 语法
 
+	
 	```haxe
 	//这行在 sys.db.Type.hx 文件中.于是可以有如下定义
 	var name:SString<10>; // SQL VARCHAR(10)
@@ -42,7 +43,7 @@ categories: haxe
 
  > 而在 hxml 文件中,单双引号无所谓  
 
- * `openfl`` 的 neko`或`cpp` 其实可以不带显示窗口的.
+ * openfl 的 neko 或 cpp 其实可以不带显示窗口的.
 
  > 参考 `lime-tools`. `helpers.IconHelper` 中调用 `SVG`
 
@@ -149,17 +150,6 @@ var w:Window = {x:0,y:0};
 
 <br />
 
-#### 区分 编译标记 和 编译定义
-
- 如果使用 openfl 的 xml 配置文件能更好的理解 编译标记(haxeflag) 和 编译定义(haxedef)
-
- haxedef 属于 haxeflag 的 `-D <var>`,因此在 openfl 的 xml 配置文件中
-
- `<haxedef name="foo" />` 等于 <haxeflag name="-D" value="foo" />
-
-
-<br />
-
 #### 遇见的一些错误
 
  * `Reflect.hasField`
@@ -183,8 +173,23 @@ var w:Window = {x:0,y:0};
  	<haxeflag name="--macro keep(null,['PlayState','flixel.system.FlxAssets','flixel.system.ui','flixel.ui'])" />
  	```
 
+ * hscript 使用类似于 for(i in 0...3) 循环时
+
+	```bash
+	--macro keep('IntIterator')
+	```
 <br />
 
+#### 区分 编译标记 和 编译定义
+
+ 如果使用 openfl 的 xml 配置文件能更好的理解 编译标记(haxeflag) 和 编译定义(haxedef)
+
+ haxedef 属于 haxeflag 的 `-D <var>`,因此在 openfl 的 xml 配置文件中
+
+ `<haxedef name="foo" />` 等于 <haxeflag name="-D" value="foo" />
+
+
+<br />
 
 #### 单引号
 
