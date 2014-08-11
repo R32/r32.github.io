@@ -71,6 +71,7 @@ categories: haxe
 	static var myext_sample_method = Lib.load ("myext", "ext_sample_method", 1);
  }
  ```
+
  ```bash
  #编译到 hbin 目录中去
  haxe -cpp hbin -main Test1
@@ -82,8 +83,9 @@ categories: haxe
 ##### 二： `.hx` 编译多平台 __使用 openfl__
 
  * 需要将 myext 添加到 haxelib 本地库.否则oepnfl在分析 ndll 路径时将出错.
+ 
  ```bash
- # 小数点为当前目录
+ #小数点为当前目录
  haxelib dev myext .
  ``` 
  
