@@ -54,31 +54,30 @@ categories: haxe
 
  > 例如你想写一个 命令行程序, 
 
- > 即使是命令行程序也是能引用 ndll lime,虽然没有界面. lime-tools 就是这样一个程序
+ > 即使是命令行程序也是能引用 ndll lime,虽然没有界面. lime-tools 就是这样一个程序.
  
-	 ```haxe
-	 #if neko
-	 import neko.Lib;
-	 #else
-	 import cpp.Lib;
-	 #end
-	 class Test1 {
-		
-		public static function main(){
-			Sys.println(myext_sample_method(16));
-		}
-		//ext_sample_method() 参考 project/common 目录下的 cpp 文件
-		static var myext_sample_method = Lib.load ("myext", "ext_sample_method", 1);
-	 }
-	 ```
+```haxe
+#if neko
+import neko.Lib;
+#else
+import cpp.Lib;
+#end
+class Test1 {
+	public static function main(){
+		Sys.println(myext_sample_method(16));
+	}
+	//ext_sample_method() 参考 project/common 目录下的 cpp 文件
+	static var myext_sample_method = Lib.load ("myext", "ext_sample_method", 1);
+}
+```
 
-	 ```bash
-	 #编译到 hbin 目录中去
-	 haxe -cpp hbin -main Test1
+```bash
+#编译到 hbin 目录中去
+haxe -cpp hbin -main Test1
 	
-	 #复制 ndll文件到 hbin下 dos
-	 copy ndll\windows\ext.ndll hbin\
-	 ```
+#复制 ndll文件到 hbin下 dos
+copy ndll\windows\ext.ndll hbin\
+```
  
 ##### 二： `.hx` 编译多平台 __使用 openfl__
 
@@ -91,17 +90,17 @@ categories: haxe
  
  * 修改 include.xml 将与 android java 的原生扩展相关代码注释掉
 
- > __重要:__ 因为那些是 haxe 与 java 的相互调用. 与这个章节的 cpp 无关
+	> __重要:__ 因为那些是 haxe 与 java 的相互调用. 与这个章节的 cpp 无关
 
-	 ```xml
-	 <?xml version="1.0" encoding="utf-8"?>
-	  <!-- inclucde.xml -->
-	  <project>
+	```xml
+	<?xml version="1.0" encoding="utf-8"?>
+	 <!-- inclucde.xml -->
+	 <project>
 		<ndll name="myext" />
 		<!-- dependency name="myext" path="dependencies/android" if="android" / -->
 		<!-- android extension="org.haxe.extension.Myext" / -->
-	  </project>
-	 ```
+	 </project>
+	```
 
  * `project.xml` 和 `Main.hx`
  
