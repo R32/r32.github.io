@@ -66,8 +66,7 @@ class Test1 {
 	public static function main(){
 		Sys.println(myext_sample_method(16));
 	}
-	//ext_sample_method() 参考 project/common 目录下的 cpp 文件
-	static var myext_sample_method = Lib.load ("myext", "ext_sample_method", 1);
+	static var myext_sample_method = Lib.load ("myext", "myext_sample_method", 1);
 }
 ```
 
@@ -129,7 +128,7 @@ copy ndll\windows\ext.ndll hbin\
 			t.text = Std.string(myext_sample_method(16));
 			flash.Lib.current.addChild(t);
 		}
-		static var myext_sample_method = Lib.load ("myext", "ext_sample_method", 1);
+		static var myext_sample_method = Lib.load ("myext", "myext_sample_method", 1);
 	 }
 	 ```
 
