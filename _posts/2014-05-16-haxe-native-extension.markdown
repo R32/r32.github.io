@@ -21,7 +21,7 @@ categories: haxe
 
  * 运行 `lime create extension myext` 快速创建样板文件. lime 属于 openfl 库
 
- > 这时当前目录将得到一个名为 myext 的示例目录.
+	> 这时当前目录将得到一个名为 myext 的示例目录.
 
 	```bash
 	cd myext	# 进入到示例目录
@@ -36,9 +36,9 @@ categories: haxe
 
  * 编译 C 源码
 
- > 查看头文件 `hx/CFFI.h`
+	> 查看头文件 `hx/CFFI.h`
 
- > C 源码的写法请参照 project/common 下的 cpp 文件
+	> C 源码的写法请参照 project/common 下的 cpp 文件
 
 	 ```bash
 	 cd project
@@ -145,9 +145,9 @@ categories: haxe
 
  * 小技巧
 
- > C++ 代码可以先在 neko 平台中快速测试,调整. 最后再以 cpp 的形式 release.
+	> C++ 代码可以先在 neko 平台中快速测试,调整. 最后再以 cpp 的形式 release.
 
- > android apk 很多情况下也能先以 neko 测试.如果不涉及 java 源生扩展
+	> android apk 很多情况下也能先以 neko 测试.如果不涉及 java 源生扩展
 
 
 <br />
