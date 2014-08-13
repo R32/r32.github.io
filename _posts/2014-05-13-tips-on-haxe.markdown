@@ -5,31 +5,32 @@ date:   2014-05-13 12:26:10
 categories: haxe
 ---
 
- > [Haxe3 迁移指南](http://old.haxe.org/manual/haxe3/migration)  [新特性](http://old.haxe.org/manual/haxe3/features)
+ * [Haxe3 迁移指南](http://old.haxe.org/manual/haxe3/migration) 以及 [新特性](http://old.haxe.org/manual/haxe3/features)
 
- > [黑魔法](http://old.haxe.org/doc/advanced/magic)
+ * [黑魔法](http://old.haxe.org/doc/advanced/magic)
 
- > 使用这些特殊语法前缀要添加 untyped 否则会报 `Unknown identifier` 错误
+  - 使用这些特殊语法前缀要添加 untyped 否则会报 `Unknown identifier` 错误
 
- > `untyped` 可以放在整个语句块`{}`前,如函数块之前 参看 `Date.hx` 最后
-
+  - `untyped` 可以放在整个语句块`{}`前,如函数块之前 参看 `Date.hx`
+		
 <!-- more -->
-<br />
-
-
-#### 其它
+#### Tips
 
  * $type
 
- > `$type(express)` 是一个类似于`console.warn(typeof(express))`的方法,会在编译时输出警告信息:显示表达式的类型
+ 	> `$type(express)` 是一个类似于`console.warn(typeof(express))`的方法,会在编译时输出警告信息:显示表达式的类型
 
- * 。。。
+ * haxe.Serializer
 
- > 在 `getter/setter` 的方法前添加 `inline` 关键字,如果这些方法不复杂的话.
+	> Serializer.run() 除了普通数据或二进制类型,还可以序列化**类实例**,但只能是纯Haxe的类,如果涉及到 native 平台方法,将失败.
+ 
+ * 其它
 
- > `std` , 例如:当你写一个 叫 `Math` 的类时,可以通过 `std.Math` 调用标准的 `Math`
+ 	> 在 `getter/setter` 的方法前添加 `inline` 关键字,如果这些方法不复杂的话.
 
- > `typedef SString<Const> = String`. 语法
+ 	> `std` , 例如:当你写一个 叫 `Math` 的类时,可以通过 `std.Math` 调用标准的 `Math`
+
+ 	> `typedef SString<Const> = String`. 语法
 
 	
 	```haxe
@@ -39,114 +40,28 @@ categories: haxe
 	
  * flashdevelop -> 项目属性 -> 编译器选项 -> Additional Compiler Options
 
- > 例如: `--macro openfl.Lib.includeBackend('native')` 如果 native 使双引号将会出错.
+ 	> 例如: `--macro openfl.Lib.includeBackend('native')` 如果 native 使双引号将会出错.
 
- > 而在 hxml 文件中,单双引号无所谓  
+ 	> 而在 hxml 文件中,单双引号无所谓
+	
+	> 如果使用了 openfl 在 flashdevelop 上修改项目属性将不会有任何改变.
 
  * openfl 的 neko 或 cpp 其实可以不带显示窗口的.
 
- > 参考 `lime-tools`. `helpers.IconHelper` 中调用 `SVG`
-
-<br />
-
-#### 对于 [`enum`](http://haxe.org/manual/types-enum-instance.html) 的理解
-
- 像是一种抽像的数据类型,只是用来描述数据结构.
-
- > 比如写一个特殊的文件格式解析器时, 可以用 `enum` 标记各字节的抽象意义,使代码更好理解.
-
- > 参考 `format` 库的和 `data.hx` 以及 下边的 `switch`
-
- 对于 `EnumValue` 类型的数据
- 
- > 所有 `EnumValue` 都会以 二个大写字母开头.这并不是强制性的
- 
- > `EnumValue` 包含有 :`getName(),getIndex(),getParameters(),equals()`,来自 `haxe.EnumValueTools`.
-
- > 对 Type.typeof(EnumValue) 返回的结果为 'TEnum',属于 macro.Type 包.
-
-<br />
-
-#### `typedef` 和 [`abstract`](http://haxe.org/manual/abstracts) 理解
-
- > `typedef` 用来定义一种数据结构,包含变量,及方法(**没有方法体**),也没有 `public` `private` 以及 `static` 这些访问控制,
-
- > 所以 `typedef` 定义的类型不可以 `new`(实例化).
-
- > `typedef` 象是一种别名的工具.像定义了一个 接口,但是不需要写 `implements`,可直接赋值包含有 `typedef` 对象.
-
- 如上, `typedef` 像是 C语言 中用 `typedef struct` 定义的一个数据块. C 中可以强制转换结构指针,同样 Haxe 也用 cast 来强制转换.
-
- > `typedef struct` 在*静态平台*在[性能](http://haxe.org/manual/types-structure-performance.html)上不如其它静态定义(感觉hxcpp应该改进这个问题)，但动态平台却没有影响.
-
- > 如果你想把一个 直接结构量`{x:0,y:0,width:100}` 赋值给一个变量, typedef struct 是最好的选择了.
-
-```haxe
-typedef Abc = {
-	var name:String;
-	function f():Void;
-}
-// 可选字段
-typedef Window = { 
-	@:optional var width:Int;
-	@:optional var height:Int;
-	@:optional var x:Float;
-	@:optional var y:Float;
-}
-```
+ 	> 参考 `lime-tools`. `helpers.IconHelper` 中调用 `SVG`
 
 
-`abstract` 用来抽象化数据结构, 可以用 new 实例化, 可以有方法体,一般情况下不可以有成员变量
+ * -dce full 
 
- > 改正: 通过添加 `@:enum` 可以使 abstract 类有成员变量.成员变量会被当成常量处理,或者`getter`
+ 	> 这个编译选项会在打包时清除未引用代码. 
+	
+	> 默认为 -dce std. 有些时候如:编译成 SWC 时将会是 -dce no
+	
+	> 有时候需要用 `@:keep` 或 `--macro keep` 来防止被 -dce 删除.
 
- > 从示例中可以看到,和 `typedef` 的区别是抽象类型是要有原形(小括号Int)的,并且 `abstract` 可以有方法体,和一些类型写类型转换规则
+	> 当使下边的些语法时,相关地方需要添加 `@:keep` ,这个标记只能用于 类 或 静态字段.
 
- > 从 new 方法体中发现,即然修改 `this`的值,所以`abstract` 更象是编译器帮你自动化了的一些代码,从 'haxe -js' 可以查看得到.
-
-[个人 abstract demo](https://github.com/R32/my-test/blob/master/test/hx-syntax-test/abstract/Source/Main.hx)
-```haxe
-abstract Bcd(Int){
-	inline public function new(i:Int):Void {
-		this = i;
-	}
-}
-```
-
-  > `abstract` 是编译器智能帮你完成一些重复和烦琐的定义,配合 `inline` 相当于做了宏替换.
-
-  > 'typedef struct' 只是给匿名结构加个标记而已,估计是因为由于要兼容动态平台,所以静态平台上 'typedef struct' == 'dynamic'
-
-
-```haxe
-typedef Window = { 
-	@:optional var width:Int;
-	@:optional var height:Int;
-	@:optional var x:Float;
-	@:optional var y:Float;
-}
-//...
-var w:Window = {x:0,y:0};	
-```
-
-
-
-
-
-<br />
-
-#### 对于`-dce full` 和  `@:keep`
-
-为了避免编译时 `-dce full` 产生的错误,需要用 `@:keep` 或 `--macro keep` 来防止被编绎器删除.
-
-当使下边的些语法时,相关地方需要添加 `@:keep`, 
-
- > 使用 `Class<Dynamic>` 或 `Class<SomeName>` 作为参数.例如: `Type.createInstance(_customSoundTray, [])` 这样的语法;
-
- > 由于 `-dce full` 的关系,最好不要同时使用 `Class<Dynamic>` 和 `Type.createInstance`.
-
-
-
+ 	> 使用 `Class<Dynamic>` 或 `Class<SomeName>` 作为参数.例如: `Type.createInstance(_customSoundTray, [])` 这样的语法; 最好不要使用这样语法.
 
 <br />
 
@@ -173,11 +88,34 @@ var w:Window = {x:0,y:0};
  	<haxeflag name="--macro keep(null,['PlayState','flixel.system.FlxAssets','flixel.system.ui','flixel.ui'])" />
  	```
 
- * hscript 使用类似于 for(i in 0...3) 循环时
+ * hscript 使用类似于 for(i in 0...10) 循环时
 
 	```bash
 	--macro keep('IntIterator')
 	```
+<br />
+
+#### 函数绑定
+
+Haxe 3 的每个函数都有 `bind` 字段
+
+ > 下划线 _ 这里看起来像是填充值.
+	
+```haxe	
+class Bind {
+	static public function main() {
+		var map = new Map<Int,String>();
+		var f = map.set.bind(_, "12");
+		$type(map.set); // Int -> String -> Void
+		$type(f); // Int -> Void    
+		f(1);
+		f(2);
+		f(3);
+		trace(map); // {1 => 12, 2 => 12, 3 => 12}
+	}
+}
+```
+
 <br />
 
 #### 区分 编译标记 和 编译定义
@@ -186,17 +124,16 @@ var w:Window = {x:0,y:0};
 
  haxedef 属于 haxeflag 的 `-D <var>`,因此在 openfl 的 xml 配置文件中
 
- `<haxedef name="foo" />` 等于 <haxeflag name="-D" value="foo" />
+ `<haxedef name="foo" />` 等于 `<haxeflag name="-D" value="foo" />`
 
 
 <br />
 
 #### 单引号
 
-Haxe 中可以用**单**或**双**引号来包话字符.使用**单**引号时可以定义多行字符串,还可以用 `${}` 嵌入一些变量或表达式
+Haxe 中可以用 **单** 或 **双** 引号来包话字符.使用 **单** 引号时可以定义多行字符串,还可以用 `${}` 嵌入一些变量或表达式
 
 ```haxe
-
 // 想要输出 $ 需要用 2 个 $$ 符号
 var a = 2;
 var b = 9;
@@ -205,7 +142,6 @@ var muline = '
   line 2 > ${a} x ${b} = ${ a * b }
   line 3 > ......
 ';
-
 ```
 
 <br />
@@ -219,10 +155,42 @@ var i:Null<Int> = null;
 // 其它**基础类型**需要检测是否为 `null`,声明和上边类似
 ```
 
+<br />
 
 
+#### `Dynamic`
 
+[Dynamic 参考](http://haxe.org/ref/dynamic). `Dynamic variables` , `Type Casting` , `Untyped` , `Unsafe Cast` 和 `Dynamic Methods`
 
+把一个 [匿名结构](http://haxe.org/manual/types-anonymous-structure.html) 赋值给声明为 Dynamic 的变量,就像 AS3或JS 的 `{}`,如果 变量没有声明为 Dynamic,则变量类型为 匿名结构,
+
+ * Parameterized Dynamic Variables
+
+ 	```haxe
+ 	// 通常解析一个结构不明确的 xml 文件时会用到.
+ 	// xml 的数据全是 String 类型.
+ 	var att : Dynamic<String> = xml.attributes;
+    att.name = "Nicolas";
+    att.age = "26";
+    //...
+ 	```
+ * Implementing Dynamic
+
+ 	```haxe
+ 	class C implements Dynamic<Int> {
+    	public var name : String;
+    	public var address : String;
+	}
+	var c = new C();
+	var n : String = c.name; // ok
+	var a : String = c.address; // ok
+	var i : Int = c.phone; // ok : use Dynamic
+	var c : String = c.country; // ERROR
+	// c.country is an Int because of Dynamic<Int>
+
+	// 参考 haxe.xml.Fast.hx 文件
+	// 可以实现接口的 resolve 方法,当访问属性时会自动转接到 resolve 上.
+ 	```
 
 <br />
 
@@ -232,61 +200,58 @@ var i:Null<Int> = null;
 Haxe has built-in support for [**regular expressions**](http://haxe.org/manual/std-regex.html).
 
 
-
 <br />
 
 
-#### 函数绑定
+#### `openfl xml` 配置文件
 
-Haxe 3 的每个函数都有 `bind` 字段
+[openfl xml 配置参考](http://www.openfl.org/documentation/projects/project-files/xml-format/) ,也可以查看 `lime-tools\1,4,0\project\ProjectXMLParser.hx`
 
- > 下划线 _ 这里看起来像是填充值.
+ * `swf lib` 跨平台使用 swf 内部的元件
 	
-```haxe
-	
-class Bind {
-	static public function main() {
-		var map = new Map<Int,String>();
-		var f = map.set.bind(_, "12");
-		$type(map.set); // Int -> String -> Void
-		$type(f); // Int -> Void    
-		f(1);
-		f(2);
-		f(3);
-		trace(map); // {1 => 12, 2 => 12, 3 => 12}
-	}
-}
+	The SWF release on haxelib is compatible with the older openfl-html5-dom backend
 
-```
-
+	you can use `<set name="html5-backend" value="openfl-html5-dom />` before using `<haxelib name="openfl" />`
 
 <br />
-
 
 #### 静态扩展 `Static Extension`
 
- > 通过自定义的静态方法,第一个参数类型,然后上下文中使用 `using`
+  通过自定义的静态方法,第一个参数类型,然后上下文中使用 `using`
 
- > 影响代码可读性：不是f1(f2(f3(f4(x))))这样的的嵌套调用，而使用链式的调用x.f4().f3().f2().f1()的形式。
+  影响代码可读性：`x.f4().f3().f2().f1()` 比 `f1(f2(f3(f4(x))))` 更直观
+
+  不用担心性能问题, haxe 编译器会很好地处理这个.
 
 ```haxe
-
 using Main.IntExtender;
-
 class IntExtender {
 	static public function triple(i:Int) {
 		return i * 3;
 	}
 }
-
 class Main {
 	static public function main() {
 		trace(12.triple());
 	}
 }
-
 ```
 
+<br />
+
+#### 对于 [`enum`](http://haxe.org/manual/types-enum-instance.html) 的理解
+
+ 像是一种抽像的数据类型,只是用来描述数据结构.
+
+ > 比如写一个特殊的文件格式解析器时, 可以用 `enum` 标记各字节的抽象意义,使代码更好理解.
+
+ > 参考 `format` 库的和 `data.hx` 以及 下边的 `switch`
+
+ 对于 `EnumValue` 类型的数据
+ 
+ > 所有 `EnumValue` 都会以 二个大写字母开头.这并不是强制性的
+ 
+ > `EnumValue` 包含有 :`getName(),getIndex(),getParameters(),equals()`,来自 `haxe.EnumValueTools`.
 
 <br />
 
@@ -400,63 +365,21 @@ trace(s); // 2
 但是 如果使用 `as3hx` 转换 `AS3` 的源码时,就会经常碰到这样的代码.
 
 ```haxe
-class Helo{
-	
+class Helo{	
 	// Class<Dynamic> 为最通常的作法
 	var t:Class<Dynamic>; //需要指定 Class 类型,比如 Class<Helo>
-
 	public function new(){
 		t = Helo;
 	}
 }
-
 ```
-
-<br />
-
-
-#### `Dynamic`
-
-[Dynamic 参考](http://haxe.org/ref/dynamic). `Dynamic variables` , `Type Casting` , `Untyped` , `Unsafe Cast` 和 `Dynamic Methods`
-
-把一个 [匿名结构](http://haxe.org/manual/types-anonymous-structure.html) 赋值给声明为 Dynamic 的变量,就像 AS3或JS 的 `{}`,如果 变量没有声明为 Dynamic,则变量类型为 匿名结构,
-
- * `Parameterized Dynamic Variables`
-
- 	```haxe
- 	// 通常解析一个结构不明确的 xml 文件时会用到.
- 	// xml 的数据全是 String 类型.
- 	var att : Dynamic<String> = xml.attributes;
-    att.name = "Nicolas";
-    att.age = "26";
-    //...
- 	```
- * `Implementing Dynamic`
-
- 	```haxe
- 	class C implements Dynamic<Int> {
-    	public var name : String;
-    	public var address : String;
-	}
-	var c = new C();
-	var n : String = c.name; // ok
-	var a : String = c.address; // ok
-	var i : Int = c.phone; // ok : use Dynamic
-	var c : String = c.country; // ERROR
-	// c.country is an Int because of Dynamic<Int>
-
-	// 参考 haxe.xml.Fast.hx 文件
-	// 可以实现接口的 resolve 方法,当访问属性时会自动转接到 resolve 上.
- 	```
-
-
 
 <br />
 
 
 #### `Type<T>`
 
- * [类型参数(Type Parameters)](http://haxe.org/ref/type_params) 应该叫 **泛型** 才合适
+ * [泛型 (Type Parameters)](http://haxe.org/ref/type_params)  
 
  * [高级类型(Type Advanced)](http://haxe.org/ref/type_advanced) 
  
@@ -471,6 +394,7 @@ class Helo{
  	> 实际上 `{}` 可以看成类型,然后这个类型只要包含 `prev next` 属性 或 `hasCode` 方法就行了
 
  	> 分析 `haxe.macro.Type.hx` 的 `Ref`
+	
  	```haxe
  	typedef Ref<T> = {
 		public function get() : T;
@@ -480,9 +404,8 @@ class Helo{
 	// 只要一个类型它包含了 get 及 toString ,就可以看成是 Ref
  	``` 
 
-
-
 <br />
+
 
 #### `General metadata` 
 
@@ -506,19 +429,65 @@ class Helo{
 
 <br />
 
+#### `typedef` 和 [`abstract`](http://haxe.org/manual/abstracts) 理解
+
+ > `typedef` 用来定义一种数据结构,包含变量,及方法(**没有方法体**),也没有 `public` `private` 以及 `static` 这些访问控制,
+
+ > 所以 `typedef` 定义的类型不可以 `new`(实例化).
+
+ > `typedef` 象是一种别名的工具.像定义了一个 接口,但是不需要写 `implements`,可直接赋值包含有 `typedef` 对象.
+
+ 如上, `typedef` 像是 C语言 中用 `typedef struct` 定义的一个数据块. C 中可以强制转换结构指针,同样 Haxe 也用 cast 来强制转换.
+
+ > `typedef struct` 在*静态平台*在[性能](http://haxe.org/manual/types-structure-performance.html)上不如其它静态定义(感觉hxcpp应该改进这个问题)，但动态平台却没有影响.
+
+ > 如果你想把一个 直接结构量`{x:0,y:0,width:100}` 赋值给一个变量, typedef struct 是最好的选择了.
+
+```haxe
+typedef Abc = {
+	var name:String;
+	function f():Void;
+}
+// 可选字段
+typedef Window = { 
+	@:optional var width:Int;
+	@:optional var height:Int;
+	@:optional var x:Float;
+	@:optional var y:Float;
+}
+```
 
 
-#### `openfl xml` 配置文件
+`abstract` 用来抽象化数据结构, 可以用 new 实例化, 可以有方法体,一般情况下不可以有成员变量
 
-[openfl xml 配置参考](http://www.openfl.org/documentation/projects/project-files/xml-format/) ,也可以查看 `lime-tools\1,4,0\project\ProjectXMLParser.hx`
+ > 改正: 通过添加 `@:enum` 可以使 abstract 类有成员变量.成员变量会被当成常量处理,或者`getter`
 
- * `swf lib` 跨平台使用 swf 内部的元件
-	
-	The SWF release on haxelib is compatible with the older openfl-html5-dom backend
+ > 从示例中可以看到,和 `typedef` 的区别是抽象类型是要有原形(小括号Int)的,并且 `abstract` 可以有方法体,和一些类型写类型转换规则
 
-	you can use `<set name="html5-backend" value="openfl-html5-dom />` before using `<haxelib name="openfl" />`
+ > 从 new 方法体中发现,即然修改 `this`的值,所以`abstract` 更象是编译器帮你自动化了的一些代码,从 'haxe -js' 可以查看得到.
 
+[个人 abstract demo](https://github.com/R32/my-test/blob/master/test/hx-syntax-test/abstract/Source/Main.hx)
+```haxe
+abstract Bcd(Int){
+	inline public function new(i:Int):Void {
+		this = i;
+	}
+}
+```
+
+  > `abstract` 是编译器智能帮你完成一些重复和烦琐的定义,配合 `inline` 相当于做了宏替换.
+
+  > 'typedef struct' 只是给匿名结构加个标记而已,估计是因为由于要兼容动态平台,所以静态平台上 'typedef struct' == 'dynamic'
+
+
+```haxe
+typedef Window = { 
+	@:optional var width:Int;
+	@:optional var height:Int;
+	@:optional var x:Float;
+	@:optional var y:Float;
+}
+//...
+var w:Window = {x:0,y:0};	
+```
 <br />
-
-
-

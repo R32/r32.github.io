@@ -7,33 +7,78 @@ categories: haxelib
 
 ---
 
-[**`h3d`**](https://github.com/ncannasse/h3d) 是一个 `flash 3D` 引擎,基于 `flash.stage3D`, 目前只适用于 `flash` 平台.
+ > [**`h3d`**](https://github.com/ncannasse/h3d) 是一个 flash 3D 引擎,基于 flash.stage3D, 目前只适用于 flash 平台.
 
-另一个fork版本 [motion-twin/h3d](https://github.com/motion-twin/h3d) 似乎可以通过 openfl 跨平台.
-
- 这个库有很多好的工具类.一些细节以后有时间我会在 `h3d` 的 `API` 中注释.
+ > 另一个fork版本 [motion-twin/h3d](https://github.com/motion-twin/h3d) 似乎可以通过 openfl 跨平台.
 
 
 <!-- more -->
 
+### h3d
+ 
+ * 空
 
-<br />
+### h2d
 
+ h2d 似乎在设计上就是作为 UI, 因此一些动画,碰撞检测的方法都比较底层,
 
+ 可以使用 XML(组件布局) 和 CSS(样式) 配置 UI.
 
-#### `h2d,h2d`
+ h2d 游戏源码示例:
 
- 这是主要的库文件，将在 API 中注释这些内容
+ * [ld-25 You are the Villain](https://github.com/ncannasse/ld25)
 
-#### `hxd`
+ * [ld-27 10 seconds](https://github.com/ncannasse/ld27)
 
- * `Res` 资源管理
+ * [ld-28 You only got one](https://github.com/ncannasse/ld28)
 
- > 可以自动扫描 `-D resourcesPath=dir` 定义的资源文件夹,然后宏构建,使IDE智能提示相应文件名.
+##### 源码简析
 
- > `initLocal()`只适用于 AIR, `initEmbed()`则会以嵌入的方式处理资源. 二个方法二选一,用来初使化 `Res.loader`
+ * comp
 
- > 注意:Res类 initEmbed之后默认自动嵌入的字体只包含 Charset.DEFAULT_CHARS
+  - **Context**
+
+		```haxe
+		// 在初使化 h3d 之前可以修改组件默认的 css 
+		public static var DEFAULT_CSS = hxd.res.Embed.getFileContent("h2d/css/default.css");
+		// 优先返回缓存 字体
+		public static function getFont( name : String, size : Int ):hxd.Font{}
+		// 优先返回缓存 Tile
+		public static function makeTileIcon( pixels : hxd.Pixels ) : h2d.Tile {} 
+		```
+  - **Parser** HTML 解析器. 
+
+		> 这个类使用了 **`hscript`** 来动态解析 html 标签上的 脚本.
+		
+		> 示例: `sample/comps/components.html`, `tools/perlin/PerlinView.hx`, `h3d/parts/Editor.hx`
+		
+  - **JQuery** 可以在 HTML 标签上写脚本
+
+ * css
+
+  - **Parser** css 解析器.
+		
+		> 和普通的 css 不一样的是 `:hover` 其实也是解析成 className. 例如:当光标悬浮于组件上时, 会自动执行  addClass(":hover")
+		
+		> 示例参见 default.css
+  
+  - **Style** 包含解析后的 CSS 属性对象
+
+  - **Defs** 一些 CSS 值数据定义,用于需要给 style 的一些属性赋值时.
+
+  - **Engine** 将 样式(Style) 应用到 组件(Component) 上去.
+
+  - **default.css** 组件默认的样式配置. 在初使化之前可以通过 comp.Context.DEFAULT_CSS 修改默认组件样式
+
+### hxd
+ 
+ * **Res** 资源管理
+
+	> 定义`-D resourcesPath=dir` 之后,Res.hx 相关宏构建将描描资源文件夹,让 IDE 有智能提示
+
+	> 上行操作并不会嵌入文件,需要主动调用 Res.initEmbed() 将文件嵌入到 flash.
+
+	> 注意:Res类 initEmbed之后默认自动嵌入的字体只包含 Charset.DEFAULT_CHARS
 
 	```haxe
 	// hxd/res/FileTree.hx::handleFile() 可以看到资源被解析成的类型.
@@ -58,35 +103,77 @@ categories: haxelib
 
 	```
 
- * `App` 主应用
+ * **App** 主应用
 
- > 继承这个类,从而快速调用 h3d
+	> 继承这个类,从而快速调用 h3d
 
- * res/Image 图片资源解析,只支持 jpg 和 png.
+ * res 文件夹
 
- > 将图片转出为 hxd/res 下的各种格式。
+  - 这个目录大多数都属于 Resource 的了类.
 
- * Embed
+  - **Image** 图片资源解析,只支持 jpg 和 png.
 
- > 例如: 宏方法 `Embed.embedFont("nokiafc22.ttf");` 将资源文件夹或系统字体文件夹下的字体嵌入到 SWF. 
+ 	 > 将图片转出为 hxd/res 下的各种格式。
 
- > 不支持 otf 类型.嵌入后通过调用 FontBuilder.getFont() 运行时方法,将指字的字符一个一个地画到Tile上. 字体嵌入不是必须的.
+  - **Embed**
 
- > 宏方法 getFileContent(path2name) 一个从文件中加载字符
+		> 例如: 宏方法 `Embed.embedFont("nokiafc22.ttf");` 将资源文件夹或系统字体文件夹下的字体嵌入到 SWF. 
 
- > 宏方法 getResource(path2name) 返回一个 hxd.res.Any 对象.这个方法还展现了如何将一个 Bytes 的变量传递给回宏返回.
+		> 不支持 otf 类型.嵌入后通过调用 FontBuilder.getFont() 运行时方法,将指字的字符一个一个地画到Tile上. 字体嵌入不是必须的.
 
- * 使用设备字体输出中文字符,只适用于 flash
+		> 宏方法 getFileContent(path2name) 一个从文件中加载字符
 
- > 由于中文字符太大(3750个字符),在嵌入时发生了 IO 错误.
+		> 宏方法 getResource(path2name) 返回一个 hxd.res.Any 对象.这个方法还展现了如何将一个 Bytes 的变量传递给回宏返回.
 
- ```haxe
-// CN_STR 为常用中文字符(3750).
-// FontBuilder 其实一个字符一个字符的 draw 到 bitmapData 中
-var font = FontBuilder.getFont("simfang", 16, { chars: MRes.CN_STR,antiAliasing : false} );
- ```
+  - 使用设备字体输出中文字符,只适用于 flash
+
+		> 由于中文字符太大(3750个字符),在嵌入时发生了 IO 错误.
+
+		```haxe
+		// CN_STR 为常用中文字符(3750).
+		// FontBuilder 其实一个字符一个字符的 draw 到 bitmapData 中
+		var font = FontBuilder.getFont("simfang", 16, { chars: MRes.CN_STR,antiAliasing : false} );
+
+		```
+  - **Sound**
+
+		> 不知道,为什么不用 @:sound("file.wav|mp3") 的方式嵌入???
+		
+		> 这个类播放声音是以 Bytes 的方式加载音乐的.
+
+  - **FileTree**  扫描资源文件夹,res 主要的宏构建类.
+		
+  - **Loader**  建立在 各文件类 上的一个方法汇总
+
+  - **Any**  建立在 Loader 上的一个方法汇总
 
 
+ * impl
+
+  - **Memory**  管理 domainMemory
+
+		> 使用 flash.Memory 前先 select(bytes) ,完了后 调用 end().
+		
+  - **Tmp**  Bytes 缓存池
+
+		> getBytes(size) 		// 将优先从缓存池里返回Bytes
+		
+		> saveBytes(bytes)	// 将bytes 释放回缓存池内
+  
+  - **`FastIO<T>`**  像是一个抽像化的数组.优先会使用 Vector 替代 Array。
+
+  - **FastIntIO**  继承 `FastIO<Int>`, 多了一些针对 **位** 的操作方法.
+				
+  - **ArrayIterator**  继承这个类,方便 for 便历.
+
+		```haxe
+		// from h2d/Sprite.hx
+		public inline function iterator() : hxd.impl.ArrayIterator<Object>{
+			return new hxd.impl.ArrayIterator(childs);
+		}
+		```
+ * poly2tri 多边形 to 三角形???
+					 
 <br />
 
 
@@ -99,7 +186,19 @@ var font = FontBuilder.getFont("simfang", 16, { chars: MRes.CN_STR,antiAliasing 
 
  * `parts`
 
-	> `air` 粒子生成器.
+	> `air` 粒子生成器. 因为要保存文件,需要在 AIR 中运行.
+	
+	```haxe
+	// %flex_sdk%\bin\adl parts.app
+	import h3d.parts.Data;
+	// extends hxd.App
+	// default.p 为粒子生成器保存的文件.
+	var state:State = Unserializer.run(Embed.getFileContent("res/default.p"));
+	// 可以更换 texture
+	state.frames = [State.defPart.toTile()];
+	
+	var emit = new Emitter(state, s3d);	
+	```
 
  * `perlin`
 

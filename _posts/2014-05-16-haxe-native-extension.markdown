@@ -78,6 +78,7 @@ haxe -cpp hbin -main Test1
 copy ndll\windows\ext.ndll hbin\
 ```
  
+<br />
 ##### 二： `.hx` 编译多平台 __使用 openfl__
 
  * 需要将 myext 添加到 haxelib 本地库.否则oepnfl在分析 ndll 路径时将出错.
@@ -89,7 +90,7 @@ copy ndll\windows\ext.ndll hbin\
  
  * 修改 include.xml 将与 android java 的原生扩展相关代码注释掉
 
-	> __重要:__ 因为那些是 haxe 与 java 的相互调用. 与这个章节的 cpp 无关
+	> 因为那些从实现原理上来说属于 NDK JNI.
 
 	```xml
 	<?xml version="1.0" encoding="utf-8"?>
