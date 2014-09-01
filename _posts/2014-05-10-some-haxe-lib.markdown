@@ -1,34 +1,42 @@
 ---
 
 layout: post
-title:  一些HaxeLib简介
+title:  一些类库集合
 date:   2014-05-10 9:15:56
 categories: haxelib
 
 ---
 
-通常这些库都能在 github.com 找到相关项目.
+收集的一些 haxe 类库,通常这些库都能在 github 找到相关项目.
 
-
-#### 解析
-
- * [format](https://github.com/HaxeFoundation/format)
-
-	> 解析各类文件或数据
 
 <!-- more -->
 
-#### 全位图游戏引擎
+#### 工具
 
- * [haxeflixel](https://github.com/haxeflixel)
+ * **[format](https://github.com/HaxeFoundation/format)**
 
-	> 社区比 haxepunk 强大
+	> 用于解析各种文件或数据.
+	
+ * **[dox](https://github.com/dpeek/dox)**
 
- * [haxepunk](https://github.com/HaxePunk)
+	> 帮助文档生成器, haxe 官网目前使用这个,而丢弃了以前的文档生成器. [示例: h3d API]({% post_url 2014-05-05-haxe-doc-gen %})
 
-	> 比 haxeflixel 更简单, 像是个人维护的项目
+ * **[hxsl](https://github.com/ncannasse/hxsl)**
 
-	> 适合初学者理解全位图引擎
+	> 写 adobe AGAL 变得如此简单. [使用指南](http://haxe.org/manual/hxsl).
+	
+	
+
+#### 游戏引擎
+
+ * **[haxeflixel](https://github.com/haxeflixel)**
+
+	> 全位图游戏引擎,社区以及周边都远比 haxepunk 强大
+
+ * [haxepunk](https://github.com/HaxePunk) 全位图
+
+	> 全位图游戏引擎, 比 haxeflixel 更简单, 像是个人维护的项目
 
 #### UI
 
@@ -42,20 +50,29 @@ categories: haxelib
 
 	> 加载和解析的时间比 stablexui 长.
 
- * [stablexui](https://github.com/RealyUniqueName/StablexUI)
+ * **[stablexui](https://github.com/RealyUniqueName/StablexUI)**
 
 	> 基于 xml 配置布局和 skin, 简单,高效 移动UI首选
 
 
-#### 其它
+#### 未分类
 
- * [Cocktail](https://github.com/silexlabs/Cocktail)
+ 
+ * **[openfl-bitfive](https://github.com/YellowAfterlife/openfl-bitfive)**
 
-	> 解析 简单的 HTML/CSS,并生成各平台,个人感觉这个更像是一个 UI库.
+	> readme 写着比 openfl 默认的 **html5后端** 更好.
+	
+ * **[mcli](https://github.com/waneck/mcli)** 
+
+	> 简单创建 CLI 程序,mcli 可以把 文档注释 通过宏处理变成 相应的帮助,这点非常好.
 
  * [hxargs](https://github.com/Simn/hxargs)
 
-	> 命令行参数解析,如果需要写一个控制台程序能快速定义参数
+	> 简单创建 CLI 程序, 帮助写在自定义的元标签 `@doc` 上.
+
+ * [Cocktail](https://github.com/silexlabs/Cocktail)
+
+	> 解析 简单的 HTML/CSS,并生成各平台,个人感觉这个更像是一个 UI库.	
 
 
 

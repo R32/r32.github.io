@@ -16,6 +16,8 @@ categories: haxe
 <!-- more -->
 #### Tips
 
+ * 对于命令行程序, 文件代码应该为 anti ,dos 中才会正确显示中文.
+
  * $type
 
  	> `$type(express)` 是一个类似于`console.warn(typeof(express))`的方法,会在编译时输出警告信息:显示表达式的类型
@@ -30,7 +32,7 @@ categories: haxe
 
  	> `std` , 例如:当你写一个 叫 `Math` 的类时,可以通过 `std.Math` 调用标准的 `Math`
 
- 	> `typedef SString<Const> = String`. 语法
+ 	> `typedef SString<Const> = String`. 这个表达式相当于 `typedef SString<T> = String`
 
 	
 	```haxe
@@ -49,6 +51,17 @@ categories: haxe
  * openfl 的 neko 或 cpp 其实可以不带显示窗口的.
 
  	> 参考 `lime-tools`. `helpers.IconHelper` 中调用 `SVG`
+	
+ * 函数可选参数, 自动的参数顺序
+
+	```haxe
+	function foo(i:Int, ?a:Array<Int>, ?f:Float){
+		trace(i,f);
+	}
+	
+	// 	haxe 编译器 将自动为第二个参数填入 null,
+	foo(10,0.123); //output => 10, 0.123
+	```	
 
 
  * -dce full 
@@ -416,14 +429,19 @@ class Helo{
  ```bash
  Starting from Haxe 3.0 , you can get the list of supported compiler flags by running haxe --help-metas
  ``` 
- * `@:overload`
+ * **`@:overload`** 方法重载,只适用于 extern 类
 
  	> can be used when interfacing an external class method with arguments of different types. You can have several overload declarations, the return type of the first one that is matched will be used. Overload metadata is only useful for extern classes, it is most likely not usable for user-written Haxe classes. A simple example: 
 
  	```haxe
-	// 参考 Reflect.makeVarArgs 
-	@:overload(function(i:String):Bool{})
-	function foo( i : Int ) : Void;
+	extern class JQueryHelper {
+		@:overload(function(j:JQuery):JQuery{})
+		@:overload(function(j:DOMWindow):JQuery{})
+		@:overload(function(j:Element):JQuery{})
+		public static inline function J( html : String ) : JQuery {
+			return new JQuery(html);
+		}
+	}
  	```
 
 

@@ -251,6 +251,14 @@ trace("flash player version >= 11.4"); // 如果目标为flash,且指定的编�
 		return macro hxd.res.Any.fromBytes($v{file},haxe.Unserializer.run($v{str}));
 	}
 	```
+ * macro.MacroType<Const>
+
+	```haxe
+	// 在 CastleDB 的 一个示例中, Data.hx 如下:
+	package dat;
+	
+	private typedef Init = haxe.macro.MacroType < [cdb.Module.build("test.cdb")] > ;
+	```
 
  * macro 关键字后可以接任意 haxe 代码. [AST](http://haxe.org/manual/macro.html)	
 

@@ -29,21 +29,26 @@ categories: other
 
  * `远端(remote) -> Add` 输入 fork 的原始分支, bob名字任意
  
- > `git remote add bob https://github.com/DoubleSpout/rrestjs.git`
+	> `git remote add bob https://github.com/DoubleSpout/rrestjs.git`
 
  * `远端(remote) -> 从获取(fetch)` , 选择相应的名字如bob
 
- > `git fetch bob`
+	> `git fetch bob`
 
  * `合并(merge) -> 本地合并` 
 
- > `git merge bob/master`
+	> `git merge bob/master`
 
- > **注:**`git rebase bob/master` 这个命令比 merge 要好,如果 fork 别的人项目
-
- * 可能需要手动调整合并冲突
+ * 可能需要手动调整合并冲突, 然后再缓存提交
  
  > GUI 这里需要自已单击已经修改了的冲突文件,而不是点击 缓存 按钮
+
+ * **rebase**
+
+  - `git rebase bob/master` 这个命令比 merge 要好,如果 fork 别的人项目
+
+  - **重要:** 冲突解决后,添冲突的文件添加到缓存之后先不要提交,而是输入 `git rebase --continue`
+
 
 
 #### 上传

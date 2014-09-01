@@ -7,22 +7,32 @@ categories: haxelib
 
 ---
 
- > [**`h3d`**](https://github.com/ncannasse/h3d) 是一个 flash 3D 引擎,基于 flash.stage3D, 目前只适用于 flash 平台.
+目前已经更名为 heaps, 看描述似乎要做成一个游戏引擎. 一些改动也比较大
 
- > 另一个fork版本 [motion-twin/h3d](https://github.com/motion-twin/h3d) 似乎可以通过 openfl 跨平台.
+[**`h3d`**](https://github.com/ncannasse/heaps) 是一个 flash 3D 引擎,基于 flash.stage3D, 目前只适用于 flash 平台.
+
+另一个fork版本 [motion-twin/h3d](https://github.com/motion-twin/h3d) 似乎可以通过 openfl 跨平台.
 
 
 <!-- more -->
 
 ### h3d
  
- * 空
+ * **Engine** 
+
+  - 构选函数的 antiAlias 参数,似乎不会起任何作用,像是没实现.
+  
+  - 一些基础设置,如修改背影颜色,或设置全屏...
+
+  - ++
+
+ * impl 文件夹
+
+  - **Driver** 核心类不同平台接口.
 
 ### h2d
 
- h2d 似乎在设计上就是作为 UI, 因此一些动画,碰撞检测的方法都比较底层,
-
- 可以使用 XML(组件布局) 和 CSS(样式) 配置 UI.
+ h2d 似乎在设计上就是作为 UI, 因此一些动画,碰撞检测的方法都比较底层, 可以使用 XML(组件布局) 和 CSS(样式) 配置 UI.
 
  h2d 游戏源码示例:
 
@@ -32,7 +42,29 @@ categories: haxelib
 
  * [ld-28 You only got one](https://github.com/ncannasse/ld28)
 
+ * [ld-30 Connected Worlds](https://github.com/ncannasse/ld30)
+
 ##### 源码简析
+
+ * **Scene** 2D 场影.
+  
+  - 通过 setFixedSize(w, h) 来设置一个宽高的基准值, 每次 resize 事件,将会自动以这个值进行缩放.
+
+		> 所以当出现缩放时 h2d.Scene 的 width,height 和 h3d.Engine,并不一致.对于 像素类的 2D 游戏,通常 会设一个很小的基准高宽值,然后缩放到指定大小. 这类游戏 Engine 的高宽值一般为 Scene 的二倍.
+
+
+
+ * **Interactive** 用于交互.
+
+	```haxe
+	// 如何给 h2d.Bitmap 添加事件.
+	var bmp = new h2d.Bitmap(Res.some_png.toTile(), s2d );
+
+	var it = new Interactive(s2d.width, s2d.height, bmp);
+	it.onClick = function(e : hxd.Event){
+		trace(e); // ERelease[e.relX,e.relY]
+	}
+	```	
 
  * comp
 
@@ -107,15 +139,34 @@ categories: haxelib
 
 	> 继承这个类,从而快速调用 h3d
 
+ * **Tile** 
+
+ 	> 为了避免 dispose, 应该尽量使用 sub 方法从主 Tile 上新建一个出来.
+
+	> scaleToSize(w, h) 是个不错的方法.例如: 当需要 32x32 的图,直接 scaleToSize(32,32) 就行了.
+
+ * **Texture** 
+
+ * **System**
+
+   - 包含 enum Cursor, 用于定义 鼠标的不同形状, 允许自定义
+
+   - 所有方法或属性都是静态类型. 参考 API 或源码.
+
+ * Stage 对 flash.display.Stage 进行了包装.
+
+
+ * **Event**  h2d.Interactive 事件参数类型.
+
  * res 文件夹
 
   - 这个目录大多数都属于 Resource 的了类.
 
   - **Image** 图片资源解析,只支持 jpg 和 png.
 
- 	 > 将图片转出为 hxd/res 下的各种格式。
+		> 将图片转出为 hxd/res 下的各种格式。
 
-  - **Embed**
+  - **Embed** 
 
 		> 例如: 宏方法 `Embed.embedFont("nokiafc22.ttf");` 将资源文件夹或系统字体文件夹下的字体嵌入到 SWF. 
 
@@ -142,13 +193,15 @@ categories: haxelib
 		> 这个类播放声音是以 Bytes 的方式加载音乐的.
 
   - **FileTree**  扫描资源文件夹,res 主要的宏构建类.
+
+		> 如果打算将 wav 转换成 mp3(if options.compressSounds), 则需要下载 `lame` 转换器,并且添加到路径,  另外`LocalFileSystem.hx` 文件(仅限于本地文件系统),LocalEntry 类的方法 convertToMP3,这里需要修改 lame 的正确路径. 结论: 最好在外部先调用命令行转换成 mp3 再放入资源目录.
 		
   - **Loader**  建立在 各文件类 上的一个方法汇总
 
   - **Any**  建立在 Loader 上的一个方法汇总
 
 
- * impl
+ * impl 文件夹
 
   - **Memory**  管理 domainMemory
 
@@ -172,7 +225,7 @@ categories: haxelib
 			return new hxd.impl.ArrayIterator(childs);
 		}
 		```
- * poly2tri 多边形 to 三角形???
+ * poly2tri 文件夹  多边形 to 三角形???
 					 
 <br />
 
