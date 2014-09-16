@@ -63,6 +63,50 @@ categories: haxe
 	foo(10,0.123); //output => 10, 0.123
 	```	
 
+ * **`__this__`**
+
+	> 在 haxe 中即使是局部方法, this 的指向永远为其所在的类,而一些如 JS 或 AS 平台却不是这样. __this__ 必须接在 `untyped` 之后, 以表式目标平台类的 `this`, 可以将下列代码编译成 JS,以区别不同之处.
+	
+	```haxe
+	class Foo {
+		var value:String;
+		public function new():Void {
+			value = "ffffffffffff";
+			var obj1 = { callb: function() { trace(this); } };
+			var obj2 = { callb: function() { trace(untyped __this__); } };
+			
+			obj1.callb(); // [object Foo]
+			obj2.callb(); // [object global]
+		}
+		static function main() {		
+			new Foo();
+		}
+	}
+	```
+
+ * `static function __init__(){}`
+
+	> 用于初使化静态变量的值. 这个方法的赋值 比 直接赋值
+	
+	```haxe
+	class Foo{
+		
+		public static var value:String = "var";
+		
+		static function __init__(){
+			value = "init func";
+		}
+		
+		public function new() {
+			trace(value);	
+		}
+		
+		public static function main(){
+			new Foo(); // output: var 
+		}								
+	
+	}
+	```
 
  * -dce full 
 
