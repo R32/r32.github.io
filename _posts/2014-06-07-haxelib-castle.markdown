@@ -7,10 +7,12 @@ categories: haxelib
 
 ---
 
- [CastleDB] 是一个基于 [Node Webkit] 的应用. 一个可视的 JSON 格式 **行数据** 的生成器. 
+ [CastleDB] 是一个基于 [Node Webkit] 的应用. 看起来像一个电子表格. 一个可视的 JSON 格式 **行数据** 的生成器. 
 
  
- 首先将下载的 Node Webkit 解压到 `CastleDB/bin` 目录下,然后打开 `nw.exe` 就行了。或者将 `CastleDB/bin` 目录下的文件打包成 zip 文件,以 `nw.exe app.zip` 的方式来运行
+ 首先将下载的 Node Webkit 解压到 `CastleDB/bin` 目录下,然后打开 `nw.exe` 就行了。或者将 `CastleDB/bin` 目录下的文件打包成 zip 文件,以 `nw.exe app.zip` 的方式来运行,  帮助文档在 www 目录 中.
+
+
 
  
  可以使用 haxelib dev 的方式本地安装 castle 库,这样就能在 Haxe 中读取 上边所应用保存的数据.
@@ -20,32 +22,6 @@ categories: haxelib
  
 <!-- more -->
 
-### 文档
-
-CastleDB 解压后 www 目录为参考文档.
-
-
-#### 为什么
-
-CastleDB 用来输入静态结构化的数据。
-
-#### 存储
-
-CastleDB 将 数据模型 和 行数据 存储到一个简单易读的 JSON 文件。可以很容易被任意程序加载使用。
-
-例如: 在游戏中你想要存储所有的物品和怪物，包括其名称、 描述、 逻辑影响 等等。
-
-#### 如何
-
-CastleDB 看起来像一个电子表格，除了每个工作表有一个数据模型。
-
-该模型允许编辑器 验证和减轻用户的输入。
-
-#### 协作
-
-CastleDB 允许数据编辑的高效协作。
-
-使用 JSON 格式 + 换行符 来存储数据，因此 GIT 或 SVN RCS 可以很好地显示文件差异。
 
 ### 列类型
 
@@ -94,6 +70,29 @@ CastleDB 允许数据编辑的高效协作。
  * **Custom Type** 自定义类型
 
 	> 通过点击 IDE 的右下角的 `edit type` 打开一个空白页面, 
+
+
+
+
+
+### 2D 地图编辑器 
+
+
+为了将 sheet 变成 2D 地图编辑器,需要添加 width:Interger , height:Interger , props:Dynamic, layers:List(name:Text, data:Tile Layer) 字段,然后右键单击 sheet name, 选中 lever 选项. 这时 每添加一行数据将会出现 Edit 的按扭.
+
+ * New Layer 将自动填充 layers:List
+
+ * Lock Grid 画图时锁定为 Grid 模式
+ 
+ * Mode
+
+   - Tiles
+
+   - Ground
+
+   - Objects
+
+
 
 
 ### 代码中调用
