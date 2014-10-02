@@ -29,7 +29,7 @@ categories: haxelib
 
  	> 仅仅测试 js 与 as3 这二个平台.
 
- 	> 备注: munit 不知道是如何实现忽略 hxml 文件中的目标平台? haxe 好像并没有相关的命令参数,  	
+ 	> 备注: munit 不知道是如何实现忽略 hxml 文件中的目标平台? haxe 好像并没有相关的命令行参数,  	
 
 
 

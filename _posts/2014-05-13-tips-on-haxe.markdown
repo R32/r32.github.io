@@ -26,6 +26,8 @@ categories: haxe
 
 	> Serializer.run() 除了普通数据或二进制类型,还可以序列化**类实例**,但只能是纯Haxe的类,如果涉及到 native 平台方法,将失败.
  
+ * Context.resolvePath 除了检索当前项目的目录之外,如果文件不存在 还将检索  haxe/std 目录.
+
  * 其它
 
  	> 在 `getter/setter` 的方法前添加 `inline` 关键字,如果这些方法不复杂的话.
@@ -487,7 +489,55 @@ class Helo{
 		}
 	}
  	```
+<br />
 
+#### 自定义元标记 Metadata
+
+haxe 允许自定义一些元标记在 类, 字段, 或 枚举上. 格式为 `@some` 通过 haxe.rtti.Meta 能在运行时访问这些标记. 
+
+和 haxe-metas 不一样的是, haxe-metas 是控制编译器行为的, 格式为 `@:some` 比自定义元标记多了一个冒号(:)
+
+当然自定义元标记可以控制编译器行为, 可以在宏构建的方法中调用 (macro.Compiler)来实现.
+
+```haxe
+#if !macro @:build(Foo.build()) #end
+@author("Nicolas") @debug class MyClass {
+	@values( -1, 100) var x:Int;
+	
+	@hehe
+	static var inst:MyClass;
+	
+	static function main(){
+		// 运行时(rtti)访问这些自定义元标记数据, 只能访问自定义的, 不能访问 haxe-metas
+		var t = haxe.rtti.Meta.getType(MyClass);	// {author: [Nicolas], debug: null}
+		var f = haxe.rtti.Meta.getFields(MyClass);	// {x: {values: [-1, 100]}}
+		var s = haxe.rtti.Meta.getStatics(MyClass);	// {inst: {hehe: null}}
+	}
+}
+
+/**
+	其实很少有 自定义元标记, 用于在 运行时(rtti)访问的
+	但在宏构建(@:build)中经常用到, 如在编译时检测一些自定义标记, 然后在宏编译时检测这些值,作一些改变,
+*
+class Foo {
+	macro public static function build():Array<haxe.macro.Expr.Field>{
+		var fields = haxe.macro.Context.getBuildFields();
+		
+		var t = haxe.macro.Context.getLocalClass().get();
+		// 取得 标记于 class 上的元标签, 除了自定义的元标签, 还能取得 haxe-metas, 如 @:require(flash)
+		trace(t.meta.get()); 
+		
+		// 取得一个数组包含所有 静态字段, 通过遍历数组, 然后调用 meta.get() 获得 元标签定义
+		var s = t.statics.get();
+		
+		// 取得一个数组包含所有 实例字段, 通过遍历数组, 然后调用 meta.get() 获得 元标签定义
+		var f = t.fields.get();	
+		
+		//return fields;	如果需要修改则返回这个
+		return null; // 返回 null 不作任何修改.
+	}	
+}
+```
 
 <br />
 

@@ -81,16 +81,14 @@ categories: haxelib
 为了将 sheet 变成 2D 地图编辑器,需要添加 width:Interger , height:Interger , props:Dynamic, layers:List(name:Text, data:Tile Layer) 字段,然后右键单击 sheet name, 选中 lever 选项. 这时 每添加一行数据将会出现 Edit 的按扭.
 
  * New Layer 将自动填充 layers:List
-
- * Lock Grid 画图时锁定为 Grid 模式
  
- * Mode
+ * Mode 这个选项将应用到当前 layer, Mode 保持为 Tiles 就好
 
-   - Tiles
+   - Tiles 默认
 
-   - Ground
+   - Ground 地面
 
-   - Objects
+   - Objects 对象
 
 
 
@@ -123,7 +121,7 @@ class Test {
 }
 ```
 
-Data.hx:
+Data.hx: 这个类仅仅只使用宏来解析 数据类型,不会解析数据, 仅提供 sheet name 的智能语法提示.
 
 ```haxe
 package dat;
@@ -133,7 +131,19 @@ package dat;
 private typedef Init = haxe.macro.MacroType < [cdb.Module.build("test.cdb")] > ;
 ```
 
-#### 其它
+
+### 更多特性
+
+ * Display Column
+
+ * Index
+
+ * Separators 分隔符
+
+ * Add Group 
+
+
+### 其它
 
  * 修改 columns 时,别按回车键,因为默认为 `delete`
 
@@ -145,8 +155,6 @@ private typedef Init = haxe.macro.MacroType < [cdb.Module.build("test.cdb")] > ;
 
 	> 表格名(sheet name)上右键菜单, 可以选择是否将 **分组** 属性添加到数据行(line).
 
-#### 个人感觉不完美的地方
+### 个人感觉不完美的地方
 
  * 输入 Dynamic 类型字段时,完全是 手工输入, 没有好的输入界面.
-
-	> 例如: `props : { tileSize : 16, name: "aaa",  data:{ file: "tiles.png", data: "AAAGAA.."} }`

@@ -5,19 +5,47 @@ date:   2014-05-05 21:03:10
 categories: haxe
 ---
 
-#### 1.使用 `haxe -xml` 导出 xml 文件
+目前 haxe 官方抛弃了以前旧的文档生成器, 而转而使用了 [haxe dox](https://github.com/dpeek/dox) 来构建 API 文档.
 
- * 一些参考 [all.hxml] , [ImportAll.hx] , [haxepunk doc]
 
+<!-- more -->
+
+#### 注释内容规范
+
+```c
+/**
+* 这种每一行 都有 星号(*) 的注释, dox 不能很好的隔开一行, 会将所有内容连接在一行上
+*
+* 这时 只能 使用 一些简单的 HTML 标签, 来做一些格式化,如: <p>,<br>,<ul>,<li> ...
+*
+* 并且这种注释, dox 也不能正确的认别 markdown
+*/
+
+
+/**
+	只有注释首尾才有 星号(*), dox 能正确解析, 包括 markdwon, 隔开一行,只要空一行就行了. 
+
+	但是问题是 flashdevelop 自动生成的 注释是上边那种形式的, 
+
+	对于较长内容的说明, 最好是采用这种形式, 以避免内容全连在一行.
+
+*/
+```
+
+
+#### 文档生成
+
+
+ * 参考[openfl doc] ,其它 [all.hxml] , [ImportAll.hx] , [haxepunk doc]
+[openfl doc]:https://github.com/openfl/openfl/blob/master/documentation/build.hxml
 [haxepunk doc]:https://github.com/HaxePunk/HaxePunk/blob/dev/doc/doc.hxml
 [all.hxml]:https://github.com/HaxeFoundation/haxe/blob/development/extra/all.hxml
 [ImportAll.hx]:https://github.com/HaxeFoundation/haxe/blob/development/extra/ImportAll.hx
 
- * 这里是我用h3d做的一个样例:
+ * 这里是我用h3d做的一个样例: genxml.html
 
 	```bash
-	#我在 h3d 的目录中建了一个叫 doc 的目录,并建立一个叫 genxml.hxml 的文件,内容如下:
-	#主要是参考主目录的 engine.hxml 改的
+	# 第一步, 使用导出 haxe -xml 导出 XML
 	--no-output
 	-cp ../
 	--macro include('h3d')
@@ -29,12 +57,13 @@ categories: haxe
 	-lib hxsl
 	-D resourcesPath=../samples/res
 	-D h3d
-	 
 	-xml pkgs.xml
-	```
 
-<!-- more -->
- * 最后命令行输入 `haxe genxml.html` 就完成了 `pkgs.xml`
+	# 第二步, 使用 dox 生成 API 文档, 
+	--next
+	-cmd haxelib run dox -i . -in h3d -in h2d -in hxd
+	```
+ * 注意:  `-in` 参数, 选择所需要的类,否则 haxe 的标准库也会被添加进去.
 
 
 
@@ -42,11 +71,9 @@ categories: haxe
 
 
 
-#### 2.然后用 haxe dox,编译 xml 文件为 html
+#### dox 命令行
 
- * haxe dox 的 `Github` 网址为 [github.com/dpeek/dox](https://github.com/dpeek/dox)
-
- * 其实不用重新编译,只要用到 theme文件夹和 run.n 文件就可以了
+你可以不必安装这个库, [下载](https://github.com/dpeek/dox) theme 文件夹 和 run.n 文件就可以了, 并用 `neko run.n` 来替换 `haxelib run dox`
 
  * 命令为: `neko run.n -i export.xml`
 
@@ -66,7 +93,7 @@ categories: haxe
 	#Add a resource directory whose contents are copied to the output directory
 	-res  --resource-path
 
-	#Add a path include filter
+	#重要: Add a path include filter 
 	-in  --include
 
 	#Add a path exclude filter
@@ -82,20 +109,15 @@ categories: haxe
 	-D  --defines
 	```
 
-
 <br />
 
 
 
 #### 其它
 
-一个 `makefile` 文件样例.仅供参考.
+由于 使用 -in 代替了 -ex , **不再需要**参考这个文件, 
 
 ```makefile
-# 到 https://github.com/dpeek/dox 下载 run.n.这里我改了名字为:gendoc.n
-# 需要下载 theme 目录
- 
-
 CC	:= neko gendoc.n
 
 # --> 修改 TARGET_DIR 为你要输出的目录,注意: haxe dox  不支持 cygwin环境下跨磁盘的的目录
@@ -129,8 +151,6 @@ clean:
 	@rm -rf $(TARGET_DIR)
 
 ```
-
-
 <br />
 
  * 生成的结果
