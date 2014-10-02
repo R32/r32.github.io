@@ -90,6 +90,12 @@ nekotools 是一个安装 haxe 时附带的强力工具,nekotools 很简单只�
 
 ### haxe
 
+ * [编译-flag](http://haxe.org/doc/compiler)
+
+ * [编译-define](http://haxe.org/manual/tips_and_tricks)
+
+ * [haxe completion](http://haxe.org/manual/completion)
+
 Haxe Compiler 3.13 - (C)2005-2014 Haxe Foundation
 
  Usage: `haxe.exe -main <class> [-swf|-js|-neko|-php|-cpp|-as3] <output> [options]`
@@ -186,7 +192,7 @@ Haxe Compiler 3.13 - (C)2005-2014 Haxe Foundation
 # 编译时忽略所有 trace 语句
 --no-traces : don't compile trace calls in the program
 
-# ???
+# 看上去像是 haxe 2.x 时期调用 flash 的 swc 库所要用的, 似乎不用理会这个
 --gen-hx-classes : generate hx headers for all input classes
 
 # 分隔 haxe 编译, hxml 文件中经常能见到
@@ -269,70 +275,125 @@ haxe --help-defines, haxe 编译定义,
 
 ```
 absolute-path          : Print absolute file path in trace output
+
 advanced-telemetry     : Allow the SWF to be measured with Monocle tool
+
 as3                    : Defined when outputing flash9 as3 source code
+
 check-xml-proxy        : Check the used fields of the xml proxy
+
 core-api               : Defined in the core api context
+
 cppia                  : Generate experimental cpp instruction assembly
+
 dce                    : The current DCE mode
+
 dce-debug              : Show DCE log
+
 debug                  : Activated when compiling with -debug
+
+# 在 openfl 项目的源码经常能看到, 用来给 IDE 提供语法提示用的., 也就是说 #if display #end 之间的内容是提供给 代码编辑器 用来做一些语法智能提示.
 display                : Activated during completion
+
 dll-export             : GenCPP experimental linking
+
 dll-import             : GenCPP experimental linking
+
 doc-gen                : Do not perform any removal/change in order to correctly generate documentation
+
 dump                   : Dump the complete typed AST for internal debugging
+
 dump-dependencies      : Dump the classes dependencies
+
 fdb                    : Enable full flash debug infos for FDB interactive debugging
+
 flash-strict           : More strict typing for flash target
 
 # 示例参看 http://old.haxe.org/doc/flash/preloader
 flash-use-stage        : Keep the SWF library initial stage. To be used together with -swf-lib. Place objects found on the stage of the SWF lib. (Not to be used together with -swf-header)
 
 format-warning         : Print a warning for each formated string, for 2.x compatibility
+
 gencommon-debug        : GenCommon internal
 
 # 使用 `haxe` 名, 作为 flash 的引导类名, 替换掉默认的 boot_xxx 名
 haxe-boot              : Given the name 'haxe' to the flash boot class instead of a generated name
+
 haxe-ver               : The current Haxe version value
+
 hxcpp-api-level        : Provided to allow compatibility between hxcpp versions
+
 include-prefix         : prepend path to generated include files
+
 interp                 : The code is compiled to be run with --interp
+
 java-ver               : <version:5-7> Sets the Java version to be targeted
+
 js-classic             : Don't use a function wrapper and strict mode in JS output
+
 js-es5                 : Generate JS for ES5-compliant runtimes
+
+# 使用更少的对象属性构建类
 js-flatten             : Generate classes to use fewer object property lookups
+
+# 参看 haxe --help 中的 --macro
 macro                  : Defined when we compile code in the macro context
+
 macro-times            : Display per-macro timing when used with --times
+
 neko-source            : Output neko source instead of bytecode
+
 neko-v1                : Keep Neko 1.x compatibility
+
 net-target             : <name> Sets the .NET target. Defaults to "net". xbox, micro (Micro Framework), compact (Compact Framework) are some valid values
+
 net-ver                : <version:20-45> Sets the .NET version to be targeted
+
+# 更改 flash 网络沙箱模式,  定义后将为 只访问网络, 默认为只访问本地
 network-sandbox        : Use local network sandbox instead of local file access one
+
 no-compilation         : Disable CPP final compilation
+
 no-copt                : Disable completion optimization (for debug purposes)
+
 no-debug               : Remove all debug macros from cpp output
+
 no-deprecation-warnings: Do not warn if fields annotated with @:deprecated are used
+
 no-flash-override      : Change overrides on some basic classes into HX suffixed methods, flash only
+
 no-inline              : Disable inlining
+
 no-macro-cache         : Disable macro context caching
+
 no-opt                 : Disable optimizations
+
 no-pattern-matching    : Disable pattern matching
+
 no-root                : GenCS internal
 
 # 禁用 swf 压缩
 no-swf-compress        : Disable SWF output compression
+
 no-traces              : Disable all trace calls
+
 php-prefix             : Compiled with --php-prefix
+
 real-position          : Disables haxe source mapping when targetting C#
+
 replace-files          : GenCommon internal
+
 scriptable             : GenCPP internal
+
 shallow-expose         : Expose types to surrounding scope of Haxe generated closure without writing to window object
+
 source-map-content     : Include the hx sources as part of the JS source map
 
-# haxe 保留定义, 用户不能定义这项. 实际上当 -swf 文件扩展名为 swc时, 将自动定义这项
+# haxe 保留定义, 用户不能定义这项. 因为当 -swf 文件扩展名为 swc时, 将自动定义这项
 swc                    : Output a SWC instead of a SWF
+
 swf-compress-level     : <level:1-9> Set the amount of compression for the SWF output
+
 swf-debug-password     : Set a password for debugging.
 
 # flash 硬件加速 第 1 级 - 直接
@@ -340,7 +401,9 @@ swf-direct-blit        : Use hardware acceleration to blit graphics
 
 # flash 硬件加速 第 2 级 - GPU
 swf-gpu                : Use GPU compositing features when drawing graphics
+
 swf-mark               : GenSWF8 internal
+
 swf-metadata           : =<file> Include contents of <file> as metadata in the swf.
 
 # 示例: http://old.haxe.org/doc/flash/preloader
@@ -354,10 +417,15 @@ swf-protected          : Compile Haxe private as protected in the SWF instead of
 swf-script-timeout     : Maximum ActionScript processing time before script stuck dialog box displays (in seconds)
 
 swf-use-doabc          : Use DoAbc swf-tag instead of DoAbcDefine
+
 sys                    : Defined for all system platforms
+
 unsafe                 : Allow unsafe code when targeting C#
+
 use-nekoc              : Use nekoc compiler instead of internal one
+
 use-rtti-doc           : Allows access to documentation during compilation
+
 vcproj                 : GenCPP internal
 
 ```
@@ -375,6 +443,7 @@ haxe --help-metas, 这类元标记一般添加在代码中, 也可以在 宏(mac
 @:allow              : (Target path)Allows private access from package, type or field
 
 @:annotation         : Annotation (@interface) definitions on -java-lib imports will be annotated with this metadata. Has no effect on types compiled by Haxe (java only)
+
 @:arrayAccess        : Allows [] access on an abstract
 
 # 使用宏构建这个类的子类, 而非当前类
@@ -387,26 +456,47 @@ haxe --help-metas, 这类元标记一般添加在代码中, 也可以在 宏(mac
 
 # 使用宏构建这个类或枚举
 @:build              : (Build macro call)Builds a class or enum from a macro
+
 @:buildXml           :  (cpp only)
+
 @:classCode          : Used to inject platform-native code into a class (for cs,java)
+
+# 用于 abstract 类型的运算符重载交换, 这个标签应该用于 static 属性的重载才会生效. 参见 @:op 
 @:commutative        : Declares an abstract operator as commutative
+
 @:compilerGenerated  : Marks a field as generated by the compiler. Shouldn't be used by the end user (for cs,java)
 
 # 标识该类为核心类, 被定义为核心的类将会与标准库中声明的抽像核心类进行核对. 也就是说 必须实现抽像核心类所有字段.
 @:coreApi            : Identifies this class as a core api class (forces Api check)
+
+# 定义 abstract 核心类型 - 用于包装各平台底层数类型.
 @:coreType           : Identifies an abstract as core type so that it requires no implementation
+
 @:cppFileCode        :  (cpp only)
+
 @:cppNamespaceCode   :  (cpp only)
+
 @:dce                : Forces dead code elimination even when not -dce full is specified
+
 @:debug              : Forces debug information to be generated into the Swf even without -debug (flash only)
+
 @:decl               :  (cpp only)
+
 @:defParam           : ?
+
 @:delegate           : Automatically added by -net-lib on delegates (cs only)
+
 @:depend             :  (cpp only)
+
 @:deprecated         : Automatically added by -java-lib on class fields annotated with @Deprecated annotation. Has no effect on types compiled by Haxe. (java only)
+
 @:event              : Automatically added by -net-lib on events. Has no effect on types compiled by Haxe. (cs only)
+
+# JS 将类导出到 window对象 下, 如果 window 未定义,则导出到 export对象(nodejs) 下
 @:expose             : (?Name=Class path)Makes the class available on the window object (js only)
+
 @:extern             : Marks the field as extern so it is not generated
+
 @:fakeEnum           : (Type name)Treat enum as collection of values of the specified type
 
 # 以二进制的形式嵌入 文件 到 swf 内, 例: @:file("a.dat") class MyByteArray extends flash.utils.ByteArray{}
@@ -418,25 +508,39 @@ haxe --help-metas, 这类元标记一般添加在代码中, 也可以在 宏(mac
 # 嵌入字体文件. 仅支持 ttf 字体文件, 例: @:font("font/ceri0553.ttf", "a-zA-Z0-9~!@#$%^&*()_+=-][}{.,;\":><") class MyFont extends Font { }
 @:font               : (TTF path,Range String)Embeds the given TrueType font into the class (must extend flash.text.Font)
 
+# 用于 abstract 类型 - http://haxe.org/manual/types-abstract-forward.html
 @:forward            : (List of field names)Forwards field access to underlying type
 
-# 用于定义 abstract 类
+# 用于 abstract 类型 - http://haxe.org/manual/types-abstract-enum.html
+@:enum               : By adding the :enum metadata to an abstract definition, that abstract can be used to define finite value sets:
+
+# 用于定义 abstract 类, 这个方法必须为 static
 @:from               : Specifies that the field of the abstract is a cast operation from the type identified in the function
+
 @:functionCode       :  (cpp only)
+
 @:functionTailCode   :  (cpp only)
 
 # 用于替换掉需要接口 haxe.rtti.Generic类,用于声明泛型类. 当 new T()时, 需要添加这个标记 (since 3.0）
 @:generic            : Marks a class or class field as generic so each type parameter combination generates its own type/field
+
 @:genericBuild       : Builds instances of a type using the specified macro
 
 # 参看 @:setter
 @:getter             : (Class field name)Generates a native getter function on the given field (flash only)
+
 @:hack               : Allows extending classes marked as @:final
+
 @:headerClassCode    :  (cpp only)
+
 @:headerCode         :  (cpp only)
+
 @:headerNamespaceCode:  (cpp only)
+
 @:hxGen              : Annotates that an extern class was generated by Haxe (for cs,java)
+
 @:ifFeature          : (Feature name)Causes a field to be kept by DCE if the given feature is part of the compilation
+
 @:include            :  (cpp only)
 
 @:initPackage        : 用于 js 平台的 extern class, 用于将 包名 初使为 Object, 或者也可以使用 @:native 来更改输出的类名.
@@ -464,38 +568,61 @@ haxe --help-metas, 这类元标记一般添加在代码中, 也可以在 宏(mac
 
 # 重写输出类或枚举的包名, 例: @:native("my.real.Cls"). 使它更容易绑定到 extern 类, 可能有不一样的名称.
 @:native             : (Output type path)Rewrites the path of a class or enum during generation
+
 @:nativeGen          : Annotates that a type should be treated as if it were an extern definition - platform native (for cs,java)
+
 @:noCompletion       : Prevents the compiler from suggesting completion on this field
+
 @:noDebug            : Does not generate debug information into the Swf even if -debug is set (flash only)
+
 @:noDoc              : Prevents a type from being included in documentation generation
+
 @:noImportGlobal     : Prevents a static field from being imported with import Class.*
+
 @:noPackageRestrict  : ?
+
 @:noStack            :  (cpp only)
+
 @:noUsing            : Prevents a field from being used with 'using'
 
 # 声明 abstract 类型不接受 null 值
 @:notNull            : Declares an abstract type as not accepting null values
+
 @:ns                 : Internally used by the Swf generator to handle namespaces (flash only)
+
+# abstract 操作符重载- http://haxe.org/manual/types-abstract-operator-overloading.html
 @:op                 : (The operation)Declares an abstract field as being an operator overload
+
+# 当使用 typedef 定义 结构时, 添加在字段(field) 前表示为 可选字段
 @:optional           : Marks the field of a structure as optional
 
-# 重载, 用于 extern class, 允许同一个方法有不同参数.
+# 函数重载, 用于 extern class, 允许同一个方法有不同参数.
 @:overload           : (Function specification (no expression))Allows the field to be called with different argument types
+
 @:privateAccess      : Allow private access to anything for the annotated expression
+
 @:property           : Marks a property field to be compiled as a native C# property (cs only)
+
 @:protected          : Marks a class field as being protected
+
 @:public             : Marks a class field as being public
 
 # 将类的所有字段声明为 public, 这样就可以避免给每一个字段都添加 public (since 3.0)
 @:publicFields       : Forces all class fields of inheriting classes to be public
+
 @:readOnly           : Generates a field with the 'readonly' native keyword (cs only)
+
 @:remove             : Causes an interface to be removed from all implementing classes before generation
 
 # 宏条件, 需要满足条件才能访问这个类的字段. 例: @:require(nodejs)
 @:require            : (Compiler flag to check)Allows access to a field only if the specified compiler flag is set
 
-@:rtti               : Adds runtime type informations
+# 编译器添加 rtti 信息, 可以通过 haxe.rtti.Rtti.getRtti 检索这些信息 
+@:rtti               : Adds runtime type informations (since 3.2)
+
 @:runtime            : ?
+
+# 表明 abstract 类型为运行时类型, 通常用于包装各平台底层类型
 @:runtimeValue       : Marks an abstract as being a runtime value
 
 # 当 override flash 的类字段时. 注意 重写 flash 的 setter 时, 返回为 Void. 例: @:setter(endian) function set_endian(endian:String):Void{}
@@ -503,27 +630,31 @@ haxe --help-metas, 这类元标记一般添加在代码中, 也可以在 宏(mac
 
 # 嵌入声音文件到 swf 文件中去. 例: @:sound("file.wav|mp3") class MySound extends flash.media.Sound{}
 @:sound              : (File path)Includes a given .wav or .mp3 file into the target Swf and associates it with the class (must extend flash.media.Sound) (flash only)
+
 @:struct             : Marks a class definition as a struct. (cs only)
+
 @:suppressWarnings   : Adds a SuppressWarnings annotation for the generated Java class (java only)
+
 @:throws             : (Type as String)Adds a 'throws' declaration to the generated function. (java only)
 
 # 用于定义 abstract 类
 @:to                 : Specifies that the field of the abstract is a cast operation to the type identified in the function
 
 @:transient          : Adds the 'transient' flag to the class field (java only)
+
 @:unbound            : Compiler internal to denote unbounded global variable
+
 @:unifyMinDynamic    : Allows a collection of types to unify to Dynamic
+
 @:unreflective       :  (cpp only)
+
 @:unsafe             : Declares a class, or a method with the C#'s 'unsafe' flag (cs only)
+
 @:usage              : ?
+
 @:volatile           : (for cs,java)
 
 ```
-
-[编译-flag]:http://haxe.org/doc/compiler
-[编译-define]:http://haxe.org/manual/tips_and_tricks
-[haxe completion]:http://haxe.org/manual/completion
-
 
 <br />
 

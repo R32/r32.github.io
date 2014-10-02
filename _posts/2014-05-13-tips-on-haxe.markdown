@@ -5,6 +5,8 @@ date:   2014-05-13 12:26:10
 categories: haxe
 ---
 
+ 这里的内容看上去非常混乱, 因为刚开始时我没想到内容会越来越多,
+
  * [Haxe3 迁移指南](http://old.haxe.org/manual/haxe3/migration) 以及 [新特性](http://old.haxe.org/manual/haxe3/features)
 
  * [黑魔法](http://old.haxe.org/doc/advanced/magic)
@@ -16,7 +18,7 @@ categories: haxe
 <!-- more -->
 #### Tips
 
- * 对于命令行程序, 文件代码应该为 anti ,dos 中才会正确显示中文.
+ * 对于命令行(CLI)程序, 文件代码应该为 anti ,dos 中才会正确显示中文.
 
  * $type
 
@@ -24,7 +26,7 @@ categories: haxe
 
  * haxe.Serializer
 
-	> Serializer.run() 除了普通数据或二进制类型,还可以序列化**类实例**,但只能是纯Haxe的类,如果涉及到 native 平台方法,将失败.
+	> Serializer.run() 除了普通数据或二进制类型,还可以序列化**类实例**,但只能是纯Haxe的类,如果涉及到原生平台方法,将失败.
  
  * Context.resolvePath 除了检索当前项目的目录之外,如果文件不存在 还将检索  haxe/std 目录.
 
@@ -35,18 +37,15 @@ categories: haxe
  	> `std` , 例如:当你写一个 叫 `Math` 的类时,可以通过 `std.Math` 调用标准的 `Math`
 
  	> `typedef SString<Const> = String`. 这个表达式相当于 `typedef SString<T> = String`
-
 	
-	```haxe
-	//这行在 sys.db.Type.hx 文件中.于是可以有如下定义
-	var name:SString<10>; // SQL VARCHAR(10)
-	```
+		```haxe
+		//这行在 sys.db.Type.hx 文件中.于是可以有如下定义
+		var name:SString<10>; // SQL VARCHAR(10)
+		```
 	
  * flashdevelop -> 项目属性 -> 编译器选项 -> Additional Compiler Options
 
- 	> 例如: `--macro openfl.Lib.includeBackend('native')` 如果 native 使双引号将会出错.
-
- 	> 而在 hxml 文件中,单双引号无所谓
+ 	> 例如: `--macro openfl.Lib.includeBackend('native')` 如果 native 使双引号将会出错, 而在 hxml 文件中,单双引号无所谓
 	
 	> 如果使用了 openfl 在 flashdevelop 上修改项目属性将不会有任何改变.
 
@@ -67,7 +66,7 @@ categories: haxe
 
  * **`__this__`**
 
-	> 在 haxe 中即使是局部方法, this 的指向永远为其所在的类,而一些如 JS 或 AS 平台却不是这样. __this__ 必须接在 `untyped` 之后, 以表式目标平台类的 `this`, 可以将下列代码编译成 JS,以区别不同之处.
+	> 在 haxe 中即使是局部方法, this 的指向永远为其所在的类,而一些如 JS 或 AS 平台却不是这样. `__this__` 必须接在 `untyped` 之后, 以表式目标平台类的 `this`, 可以将下列代码编译成 JS,以区别不同之处.
 	
 	```haxe
 	class Foo {
@@ -88,7 +87,7 @@ categories: haxe
 
  * `static function __init__(){}`
 
-	> 用于初使化静态变量的值. 这个方法的赋值 比 直接赋值
+	> 用于初使化静态变量的值. 注意 和 区分直接赋值的先后顺序.
 	
 	```haxe
 	class Foo{
@@ -104,7 +103,7 @@ categories: haxe
 		}
 		
 		public static function main(){
-			new Foo(); // output: var 
+			new Foo(); // output: var , 说明 __init__ 的赋值比直接赋值要早.
 		}								
 	
 	}
@@ -318,9 +317,7 @@ class Main {
 
 Haxe 的 `switch` 表达式还是挺复杂的.参考: [Pattern Matching](http://haxe.org/manual/lf-pattern-matching.html)
 
- > 匹配总是从顶部到底部。
-
- > _ 匹配任何字符，所以case _： 相当于 default:
+ > 匹配总是从顶部到底部. _ 匹配任何字符，所以case _： 相当于 default:
 
 	
 ```haxe
@@ -497,7 +494,7 @@ haxe 允许自定义一些元标记在 类, 字段, 或 枚举上. 格式为 `@s
 
 和 haxe-metas 不一样的是, haxe-metas 是控制编译器行为的, 格式为 `@:some` 比自定义元标记多了一个冒号(:)
 
-当然自定义元标记可以控制编译器行为, 可以在宏构建的方法中调用 (macro.Compiler)来实现.
+当然自定义元标记可以控制 部分编译器 行为, 可以在宏构建的方法中调用 (macro.Compiler)来实现.
 
 ```haxe
 #if !macro @:build(Foo.build()) #end
@@ -541,7 +538,7 @@ class Foo {
 
 <br />
 
-#### `typedef` 和 [`abstract`](http://haxe.org/manual/abstracts) 理解
+#### `typedef` 和 [`abstract`](http://haxe.org/manual/abstracts) 个人理解
 
  > `typedef` 用来定义一种数据结构,包含变量,及方法(**没有方法体**),也没有 `public` `private` 以及 `static` 这些访问控制,
 
@@ -551,32 +548,48 @@ class Foo {
 
  如上, `typedef` 像是 C语言 中用 `typedef struct` 定义的一个数据块. C 中可以强制转换结构指针,同样 Haxe 也用 cast 来强制转换.
 
- > `typedef struct` 在*静态平台*在[性能](http://haxe.org/manual/types-structure-performance.html)上不如其它静态定义(感觉hxcpp应该改进这个问题)，但动态平台却没有影响.
+ > `typedef struct` 会稍微影响 *静态平台* 的[性能](http://haxe.org/manual/types-structure-performance.html)，但动态平台却没有影响.
 
- > 如果你想把一个 直接结构量`{x:0,y:0,width:100}` 赋值给一个变量, typedef struct 是最好的选择了.
+ > 如果你想把一个 直接结构量`{x:0,y:0,width:`100}` 赋值给一个变量, typedef struct 是最好的选择了.
 
-```haxe
-typedef Abc = {
-	var name:String;
-	function f():Void;
-}
-// 可选字段
-typedef Window = { 
-	@:optional var width:Int;
-	@:optional var height:Int;
-	@:optional var x:Float;
-	@:optional var y:Float;
-}
-```
+	```haxe
+	typedef Abc = {
+		var name:String;
+		function f():Void;
+	}
 
+	// 可选字段
+	typedef Window = { 
+		@:optional var width:Int;
+		@:optional var height:Int;
+		@:optional var x:Float;
+		@:optional var y:Float;
+	}
+	//...
+	var w:Window = {x:0,y:0};	
+	```
 
-`abstract` 用来抽象化数据结构, 可以用 new 实例化, 可以有方法体,一般情况下不可以有成员变量
+`abstract` 抽象化数据结构,用于包装底层类型 
+
+ > 用 new 实例化, 可以有方法体,除非添加 @:enum 否则不可以有成员变量.
 
  > 改正: 通过添加 `@:enum` 可以使 abstract 类有成员变量.成员变量会被当成常量处理,或者`getter`
 
  > 从示例中可以看到,和 `typedef` 的区别是抽象类型是要有原形(小括号Int)的,并且 `abstract` 可以有方法体,和一些类型写类型转换规则
 
  > 从 new 方法体中发现,即然修改 `this`的值,所以`abstract` 更象是编译器帮你自动化了的一些代码,从 'haxe -js' 可以查看得到.
+
+ > 在 abstract 语法内 的 static 成员方法,不需要 using, 见 [abstract-selective-functions](http://haxe.org/manual/types-abstract-selective-functions.html) 这一点对运算符重载很重要, 因为运算符重载有时需要添加 `@:commutative` 来交换二个操作数的位置,就 **必须** 使用 static 类型的方法重载.
+
+	```haxe
+	@:commutative @:op(A + B) private static inline function addWithFloat(a:UInt, b:Float):Float {
+		return a.toFloat() + b;
+	}
+
+	@:commutative @:op(A * B) private static inline function mulWithFloat(a:UInt, b:Float):Float {
+		return a.toFloat() * b;
+	}
+	```
 
 [个人 abstract demo](https://github.com/R32/my-test/blob/master/test/hx-syntax-test/abstract/Source/Main.hx)
 ```haxe
@@ -589,17 +602,5 @@ abstract Bcd(Int){
 
   > `abstract` 是编译器智能帮你完成一些重复和烦琐的定义,配合 `inline` 相当于做了宏替换.
 
-  > 'typedef struct' 只是给匿名结构加个标记而已,估计是因为由于要兼容动态平台,所以静态平台上 'typedef struct' == 'dynamic'
 
-
-```haxe
-typedef Window = { 
-	@:optional var width:Int;
-	@:optional var height:Int;
-	@:optional var x:Float;
-	@:optional var y:Float;
-}
-//...
-var w:Window = {x:0,y:0};	
-```
 <br />

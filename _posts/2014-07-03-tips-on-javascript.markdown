@@ -11,19 +11,32 @@ categories: haxe
  
 <!-- more -->
 
-### HTML DOM
+#### `HTML DOM`
 
 haxe.js.html 下的对象类型挺吓人的.
 
 
-### 相关 haxe-defines 以及 haxe-metas
+<br />
+
+#### JS 相关 defines 以及 metas
 
 编译行使用 -D 来设置, 代码中通过 Context.defined 或 Context.definedValue 检测设置
 
- * js-flatten 平坦模式. 
+ * js-flatten 平坦模式.
 
+ 	> 
 
-### `extern class`
+ * embed-js 嵌入 haxe 安装包标准库内部的 JS 文件.
+
+	> 目前只有 `jQuery 1.6.4` 和 `swfObject 1.5` 这二个 since 3.0
+
+ * @:expose(?Name=Class path) Makes the class available on the window object (js only)
+
+	> 将类导出到 window对象 下, 如果 window 未定义,则导出到 export对象(nodejs) 下
+
+<br />
+
+#### `extern class`
 
 当 js 平台时, 由于经常需要调用 js 文件, 由于 Javascript **上下文** 的随意性, 并没有好的工具能自动创建 extern class
 
@@ -48,6 +61,7 @@ DisplayToggle.prototype.show = function() {
 ```
 
 为这个 DisplayToggle.js 创建 extern class 声明
+
 ```haxe
 // DisplayToggle.hx
 package ;
@@ -117,14 +131,16 @@ class Main {
 	> 这也是为什么 官方文档没有这个 元标记以及 方法 说明,
 
 
+<br />
+
+
 ### 使用 nodejs
 
 虽然是 js 平台, 但是在安装 [haxelib nodejs](https://github.com/dionjwa/nodejs-std) 库之后, 完成可以看成另一个平台.
 
 
-### 杂项
 
-haxe安装包 自带了二个JS文件 `jQuery 1.6.4` 和 `swfObject 1.5`, 如果你需要在编译时添加这二个 haxe安装包 带的文件,可以定义: `-D embed_js`.
+<br />
 
 
 
