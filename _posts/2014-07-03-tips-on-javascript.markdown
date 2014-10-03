@@ -24,15 +24,21 @@ haxe.js.html 下的对象类型挺吓人的.
 
  * js-flatten 平坦模式.
 
- 	> 
+	> Generate classes to use fewer object property lookups
 
- * embed-js 嵌入 haxe 安装包标准库内部的 JS 文件.
+ * `embed-js` 嵌入 haxe 安装包标准库内部的 JS 文件.
 
 	> 目前只有 `jQuery 1.6.4` 和 `swfObject 1.5` 这二个 since 3.0
 
- * @:expose(?Name=Class path) Makes the class available on the window object (js only)
+ * `@:expose(?Name=Class path)` Makes the class available on the window object (js only)
 
-	> 将类导出到 window对象 下, 如果 window 未定义,则导出到 export对象(nodejs) 下
+	> 将类导出到 window对象 下, 如果 window 未定义,则导出到 exports对象(nodejs) 下
+
+ * `@:initPackage`
+
+	> 针对 extern class 初使化包名为 Object, 
+	
+ * `@:runtime` (since 2.10) 未知
 
 <br />
 

@@ -17,7 +17,7 @@ categories: haxe
 这个文档源文来自: [Haxeflixel's guide](http://haxeflixel.com/documentation/as3-and-haxe-comparison/).
 
 <!-- more -->
-<h3>Basic Types</h3>
+<h3>Basic Types(基础类型)</h3>
 <div class="row">
   <div class="col-md-6 as3">
   <h4>AS3</h4>
@@ -36,7 +36,7 @@ Vector.<String>
   <div class="col-md-6 hx3">
   <h4>Haxe</h4>
 
-{% highlight as %}
+{% highlight haxe %}
 Bool
 Int
 Float
@@ -47,9 +47,31 @@ Array<String>
 {% endhighlight %}
   </div>
 </div>
-
 <hr />
-<h3>Package Declarations</h3>
+
+<h3>Const (常量)</h3>
+<div class="row">
+<div class="col-md-6 as3">
+<h4>AS3</h4>
+{% highlight as %}
+
+const MAX:int = 100;
+
+{% endhighlight %}
+</div>
+
+<div class="col-md-6 hx3">
+<h4>Haxe</h4>
+{% highlight haxe %}
+
+static inline var MAX:Int = 100;
+// 但是 haxe 的常量只允许 Int, Bool, Float, String 这些常量类型.
+{% endhighlight %}
+</div>
+</div>
+<hr />
+
+<h3>Package Declarations(包声明)</h3>
 
 <div class="row">
 <div class="col-md-6 as3">
@@ -74,7 +96,7 @@ package com.example.myapplication;
 </div>
 
 <hr />
-<h3>Defining a Class</h3>
+<h3>Defining a Class(定义类)</h3>
 
 <div class="row">
 <div class="col-md-6 as3">
@@ -84,8 +106,7 @@ package com.example.myapplication;
 public class MyClass {
 
    public function MyClass () {
-
-
+	
    }
 
 }
@@ -100,7 +121,6 @@ class MyClass {
 
    public function new () {
 
-
    }
 
 }
@@ -111,7 +131,7 @@ class MyClass {
 </div>
 
 <hr />
-<h3>Loops</h3>
+<h3>Loops(循环)</h3>
 <div class="row">
 <div class="col-md-6 as3">
 <h4>AS3</h4>
@@ -135,6 +155,7 @@ for (var propertyName:String in object) {
 <h4>Haxe</h4>
 
 {% highlight as %}
+// haxe 中没有 for(var i=0; i<10; i++) 这样的循环
 for (i in 0...100) {
 
 }
@@ -167,15 +188,15 @@ switch (value) {
    default:
       trace ("Not equal to 1");
       break;
-
 }
-        {% endhighlight %}
+{% endhighlight %}
 </div>
 
 <div class="col-md-6 hx3">
 <h4>Haxe</h4>
 
-{% highlight as %}
+{% highlight haxe %}
+// haxe 中的 switch 不需要 break;
 switch (value) {
 
    case 1:
@@ -192,7 +213,7 @@ switch (value) {
 </div>
 
 <hr />
-<h3>Type Inference</h3>
+<h3>Type Inference(类型推断)</h3>
 
 <div class="row">
 <div class="col-md-6 as3">
@@ -201,19 +222,19 @@ switch (value) {
 {% highlight as %}
 var hi = "Hello World";
 
-// type is Object
-// fails to compile in strict mode
+// type is Object (类型为 Object)
+// fails to compile in strict mode (不能通过严格模式的编译)
 {% endhighlight %}
 </div>
 
 <div class="col-md-6 hx3">
 <h4>Haxe</h4>
 
-{% highlight as %}
+{% highlight haxe %}
 var hi = "Hello World";
 
-// type is String
-// even works for code completion
+// type is String (类型为 String)
+// even works for code completion (能正常通过编译)
 {% endhighlight %}
 </div>
 
@@ -221,7 +242,7 @@ var hi = "Hello World";
 </div>
 
 <hr />
-<h3>Type Casting</h3>
+<h3>Type Casting(类型转换)</h3>
 
 <div class="row">
 <div class="col-md-6 as3">
@@ -239,11 +260,9 @@ var toInteger:int = int (10.1);
 <div class="col-md-6 hx3">
 <h4>Haxe</h4>
 
-{% highlight as %}
+{% highlight haxe %}
 var car:Car = cast vehicle;
-
 // or for a safe cast:
-
 var car = cast (vehicle, Car);
 
 var toString = Std.string (10);
@@ -278,7 +297,8 @@ type = Class (getDefinitionByName (name);
 <div class="col-md-6 hx3">
 <h4>Haxe</h4>
 
-{% highlight as %}
+{% highlight haxe %}
+// haxe 中没有 is as 以及 instanceof 这些关键字.
 if (Std.is (vehicle, Car)) {
 
 }
@@ -304,7 +324,6 @@ if (object == null) {
 }
 
 if (!object) {
-
 }
 {% endhighlight %}
 </div>
@@ -312,10 +331,11 @@ if (!object) {
 <div class="col-md-6 hx3">
 <h4>Haxe</h4>
 
-{% highlight as %}
+{% highlight haxe %}
 if (object == null) {
-
+	
 }
+
 {% endhighlight %}
 </div>
 
@@ -348,7 +368,7 @@ delete table["key"];
 <div class="col-md-6 hx3">
 <h4>Haxe</h4>
 
-{% highlight as %}
+{% highlight haxe %}
 var table = new Map<String, Int> ();
 table.set ("key", 100);
 
@@ -368,7 +388,7 @@ table.remove ("key");
 </div>
 
 <hr />
-<h3>Rest Parameters</h3>
+<h3>Rest Parameters(可变参数)</h3>
 
 <div class="row">
 <div class="col-md-6 as3">
@@ -386,7 +406,7 @@ test (1, 2, 3);
 <div class="col-md-6 hx3">
 <h4>Haxe</h4>
 
-{% highlight as %}
+{% highlight haxe %}
 function test (params:Array<Dynamic>) {
 
 }
@@ -399,7 +419,7 @@ Reflect.makeVarArgs (test) (1, 2, 3);
 </div>
 
 <hr />
-<h3>Reflection</h3>
+<h3>Reflection(反射)</h3>
 
 <div class="row">
 <div class="col-md-6 as3">
@@ -415,7 +435,7 @@ bar.apply (this, [ "hi" ]);
 <div class="col-md-6 hx3">
 <h4>Haxe</h4>
 
-{% highlight as %}
+{% highlight haxe %}
 var foo = Reflect.field (object, "foo");
 
 Reflect.callMethod (this, bar, [ "hi" ]);
@@ -426,7 +446,7 @@ Reflect.callMethod (this, bar, [ "hi" ]);
 </div>
 
 <hr />
-<h3>Function Types</h3>
+<h3>Function Types(函数类型)</h3>
 
 <div class="row">
 <div class="col-md-6 as3">
@@ -444,14 +464,15 @@ var type:Function = hello;
 <div class="col-md-6 hx3">
 <h4>Haxe</h4>
 
-{% highlight as %}
+{% highlight haxe %}
 function hello (msg:String):Void {
 
 }
 
-var type:String->Void = hello;
+var type:String->Void = hello; 
 
 // can also use Dynamic
+var type2:Dynamic = hello;
 {% endhighlight %}
 </div>
 
@@ -483,7 +504,7 @@ function set x (value:Number):void {
 <div class="col-md-6 hx3">
 <h4>Haxe</h4>
 
-{% highlight as %}
+{% highlight haxe %}
 public var x (get, set):Float;
 
 function get_x():Float {
@@ -497,13 +518,14 @@ function set_x(value:Float):Float {
    return _x = value;
 
 }
+// 重要: 这种形式在 haxe 很少见, 参见下边 Read-Only Properties 才是正确的做法
 {% endhighlight %}
 </div>
 </div>
 
 
 <hr />
-<h3>Read-Only Properties</h3>
+<h3>Read-Only Properties(只读属性)</h3>
 
 <div class="row">
 <div class="col-md-6 as3">
@@ -521,11 +543,15 @@ function get x ():Float {
 <div class="col-md-6 hx3">
 <h4>Haxe</h4>
 
-{% highlight as %}
+{% highlight haxe %}
 public var x (default, null):Float;
 
 // null allows private access
 // never would restrict all access
+public var y(default, set):Float;
+function set_y(v:Float):Float{
+	return y = v; // 注意这个 y 没有下划线, 和声明的 y 变量一相同
+}
 {% endhighlight %}
 </div>
 </div>
@@ -548,7 +574,7 @@ clearTimeout(cancelID);// 取消
 
 <div class="col-md-6 hx3">
 <h4>Haxe</h4>
-{% highlight as %}
+{% highlight haxe %}
 // 重要: haxe.Timer 原生 Haxe 只支持 flash 以及 Javascript 平台
 // 使用 openfl 时, haxe.Timer 才是跨平台的.参看 HaxeToolkit\haxe\lib\openfl-native\1,n,n\haxe\Timer.hx
 // 使用 openfl 时, haxe.Timer 和 flash.utils.Timer 不是同一个类.
@@ -580,7 +606,7 @@ trace(this === root);
 
 <div class="col-md-6 hx3">
 <h4>Haxe</h4>
-{% highlight as %}
+{% highlight haxe %}
 // Haxe 则需要类型一致,  或者A的类型是 B 的 父类或子类
 
 // 假如 this => Main,  root => MovieClip
@@ -612,9 +638,9 @@ CONFIG::DEBUG{
 
 <div class="col-md-6 hx3">
 <h4>Haxe</h4>
-{% highlight as %}
+{% highlight haxe %}
 
-// 细节参看页尾的 宏条件编译
+// 细节参看页尾的 条件编译
 #if debug
   trace("debug");
 #end
@@ -622,8 +648,10 @@ CONFIG::DEBUG{
 {% endhighlight %}
 </div>
 </div>
-<br />
+<hr />
 
+
+<br />
 
 #### Additional Features
 

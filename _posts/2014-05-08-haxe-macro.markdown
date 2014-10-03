@@ -7,6 +7,8 @@ categories: haxe
 
 ---
 
+个人感觉 宏 是 Haxe 最主要的特性, Haxe 的宏非常强力
+
 > 宏可以在编译时通过计算初使化一些值,比如 UI 的配置等等.
 
 > 宏可以扫描资源文件夹,用于自动嵌入文件或者 IDE 智能提示
@@ -15,7 +17,7 @@ categories: haxe
 
 <!-- more -->
 
-### 条件编译([Conditional Compilation](http://haxe.org/manual/lf-condition-compilation.html))
+### 条件编译 [(Conditional Compilation)](http://haxe.org/manual/lf-condition-compilation.html)
 
 Haxe 通过使用 `#if #else #elseif #end` 来 **检测编译器标志**, 用于实现 **条件编译**. 严格来说我不应该把 这一节内容放在 宏 这一章
 
@@ -54,7 +56,7 @@ trace("haxe version > 3.1");
 
 在 `#if` 和 `#elseif` 之后的条件允许以下表达式:
 
- * 任意编译标志(haxe-defines)将替换成名字相同的 条件标识符, 如果带 减(-)号,将会 **同时** 生成另一个 带 下划线(_)的标识符
+ * **重要:** 任意编译标志(haxe-defines)将替换成名字相同的 条件标识符, 如果带 减(-)号,将会 **同时** 生成另一个 带 下划线(_)的标识符
 
 	> **请注意:** `-D some-flag` 将会产生 `some-flag` 和 `some_flag` 二个条件标识符. 但是 `#if` 或 `#elseif` 却**只能识别**带下划线的那一个. 
 	> 减号那个需要用引号括起来, 而用引号括起来的标识符却又不能使用一些运算符.
@@ -64,13 +66,13 @@ trace("haxe version > 3.1");
 
 	> **结论:** 即使定义标志时为 减(-)号, 但检测编译标志时, 请使用 下划线(_) 替换掉 减(-)号.
 
- * 使用 `-lib libName` 会生成同库名一样的 条件标识符,, 减(-)号问题和上边一样
+ * **重要:** 使用 **haxelib** 时 会生成同库名一样的 条件标识符, 减(-)号问题和上边一样
 
  * String, Int, Float 常量值可以直接使用, 0值 以及 空字符串 用于表示 false
 
  * 逻辑运算符 `&&(与), ||(或), !(非)`
 
- * 运算符 `==, !=, >, >=, <=` 可以用来比较
+ * 条件运算符 `==, !=, >, >=, <=`
 
  * 圆括号`()`, 用于组合多个表达式
 
@@ -79,6 +81,23 @@ trace("haxe version > 3.1");
 	```
 	flash|neko|cpp|js|php|java  : 这种平台相关无需多解释,但是从上边示例可以发现, 还可以指定版本
 	```
+
+##### 重要: 同样可以把条件标识符放置在 `@:require` 之后
+
+`@:require(Compiler Flag [,"custom error message" ])`
+
+如果没有满足 `@:require` 之后的条件标识符, 类名可以访问, 但是 类的所有字段(包括static类型)都不可访问. 
+
+```haxe
+@:require(haxe_ver>3.1)
+@:require(nodejs, "require haxelib nodejs")
+class Foo{
+	public var value:String;
+	public function new(val:String){
+		value = val;
+	}
+}
+```
 
  
 <br />
