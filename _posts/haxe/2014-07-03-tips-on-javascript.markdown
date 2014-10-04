@@ -13,7 +13,7 @@ categories: haxe
 
 #### `HTML DOM`
 
-haxe.js.html 下的对象类型挺吓人的.
+haxe.js.html 下的对象类型挺吓人的. 所以应该使用 js.JQuery 来操作 DOM 对象.
 
 
 <br />

@@ -1,16 +1,21 @@
-name: 5515544's Blog
+name: lwm
 
-# 下边二行可以用 backticks 替换 {% highlight %} 的代码高亮方式
-# 但是如果混在 html 标签中,还是得用 {% highlight %}
+
+### 但是如果 backticks 混在 html 标签中,还是得用 {% highlight %}
 markdown: redcarpet
-extensions: [fenced_code_blocks]
-#markdown: kramdown
+
+redcarpet:
+  extensions: ["no_intra_emphasis", "fenced_code_blocks", "autolink", "tables", "with_toc_data"]
+
+
 
 gems:
   - jekyll-sitemap
 
 # 更改这个配置文件需要重启一下
 destination: /cygdrive/r/_site
+
+
 
 include: []
 
@@ -24,11 +29,17 @@ timezone: CN
 
 excerpt_separator: <!-- more -->
 
+
+
 # 计划用这个来实现 别人帮助 编辑
 doc_url_path: https://github.com/R32/r32.github.io/blob/master/
 
+
+
 #permalink: none
-#header menu config
+
+
+##### 一些自定义的数据
 
 custom_menu:
   - name: home
@@ -46,7 +57,8 @@ custom_menu:
   - name: person
     url: /person/
     label: 个人
-# powered by ...
+
+
 powered_by:
   - name: Github Pages
     url: pages.github.com

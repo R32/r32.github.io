@@ -17,15 +17,15 @@ categories: haxelib
 
 #### 快速入门
 
- * `haxelib run munit config`
+ * haxelib run munit config
 
  	> 将会在当前目录中创建配置文件 `.munit`, 并且创建 一些样例测试于 test 目录下.
 
- * `haxelib run munit test`
+ * haxelib run munit test
 
  	> 根据 `.munit` 文件的配置进行测试.
 
- * `haxelib run munit test -js -as3`
+ * haxelib run munit test -js -as3
 
  	> 仅仅测试 js 与 as3 这二个平台.
 

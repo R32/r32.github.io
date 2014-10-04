@@ -14,7 +14,7 @@ categories: haxe
 
 haxedoc 命令已经被弃用,而改用了另一个叫haxelib dox, **但是** 生成 xml 还是用的 haxe -xml 命令
 
- * [如何生成 Haxe API 文档]({% post_url 2014-05-5-haxe-doc-gen %})
+ * [如何生成 Haxe API 文档]({% post_url haxe/2014-05-5-haxe-doc-gen %})
 
 <br />
 
@@ -194,7 +194,9 @@ Haxe Compiler 3.13 - (C)2005-2014 Haxe Foundation
 # 编译时忽略所有 trace 语句
 --no-traces : do not compile trace calls in the program
 
-# 看上去像是 haxe 2.x 时期调用 flash 的 swc 库所要用的, 似乎不用理会这个
+# 解析 flash 的 swf/swc 库并自动生成 extern class, 感觉是一个自动写 extern class 的工具, 可惜只能用于 flash 库.
+# 既然 haxe 能直接使用 swc 库, 个人感觉 就已经不需要 extern class 类了.也就是说 --gen-hx-classes 多余了.
+# 示例: haxe -swf empty.swf --no-output -swf-lib some.swc --gen-hx-classes
 --gen-hx-classes : generate hx headers for all input classes
 
 # 分隔 haxe 编译, hxml 文件中经常能见到
@@ -282,6 +284,7 @@ haxe --help-defines, haxe Compiler Flag
 ```bash
 absolute-path          : Print absolute file path in trace output
 
+# 添加 Scout (aka Monocle) 支持. Since SVN r5429
 advanced-telemetry     : Allow the SWF to be measured with Monocle tool
 
 as3                    : Defined when outputing flash9 as3 source code
@@ -311,8 +314,10 @@ dump                   : Dump the complete typed AST for internal debugging
 
 dump-dependencies      : Dump the classes dependencies
 
+# 启用交互式调试的 Flash 内容。它在 SWF 输出中包含调试器标记，并添加额外的调试信息。这也将把 trace 输出重定向到 flashlog.txt, 而不是 swf 中的 Textfiled
 fdb                    : Enable full flash debug infos for FDB interactive debugging
 
+# 更严格的类型检测, 反正加上就是
 flash-strict           : More strict typing for flash target
 
 # 示例参看 http://old.haxe.org/doc/flash/preloader
@@ -348,6 +353,7 @@ macro                  : Defined when we compile code in the macro context
 
 macro-times            : Display per-macro timing when used with --times
 
+# 仅仅只生成 .neko 源代码
 neko-source            : Output neko source instead of bytecode
 
 neko-v1                : Keep Neko 1.x compatibility
@@ -359,6 +365,7 @@ net-ver                : <version:20-45> Sets the .NET version to be targeted
 # 更改 flash 网络沙箱模式,  定义后将为 只访问网络, 默认为只访问本地
 network-sandbox        : Use local network sandbox instead of local file access one
 
+# 用于 cpp,java,c# 生成代码但是不编译.
 no-compilation         : Disable CPP final compilation
 
 no-copt                : Disable completion optimization (for debug purposes)
@@ -411,6 +418,8 @@ swf-gpu                : Use GPU compositing features when drawing graphics
 
 swf-mark               : GenSWF8 internal
 
+# 嵌入元数据 xml文件到 swf,以便搜索引擎检索信息, 示例: -D swf-metadata=data.xml 
+# 元数据 xml文件 格式参见 http://www.adobe.com/products/xmp.html
 swf-metadata           : =<file> Include contents of <file> as metadata in the swf.
 
 # 示例: http://old.haxe.org/doc/flash/preloader

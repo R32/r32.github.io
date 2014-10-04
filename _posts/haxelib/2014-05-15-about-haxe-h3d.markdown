@@ -1,30 +1,26 @@
 ---
 
 layout: post
-title:  简单描述 h3d
+title:  简单描述 heaps(h3d)
 date:   2014-05-13 8:26:10
 categories: haxelib
 
 ---
 
-目前已经更名为 heaps, 看描述似乎要做成一个游戏引擎. 一些改动也比较大
+目前已经更名为 heaps, 看描述似乎要做成一个游戏引擎. 一些改动也比较大,  [**`heaps`**](https://github.com/ncannasse/heaps) 当目标平台为 flash 时将基于 flash.stage3D, 而 平台为 js 时, 将使用 webgl. 如果需要使用以前旧的 h3d 版本, 在 github 页面上找到 h3d 这个分支即可. 另一个fork版本 [motion-twin/h3d](https://github.com/motion-twin/h3d) 似乎可以通过 openfl 跨平台.
 
-[**`h3d`**](https://github.com/ncannasse/heaps) 是一个 flash 3D 引擎,基于 flash.stage3D, 目前只适用于 flash 平台.
-
-另一个fork版本 [motion-twin/h3d](https://github.com/motion-twin/h3d) 似乎可以通过 openfl 跨平台.
+注意: 下边的文档描述可能和 heaps 中的文件并不一致.
 
 
 <!-- more -->
 
 ### h3d
- 
+
  * **Engine** 
 
-  - 构选函数的 antiAlias 参数,似乎不会起任何作用,像是没实现.
+	> 构选函数的 antiAlias 参数,似乎不会起任何作用,像是没实现.
   
-  - 一些基础设置,如修改背影颜色,或设置全屏...
-
-  - ++
+	> 一些基础设置,如修改背影颜色,或设置全屏...
 
  * impl 文件夹
 
@@ -44,7 +40,7 @@ categories: haxelib
 
  * [ld-30 Connected Worlds](https://github.com/ncannasse/ld30)
 
-##### 源码简析
+#### 源码简析
 
  * **Scene** 2D 场影.
   

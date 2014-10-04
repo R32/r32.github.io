@@ -30,7 +30,7 @@ categories: other
 
 #### 插件使用
 
- Github pages在线[支持的插件](https://pages.github.com/versions/)
+ Github pages在线[支持的插件](https://pages.github.com/versions/), 可使用 gem 命令检测本机插件版本和 github pages 进行对比
 
  * [`jekyll-sitemap`](https://github.com/jekyll/jekyll-sitemap) 用于生成 `sitemap.xml` 以优化 SEO
 
@@ -42,3 +42,5 @@ categories: other
 
 
  * ['jekyll-redirect-from'](https://github.com/jekyll/jekyll-redirect-from) 一个类似于 `URL rewrite` 
+
+ * [jemoji](https://github.com/jekyll/jemoji)

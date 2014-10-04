@@ -7,12 +7,7 @@ categories: haxe
 
 ---
 
- > 原生扩展提供 Haxe 代码的接口, 如果你想要创建您自己的本地扩展，您可以找到一些教程
-
- > [haxeflixel 的文章](http://haxeflixel.com/documentation/native-extensions/)
-
-
-
+原生扩展提供 Haxe 代码的接口, 如果你想要创建您自己的本地扩展，您可以找到一些教程, [haxeflixel 的文章](http://haxeflixel.com/documentation/native-extensions/).
 
 
 <!-- more -->
@@ -154,7 +149,7 @@ copy ndll\windows\ext.ndll hbin\
 
  * 参考 cpp 的前部分.`dependencies/` 目录就是属于 android 原生扩展 
  
- * [haxe android JNI]({% post_url 2014-05-10-tips-openfl-android %})
+ * [haxe android JNI]({% post_url haxe/2014-05-10-tips-openfl-android %})
  
 
 <br /> 
@@ -162,7 +157,7 @@ copy ndll\windows\ext.ndll hbin\
 
  * 当编译成flash时,haxe可以直接引用 SWC 库.并且提供输入智能提示
 
- * [haxe 中引用 SWC 文件 ]({% post_url 2014-05-10-tips-haxe-flash %})
+ * [haxe 中引用 SWC 文件 ]({% post_url haxe/2014-05-10-tips-haxe-flash %})
 
 
 <br />
@@ -200,5 +195,4 @@ copy ndll\windows\ext.ndll hbin\
 
  * [文档](http://old.haxe.org/doc)
  
-<br />
 <br />

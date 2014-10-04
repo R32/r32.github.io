@@ -1,8 +1,10 @@
 ---
+
 layout: post
 title:  生成Haxe API文档
 date:   2014-05-05 21:03:10
 categories: haxe
+
 ---
 
 目前 haxe 官方抛弃了以前旧的文档生成器, 而转而使用了 [haxe dox](https://github.com/dpeek/dox) 来构建 API 文档.

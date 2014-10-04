@@ -3,7 +3,7 @@
 /**
 * Code hightliht
 */
-.highlight  { background: #ffffff; }
+.highlight  { background: #ffffff; font-family: Consolas,"Liberation Mono","Courier New",Courier,monospace;}
 .highlight .c { color: #777777; } /* Comment */
 .highlight .err { color: #a61717; background-color: #e3d2d2 } /* Error */
 .highlight .k { font-weight: bold } /* Keyword */
@@ -65,7 +65,7 @@
 .highlight .il { color: #009999 } /* Literal.Number.Integer.Long */
 
 blockquote{
-  border-left: 5px solid #DDD;
+  border-left: 4px solid #DDD;
 }
 
 code, tt {
@@ -74,11 +74,12 @@ code, tt {
     border: 1px solid #DDD;
     margin: 0px 2px;
     padding: 0px 5px;
-    font-family: Consolas,"Liberation Mono",Courier,monospace;
+    font-family: Consolas,"Liberation Mono","Courier New",Courier,monospace;
     color:#333;
-    font-size:13px;
+    font-size:14px;
     white-space: nowrap;
 }
+
 
 .highlight code,.highlight tt{
   border: 0;
@@ -91,6 +92,9 @@ em code{
 
 h1 code,h2 code,h3 code,h4 code,h5 code,h6 code{
   font-size: inherit;
+  border:0;
+  margin:0;
+  padding:0;
 }
 
 
@@ -342,7 +346,7 @@ hr.gh{ background:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAECAY
 h1,h2,h3,h4,h5,h6{font-family:'微软雅黑'}
 
 div.post h1,div.post h2,div.post h3,div.post h4,div.post h5,div.post h6{
-  line-height:1.1; margin-bottom:10px; margin-top:23px;
+  line-height:1.1; margin-bottom:10px; margin-top:30px;
 }
 
 .zh-st{
@@ -367,8 +371,11 @@ div.excerpt{font-size: 90%;}
 
 div.excerpt h4,div.excerpt h3{color:#777; font-size: 15px}
 
-div.excerpt a,div.excerpt p{
+div.excerpt a{
   color: #555;
+}
+div.excerpt p{
+  color: #777;	
 }
 
 div.excerpt blockquote,div.excerpt code{
