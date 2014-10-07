@@ -10,9 +10,7 @@ categories: haxelib
  [CastleDB] 是一个基于 [Node Webkit] 的应用. 看起来像一个电子表格. 一个可视的 JSON 格式 **行数据** 的生成器. 
 
  
- 首先将下载的 Node Webkit 解压到 `CastleDB/bin` 目录下,然后打开 `nw.exe` 就行了。或者将 `CastleDB/bin` 目录下的文件打包成 zip 文件,以 `nw.exe app.zip` 的方式来运行,  帮助文档在 www 目录 中.
-
-
+ 首先将下载的 Node Webkit 解压到 `CastleDB/bin` 目录下,然后打开 `nw.exe` 就行了。或者将 `CastleDB/bin` 目录下的文件打包成 zip 文件,以 `nw.exe app.zip` 的方式来运行,  帮助文档在 www 目录 中. 可以点开 标题菜单的 dev 打开 控制台, 输入 `_.data` 将是 你用 这个编辑器输入的 JSON 数据.
 
  
  可以使用 haxelib dev 的方式本地安装 castle 库,这样就能在 Haxe 中读取 上边所应用保存的数据.
@@ -25,6 +23,8 @@ categories: haxelib
 
 ### 列类型
 
+描述中提到的 JSON 格式是表示用文本编辑器直接打找 .cdb 文件后看到的字符串, 其实 .cdb 就是一个 JSON 文件.
+
  * **Unique Identifier** 唯一标识符。将允许引用这一行从其他 表(sheets) 或 列(columns)。唯一标识符必须是有效的代码标识符`[A-Za-z_][A-Za-z0_9_]*`
 
  * **Text** 字符串文本。 任意文本,目前不允许多行文本。注意: 字段名称为 name 将会有特殊意义,用于引用(Reference)
@@ -35,9 +35,9 @@ categories: haxelib
 
  * **Float** 浮点数
 
- * **Enumeration** 枚举。类似于 单项选择框???
+ * **Enumeration** 枚举。类似于 单项选择, 添加 column 时, 用逗号分隔各项值
 
- * **Flags** 标志。 类似于 多项选择框。例如: `hasHat, hasShirt, hasShoes`
+ * **Flags** 标志。 类似于 多项选择框。例如: `hasHat, hasShirt, hasShoes`, 添加 column 时, 用逗号分隔各项值
 
  * **Reference** 引用。 
 
@@ -55,7 +55,9 @@ categories: haxelib
 
  * **File** 目标文件相对或绝对路径。
 
- * **Image** 要显示的图片。
+ * **Image** 要显示的图片, 
+
+ 	> JSON格式: 这个列的值为一个图片的 md5 值, 这时和 .cdb 会存在一个 同名的 .img 后缀的 JSON 文件, 文件格式类似于 `{"md5string": "data:image/png;base64,........"}`
 
  * **Tile** 类似于图片,一张图片上存放多个 Tile,类似于 SpriteSheet
 
@@ -65,11 +67,26 @@ categories: haxelib
 
  * **Data Layer**
 
- * **Tile Layer**
+ * **Tile Layer** 这个字段由 castle 编辑器自行添加数据
 
- * **Custom Type** 自定义类型
+ * **Custom Type** 自定义类型, 
 
-	> 通过点击 IDE 的右下角的 `edit type` 打开一个空白页面, 
+	> 通过点击 IDE 的右下角的 `edit type` 打开一个空白页面, 我看到的示例都是 enum 类型的, 和普通的 Enumeration 比起来,
+	> Custom Type 的 enum 是带有 构造方法的. 示例如下:
+
+	```haxe
+	enum Super2 {
+		A;
+		B;
+		C( x : Int );
+	}
+
+	enum Effect2 {
+		Poison( time : Float, power : Float );
+		Check( a : Super2 );
+		Monster( m : monsters );
+	}
+	```
 
 
 
@@ -95,7 +112,7 @@ categories: haxelib
 
 ### 代码中调用
 
-参看 www/index.html 以及 src/test. Test.hx:
+在 Haxe 中调用...参看 www/index.html 以及 src/test. Test.hx:
 
 ```haxe
 import dat.Data;

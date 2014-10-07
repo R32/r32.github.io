@@ -108,6 +108,10 @@ categories: haxelib
 
 	> A cross platform Haxe library for loading resources with utilities for queueing and caching requests. Supports AVM2, JavaScript, Neko and C++
 
+ * [tink_core](https://github.com/haxetink/tink_core) 
+
+ 	> 包含几个轻量级工具库. 比如 signal, 文档很详细
+
 
 
 

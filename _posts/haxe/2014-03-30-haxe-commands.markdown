@@ -282,6 +282,7 @@ haxe --help-defines, haxe Compiler Flag
 这个列表按文件名排序, 并且没有按平台把它们区分开来: 
 
 ```bash
+# 在 trace 语句中 打印绝对路径
 absolute-path          : Print absolute file path in trace output
 
 # 添加 Scout (aka Monocle) 支持. Since SVN r5429
@@ -345,7 +346,7 @@ js-classic             : Don not use a function wrapper and strict mode in JS ou
 
 js-es5                 : Generate JS for ES5-compliant runtimes
 
-# 使用更少的对象属性构建类
+# 使用更少的对象属性构建类, 例如: 默认情况下会创建的类有时似于 Main.a.b.c   加这个属性后将为 Main_a_b_c 这样就降低了访问对象的深度
 js-flatten             : Generate classes to use fewer object property lookups
 
 # 参看 haxe --help 中的 --macro
@@ -505,7 +506,8 @@ haxe --help-metas, 这类元标记一般添加在代码中, 也可以在 宏(mac
 
 @:depend             :  (cpp only)
 
-@:deprecated         : Automatically added by -java-lib on class fields annotated with @Deprecated annotation. Has no effect on types compiled by Haxe. (java only)
+# 如果一个字段或类, 被添加这个标记, 编译器将在编译时输出警告信息
+@:deprecated         : Automatically added by -java-lib on class fields annotated with @Deprecated annotation. Has no effect on types compiled by Haxe.
 
 @:event              : Automatically added by -net-lib on events. Has no effect on types compiled by Haxe. (cs only)
 
@@ -587,6 +589,7 @@ haxe --help-metas, 这类元标记一般添加在代码中, 也可以在 宏(mac
 @:multiType          : (Relevant type parameters)Specifies that an abstract chooses its this-type from its @:to functions
 
 # 重写输出类或枚举的包名, 例: @:native("my.real.Cls"). 使它更容易绑定到 extern 类, 可能有不一样的名称.
+# nodejs 的 extern class 经常有 @:native("(require('fs'))"), 由于这样导出的代码不美观, haxe 3.2 将会有新的 @:jsRequire 标记
 @:native             : (Output type path)Rewrites the path of a class or enum during generation
 
 @:nativeGen          : Annotates that a type should be treated as if it were an extern definition - platform native (for cs,java)
@@ -615,6 +618,7 @@ haxe --help-metas, 这类元标记一般添加在代码中, 也可以在 宏(mac
 @:op                 : (The operation)Declares an abstract field as being an operator overload
 
 # 当使用 typedef 定义 结构时, 添加在字段(field) 前表示为 可选字段
+# 一种类似于写 形参 方法可以替换掉这个元标记 
 @:optional           : Marks the field of a structure as optional
 
 # 函数重载, 用于 extern class, 允许同一个方法有不同参数.

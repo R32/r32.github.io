@@ -26,6 +26,8 @@ haxe.js.html 下的对象类型挺吓人的. 所以应该使用 js.JQuery 来操
 
 	> Generate classes to use fewer object property lookups
 
+	> 使用更少的对象属性构建类, 例如: 默认情况下会创建的类有时似于 Main.a.b.c 加这个属性后将为 Main_a_b_c 这样就降低了访问对象的深度
+
  * `embed-js` 嵌入 haxe 安装包标准库内部的 JS 文件.
 
 	> 目前只有 `jQuery 1.6.4` 和 `swfObject 1.5` 这二个 since 3.0

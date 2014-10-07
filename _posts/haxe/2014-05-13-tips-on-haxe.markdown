@@ -299,7 +299,33 @@ class Main {
 
 #### 对于 [`enum`](http://haxe.org/manual/types-enum-instance.html) 的理解
 
- 像是一种抽像的数据类型,只是用来描述数据结构.
+一. 配合 EnumFlags,将 enum 用作于多项选译, 如下描述一个人能说几种语言, .
+
+```haxe
+enum Lang{
+	EN;
+	FR:
+	CN;
+}
+// EnumFlags 的定义
+abstract EnumFlags<T:EnumValue>(Int) {}
+
+// 为什么这里的类型 Lang 为 EnumValue
+var f = new EnumFlags<Lang>();
+
+// 这个示例显示 如果 Lang 作为类型参数时, 将等于 EnumValue, 只是用来限定包含哪些有字段
+var en:Lang = EN;
+var fr:EnumValue = FR;
+
+// 而 尖括号(EnumFlags<Lang>) 中的 Lang ,这里是用于表示 类型, 而不是把 Lang 作为值传递
+// 任何时候 尖括号中的值都是用来表类型.
+
+var t:Enum<Dynamic> = Lang;	// 或 t:Enum<Lang> = Lang; 这里才是把 Lang 作值传递, 这里和 Class<Dynamic> 那里一致
+function foo<T>(eu:Enum<T>):Void {} // foo(Lang);
+```
+
+
+二. 配合 switch , 用于描述抽像的数据类型,感觉像是单项选译, 详情见官方文档.
 
  > 比如写一个特殊的文件格式解析器时, 可以用 `enum` 标记各字节的抽象意义,使代码更好理解.
 
@@ -309,7 +335,9 @@ class Main {
  
  > 所有 `EnumValue` 都会以 二个大写字母开头.这并不是强制性的
  
+
  > `EnumValue` 包含有 :`getName(),getIndex(),getParameters(),equals()`,来自 `haxe.EnumValueTools`.
+
 
 <br />
 
@@ -447,18 +475,16 @@ class Helo{
 
  * 也许会看到 `<T:{prev:T,next:T}>`或 `<K:{ function hashCode():Int;}>` 这样的源码
  
- 	> 实际上 `{}` 可以看成类型,然后这个类型只要包含 `prev next` 属性 或 `hasCode` 方法就行了
-
- 	> 分析 `haxe.macro.Type.hx` 的 `Ref`
+ 	> 实际上 `{}` 可以看成类型,然后这个类型只要包含 `prev next` 属性 或 `hasCode` 方法就行了, 分析 `haxe.macro.Type.hx` 的 `Ref`
 	
- 	```haxe
- 	typedef Ref<T> = {
-		public function get() : T;
-		public function toString() : String;
-	}
+		```haxe
+	 	typedef Ref<T> = {
+			public function get() : T;
+			public function toString() : String;
+		}
 
-	// 只要一个类型它包含了 get 及 toString ,就可以看成是 Ref
- 	``` 
+		// 只要一个类型它包含了 get 及 toString ,就可以看成是 Ref
+		``` 
 
 <br />
 
@@ -558,14 +584,24 @@ class Foo {
 		function f():Void;
 	}
 
-	// 可选字段
-	typedef Window = { 
+	// 类似于写 接口, 或 extern 类.
+	typedef Window = {
+		var x:Float;
+		var y:Float;
 		@:optional var width:Int;
 		@:optional var height:Int;
-		@:optional var x:Float;
-		@:optional var y:Float;
+		function exit():Void;
+		
 	}
-	//...
+	
+	// 类似于 JSON 形参一样,
+	typedef Window = {
+		x:Float,
+		y:Float,
+		?width:Int,	// 用 ? 替换掉 @:optional var, 而且结尾用 , 号
+		?height:Int,
+		exit:Void->Void
+	}
 	var w:Window = {x:0,y:0};	
 	```
 

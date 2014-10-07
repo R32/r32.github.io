@@ -287,11 +287,11 @@ haxe -swf nothing.swf --no-output -swf-lib lib.swc --gen-hx-classes
 
 #### 其它
 
- 当 `haxe` 调用 `flash alchemy` 打包的 `swc` 库时,将会出错,但使用 `-debug` 编绎选项却能通过. [问题#1976](https://github.com/HaxeFoundation/haxe/issues/1976)
+当调用 flash alchemy 打包的 swc 库时,将会出错,但使用 `-debug` 编绎选项却能通过. [问题#1976](https://github.com/HaxeFoundation/haxe/issues/1976), 所以目前只能以 loader 的形式加载 swf [示例](https://github.com/R32/my-test/blob/master/test/as3/stringecho/hx-proj/EchoTestLoader.hx) 
 
- * 一些编绎相关选项参看 [编译-flag](http://haxe.org/doc/compiler) 和 [编译-define](http://haxe.org/manual/tips_and_tricks)
 
- * Haxe 语法的 private 只限制 Haxe 语法编译器自身,编译成 flash 后,在swf中所有private成员都是 public 可见的.
+
+一些编绎相关选项参看 [编译-flag](http://haxe.org/doc/compiler) 和 [编译-define](http://haxe.org/manual/tips_and_tricks), Haxe 语法的 private 只限制 Haxe 语法编译器自身,编译成 flash 后,在swf中所有private成员都是 public 可见的.
 
 	> 编译定义(-D) `swf-protected` : by default the compiler turns all private fields public in SWF output. This flag will keep them protected instead.(Haxe private == AS3 protected) 
 <br />
