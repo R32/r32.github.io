@@ -7,7 +7,7 @@ categories: haxelib
 
 ---
 
- [CastleDB] 是一个基于 [Node Webkit] 的应用. 看起来像一个电子表格. 一个可视的 JSON 格式 **行数据** 的生成器. 
+ [CastleDB] 是一个基于 [Node Webkit] 的应用. 看起来像一个电子表格. 一个可视的 JSON 格式 **行数据** 的生成器.
 
  
  首先将下载的 Node Webkit 解压到 `CastleDB/bin` 目录下,然后打开 `nw.exe` 就行了。或者将 `CastleDB/bin` 目录下的文件打包成 zip 文件,以 `nw.exe app.zip` 的方式来运行,  帮助文档在 www 目录 中. 可以点开 标题菜单的 dev 打开 控制台, 输入 `_.data` 将是 你用 这个编辑器输入的 JSON 数据.

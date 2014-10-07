@@ -46,9 +46,7 @@ haxe.js.html 下的对象类型挺吓人的. 所以应该使用 js.JQuery 来操
 
 #### `extern class`
 
-当 js 平台时, 由于经常需要调用 js 文件, 由于 Javascript **上下文** 的随意性, 并没有好的工具能自动创建 extern class
-
-所以需要自已手动为这些外部 JS 文件写 extern class 声明.
+当 js 平台时, 由于经常需要调用 js 文件, 由于 Javascript **上下文** 的随意性, 并没有好的工具能自动创建 extern class, 所以需要自已手动为这些外部 JS 文件写 extern class 声明.
 
 
 ```javascript
@@ -111,8 +109,9 @@ class Main {
 }
 ```
 
+<br />
 
-通过源码可以发现 macro.Compiler 下有**宏**方法 includeFile, 但仅限于 js 平台使用. 使用说明:
+隐藏细节: 通过源码可以发现 macro.Compiler 下有**宏**方法 includeFile, 但仅限于 js 平台使用. 使用说明:
 
  * 在 extern class 上添加元标记 `@:initPackage`
 
@@ -132,12 +131,6 @@ class Main {
 	}
  	```
 
- * 避免使用这种方式
-
-	> 事实上应该将外部 JS 文件,放置到 输出目录中去, 
-
-	> 这也是为什么 官方文档没有这个 元标记以及 方法 说明,
-
 
 <br />
 
@@ -146,6 +139,7 @@ class Main {
 
 虽然是 js 平台, 但是在安装 [haxelib nodejs](https://github.com/dionjwa/nodejs-std) 库之后, 完成可以看成另一个平台.
 
+haxe 3.2 版本时, 将会新增一个 元标记 @:requireJS, 而且目前 也已经将一个 hxnodejs 的库移到了 官方目录中去.
 
 
 <br />
