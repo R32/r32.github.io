@@ -7,19 +7,53 @@ categories: haxelib
 
 ---
 
- [CastleDB] 是一个基于 [Node Webkit] 的应用. 看起来像一个电子表格. 一个可视的 JSON 格式 **行数据** 的生成器.
-
+[CastleDB] 是一个基于 [Node Webkit] 的应用. 看起来像一个电子表格. 一个可视的 JSON 格式 **行数据** 的生成器.
  
- 首先将下载的 Node Webkit 解压到 `CastleDB/bin` 目录下,然后打开 `nw.exe` 就行了。或者将 `CastleDB/bin` 目录下的文件打包成 zip 文件,以 `nw.exe app.zip` 的方式来运行,  帮助文档在 www 目录 中. 可以点开 标题菜单的 dev 打开 控制台, 输入 `_.data` 将是 你用 这个编辑器输入的 JSON 数据.
-
  
- 可以使用 haxelib dev 的方式本地安装 castle 库,这样就能在 Haxe 中读取 上边所应用保存的数据.
+可以使用 haxelib dev 的方式本地安装 castle 库,这样就能在 Haxe 中读取 上边所应用保存的数据. 
+
+
+ * **适用环境**
+
+	> 这个工具主要是用于 **集中处理** 一些 数据类, 如果使用 Haxe, 那么在代码中引用这些数据时 IDE 会有语法智能提示, 避免打错字符.
+	> 而且由于 数据的集中处理, 单独更改这些数据也方便, 这样就不必在游戏代码中修改这些数据. 而已这些数据在代码中也不直观.
+
+	> 比如 用于 游戏中怪物的血量, 等级, 类型,移动速度,甚至系关联的图像 等等. [游戏示例](https://github.com/ncannasse/ld30)
+
 
  [CastleDB]:(https://github.com/ncannasse/castle)
  [Node Webkit]:(https://github.com/rogerwang/node-webkit)
  
 <!-- more -->
 
+<br />
+
+### 安装
+
+1. 这是一个基于 [Node Webkit] 的应用, 所以你需要下载它, 如果没有的话.
+
+2. 下载 [CastleDB],  将 `bin` 目录下的文件打包成一个 zip 文件(注意 **不要包含** bin 目录名). 这里我们打包成 castle.zip
+
+3. 在 命令行下输入: `nw.exe castle.zip` 就行了. 最好是写一个 bat 文件. 示例如下:
+
+```bat
+@echo off
+
+:: 设置 nw.exe 所在路径及文件名
+set NODE_WEBKIT="E:\Program Files\nw\nw.exe"
+
+:: 设置 castle.zip 所在路径及文件名
+set APP_CASTLE="E:\Program Files\CastleDB\bin\castle.zip"
+
+:: start 命令以二个 双引号开始,以正确处理带有空格的目录
+start "" %NODE_WEBKIT% %APP_CASTLE%
+
+exit
+```
+
+4. **帮助文档** 在 www 目录 中. 可以点开 标题菜单的 dev 打开 控制台, 输入 `_.data` 将是 你用 这个编辑器输入的 JSON 数据.
+
+<br />
 
 ### 列类型
 
@@ -72,7 +106,7 @@ categories: haxelib
  * **Custom Type** 自定义类型, 
 
 	> 通过点击 IDE 的右下角的 `edit type` 打开一个空白页面, 我看到的示例都是 enum 类型的, 和普通的 Enumeration 比起来,
-	> Custom Type 的 enum 是带有 构造方法的. 示例如下:
+	> Custom Type 的 enum 是带有 构造方法的. 示例如下: 
 
 	```haxe
 	enum Super2 {
@@ -112,7 +146,7 @@ categories: haxelib
 
 ### 代码中调用
 
-在 Haxe 中调用...参看 www/index.html 以及 src/test. Test.hx:
+在 Haxe 中调用. flashdevelop 能很好地提供智能提示,以避免打错字符. 参看 www/index.html 以及 src/test. Test.hx:
 
 ```haxe
 import dat.Data;
@@ -133,12 +167,15 @@ class Test {
 		
 		for( s in dat.Data.monsters.resolve("wolf").skills[0].sub )
 			trace(s);
-			
+		
+		// If the sheet does not have an unique identifier, only the all field is available.
+		// If the sheet has an unique identifier, you can access the all field, but also use get (by id) and resolve (by string). 	
 	}	
 }
 ```
 
 Data.hx: 这个类仅仅只使用宏来解析 数据类型,不会解析数据, 仅提供 sheet name 的智能语法提示.
+
 
 ```haxe
 package dat;
@@ -148,6 +185,10 @@ package dat;
 private typedef Init = haxe.macro.MacroType < [cdb.Module.build("test.cdb")] > ;
 ```
 
+> 在纯 JS 或其它语言中调用, 由于 .cdb 其实就是 JSON 格式的文件, 把它当成 JSON 数据处理就行了. 不过对比 haxe, 这个没有 IDE 的智能提示很容易输错一些什么.
+
+
+<br />
 
 ### 更多特性
 
@@ -158,6 +199,9 @@ private typedef Init = haxe.macro.MacroType < [cdb.Module.build("test.cdb")] > ;
  * Separators 分隔符
 
  * Add Group 
+
+
+<br />
 
 
 ### 其它
@@ -172,6 +216,13 @@ private typedef Init = haxe.macro.MacroType < [cdb.Module.build("test.cdb")] > ;
 
 	> 表格名(sheet name)上右键菜单, 可以选择是否将 **分组** 属性添加到数据行(line).
 
+
+
+<br />
+
+
 ### 个人感觉不完美的地方
 
  * 输入 Dynamic 类型字段时,完全是 手工输入, 没有好的输入界面.
+
+ * 没有所谓 Db 的查询方法
