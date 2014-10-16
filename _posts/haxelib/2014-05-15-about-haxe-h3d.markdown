@@ -7,10 +7,10 @@ categories: haxelib
 
 ---
 
-目前已经更名为 heaps, 看描述似乎要做成一个游戏引擎. 一些改动也比较大,  [**`heaps`**](https://github.com/ncannasse/heaps) 当目标平台为 flash 时将基于 flash.stage3D, 而 平台为 js 时, 将使用 webgl. 如果需要使用以前旧的 h3d 版本, 在 github 页面上找到 h3d 这个分支即可. 另一个fork版本 [motion-twin/h3d](https://github.com/motion-twin/h3d) 似乎可以通过 openfl 跨平台.
+目前已经更名为 heaps, 看描述似乎要做成一个游戏引擎. 一些改动也比较大,  [**`heaps`**](https://github.com/ncannasse/heaps) 当目标平台为 flash 时将基于 flash.stage3D, 而 平台为 js 时, 将使用 webgl. 如果需要使用以前旧的 h3d 版本, 在 github 页面上找到 h3d 这个分支即可. 
 
-注意: 下边的文档描述可能和 heaps 中的文件并不一致.
 
+注意: 下边的文档描述为 heaps的 h3d 分支.
 
 <!-- more -->
 

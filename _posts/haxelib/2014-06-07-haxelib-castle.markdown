@@ -20,6 +20,8 @@ categories: haxelib
 
 	> 比如 用于 游戏中怪物的血量, 等级, 类型,移动速度,甚至系关联的图像 等等. [游戏示例](https://github.com/ncannasse/ld30)
 
+	> 看上去适用于一些配置文件(Config)或类.
+
 
  [CastleDB]:(https://github.com/ncannasse/castle)
  [Node Webkit]:(https://github.com/rogerwang/node-webkit)
