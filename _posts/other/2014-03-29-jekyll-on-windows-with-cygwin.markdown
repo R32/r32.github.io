@@ -35,6 +35,7 @@ categories: other
  3. 可选安装.一些我在装`jekyll` 之前就已经装好了包.不太清楚其中一些是否为 `jelyll` 必须安装的
 
 	```bash
+	# 下边清单再加上 zip 包 就是 flash alchemy 所需的环境
 	Devel/make: The GNU version of the 'make' utility
 	Devel/gcc-g++: GNU  Compiler Collection(C++)
 	Perl/perl: Larry Wall's Practical Extracting and Report Language.
@@ -50,8 +51,11 @@ categories: other
 	
 	4. `chere -u` 将移除右键菜单. 参看 `chere --help`
 
- 5. `gem install jekyll` 就可以完成安装.
- 
+ 5. ~~ `gem install jekyll`~~ `gem install github-pages` 就可以完成安装.	
+
+	> 如运行 gem install 时弹出 UTF之类的错误, 可以把 dos 窗口编码改成 英文.
+	> 左上角图标 -> 默认值 -> 默认代码页, 然后重新打开 
+
  6. 测试
  
 	```bash
@@ -90,6 +94,11 @@ Generating... which: no python2 in (/usr/local/bin:/usr/bin:...
 ```bash
 ln -s /usr/bin/python /usr/local/bin/python2
 ```
+
+
+jekyll: command not found, 需要添加路径 `export PATH=$HOME/bin:$PATH`
+
+
 
 <br />
 

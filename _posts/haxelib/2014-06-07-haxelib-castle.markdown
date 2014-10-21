@@ -1,26 +1,26 @@
 ---
 
 layout: post
-title:  CastleDB
+title:  castle
 date:   2014-06-07 7:26:01
 categories: haxelib
 
 ---
 
-[CastleDB] 是一个基于 [Node Webkit] 的应用. 看起来像一个电子表格. 一个可视的 JSON 格式 **行数据** 的生成器.
+[castle] 是一个基于 [Node Webkit] 的应用. 外观看上去像类似于Excel的电子表格. 是 JSON 格式 **行数据** 的编辑器.
+
+**适用环境**
+
+这个工具主要是用于 **集中处理** 一些 数据类, 看上去适用于一些配置文件(Config)或类.
  
- 
-可以使用 haxelib dev 的方式本地安装 castle 库,这样就能在 Haxe 中读取 上边所应用保存的数据. 
+ > 如果使用 Haxe,在代码中引用这些数据时 IDE 会有语法智能提示, 以避免打错字符.
+
+ > 如果不使用 Haxe, 把 castle 生成的 .cdb 文件当成普通的 JSON 文件外理就行了. 
+
+而且由于 数据的集中处理, 单独更改这些数据也方便, 这样就不必在代码中修改这些数据.
+比如 用于 游戏中怪物的血量, 等级, 类型,移动速度,甚至系关联的图像 等等. [游戏示例(haxe/flash)](https://github.com/ncannasse/ld30)
 
 
- * **适用环境**
-
-	> 这个工具主要是用于 **集中处理** 一些 数据类, 如果使用 Haxe, 那么在代码中引用这些数据时 IDE 会有语法智能提示, 避免打错字符.
-	> 而且由于 数据的集中处理, 单独更改这些数据也方便, 这样就不必在游戏代码中修改这些数据. 而已这些数据在代码中也不直观.
-
-	> 比如 用于 游戏中怪物的血量, 等级, 类型,移动速度,甚至系关联的图像 等等. [游戏示例](https://github.com/ncannasse/ld30)
-
-	> 看上去适用于一些配置文件(Config)或类.
 
 
  [CastleDB]:(https://github.com/ncannasse/castle)
@@ -32,28 +32,35 @@ categories: haxelib
 
 ### 安装
 
-1. 这是一个基于 [Node Webkit] 的应用, 所以你需要下载它, 如果没有的话.
+ - 下载 [Node Webkit], 如果已有则可以跳过这一步.
 
-2. 下载 [CastleDB],  将 `bin` 目录下的文件打包成一个 zip 文件(注意 **不要包含** bin 目录名). 这里我们打包成 castle.zip
+ - 下载 [CastleDB],  将 `bin` 目录下的文件打包成一个 zip 文件(注意 **不要包含** bin 目录名). 这里我们打包成 castle.zip
 
-3. 在 命令行下输入: `nw.exe castle.zip` 就行了. 最好是写一个 bat 文件. 示例如下:
+	> 如需在 haxe 中调用,　可以 haxelib dev 的方式添加到本地库.
+	
+	```bash
+	# castle-master 为　解压后所在文件夹
+	haxelib dev castle castle-master
+	```
 
-```bat
-@echo off
+ - 在 命令行下输入: `nw.exe castle.zip` 就行了. 最好是写一个 bat 文件. 示例如下:
 
-:: 设置 nw.exe 所在路径及文件名
-set NODE_WEBKIT="E:\Program Files\nw\nw.exe"
+	```bat
+	@echo off
+	
+	:: 设置 nw.exe 所在路径及文件名
+	set NODE_WEBKIT="E:\Program Files\nw\nw.exe"
+	
+	:: 设置 castle.zip 所在路径及文件名
+	set APP_CASTLE="E:\Program Files\CastleDB\bin\castle.zip"
+	
+	:: start 命令以二个 双引号开始,以正确处理带有空格的目录
+	start "" %NODE_WEBKIT% %APP_CASTLE%
+	
+	exit
+	```
 
-:: 设置 castle.zip 所在路径及文件名
-set APP_CASTLE="E:\Program Files\CastleDB\bin\castle.zip"
-
-:: start 命令以二个 双引号开始,以正确处理带有空格的目录
-start "" %NODE_WEBKIT% %APP_CASTLE%
-
-exit
-```
-
-4. **帮助文档** 在 www 目录 中. 可以点开 标题菜单的 dev 打开 控制台, 输入 `_.data` 将是 你用 这个编辑器输入的 JSON 数据.
+ * **帮助文档** 在解压包的 www 目录 中. 当处于 Node Webkit　时,可以点开 标题菜单的 dev 打开 控制台, 输入 `_.data` 将是 你用 这个编辑器输入的 JSON 数据.
 
 <br />
 
@@ -187,8 +194,6 @@ package dat;
 private typedef Init = haxe.macro.MacroType < [cdb.Module.build("test.cdb")] > ;
 ```
 
-> 在纯 JS 或其它语言中调用, 由于 .cdb 其实就是 JSON 格式的文件, 把它当成 JSON 数据处理就行了. 不过对比 haxe, 这个没有 IDE 的智能提示很容易输错一些什么.
-
 
 <br />
 
@@ -223,8 +228,8 @@ private typedef Init = haxe.macro.MacroType < [cdb.Module.build("test.cdb")] > ;
 <br />
 
 
-### 个人感觉不完美的地方
+### 个人感觉
 
  * 输入 Dynamic 类型字段时,完全是 手工输入, 没有好的输入界面.
 
- * 没有所谓 Db 的查询方法
+ * 无法绑定为 .cdb 的默认打开工具.估计要将 castle和 node webkit打包成单一文件.

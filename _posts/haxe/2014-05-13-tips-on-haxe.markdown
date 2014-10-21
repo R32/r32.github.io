@@ -28,7 +28,7 @@ categories: haxe
 
 	> Serializer.run() 除了普通数据或二进制类型,还可以序列化**类实例**,但只能是纯Haxe的类,如果涉及到原生平台方法,将失败.
  
- * Context.resolvePath 除了检索当前项目的目录之外,如果文件不存在 还将检索  haxe/std 目录.
+ * Context.resolvePath 除了检索当前项目的目录之外,还将检索　-lib 库目录,　haxe/std 目录.
 
  * 其它
 
@@ -120,6 +120,13 @@ categories: haxe
 	> 当使下边的些语法时,相关地方需要添加 `@:keep` ,这个标记只能用于 类 或 静态字段.
 
  	> 使用 `Class<Dynamic>` 或 `Class<SomeName>` 作为参数.例如: `Type.createInstance(_customSoundTray, [])` 这样的语法; 最好不要使用这样语法.
+	
+ * Sys.command 和 sys.io.Process
+
+	> Sys.command 可以执行 dos 命令如 `dir`　和 一些 (WIN + R)可以运行的CLI命令, 而 sys.io.Process 只能运行后者.
+	>(注意: 不要运行 cmd 或类似程序)
+	
+	> Sys.command 返回 0 表示程序以 exit(0) 的方式正常退出, 非 0 值一般意味着出错, 如果需要获得 CLI程序的输出值(stdout|stderr)则应该使用 sys.io.Process. 这二个都会等待 CLI程序**完全运行结束**（我只用 nodejs 的 setTimeout 测试过）.
 
 <br />
 

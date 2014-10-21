@@ -27,6 +27,11 @@ categories: other
 	
 	
 <!-- more -->
+#### 安装 
+
+ 参考 [Cygwin 环境安装 Jekyll]({% post_url other/2014-03-29-jekyll-on-windows-with-cygwin %})
+
+<br />
 
 #### 插件使用
 
@@ -41,6 +46,8 @@ categories: other
 	```
 
 
- * ['jekyll-redirect-from'](https://github.com/jekyll/jekyll-redirect-from) 一个类似于 `URL rewrite` 
+ * ['jekyll-redirect-from'](https://github.com/jekyll/jekyll-redirect-from) 一个类似于 `URL rewrite`, 简单的重定义 
 
- * [jemoji](https://github.com/jekyll/jemoji)
+ * [jemoji](https://github.com/jekyll/jemoji) 支持表情字符串
+
+ * [jekyll-mentions](https://github.com/jekyll/jekyll-mentions) **`@mention`** support for your Jekyll site

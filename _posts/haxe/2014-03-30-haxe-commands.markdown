@@ -7,7 +7,7 @@ categories: haxe
 
 ---
 
-这里主要描述 haxe安装包下, haxe, haxelib, nekotools 三个命令
+这里主要描述 haxe安装包下, haxe, haxelib, nekotools 三个命令,  haxe 命令行会经常在 .hxml 文件中用到
 
 
 ### haxedoc
@@ -20,11 +20,12 @@ haxedoc 命令已经被弃用,而改用了另一个叫haxelib dox, **但是** �
 
 <!-- more -->
 
+
 ### haxelib
 
 haxelib 用于管理 haxe库
 
- * 命令行下 输入 `haxelib --help`
+ * 命令行下只输入 `haxelib` 将显示一些帮助信息.
 
  * 一些常用命令:
 
@@ -62,6 +63,23 @@ haxelib 用于管理 haxe库
  * 开发并上传库 见:[haxe.org/com/haxelib](http://haxe.org/com/haxelib)
 
 
+#### hxml
+
+通常 hxml 是用于编译 hx 代码的默认文件, 需要注意的是 有一个特殊的叫 `extraParams.hxml` 的文件, 这个文件一般在一些 haxelib 中可以见到(和 haxelib.json 位于同级目录), 用于当使用 -lib libname 编译时附加一些编译参数. 如果是基于 openfl 的项目库,那么这个特殊文件将是 `include.xml`
+
+hxml 的内容为 haxe --help 中的命令. 注释用 # 符号.简单示例:
+
+```bash
+# 这个符号后接的为注释内容
+# 使用宏, 
+--macro Sys.println('Begin...')
+-cp src
+-lib format
+
+# 指示入口类
+-main Main
+``` 
+
 <br />
 
 ### nekotools
@@ -88,7 +106,6 @@ nekotools 是一个安装 haxe 时附带的强力工具,nekotools 很简单只�
 
 
 <br />
-
 
 ### haxe
 
@@ -233,17 +250,21 @@ Haxe Compiler 3.13 - (C)2005-2014 Haxe Foundation
 # ???单步
 --interp : interpret the program using internal macro system
 
-# 调用 macro 命令, 默认为 macro.Compiler 下的 宏(macro)方法, 但其实可以是任意 宏(macro)方法
+# 调用 macro 命令, 默认为 macro.Compiler 下的 宏(macro)方法, --macro keep("SomeClass")
+# 但其实可以是任意方法,例如: --macro Sys.println("Hello World!")
 --macro  : call the given macro before typing anything else
 
-# 绑定端口, 用于缓存编译, 适用于大型项目, 减少编译时间, 参看下边示例
+# 绑定当前工作目录到 host:port, 用于缓存编译, 适用于大型项目, 减少编译时间, 参看下边示例
 --wait <[host:]port> : wait on the given port for commands to run)
 
 # 连接端口, 使用缓存编译, 如果文件未发生改动, 参看下边示例
 --connect <[host:]port> : connect on the given port and run commands there)
 
-# 设置缓存编译服务器目录, 和 --wait --connect 是一起的.
+# 设置当前工作目录, 这个命令会影响到 缓存编译的　--wait 和 --connect
 --cwd <dir> : set current working directory
+
+# 未知
+--each
 
 # 仅仅显示 haxe 当前版本
 -version : print version and exit
@@ -273,7 +294,7 @@ lime build flash --connect 6000 --times
 
 haxe --help-defines, haxe Compiler Flag 
 
-**注意:** 如果你想在 条件编译 或 宏代码 中访问这些定义,最好将 减号(-)替换成 下划线(_)
+**注意:** 如果你想在 条件编译 或 宏代码 中访问这些定义,应该将 减号(-)替换成 下划线(_)
 
 使用 -D 设定下列值, 一些和上边重复的不会再描述. 例如 `haxe -dce full` 和 `haxe -D dce=full` 将产生一样的效果.
 

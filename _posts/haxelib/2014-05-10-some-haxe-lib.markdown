@@ -11,6 +11,17 @@ categories: haxelib
 
 
 <!-- more -->
+#### 个人
+
+这一章节,主要收集一些个人Blog或网站, 本来想写在另一篇档案中的. 还是算了.
+
+ * http://haxe.io 主要是一些 haxe 的新闻, 经常能看到一些惊异的东西.
+
+ * http://thx-lib.org [fponticelli](https://github.com/fponticelli)的个人库, 一些有意思的东西
+
+ * http://player03.com [player-03](https://github.com/player-03) 在 openfl 的论坛上还蛮活跃的. 
+
+<br />
 
 #### 工具
 
