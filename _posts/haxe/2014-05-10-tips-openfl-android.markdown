@@ -71,7 +71,12 @@ categories: haxe
 
 #### `openfl JNI`
 
-下边示例需要在 `openfl xml` 文件中用 `template` 指定包含 `static` 方法 `sampleFunction1` 的`SampleClassName.java`
+下边示例需要在 openfl项目的 xml 配置文件中用 `<template />` 指定 java 类.
+
+```xml
+<!-- 注意 src/com/SampleClassName.java 和 JNI.createStaticMethod 第一个参数对应  -->
+<template path="path/to/SampleClassName.java" rename="src/com/SampleClassName.java" if="android" />
+```
 
 
 `(Ljava/lang/String;)V` [签名格式参看](http://blog.csdn.net/freedom2028/article/details/7772141)
@@ -82,7 +87,7 @@ categories: haxe
 	```as
 	// 详细实例参看下边  `textFiled`中文输入.
 	class SampleClassName{
-		 static var _sampleFunction1 = openfl.utils.JNI.createStaticMethod("SampleClassName", "sampleFunction1", "(Ljava/lang/String;Lorg/haxe/lime/HaxeObject;)V", true);
+		 static var _sampleFunction1 = openfl.utils.JNI.createStaticMethod("com/SampleClassName", "sampleFunction1", "(Ljava/lang/String;Lorg/haxe/lime/HaxeObject;)V", true);
 		 
 		 static public function sampleFunction1(text:String,obj:Dynamic):Void{
 		 	var a = new Array<Dynamic>();
@@ -94,7 +99,8 @@ categories: haxe
 	```
  * [更简单的方法](https://github.com/player-03/haxeutils#jniclassbuilderhx)
 
-	```as
+	```haxe
+	// 这个 haxe类 所在的包　要和 java类所在的包一致
 	#if !macro @:build(com.player03.haxeutils.JNIClassBuilder.build()) #end
 	class SampleClassName {
 	    @jni public static function sampleFunction1(var1:String, var2:Dynamic):Void;
