@@ -612,15 +612,13 @@ class Foo {
 	var w:Window = {x:0,y:0};	
 	```
 
-`abstract` 抽象化数据结构,用于包装底层类型 
+`abstract` 抽象化数据结构,用于包装底层类型, 其行为更像是 inline,编译器将作自动替换.
 
  > 用 new 实例化, 可以有方法体,除非添加 @:enum 否则不可以有成员变量.
 
  > 改正: 通过添加 `@:enum` 可以使 abstract 类有成员变量.成员变量会被当成常量处理,或者`getter`
 
  > 从示例中可以看到,和 `typedef` 的区别是抽象类型是要有原形(小括号Int)的,并且 `abstract` 可以有方法体,和一些类型写类型转换规则
-
- > 从 new 方法体中发现,即然修改 `this`的值,所以`abstract` 更象是编译器帮你自动化了的一些代码,从 'haxe -js' 可以查看得到.
 
  > 在 abstract 语法内 的 static 成员方法,不需要 using, 见 [abstract-selective-functions](http://haxe.org/manual/types-abstract-selective-functions.html) 这一点对运算符重载很重要, 因为运算符重载有时需要添加 `@:commutative` 来交换二个操作数的位置,就 **必须** 使用 static 类型的方法重载.
 
@@ -642,8 +640,5 @@ abstract Bcd(Int){
 	}
 }
 ```
-
-  > `abstract` 是编译器智能帮你完成一些重复和烦琐的定义,配合 `inline` 相当于做了宏替换.
-
 
 <br />

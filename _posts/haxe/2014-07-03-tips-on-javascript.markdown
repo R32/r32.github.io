@@ -139,7 +139,7 @@ class Main {
 
 虽然是 js 平台, 但是在安装 [haxelib nodejs](https://github.com/dionjwa/nodejs-std) 库之后, 完成可以看成另一个平台.
 
-haxe 3.2 版本时, 将会新增一个 元标记 @:requireJS, 而且目前 也已经将一个 hxnodejs 的库移到了 官方目录中去.
+haxe 3.2 版本时, 将会新增一个 元标记 @:jsRequire, 而且目前 也已经将一个 hxnodejs 的库移到了 官方目录中去.
 
 
 <br />

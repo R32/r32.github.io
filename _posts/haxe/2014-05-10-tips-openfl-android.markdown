@@ -192,6 +192,9 @@ categories: haxe
 
 	# 指定多个 -s
 	adb logcat -s "trace" -s "MyActivity"
+
+	# android-sdk/tools/ 创建 虚拟SD卡文件
+	mksdcard 512M D:/abc.img
 	```  	
  * 当设置 `<window fullscreen="false" />` 时.
 

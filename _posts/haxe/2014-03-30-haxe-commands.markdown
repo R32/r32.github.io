@@ -609,8 +609,9 @@ haxe --help-metas, 这类元标记一般添加在代码中, 也可以在 宏(mac
 
 @:multiType          : (Relevant type parameters)Specifies that an abstract chooses its this-type from its @:to functions
 
-# 重写输出类或枚举的包名, 例: @:native("my.real.Cls"). 使它更容易绑定到 extern 类, 可能有不一样的名称.
 # nodejs 的 extern class 经常有 @:native("(require('fs'))"), 由于这样导出的代码不美观, haxe 3.2 将会有新的 @:jsRequire 标记
+
+# 重写输出类或枚举的包名, 例: @:native("my.real.Cls"). 使它更容易绑定到 extern 类, 可能有不一样的名称.
 @:native             : (Output type path)Rewrites the path of a class or enum during generation
 
 @:nativeGen          : Annotates that a type should be treated as if it were an extern definition - platform native (for cs,java)

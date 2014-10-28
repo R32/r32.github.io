@@ -142,6 +142,29 @@ class TheClass {
  </div>
 </div>
 
+<hr />
+
+#### 空的
+
+<div class="row">
+ <div class="col-md-6 as3">
+ <h4>Java</h4>
+{% highlight java %}
+
+// 替换这里的内容
+
+{% endhighlight %}
+ </div>
+
+ <div class="col-md-6 hx3">
+  <h4>Haxe</h4>
+{% highlight as %}
+
+// 替换这里的内容
+
+{% endhighlight %}
+ </div>
+</div>
 
 <hr />
 
@@ -170,6 +193,8 @@ class TheClass {
 <hr />
 
 #### 简单记些 Java
+
+[15分钟　java 快速入门](https://github.com/jdonaldson/learnxinyminutes-docs/blob/master/java.html.markdown)
 
  * 变量定义
 
