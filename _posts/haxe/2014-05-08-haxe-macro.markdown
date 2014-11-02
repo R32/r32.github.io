@@ -335,6 +335,8 @@ class Um{
 
 **注意**: 宏方法 assign 和 noChange 只有返回值不一样, 充分说明了 宏返回值 将替换所 宏调用. 这一概念很重要.
 
+------
+
  * haxe.macro.ExprTools 类中的 toString 和 getValue 都是常用方法
 
  * 如何从宏方法返回一个 bytes
@@ -494,8 +496,7 @@ build宏函数 与 普通的宏函数不一样的地方:
 
  * 基准测试 / 优化 (Benchmarking / Optimization)
 
-
- #### 其它
+#### 其它
 
 	* `Context.unify(t1,t2)` 检测二个类型是否能(统一?),难道是类似于 二个数字的公约数的东西?? **未知**
 
