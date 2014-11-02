@@ -48,6 +48,6 @@ categories: other
 
  * ['jekyll-redirect-from'](https://github.com/jekyll/jekyll-redirect-from) 一个类似于 `URL rewrite`, 简单的重定义 
 
- * [jemoji](https://github.com/jekyll/jemoji) 支持表情字符串
+ * [jemoji](https://github.com/jekyll/jemoji) 支持表情字符串, [表情字符清单](http://www.emoji-cheat-sheet.com/)
 
  * [jekyll-mentions](https://github.com/jekyll/jekyll-mentions) **`@mention`** support for your Jekyll site

@@ -94,7 +94,7 @@ public class Helo extends Activity {
 
 ### 其它
 
- * [中文API](http://androidbox.sinaapp.com/),  
+ * [中文API](http://androidbox.sinaapp.com/), 这个链接有其它更多不错的内容. 
 
 #### Activity
 

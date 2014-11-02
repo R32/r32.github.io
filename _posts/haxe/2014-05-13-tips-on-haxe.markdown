@@ -18,6 +18,8 @@ categories: haxe
 <!-- more -->
 #### Tips
 
+ * [windows-installer 最新的开发版本下](http://hxbuilds.s3-website-us-east-1.amazonaws.com/builds/haxe/windows-installer/haxe_latest.tar.gz) 由于目前无法访问 google.api,所以 build.haxe.org 内容为空.
+
  * 对于命令行(CLI)程序, 文件代码应该为 anti ,dos 中才会正确显示中文.
 
  * $type

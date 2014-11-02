@@ -7,12 +7,10 @@ categories: haxe
 
 ---
 
-个人感觉 宏 是 Haxe 最主要的特性, Haxe 的宏非常强力
+宏 是 Haxe 最主要的特性
 
 > 宏可以在编译时通过计算初使化一些值,比如 UI 的配置等等.
-
 > 宏可以扫描资源文件夹,用于自动嵌入文件或者 IDE 智能提示
-
 > 最新的[官网参考](http://haxe.org/manual/macro.html)
 
 <!-- more -->
@@ -52,6 +50,10 @@ trace("haxe version > 3.1");
 // flash 或 php 平台
 #end
 
+#if js
+#error 目前不支持 js 平台
+#end
+
 ```
 
 在 `#if` 和 `#elseif` 之后的条件允许以下表达式:
@@ -82,7 +84,7 @@ trace("haxe version > 3.1");
 	flash|neko|cpp|js|php|java  : 这种平台相关无需多解释,但是从上边示例可以发现, 还可以指定版本
 	```
 
-##### 重要: 同样可以把条件标识符放置在 `@:require` 之后
+**同样可以把条件标识符放置在 `@:require` 之后**
 
 `@:require(Compiler Flag [,"custom error message" ])`
 
@@ -134,18 +136,11 @@ class Foo{
 
 ### 宏方法
 
-内容只适用于 haxe 3.
+内容只适用于 haxe 3. 宏相当于一个在编译时运行的 neko 平台.例如: 在编译时输出 `--macro Sys.println('Hello macro!')`
 
 **注意:** 通常应该把宏函数和其它函数分开放在不同文件,否则代码中的很多地方要加上**`#if macro`** 这样的条件编译才能通过编译.
 
-**注意:** 给宏函数传参数时,**参数应该是常量**, 不可以是成员变量.
-
-	> (对于静态或局部变量),在宏函数内部只能获得标识符(`ExprTools.toString()`), 或行号,不可以取得变量的值
-
-	> 因为宏编译时,这些赋值还不存在. 总结: 通过宏函数传递一个变量毫无意义;
-
-	> 如果觉得 常量 不够灵活,可以过过 -D ABC=123 ,然后调用 macro.Context 或 macro.Compiler 的相关方法取值.
-
+**注意:** 给宏函数传参数时,**参数应该是常量**, 如果传变量只能获得 变量名 不能获得 变量值(因为宏编译时赋值还没发生).
 
  * 最简单, `macro 常量`
 
@@ -164,6 +159,7 @@ class Foo{
 		var easy:String = "easy!";
 		return macro "so " + $v{ easy };
 	}
+
 	// 示例:    trace( tut_array([1,2,3,4,5]) );    =>     trace([1,2,3,4,5,10]);
 	macro public static function tut_array(arr:Array<Int>) {
 		arr.push(10);
@@ -282,6 +278,65 @@ class Foo{
 
 ### 小抄
 
+```haxe
+class Main{
+	static public function main(){
+		trace( Um.tut_const() );
+	}
+}
+
+class Um{
+	macro public static function tut_const() {
+	    return macro "simple";
+	}
+}
+```
+
+如上示例: 当调用 宏方法 Um.tut_const 时, Um.tut_const 的返回值将替换掉 Um.tut_const(), 也就是说 `trace( Um.tut_const() )` 将替换成 `trace("simple")`;
+
+
+```haxe
+class Main {
+	
+	static function main() {
+		var i = 1;
+		var j = 2;
+		var a = [1, 2];
+		
+		Um.callMethed(a);
+		Um.assign(i);
+		Um.noChange(j);
+		
+		trace(a); // 输出: [1, 2, 77]
+		trace(i); // 输出: 88
+		trace(j); // 输出: 2 
+	}
+	
+}
+
+class Um{
+
+	macro static public function callMethed(a) {
+		return macro $i { haxe.macro.ExprTools.toString(a) }.push(77);
+	}
+	
+	macro static public function assign(i) {
+		return macro $i { haxe.macro.ExprTools.toString(i) } = 88;
+	}
+	
+	macro static public function noChange(i) {
+		macro $i { haxe.macro.ExprTools.toString(i) } = 99;
+		return macro null;
+	}
+}
+```
+
+上边是一个将变量传递给 宏方法的示例(haxe 3.2 推荐使用 Context.getLocalTVars 来获得本地变量,一，而不是通过宏传递)
+
+**注意**: 宏方法 assign 和 noChange 只有返回值不一样, 充分说明了 宏返回值 将替换所 宏调用. 这一概念很重要.
+
+ * haxe.macro.ExprTools 类中的 toString 和 getValue 都是常用方法
+
  * 如何从宏方法返回一个 bytes
 
 	```haxe
@@ -311,7 +366,6 @@ class Foo{
 	var loaderType = macro : hxd.res.Loader;
 	
 	
-	// 轻松获得一个函数体. 对于宏构建(@:build) 非常有帮助.
 	var method = macro {
 		return flash.Lib.current.stage;
 	}
@@ -333,14 +387,14 @@ The syntax for reification is `macro expr`, where `expr` is any valid Haxe expre
 
  	> `$b{}` : `Array<Expr> -> Expr`
 
- 	> `$i{}` : `String -> Expr` 注: 这里的 String 指的是标识符即变量名.
+ 	> `$i{}` : `String -> Expr` 注: 这里的 String 变量名字符串.
 
  	```haxe
 	function main(){
 		var abc = 100;
 		trace( getIdent() ); // 宏替后将为 trace(abc);
 	}
- 	macro static function getIdent(){
+ 	macro static function getIdent(i:Expr){
  		return macro $i{"abc"};
  	}
  	```
@@ -434,9 +488,7 @@ build宏函数 与 普通的宏函数不一样的地方:
 
 	> 编译时使用类似于 `--macro : call the given macro before typing anything else`
 
-	> **注意:** 实际上 `haxe.macro.Compiler` 类中的方法**在代码中**只有 `getDefine` 可用,其它方法只能通过这种型式来调用
-
-	> 例:添加编译标记: --macro haxe.macro.Compiler.include('my.package')
+	> 例:添加编译标记: --macro include('my.package')
 
 	> openfl 示例: `<haxeflag name="--macro keep('PlayState')" />`
 

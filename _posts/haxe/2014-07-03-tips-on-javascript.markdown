@@ -22,6 +22,8 @@ haxe.js.html 下的对象类型挺吓人的. 所以应该使用 js.JQuery 来操
 
 编译行使用 -D 来设置, 代码中通过 Context.defined 或 Context.definedValue 检测设置
 
+ * `@:jsRequire` 需要 haxe 3.2+
+ 
  * js-flatten 平坦模式.
 
 	> Generate classes to use fewer object property lookups
@@ -41,6 +43,7 @@ haxe.js.html 下的对象类型挺吓人的. 所以应该使用 js.JQuery 来操
 	> 针对 extern class 初使化包名为 Object, 
 	
  * `@:runtime` (since 2.10) 未知
+
 
 <br />
 

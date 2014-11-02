@@ -56,3 +56,18 @@ categories: haxe
  * [BFXR](http://www.bfxr.net/)
  
 	> BFXR 是一个移植于 AS3 SFXR 并改进添加了更多特性.It has moved in the direction of increased complexity and range of expression.
+
+<br />
+
+
+### 其它
+
+ * You can also search Google for terms like "Video Game Sprites", "Sprite Archives" etc.
+	
+	- http://www.videogamesprites.net/ 有一点点
+
+ * OpenGameArt.org 免费资源网站.
+
+ * http://7soul1.deviantart.com/?rnrd=74632 图像
+
+<br />

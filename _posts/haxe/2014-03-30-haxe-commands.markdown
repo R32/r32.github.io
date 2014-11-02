@@ -202,7 +202,7 @@ Haxe Compiler 3.13 - (C)2005-2014 Haxe Foundation
 # 提示错误
 -prompt : prompt on error
 
-# 在编译成功之后执行外部命令, 例: -cmd dir
+# 通常放在最后用于编译成功之后执行外部命令, 例: --next -cmd dir
 -cmd : run the specified command after successful compilation
 
 # flash平台, 更严格的类型检测
@@ -263,7 +263,7 @@ Haxe Compiler 3.13 - (C)2005-2014 Haxe Foundation
 # 设置当前工作目录, 这个命令会影响到 缓存编译的　--wait 和 --connect
 --cwd <dir> : set current working directory
 
-# 未知
+# 用于 单个hxml文件(或单条CLI命令)的多目标编译, 在 --each 之前的参数将用于所有 --next
 --each
 
 # 仅仅显示 haxe 当前版本
@@ -330,6 +330,7 @@ dll-export             : GenCPP experimental linking
 
 dll-import             : GenCPP experimental linking
 
+# 用于导出代码注释为API文档, 为了正确生成文档不会执行任何改动或删除
 doc-gen                : Do not perform any removal/change in order to correctly generate documentation
 
 dump                   : Dump the complete typed AST for internal debugging
@@ -498,6 +499,9 @@ haxe --help-metas, 这类元标记一般添加在代码中, 也可以在 宏(mac
 
 @:buildXml           :  (cpp only)
 
+# 就是允许调用, 主要用于修复: https://github.com/HaxeFoundation/haxe/issues/3218
+@:callable           : Abstract forwards call to its underlying type(since haxe 3.2)
+
 @:classCode          : Used to inject platform-native code into a class (for cs,java)
 
 # 用于 abstract 类型的运算符重载交换, 这个标签应该用于 static 属性的重载才会生效. 参见 @:op 
@@ -609,7 +613,9 @@ haxe --help-metas, 这类元标记一般添加在代码中, 也可以在 宏(mac
 
 @:multiType          : (Relevant type parameters)Specifies that an abstract chooses its this-type from its @:to functions
 
-# nodejs 的 extern class 经常有 @:native("(require('fs'))"), 由于这样导出的代码不美观, haxe 3.2 将会有新的 @:jsRequire 标记
+# nodejs 的 extern class 经常有 @:native("(require('fs'))"), 由于这样导出的代码不美观, haxe 3.2 将会有新的
+# 例: @:jsRequire("fs") , 或加载子项 @:jsRequire("http", "Server") 相当于 js 的 require("http").Server
+@:jsRequire 标记
 
 # 重写输出类或枚举的包名, 例: @:native("my.real.Cls"). 使它更容易绑定到 extern 类, 可能有不一样的名称.
 @:native             : (Output type path)Rewrites the path of a class or enum during generation
