@@ -759,25 +759,13 @@ int main(int argc, const char ** argv){
 
 访问继承, 例如: `class Vector: public Octopus{}`
 
-public继承:
-
-| 基类 | public | protected | private |
-| --- | --- | --- |
-| 子类 | public | protected | 不可见 |
 
 
-protected继承:
-
-| 基类 | public | protected | private |
-| --- | --- | --- |
-| 子类 | protected | protected | 不可见 |
-
-
-private继承:
-
-| 基类 | public | protected | private |
-| --- | --- | --- |
-| 子类 | private | private | 不可见 |
+| 基类            | public     | protected  | private |
+| -------------- |:----------:| ---------:| ------- |
+| public 继承     | public     | protected |  不可见  |
+| protected 继承  | protected  | protected |  不可见  |
+| private 继承    | private    | private   |  不可见  |
 
  
 
