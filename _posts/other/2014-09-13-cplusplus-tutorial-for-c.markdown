@@ -16,6 +16,23 @@ categories: other
 
 #### 其它
 
+ * `#ifdef __cplusplus` 一些源码能常见到的.
+
+	> C++ 语言在编译的时候为了解决函数的多态问题，会改变函数名称，但 C 语言则不会，因此会造成链接时找不到对应函数的情况，此时C函数就需要用extern “C”进行链接指定，这告诉编译器， **请保持我的名称，不要给我生成用于链接的中间函数名**.
+
+	```cpp
+	#ifdef __cplusplus
+		extern "C" { // extern C 修饰变量和函数按照 C 语言方式编译和连接;
+	#endif
+	
+		void gme_clear_playlist( Music_Emu* );
+		 	
+	#ifdef __cplusplus
+		}	// extern C 结尾
+	#endif
+	```
+
+ 
  * 函数后边跟 const, 表示这个函数不会修改成员变量.
 
 	```cpp
@@ -734,7 +751,7 @@ int main(int argc, const char ** argv){
 
 
 | 基类            | public     | protected  | private |
-| -------------- |:----------:| ---------:| ------- |
+| -------------- | ---------- | ---------  | ------- |
 | public 继承     | public     | protected |  不可见  |
 | protected 继承  | protected  | protected |  不可见  |
 | private 继承    | private    | private   |  不可见  |
