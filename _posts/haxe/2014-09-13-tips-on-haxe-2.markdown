@@ -5,7 +5,7 @@ date:   2014-09-13 17:21:10
 categories: haxe
 ---
 
-一些杂乱无章的笔记...[之前一部分]({% post_url haxe/2014-05-10-tips-on-haxe- %})
+一些杂乱无章的笔记...[之前一部分]({% post_url haxe/2014-05-13-tips-on-haxe %})
  
 <!-- more -->
 

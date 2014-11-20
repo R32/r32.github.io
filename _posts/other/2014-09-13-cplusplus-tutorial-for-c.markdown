@@ -14,6 +14,37 @@ categories: other
 
 <!-- more -->
 
+#### 其它
+
+ * 函数后边跟 const, 表示这个函数不会修改成员变量.
+
+	```cpp
+	int current_track() const;
+	
+	//....
+	
+	int current_track() const{
+		return x;
+	}
+	```
+
+ * 初使化成员列表, 可以初使化 const 类型成员.
+
+	> 如果有一个类成员, 类型为 类或结构, 而这个成员需要参数来初使化, 这时就需要对这个类成员进行初使化.
+
+	```cpp
+	class Vector{
+	public:
+		double x;
+		double y;
+		const double PI;
+		Vector(): x(1.0), y(1.0), PI(3.1415926){
+		
+		}	
+	};
+	```
+<br />
+
 #### 头文件引用
 
 C++ 的 `#include` 在引用头文件时, 不需要添加头文件扩展名 `.h`, 当 **引用标准 C 库时,需要以字母 c 开头**. C++ 的一些标准库需要添加命名空间 `using namespace std`
@@ -96,19 +127,14 @@ using namespace std;
 int main (){
    fstream f;
    char c;
-
    cout << "What's inside the test.txt file" << endl;
    cout << endl;
-
    f.open("test.txt", ios::in);
-
    while (! f.eof() ){
       f.get(c);                          // Or c = f.get()
       cout << c;
    }
-
    f.close();
-
    return 0;
 }
 ```
@@ -122,18 +148,15 @@ using namespace std;
 
 int main (){
    int i;
-
    cout << "A list of numbers:" << endl;
    for (i = 1; i <= 1024; i *= 2){
       cout.width (7);
       cout << i << endl;
    }
-
    cout << "A table of numbers:" << endl;
    for (i = 0; i <= 4; i++){
       cout << setw(3) << i << setw(5) << i * i * i << endl; 	// setw 有点像 \t 
    }
-
    return 0;
 }
 ```
@@ -149,16 +172,11 @@ int main (){
 ```c++
 using namespace std;
 #include <iostream>
-
 double a = 128;
-
-int main ()
-{
+int main (){
    double a = 256;
-
    cout << "Local a:  " << a   << endl;
    cout << "Global a: " << ::a << endl; // 注意 双冒号 的用法
-
    return 0;
 }
 ```
@@ -170,34 +188,24 @@ int main ()
 使用 `::` 访问各命名空间下, 例如: `std::cout << "Hello" << std::endl`
 
 ```c++
-
 using namespace std;
 #include <iostream>
 #include <cmath>
-
-namespace first
-{
+namespace first{
    int a;
    int b;
 }
-
-namespace second
-{
+namespace second{
    double a;
    double b;
 }
-
-int main ()
-{
+int main (){
    first::a = 2;
    first::b = 5;
-
    second::a = 6.453;
    second::b = 4.1e4;
-
    cout << first::a + second::a << endl;
    cout << first::b + second::b << endl;
-
    return 0;
 }
 ```
@@ -210,11 +218,9 @@ inline 内联替换,常用于对性能有要求的小代码块,或常在宏替�
 using namespace std;
 #include <iostream>
 #include <cmath>
-
 inline double hypothenuse (double a, double b){
    return sqrt (a * a + b * b);
 }
-
 int main (){
    double k = 6, m = 9;
    cout << hypothenuse (k, m) << endl;
@@ -231,14 +237,11 @@ try,catch,throw
 using namespace std;
 #include <iostream>
 #include <cmath>
-
 int main (){
    int a, b;
-
    cout << "Type a number: ";
    cin >> a;
    cout << endl;
-
    try{
       if (a > 100) throw 100;
       if (a < 10)  throw 10;
@@ -261,17 +264,13 @@ int main (){
 ```c++
 using namespace std;
 #include <iostream>
-
-double test (double a, double b = 7)
-{
+double test (double a, double b = 7){
    return a - b;
 }
 
-int main ()
-{
+int main (){
    cout << test (14, 5) << endl;    // Displays 14 - 5
    cout << test (14) << endl;       // Displays 14 - 7
-
    return 0;
 }
 ```
@@ -299,11 +298,9 @@ using namespace std;
 double test (double a, double b){
    return a + b;
 }
-
 int test (int a, int b){
    return a - b;
 }
-
 int main (){
    double   m = 7,  n = 4;
    int      k = 5,  p = 3;
@@ -333,7 +330,6 @@ int main (){
    i2 = 6;
    i3 = minimum (i1, i2);
    cout << "Most little: " << i3 << endl;
-
    double d1, d2, d3;
    d1 = 7.9;
    d2 = 32.1;
@@ -347,8 +343,7 @@ int main (){
 
 ```c++
 template <class T1, class T2>
-T1 minimum (T1 a, T2 b)
-{
+T1 minimum (T1 a, T2 b){
    T1 r, b_converted;
    r = a;
    b_converted = (T1) b;
@@ -369,51 +364,30 @@ using namespace std;
 
 int main (){
    double *d;                     
-
    d = new double; 
-
    *d = 45.3; 
-
    cout << "Type a number: ";
    cin >> *d;
-
    *d = *d + 5;
-
    cout << "Result: " << *d << endl;
-
    delete d;     
-
    d = new double[15];   // 相当于 d = (double *) malloc(sizeof(double) * 15);
-
    d[0] = 4456;
    d[1] = d[0] + 567;
-
    cout << "Content of d[1]: " << d[1] << endl;
-
    delete [] d; 		// 相当于 free(d);
-
    int n = 30;
-
    d = new double[n];                 // new can be used to allocate an
                                       // array of random size.
-   for (int i = 0; i < n; i++)
-   {
+   for (int i = 0; i < n; i++)   {
       d[i] = i;
    }
-
    delete [] d;
-
-
    char *s;
-
    s = new char[100];
-
    strcpy (s, "Hello!");
-
    cout << s << endl;
-
    delete [] s;
-
    return 0;
 }
 ```
@@ -443,7 +417,6 @@ using namespace std;
 struct vector{
    double x;
    double y;
-
    double surface (){
       double s;
       s = x * y;
@@ -455,7 +428,6 @@ struct vector{
 int main (){
    vector a = {x:5,y:6};
    cout << "The surface of a: " << a.surface() << endl;
-
    a.x = 7;
    cout << "The surface of a: " << a.surface() << endl;		
    return 0;
