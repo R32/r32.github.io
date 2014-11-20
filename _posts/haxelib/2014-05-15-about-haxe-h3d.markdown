@@ -9,12 +9,154 @@ categories: haxelib
 
 目前已经更名为 heaps, 看描述似乎要做成一个游戏引擎. 一些改动也比较大,  [**`heaps`**](https://github.com/ncannasse/heaps) 当目标平台为 flash 时将基于 flash.stage3D, 而 平台为 js 时, 将使用 webgl. 如果需要使用以前旧的 h3d 版本, 在 github 页面上找到 h3d 这个分支即可. 
 
-
-注意: 下边的文档描述为 heaps的 h3d 分支.
-
 <!-- more -->
 
+
 ### h3d
+
+<br />
+
+### h2d
+
+游戏示例: [ld-30 Connected Worlds](https://github.com/ncannasse/ld30)
+
+<br />
+
+### hxsl
+
+一些概念可以先参考 haxelib 中的 hxsl 文档 http://old.haxe.org/manual/hxsl
+
+一些 AGAL 的内容.http://www.adobe.com/cn/devnet/flashplayer/articles/what-is-agal.html
+
+#### 着色器表达式(Shader expression)
+
+```haxe
+class ColorKey extends hxsl.Shader {
+
+	static var SRC = {
+		@param var colorKey : Vec4;
+		var textureColor : Vec4;
+
+		function fragment() {
+			var cdiff = textureColor - colorKey;
+			if( cdiff.dot(cdiff) < 0.00001 ) discard;
+		}
+	}
+
+	public function new( v = 0 ) {
+		super();
+		colorKey.setColor(v);
+	}
+
+}
+```
+
+
+**hxsl 自定义元标记**, 参看上边使用示例
+
+
+```haxe
+@local		... 局部变量?
+
+@global		... 对应 类hxsl.Globals, 像是类的 全局静态变量?
+
+@var		... 可变寄存器 ???(a varying variable, that is set in vertex shader and read in the fragment shader)
+
+@param		使这个标记的变量能在 类 中访问.
+
+@input	 	...输入的变量来自顶点缓冲区(the input variables are the ones that come from the vertex buffer)
+
+@function	...
+
+@output		...
+
+@const		... 常量寄存器?
+
+// 二个带 : 的元标记
+@:import
+
+@:extends
+
+
+//对应的 enum
+enum VarKind {
+	Global;
+	Input;
+	Param;
+	Var;
+	Local;
+	Output;
+	Function;
+}
+
+enum VarQualifier {
+	Const( ?max : Int );
+	Private;
+	Nullable;
+	PerObject;
+	Name( n : String );
+	Shared;
+	Precision( p : Prec );
+}
+
+
+	function applyMeta( m : MetadataEntry, v : Ast.VarDecl ) {
+		switch( m.params ) {
+		case []:
+		case [ { expr : EConst(CString(n)), pos : pos } ] if( m.name == "var" || m.name == "global" || m.name == "input" ):
+			v.qualifiers.push(Name(n));
+		case [ { expr : EConst(CInt(n)), pos : pos } ] if( m.name == "const" ):
+			v.qualifiers.push(Const(Std.parseInt(n)));
+			return;
+		default:
+			error("Invalid meta parameter", m.pos);
+		}
+		switch( m.name ) {
+		case "var":
+			if( v.kind == null ) v.kind = Var else error("Duplicate type qualifier", m.pos);
+		case "global":
+			if( v.kind == null ) v.kind = Global else error("Duplicate type qualifier", m.pos);
+		case "param":
+			if( v.kind == null ) v.kind = Param else error("Duplicate type qualifier", m.pos);
+		case "input":
+			if( v.kind == null ) v.kind = Input else error("Duplicate type qualifier", m.pos);
+		case "const":
+			v.qualifiers.push(Const());
+		case "private":
+			v.qualifiers.push(Private);
+		case "nullable":
+			v.qualifiers.push(Nullable);
+		case "perObject":
+			v.qualifiers.push(PerObject);
+		case "shared":
+			v.qualifiers.push(Shared);
+		case "lowp":
+			v.qualifiers.push(Precision(Low));
+		case "mediump":
+			v.qualifiers.push(Precision(Medium));
+		case "highp":
+			v.qualifiers.push(Precision(High));
+		default:
+			error("Unsupported qualifier " + m.name, m.pos);
+		}
+	}
+```
+
+
+<br />
+
+### hxd
+
+<br />
+
+---
+
+
+---
+
+**注意:** 下边是以前旧的内容,也就是 heaps的 h3d 分支内容. 这个分支使用的是 haxelib hxsl.
+
+### h3d/h3d
 
  * **Engine** 
 
@@ -26,7 +168,7 @@ categories: haxelib
 
   - **Driver** 核心类不同平台接口.
 
-### h2d
+### h3d/h2d
 
  h2d 似乎在设计上就是作为 UI, 因此一些动画,碰撞检测的方法都比较底层, 可以使用 XML(组件布局) 和 CSS(样式) 配置 UI.
 
@@ -38,67 +180,7 @@ categories: haxelib
 
  * [ld-28 You only got one](https://github.com/ncannasse/ld28)
 
- * [ld-30 Connected Worlds](https://github.com/ncannasse/ld30)
-
-#### 源码简析
-
- * **Scene** 2D 场影.
-  
-  - 通过 setFixedSize(w, h) 来设置一个宽高的基准值, 每次 resize 事件,将会自动以这个值进行缩放.
-
-		> 所以当出现缩放时 h2d.Scene 的 width,height 和 h3d.Engine,并不一致.对于 像素类的 2D 游戏,通常 会设一个很小的基准高宽值,然后缩放到指定大小. 这类游戏 Engine 的高宽值一般为 Scene 的二倍.
-
-
-
- * **Interactive** 用于交互.
-
-	```haxe
-	// 如何给 h2d.Bitmap 添加事件.
-	var bmp = new h2d.Bitmap(Res.some_png.toTile(), s2d );
-
-	var it = new Interactive(s2d.width, s2d.height, bmp);
-	it.onClick = function(e : hxd.Event){
-		trace(e); // ERelease[e.relX,e.relY]
-	}
-	```	
-
- * comp
-
-  - **Context**
-
-		```haxe
-		// 在初使化 h3d 之前可以修改组件默认的 css 
-		public static var DEFAULT_CSS = hxd.res.Embed.getFileContent("h2d/css/default.css");
-		// 优先返回缓存 字体
-		public static function getFont( name : String, size : Int ):hxd.Font{}
-		// 优先返回缓存 Tile
-		public static function makeTileIcon( pixels : hxd.Pixels ) : h2d.Tile {} 
-		```
-  - **Parser** HTML 解析器. 
-
-		> 这个类使用了 **`hscript`** 来动态解析 html 标签上的 脚本.
-		
-		> 示例: `sample/comps/components.html`, `tools/perlin/PerlinView.hx`, `h3d/parts/Editor.hx`
-		
-  - **JQuery** 可以在 HTML 标签上写脚本
-
- * css
-
-  - **Parser** css 解析器.
-		
-		> 和普通的 css 不一样的是 `:hover` 其实也是解析成 className. 例如:当光标悬浮于组件上时, 会自动执行  addClass(":hover")
-		
-		> 示例参见 default.css
-  
-  - **Style** 包含解析后的 CSS 属性对象
-
-  - **Defs** 一些 CSS 值数据定义,用于需要给 style 的一些属性赋值时.
-
-  - **Engine** 将 样式(Style) 应用到 组件(Component) 上去.
-
-  - **default.css** 组件默认的样式配置. 在初使化之前可以通过 comp.Context.DEFAULT_CSS 修改默认组件样式
-
-### hxd
+### h3d/hxd
  
  * **Res** 资源管理
 
@@ -225,9 +307,67 @@ categories: haxelib
 					 
 <br />
 
+### 源码简析
+
+ * **Scene** 2D 场影.
+  
+  - 通过 setFixedSize(w, h) 来设置一个宽高的基准值, 每次 resize 事件,将会自动以这个值进行缩放.
+
+		> 所以当出现缩放时 h2d.Scene 的 width,height 和 h3d.Engine,并不一致.对于 像素类的 2D 游戏,通常 会设一个很小的基准高宽值,然后缩放到指定大小. 这类游戏 Engine 的高宽值一般为 Scene 的二倍.
 
 
-#### `tool`
+
+ * **Interactive** 用于交互.
+
+	```haxe
+	// 如何给 h2d.Bitmap 添加事件.
+	var bmp = new h2d.Bitmap(Res.some_png.toTile(), s2d );
+
+	var it = new Interactive(s2d.width, s2d.height, bmp);
+	it.onClick = function(e : hxd.Event){
+		trace(e); // ERelease[e.relX,e.relY]
+	}
+	```	
+
+ * comp
+
+  - **Context**
+
+		```haxe
+		// 在初使化 h3d 之前可以修改组件默认的 css 
+		public static var DEFAULT_CSS = hxd.res.Embed.getFileContent("h2d/css/default.css");
+		// 优先返回缓存 字体
+		public static function getFont( name : String, size : Int ):hxd.Font{}
+		// 优先返回缓存 Tile
+		public static function makeTileIcon( pixels : hxd.Pixels ) : h2d.Tile {} 
+		```
+  - **Parser** HTML 解析器. 
+
+		> 这个类使用了 **`hscript`** 来动态解析 html 标签上的 脚本.
+		
+		> 示例: `sample/comps/components.html`, `tools/perlin/PerlinView.hx`, `h3d/parts/Editor.hx`
+		
+  - **JQuery** 可以在 HTML 标签上写脚本
+
+ * css
+
+  - **Parser** css 解析器.
+		
+		> 和普通的 css 不一样的是 `:hover` 其实也是解析成 className. 例如:当光标悬浮于组件上时, 会自动执行  addClass(":hover")
+		
+		> 示例参见 default.css
+  
+  - **Style** 包含解析后的 CSS 属性对象
+
+  - **Defs** 一些 CSS 值数据定义,用于需要给 style 的一些属性赋值时.
+
+  - **Engine** 将 样式(Style) 应用到 组件(Component) 上去.
+
+  - **default.css** 组件默认的样式配置. 在初使化之前可以通过 comp.Context.DEFAULT_CSS 修改默认组件样式
+
+<br />
+
+### `tool`
 
  * `fbx`
 
@@ -262,5 +402,4 @@ categories: haxelib
 	> 这是一个很好的如何使用 `format.zip` 和 如何创建一个简单命令行程序的示例
 
 
-
-
+<br />
