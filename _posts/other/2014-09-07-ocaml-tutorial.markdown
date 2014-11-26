@@ -111,7 +111,7 @@ let average a b =
  * ocaml 没有 return 关键字, 函数中最后一行将为函数的返回值.
 
 
-定义没有参数的函数: 使用 `()` 当参数. `()` 的类型为 unit, 像其它语言的 void
+**无参数的函数**: 使用 `()` 当参数. `()` 的类型为 unit, 像其它语言的 void
 
 ```ocaml
 let hello () =
@@ -125,13 +125,15 @@ let () = hello()
 ```
 
 
-一种其它的定义方式, 常常能在一些源码中见到:
+**`fun`**, 对于 C 语言, 像是声明一个函数指针指向一个函数, 对于 haxe|as3|js 则像是 `var average = function (a, b){return (a+b)/2;}` 如果定义局部函数经常会用到 这个关键字, 如示例中的 List.map
 
-```javascript
+```ocaml
 let average = fun a b -> (a +. b) /. 2.0;;
 
 List.map (fun i -> i*2) [1;2;3];;
 ```
+
+还有个 [function](#function) 的形为蛮复杂的, 放在后边再说.
 
 <br />
 
@@ -531,7 +533,7 @@ let sum_list = List.fold_left ( + ) 0
 [1; 2; 3]
 ```
 
-一个链表有 链头(第一个元素), 链尾(剩下的元素). 前边的示例中, 链头是整数 1, 链尾则是 List [2; 3].
+一个链表有 **链头(第一个元素)**, **链尾(剩下的元素)**. 前边的示例中, 链头是整数 1, 链尾则是 List [2; 3].
 
 另一种做法是使用 cons 运算符 -- `头::尾`. 所以下边示例结果一致:
 
@@ -556,8 +558,6 @@ struct pari_of_ints{
 ```
 
 ocaml 中最简单的对应形式是 组元( **tuple** ), 和链表不同, 组元的元素可以是不同类型. 例如: `(3, "hello", 'x')` 的类型是 `int * string * char`. 不能在 tuple 中命名元素, 而是要记住它们出现的顺序. tuple 表现形式为: 小括号中用逗号分隔数据. tuple 常常用作于 Variants 的参数列表.
-
-
 
 
 另外一种稍显复杂的方法, 就是使用 记录( **record** ), 可以像 C 语言的结构一样在 record 中为元素命名. 一个和之前 C 语言结构等价的 record: 
@@ -1090,12 +1090,58 @@ plus 2 3;;
 (* - : int = 6 *)
 ```
 
+##### function
+
+在一些模块源码中经常能见到这个关键字, 看上去也很复杂. 通过一些示例来了解它们:
+
+```ocaml
+(* 简单的和 fun 形为一到, 但只能有一个参数 *)
+let double = function n -> n * 2
+
+
+(* 虽然 function 只接受一个参数,但是可以用这种方式增加参数, 实际上 function 换成 fun 结果也是一样 *)
+let max x = function y -> if x > y then x else y
+
+(* 这看上去有点像 match expr with.... *)
+let foo = function
+	[] -> 0				(* 如果参数为空链表 则返回 0, *)
+	| a::l -> a		(* 如果空链表不为空, 则以头和尾形式表现, 这里将返回链表第一个值 *)
+;; (* var foo : int list -> int = <fun> *)	
+
+(* 上边的示例加上归递, 可以计算 List 的长度  *)
+let rec length_aux len = function
+	[] -> len							(* 如果为空链表[], 则返回值 len *)
+	| a::l -> length_aux (len + 1) l 	
+;;
+
+length_aux 0 [0; 1; 2; 3; 4];;	(* 初使化第一个参数为 0, 因为递归需要 *)
+(* - int : 5 *)
+
+let length li = length_aux 0 li;; (* 包装一下 length_aux, 使它能计算 List 长度 *)
+
+
+(* 再回顾一下 function 类似于 match expr with ....的形为*)
+type language =
+	| Zh
+	| En
+	| De
+;; (* type language = Zh | En | De *)
+
+let bar = function
+   Zh -> 1
+ | En -> 2
+ | De -> 3
+;; (* val bar : language -> int = <fun> *)
+
+bar Zh;; (* - : int = 1 *)
+```
+
 <br />
 
 模块
 ------
 
-在 ocaml 中, 每一段代被包成一个模块, 一个模块可以选择性地作为另一个模块的子模块,很像文件系统中的目录-但是我们不经常这样做。
+在 ocaml 中, 每一段代码被包成一个模块, 一个模块可以选择性地作为另一个模块的子模块,很像文件系统中的目录-但是我们不经常这样做。
 
 当你写一个程序使用两个文件amodule.ml和bmodule.ml，它们中的每一个都自动定义一个模块，名字叫Amodule和Bmodule，模块的内容就是你写到文件中的东西。
 
@@ -1297,6 +1343,44 @@ end
 
 
 
+结束语：函子是用来帮助程序员写出正确的程序的，而不是用来提高性能的，甚至会有运行时的损耗，除非使用像 ocamldefun 这样的解函器，ocamldefun 需要访问函子的源代码。
+
+#### 模块实际操作
+
+在ocaml的 toplevel 中，下面的技巧可以让一个现存的模块的内容可视化，比如List：
+
+```ocaml
+module M = List;;
+
+(* 省略.... *)
+```
+
+#### 模块包含
+
+如果我们觉得在标准的List模块中缺少一个函数，但是如果里面有我们确实需要它。在文件extensions.ml中，我们可以用include指令来实现这个效果。
+
+```ocaml
+module List = struct
+    include List
+    let rec optmap f = function
+      | [] -> []
+      | hd :: tl ->
+         match f hd with
+         | None -> optmap f tl
+         | Some x -> x :: optmap f tl
+end;;
+```
+
+(TODO: 第一次见 function 这种语法)
+
+它创建了Extensions.List模块，这个模块有标准的List模块的所有东西，加上一个新的optmap函数。从另一个文件看，要覆盖默认的List模块我们所要做的只是在 .ml 文件的开头open Extensions
+
+```ocaml
+open Extensions
+...
+List.optmap ...
+```
+
 <br />
 
 
@@ -1355,10 +1439,8 @@ max 'a' 'b';;		(* - : string = "b" *)
 
 ```ocaml
 let rec range a b =
-	if a > b then
-		[]
-    else 
-		a :: range (a+1) b
+	if a > b then []
+    else a :: range (a+1) b
 ;;
 
 (* val range : int -> int -> int list = <fun> *)
@@ -1366,12 +1448,132 @@ let rec range a b =
 
 查看这人常见的函数调用, 从最开始简单处 `a > b`, 如果调用 `range 11 10` 将返回 `[](空链表)` 就是这样. 还记得运算符 `::(cons)` 吗? `10::[]` 和 `[10]` 是一样的. 
 
+所以 `range 1 10` 的计算结果为: `[ 1; 2; 3; 4; 5; 6; 7; 8; 9; 10 ]`; 另一个复杂的 string_of_float 函数,展示了 多重 else if.. 注意嵌套函数 loop 如何递归.
+
+```ocaml
+let string_of_float f =
+  let s = format_float "%.12g" f in
+  let l = string_length s in
+  let rec loop i =
+    if i >= l then s ^ "."
+    else if s.[i] = '.' || s.[i] = 'e' then s
+    else loop (i+1) in
+  loop 0
+```
+
+另一种直接的写法, 但是速度比上边的归递要慢:
+
+```ocaml
+let string_of_float f =
+  let s = format_float "%.12g" f in
+  if String.contains s '.' || String.contains s 'e'
+  then s
+  else s ^ "."
+```
+
+#### Using begin ... end
+
+这是一些来自 lablgtk 的源码:
+
+```ocaml
+if GtkBase.Object.is_a obj cls then
+  fun _ -> f obj
+else begin
+  eprintf "Glade-warning: %s expects a %s argument.\n" name cls;
+  raise Not_found
+end
+```
+
+begin 和 end 都是所谓的打开和关闭括号的 **语法糖**, 类似于其它语言的大括号`{}`. 或者你可以使用小括号代替 begin 和 end.
+
+```ocaml
+if 1 = 0 then
+      print_endline "THEN"
+    else begin
+      print_endline "ELSE";
+      failwith "else clause"
+    end;;
+(* 
+ELSE
+Exception: Failure "else clause".
+*)
+
+if 1 = 0 then
+      print_endline "THEN"
+    else (
+      print_endline "ELSE";
+      failwith "else clause"
+    );;
+(* 
+ELSE
+Exception: Failure "else clause".
+*)
+```
 
 
+#### for loop and while loop
+
+ocaml 对循环支持有限,因为更多的是使用递归
+
+```ocaml
+for variable = start_value to end_value do
+  expression
+done
+  
+for variable = start_value downto end_value do
+  expression
+done
+
+(* 简单示例：相当于 for(int i = 0; i<5; i++){} *)
+for i = 0 to 5  do
+  print_int i
+done
+;; (* 012345 : uint = () *)
+```
+
+ocaml 不支持 break, continue 或 last 语句(你可以引发异常然后在外边捕获它. 但这样看起来好像很笨拙).
+
+注意: do 和 done 之间的表达式类型必须为 unit, 因此 `for i = 0 to 5 do i done` 将会报错, 所以 函数式程序员更倾向于使用 递归而不是循环.
+
+你可能不会在 ocaml 的源码中见到有人使用 while, 因为却实不方便使用.
+
+```ocaml
+let quit_loop = false in
+while not quit_loop do
+  print_string "Have you had enough yet? (y/n) ";
+  let str = read_line () in
+  if str.[0] = 'y' then
+    (* 怎么设置 quit_loop 为 true 而 退出循环 ?!? *)
+done
+```
+
+ocaml 的 let 绑定 并不是真正的变量(更像是宏常量),幸运的是 ocaml 有引用(ref), 注意 引用(ref)前的 `!` 类似于 C语言的 `*` 用于从指针中提取值, 并不是 逻辑非(Not) 的意思. 
+
+```ocaml
+let quit_loop = ref false in
+while not !quit_loop do
+  print_string "Have you had enough yet? (y/n) ";
+  let str = read_line () in
+  if str.[0] = 'y' then
+    quit_loop := true
+done;;
+```
+
+##### 遍历链表
+
+如果你想遍历链表, 不要用 for 或 while 循环, 因为 ocaml 有更好更快的方法. 这些方法位于 List 模块中(List 使用递归来遍历链表). 首先定义一个测试用的链表:
+
+```ocaml
+let my_list = [1; 2; 3; 4; 5; 6; 7; 8; 9; 10];;
+
+(* 如果你想对列表中的每个元素调用一个函数, 可以用 List.iter, 像这样: *)
+let f elem =
+    Printf.printf "I'm looking at element %d now\n" elem in
+    List.iter f my_list
+;;
+```
 
 <br />
-
-
 
 ocaml 命令行
 ------

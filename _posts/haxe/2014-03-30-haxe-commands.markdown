@@ -277,19 +277,6 @@ Haxe Compiler 3.13 - (C)2005-2014 Haxe Foundation
 
 -help  Display this list of options
 --help  Display this list of options
-
-
-### --wait 和 --connect 示例
-### -v 将会显示详情,如哪些文件缓存还是编绎了,一般情况不需要添加 -v
-# 服务绑定6000端口,用于缓存编译结果
-haxe -v --wait 6000
-
-# 连接缓存编译， --times 可以显示编译所花的时间
-haxe --times --connect 6000 build.hxml
-
-# 如果为 openfl 项目, 编译时则可以像下边:
-lime build flash --connect 6000 --times
-
 ```
 
 haxe --help-defines, haxe Compiler Flag 
@@ -711,6 +698,34 @@ haxe --help-metas, 这类元标记一般添加在代码中, 也可以在 宏(mac
 @:volatile           : (for cs,java)
 
 ```
+
+
+<br />
+
+
+##### 缓存编译
+
+用于绑定目录到指定端口,缓存编译, 这样使得每次编译时不会重新解析所有
+
+```bash
+### --wait 和 --connect 示例
+### -v 将会显示详情,如哪些文件缓存还是编绎了,一般情况不需要添加 -v
+# 服务绑定6000端口,用于缓存编译结果
+haxe -v --wait 6000
+```
+
+另外打开一个新的 CMD 窗口:
+
+```bash
+# 连接缓存编译， --times 可以显示编译所花的时间
+haxe --times --connect 6000 build.hxml
+
+# 如果为 openfl 项目, 编译时则可以像下边:
+lime build flash --connect 6000 --times
+```
+
+<br />
+
 
 ##### 一些简单的示例:
 

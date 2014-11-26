@@ -111,13 +111,11 @@ categories: haxe
 	}
 	```
 
- * -dce full 
+ * **`-dce full`**
 
- 	> 这个编译选项会在打包时清除未引用代码. 
+ 	> 这个编译选项会在打包时清除未引用代码. 默认为 -dce std. 有些时候如:编译成 SWC 时将会是 -dce no
 	
-	> 默认为 -dce std. 有些时候如:编译成 SWC 时将会是 -dce no
-	
-	> 有时候需要用 `@:keep` 或 `--macro keep` 来防止被 -dce 删除.
+	> 所以有时候需要用 `@:keep` 或 `--macro keep` 来防止被 -dce 删除.
 
 	> 当使下边的些语法时,相关地方需要添加 `@:keep` ,这个标记只能用于 类 或 静态字段.
 
@@ -129,6 +127,19 @@ categories: haxe
 	>(注意: 不要运行 cmd 或类似程序)
 	
 	> Sys.command 返回 0 表示程序以 exit(0) 的方式正常退出, 非 0 值一般意味着出错, 如果需要获得 CLI程序的输出值(stdout|stderr)则应该使用 sys.io.Process. 这二个都会等待 CLI程序**完全运行结束**（我只用 nodejs 的 setTimeout 测试过）.
+
+ * **缓存编译** 绑定目录到指定端口,缓存编译, 这样编译时不必每次都解析所有 .hx 文件,而只会解析修改过的文件
+	
+  - 命令行
+
+		> 用一个窗口 绑定当前目录到指定端口:  `haxe --wait 6000`
+	
+		> 另一个窗口 连接前边绑定: `haxe --connect 6000 --times build.hxml`
+
+  - flashdevelop
+
+		> ![flashdevelop setting](/assets/img/fd_setter_completionServer.png) 
+
 
 <br />
 
