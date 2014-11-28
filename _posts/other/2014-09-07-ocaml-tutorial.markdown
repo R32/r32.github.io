@@ -255,7 +255,7 @@ let give_me_a_three x = 3;;
 
 (**  
  此函数的类型是什么? 在 ocaml 中使用一个特殊的占位符, 意思是 "任意类型的幻想",
- 表现形式为: 单引号字符后跟一个字符 a,  
+ 表现形式为: 单引号字符后跟一个字符( 字符从 a 开始,那么第二个不同参数将为 b......),  
 
  give_me_a_three : 'a -> int = <fun>
 
@@ -1571,7 +1571,148 @@ let f elem =
     Printf.printf "I'm looking at element %d now\n" elem in
     List.iter f my_list
 ;;
+
+(* map, 便历链表改变每一个元素, 返回新的链表 *)
+List.map (( * ) 2 ) my_list
+;; (* - : int list = [2; 4; 6; 8; 10; 12; 14; 16; 18; 20] *)
+
+(* filter 过滤链表, 只返回为 true 的元素链表 *)
+let is_even i = i mod 2 == 0 in
+	List.filter is_even my_list
+;; (* - : int list = [2; 4; 6; 8; 10] *)
+
+(* mem 检测链表是否包含指定元素 *)
+List.mem 12 my_list
+;; (* - : bool = false *)
+
+(* List.exists 和 mem 一样, 只是第一个参数为回调函数
+   List.for_all 则所有元素必须满足回调函数
+
+  iter2, map2 for_all2, exists2 则可以同一时间遍历二链表
+*)
 ```
+
+map 和 filter 只能操作单独的元素, **`fold`** 是更常见的操作, 思考"在链表元素之间插入操作符", 假设我们要将链表中的数字全都加在一起:
+
+```ocaml
+1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 + 9 + 10;;
+(* - : int = 55  *)
+```
+
+首先, 如果我们尝试 合拢(fold) 一个空链表将会发生什么? 那么 ocaml 将无法确定链表类型.或者一些其它的原因(TODO 未翻译),显然我们 **必须为 fold 提供一个默认值 参数**
+
+让我们使用 List.fold_left(有另一个版本的fold_right, 只是性能稍差) 来定义 整数链表的 sum 和 product:
+
+```ocaml
+let sum = List.fold_left ( + ) 0		(* 0 默认值 参数,作为归递初始值, 而并不是每个元素都会加上这个值 *)
+;; (* val sum : int list -> int = <fun> *)
+
+let product = List.fold_left ( * ) 1
+;; product : int list -> int = <fun>
+
+sum my_list;; (* - : int = 55 *)
+
+product my_list;; (* - : int = 3628800  *)
+
+(* 这很简单, 偶然做一个数学阶乘: (range 参上前边小节的定义)
+请注意这个阶乘的函数不是非常有用，因为会溢出整数，或者如果参数值较小将得到一个错误。真正的阶乘的函数将使用Big_int模块。	
+ *)
+let fact n = product (range 1 n);;
+```
+
+#### 遍历字符串
+
+String 模块提供很多字符串处理的相关功能.其中一些波及遍历整个字符串. String.iter
+
+String.fill 和 String.blit 分别是 C 语言 memset 和 strcpy, String.copy 复制一个字符串, 像 strdup. 
+
+
+#### 递归
+
+叫 归递 也行.在函数式编程中, 递归得到最好的支持, 而循环(for or while)则是二等公民.
+
+在第一个示例中, 我们要将整个文件读入内存(很长的字符串), 对此有三种可能的方法:
+
+ * 方法一:  获得文件的长度(length), 然后使用 really_input方法读入. 这是最简单的方法但很可能不能用于 通道(channel)(通道并不是真正的文件例如从键盘输入)
+
+	```ocaml
+	open Printf
+	
+	let read_whole_chan chan = 
+	  let len = in_channel_length chan in
+	  let result = string.create len in
+	  really_input chan result 0 len;
+	  result
+	
+	let read_whole_file filename =
+	  let chan = open_in filename in
+	  read_whole_chan chan
+  
+	let () =
+	  let filename = Sys.argv.(1) in
+	  let str = read_whole_file filename in
+	  printf "I read %d characters from %s\n" (String.length str) filename 
+	
+	(* 不是很理想, 因为 read_whole_chan 不会像 键盘输入或套接字之类的非文件流 *)
+	```
+
+ * 方法二: 使用 while 循环,以 抛出异常(exception)的方式从循环中退出
+
+	```ocaml
+	open Printf
+	let read_whole_chan chan =
+	  let buf = Buffer.create 4096 in
+	  try
+	    while true do
+	      let line = input_line chan in
+	      Buffer.add_string buf line;
+	      Buffer.add_char buf '\n'
+	    done;
+	    assert false (* This is never executed
+                    (always raise Assert_failure). *)
+	  with
+	    End_of_file -> Buffer.contents buf
+  
+	let read_whole_file filename =
+	  let chan = open_in filename in
+	  read_whole_chan chan
+  
+	let () =
+	  let filename = Sys.argv.(1) in
+	  let str = read_whole_file filename in
+	  printf "I read %d characters from %s\n" (String.length str) filename
+	```
+
+ * 方法三: 递归, 以 抛出异常(exception)的方式结束递归. 它不太容易理解
+
+	```ocaml
+	open Printf
+		  
+	let read_whole_chan chan =
+	  let buf = Buffer.create 4096 in
+	  let rec loop () =
+	    let line = input_line chan in
+	    Buffer.add_string buf line;
+	    Buffer.add_char buf '\n';
+	    loop () in
+	  try
+	    loop ()
+	  with
+	    End_of_file -> Buffer.contents buf
+	  
+	let read_whole_file filename =
+	  let chan = open_in filename in
+	  read_whole_chan chan
+	  
+	let () =
+	  let filename = Sys.argv.(1) in
+	  let str = read_whole_file filename in
+	  printf "I read %d characters from %s\n" (String.length str) filename
+	```	
+
+(注: 通道(channel) 应该就是所谓的 **文件流** 吧,类似于 stderr,stdio,stdin 之类的)
+
+
 
 <br />
 
