@@ -451,7 +451,7 @@ build宏函数 与 普通的宏函数不一样的地方:
 
  * 不是直接调用,而是将元标记 `@:build` 或 `@:autoBuild` 放在一个 `class` 或 `enum` 定义中.
 
-[build 一个示例]({% post_url haxe/2014-05-13-tips-on-haxe %}#自定义元标记 Metadata), 其实 haxelib heaps 库中 hxd 目录下有很多很好的宏构建示例
+[build 一个示例]({% post_url haxe/2014-05-13-tips-on-haxe %}#自定义元标记-Metadata), 其实 haxelib heaps 库中 hxd 目录下有很多很好的宏构建示例
 
 
 <br />
@@ -525,7 +525,7 @@ includeFile(fileName:Dynamic):Dynamic;
 */
 keep(path:String = null, paths:Array<String> = null, recursive:Bool = true):Void
 
-// 加载 flash 补丁文件, 因该只能用于 flash 端的 http://r32.github.io/{% post_url haxe/2014-05-10-tips-haxe-flash%}#patch files
+// 加载 flash 补丁文件, 因该只能用于 flash 端的 http://r32.github.io/{% post_url haxe/2014-05-10-tips-haxe-flash%}#patch-files
 patchTypes(file:String):Void
 
 // 移除指定字段
