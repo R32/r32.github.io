@@ -1,9 +1,18 @@
 ---
 layout: post
-title:  openfl编译android 小记
+title:  openfl 编译 android 小记
 date:   2014-05-10 16:03:10
 categories: haxe
 ---
+
+
+一些内容并非只是 android 平台.
+
+
+<!-- more -->
+
+
+<br />
 
 #### 创建 certificate
 
@@ -22,8 +31,6 @@ categories: haxe
 	```
 
 [create certificate]:http://www.openfl.org/archive/community/general-discussion/openfl-android-singing-guide/
-<!-- more -->
-
 
 
 <br />
@@ -40,7 +47,6 @@ categories: haxe
 <!-- 排除armv7以获得更小的文件尺寸,文件大小将减小一半 -->
 <architecture name="armv6" exclude="armv7" />
 ```
-
 
 <br />
 

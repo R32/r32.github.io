@@ -1,21 +1,13 @@
 ---
 
 layout: post
-title:  编绎haxe为AIR
+title:  导出 SWF 文件为 AIR
 date:   2014-05-13 9:26:10
 categories: haxe
 
 ---
 
-标题改成如何将 `.swf` 文件打包成 `air` 更为合适.
-
-
 最简单的方法是用 `flashdevelop` 创建一个 `haxe/air` 的示例.
-
-
-其实很少有人用 `haxe` 编绎成 `air`. 因为 `openfl` 可以生成 `windows` 或 `linux` 平台的应用.
-
- > 注:`windows` 平台的 `TextField.type = "input"` 的效果很不好,而且不支持 IME 的输入
 
 <!-- more -->
 
@@ -75,9 +67,9 @@ categories: haxe
 
 
 
-#### 创建 `swf`
+#### 创建 swf
 
-先需要编绎成常见的 `swf` 格式. 细节参看: [编绎haxe](http://haxe.org/doc/compiler)
+先需要编绎成常见的 swf 格式. 细节参看: [编绎haxe](http://haxe.org/doc/compiler)
 
 ```bat
 haxe -main Main -swf Main.swf

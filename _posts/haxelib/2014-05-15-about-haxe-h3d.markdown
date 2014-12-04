@@ -1,16 +1,17 @@
 ---
 
 layout: post
-title:  简单描述 heaps(h3d)
+title:  heaps
 date:   2014-05-13 8:26:10
 categories: haxelib
 
 ---
 
-目前已经更名为 heaps, 看描述似乎要做成一个游戏引擎. 一些改动也比较大,  [**`heaps`**](https://github.com/ncannasse/heaps) 当目标平台为 flash 时将基于 flash.stage3D, 而 平台为 js 时, 将使用 webgl. 如果需要使用以前旧的 h3d 版本, 在 github 页面上找到 h3d 这个分支即可. 
+[**`heaps`**](https://github.com/ncannasse/heaps) 当目标平台为 flash 时将基于 flash.stage3D, 而 平台为 js 时, 将使用 webgl. 以前名字为 h3d, 如果需要使用以前旧的 h3d 版本, 在 github 页面上找到 h3d 这个分支即可
 
 <!-- more -->
 
+<br />
 
 ### h3d
 
@@ -149,10 +150,8 @@ enum VarQualifier {
 
 <br />
 
----
-
-
----
+旧的内容
+------
 
 **注意:** 下边是以前旧的内容,也就是 heaps的 h3d 分支内容. 这个分支使用的是 haxelib hxsl.
 

@@ -7,13 +7,77 @@ categories: haxelib
 
 ---
 
- [munit] 是用于 haxe 跨平台的测试框架. [wiki]
-
- [wiki]:https://github.com/massiveinteractive/MassiveUnit/wiki
-
- [munit]:https://github.com/massiveinteractive/MassiveUnit/
+内容分为haxe标准库的 haxe.unit 和 haxelib munit.可以任意选译其中的一个用于 haxe 代码测试
  
 <!-- more -->
+
+<br />
+
+haxe.unit test
+------
+
+#### 创建测试样例
+
+你需要创建一个 新类 扩展 haxe.unit.TestCase, 然后写一些测试用的方法. **注意:** 测试方法(method)名字必须以 test 开头.
+
+```haxe
+// 注: 由于 TestCase 被标记为 @:publicField 所以不用添加 public 访问控制
+class TestFoo extends haxe.unit.TestCase{
+	function new(){
+		super();
+		this.print("这里做类的初使化工作");
+	}
+	
+	// 以字符 test 开头的方法.
+	public function testBase(){
+		this.print(" 一个 test方法 ");
+		this.assertEquals("A","A");
+	}
+	override function setup(){
+		this.print(" 在每次调用一个 test方法时之前 ");
+	}
+	override function tearDown(){
+		this.print(" 在每次执行完一个 test方法时之后 ");
+	}
+}
+```
+
+#### 添加测试样例
+
+必须将所有 TestCase 类添加到 TestRunner 中去.
+
+```haxe
+class Main{
+	static function main(){
+		var runner = new haxe.unit.TestRunner();
+		runner.add(new TestFoo());
+		runner.run();	
+	}
+}
+```
+
+#### 比较复杂的对象
+
+很可能需要自已写一些 equals 之类的方法, 但是对于数组可以:
+
+```haxe
+public function testArray(){
+	var a = [1,2,3];
+	assertEquals("[1, 2, 3]", Std.string(a));
+}
+```
+
+<br />
+
+haxelib munit
+------
+
+[munit] 是用于 haxe 跨平台的测试框架. [wiki]
+
+[wiki]:https://github.com/massiveinteractive/MassiveUnit/wiki
+
+[munit]:https://github.com/massiveinteractive/MassiveUnit/
+
 
 #### 快速入门
 
@@ -34,7 +98,7 @@ categories: haxelib
 
 
 
-#### 自动生成 Test 类
+#### 自动生成
 
 For example
 
@@ -70,6 +134,8 @@ haxelib run munit gen -filter ExampleTest
 	> BUG? `haxelib run munit test` 将会覆盖 第 4 步, 
 	
 	> 还有就是虽然测试属于另一个项目, 但是为了能获得代码智能提示需要把 -lib munit 加入到项目.
+	
+ 6. 使用这个测试框架时, 有时候关联的 haxelib 太多经常不能通过测试编译
 
 
 <br />

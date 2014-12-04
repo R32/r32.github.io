@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  haxe编译flash 小记
+title:  haxe 编译 flash 小记
 date:   2014-05-10 15:16:10
 categories: haxe
 ---

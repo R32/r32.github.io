@@ -10,19 +10,35 @@ categories: haxe
  计划慢慢使用 haxe 来写 javascript 包括 nodejs.
  
 <!-- more -->
+<br />
 
 #### `HTML DOM`
 
 haxe.js.html 下的对象类型挺吓人的. 所以应该使用 js.JQuery 来操作 DOM 对象.
 
 
-<br />
-
-#### JS 相关 defines 以及 metas
+#### defines and metas
 
 编译行使用 -D 来设置, 代码中通过 Context.defined 或 Context.definedValue 检测设置
 
- * `@:jsRequire` 需要 haxe 3.2+
+ * `@:jsRequire(moduleName,?subModName)` 需要 haxe 3.2+
+
+	> 在 haxe 3.13 时 使用诸如 `@:native("(require('fs'))") extern class Fs{}` 这样很不美观.
+	
+	> haxe 3.2+ 应此添加了这个新标记,
+	
+	```haxe
+	@:jsRequire("fs")
+	extern class Fooo {
+		
+	}	// 那么这个类导出的 JS 代码则为 var Fooo = require("fs");
+
+	
+	@:jsRequire("http", "Server")
+	extern class Barr{
+		
+	}	// 导出的JS代码为:	var Barr = require("http").Server;
+	```
  
  * js-flatten 平坦模式.
 
@@ -138,7 +154,7 @@ class Main {
 <br />
 
 
-### 使用 nodejs
+#### 使用 nodejs
 
 虽然是 js 平台, 但是在安装 [haxelib nodejs](https://github.com/dionjwa/nodejs-std) 库之后, 完成可以看成另一个平台.
 

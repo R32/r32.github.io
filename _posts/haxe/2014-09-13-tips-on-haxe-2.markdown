@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  混乱的记录
+title:  一些语法记录 2
 date:   2014-09-13 17:21:10
 categories: haxe
 ---
@@ -11,9 +11,103 @@ categories: haxe
 
 <br />
 
+#### 杂项
+
+ * haxe 的代码, 对于 `Java` 和 `C#` 平台, 把函数(例如:sortBy)直接写在参数上比写在类成员上要快
+
+ * 泛型方法中有 new Some<T>() 这样的创建泛型实例时, 最好加上 `@:generic` 元标记.
+
+	```haxe
+	// 如果这个方法是 new Array<T>(),倒是没什么错误, 但是
+	// Vector 在实例化时需要 默认类型来填充各单元, 所以不加 @:generic 时将报错,或得到的值不正确
+	@:generic function vec<T>(n:T){
+		var v = new haxe.ds.Vector<T>(5);
+		for(i in 0...5){
+			v.set(i, n)
+		}
+		return v
+	}
+	```
+
+
+#### for and while
+
+首先看下 javascript 中的闭包..
+
+```js
+// 第一个, 闭包环境的问题, 将会输出 3,3,3
+for(var i = 0; i<3; i += 1){
+	setTimeout(function(){
+		console.log(i);	
+	},500)
+}
+
+
+// 第二个, 值传递到闭包.避免上面问题,输出 0, 1, 2
+for(var i = 0; i<3; i += 1){
+	setTimeout((function(n){
+		return function(){
+			console.log(n);
+		}	
+	})(i),500)
+}
+```
+
+上边的示例在 flash 中显示的结果也一致, 再来对比一下 haxe 中 for 和 while 循环的区别:
+
+
+```haxe
+// while 循环,	-	输出为: 3, 3, 3 
+var i = 0;
+while(i < 3){
+	haxe.Timer.delay(function(){
+		trace(i);
+	}, 500);
+	i += 1;
+}
+
+// for 循环		-	输出为: 0, 1, 2, 
+for(i in 0...3){
+	haxe.Timer.delay(function(){
+		trace(i);
+	}, 500);
+}
+```
+
+使用 Neko 平台测试: 由于 haxe 标准库中没有 setTimeout 之类的函数,因此这里用 Thread 来测试异步
+
+```haxe
+// while 循环会先输出 for loop: 0 ~ 3, 然后接出 3, 3, 3
+static function main() {
+	var i = 0;
+	while(i < 3){
+		Thread.create(function() {
+			Sys.sleep(.5);
+			Sys.println(i);
+		});
+		Sys.println("for loop: " + i);
+		i += 1;
+	}
+	Sys.sleep(3); // 等待线程结束
+}
+
+// for 循环, 同样是 for loop: 0 ~ 3, 但是接着输出 [0, 1, 2], 这个 [0, 1, 2] 有时候会是其它顺序.
+static function main() {
+	for(i in 0...3){
+		Thread.create(function() {
+			Sys.sleep(.5);
+			Sys.println(i);
+		});
+		Sys.println("for loop: " + i);
+	}
+	Sys.sleep(3);
+}
+```
+
+
 #### List
 
-链表形式, Haxe 中的List 是由包含二个元素的各个数组链接而成,文档称 适用于经常删除和添加元素,而避免复制.从源码上感觉这个List 的实现不太好
+链表形式, Haxe 中的List 是由包含二个元素的各个数组链接而成,文档称 适用于经常删除和添加元素,而避免复制.从源码上感觉这个List 的实现不太好, 感觉 List 没什么用.不如直接用 Vector 或 Array.
 
 ```haxe
 var list = new List<Int>();

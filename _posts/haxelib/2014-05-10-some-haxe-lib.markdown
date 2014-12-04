@@ -46,6 +46,10 @@ categories: haxelib
 
 #### 游戏引擎
 
+ * **[heaps(h3d)](https://github.com/ncannasse/heaps)**
+
+	> 大神的游戏引擎,使用 stage3D,webGl,openGl, 没有文档, 未发布过,但是已经有他自已的几个大游戏使用
+
  * **[haxeflixel](https://github.com/haxeflixel)**
 
 	> 全位图游戏引擎,社区以及周边都远比 haxepunk 强大
@@ -121,7 +125,36 @@ categories: haxelib
 
  * [tink_core](https://github.com/haxetink/tink_core) 
 
- 	> 包含几个轻量级工具库. 比如 signal, 文档很详细
+	```
+	# 包含几个轻量级工具库. 源码都简单.
+	
+	
+	Pair	:	双, 例如用来给 Map 类型排序,就需要建一个 Array<Pait> 的数组..
+	
+	Either	:	二者之一,Left(T1)或Right(T2), 用于参数可以接受二种类型,
+	
+	Lazy	:	abstract Lazy<T>(Void->T), lazy evaluation,
+				把一个值包装成 返回这个值的函数, 没必要这么做吧???
+	
+	Error	:	集合了一些网络错误, 例如: ErrorCode.NotFound == 404
+	
+	Outcome	:	常用于函数返回值, 用来检测返回值是否出错.OutcomeTools 有一些可用于 using 的方法
+				类似于 haxe.ds.Option
+				C 语言中常常返回 0, 表示正确, 非 0 值为错误代码
+	
+	Future	:	这个的文档太长, hehe.
+	
+	Ref		:	感觉没必要. 这个类使用 Vector 的第一个元素存储值.来达到引用效果.
+	
+	Noise	:	表示空,用于表示一个类型, 示例: 当你操作成功却不需要做任何事情时
+				function writeToFile(content:String):Outcome<Noise, IoError>;
+				
+	Callback	:	abstract Callback<T>(Null<T->Void>) from (T->Void) {}	
+	
+	CallbackLink:	abstract CallbackLink(Null<Void->Void>){}
+	
+	CallbackList:	abstract CallbackList<T>(Array<Cell<T>>){}
+	```
 
 
 

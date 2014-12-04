@@ -1,7 +1,7 @@
 ---
 
 layout: post
-title:	宏
+title:	macro 宏编译 
 date:   2014-05-08 10:26:10
 categories: haxe
 
@@ -14,10 +14,11 @@ categories: haxe
 > 最新的[官网参考](http://haxe.org/manual/macro.html)
 
 <!-- more -->
+<br />
 
-### 条件编译 [(Conditional Compilation)](http://haxe.org/manual/lf-condition-compilation.html)
+### 条件编译
 
-Haxe 通过使用 `#if #else #elseif #end` 来 **检测编译器标志**, 用于实现 **条件编译**. 严格来说我不应该把 这一节内容放在 宏 这一章
+[条件编译 (Conditional Compilation)](http://haxe.org/manual/lf-condition-compilation.html). Haxe 通过使用 `#if #else #elseif #end` 来 **检测编译器标志**, 用于实现 **条件编译**. 严格来说我不应该把 这一节内容放在 宏 这一章
 
  > defines: 编译标志(Compiler Flag)
 

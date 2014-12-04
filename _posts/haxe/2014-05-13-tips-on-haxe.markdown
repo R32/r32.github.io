@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  Tips on Haxe
+title:  一些语法记录 1
 date:   2014-05-13 12:26:10
 categories: haxe
 ---
@@ -21,6 +21,8 @@ categories: haxe
  * [windows-installer 最新的开发版本下](http://hxbuilds.s3-website-us-east-1.amazonaws.com/builds/haxe/windows-installer/haxe_latest.tar.gz) 由于目前无法访问 google.api,所以 build.haxe.org 内容为空.
 
  * 对于命令行(CLI)程序, 文件代码应该为 anti ,dos 中才会正确显示中文.
+
+ * 字面量初使化 Map 的格式为:  `var map = [ 1 => 10, 2 => 20, 3 => 30]`
 
  * $type
 
@@ -129,6 +131,9 @@ categories: haxe
 	> Sys.command 返回 0 表示程序以 exit(0) 的方式正常退出, 非 0 值一般意味着出错, 如果需要获得 CLI程序的输出值(stdout|stderr)则应该使用 sys.io.Process. 这二个都会等待 CLI程序**完全运行结束**（我只用 nodejs 的 setTimeout 测试过）.
 
  * **缓存编译** 绑定目录到指定端口,缓存编译, 这样编译时不必每次都解析所有 .hx 文件,而只会解析修改过的文件
+
+	> 注: 开启这种效果之后有时候会造成 找不到 宏编译成生的字段 的错误, 这时需要重启 flashdevelop,
+	> 或者 ` Ctrl+C` 中断命令行绑定, 然后重新绑定.
 	
   - 命令行
 

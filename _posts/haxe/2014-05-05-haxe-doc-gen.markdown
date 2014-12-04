@@ -1,7 +1,7 @@
 ---
 
 layout: post
-title:  生成Haxe API文档
+title:  导出代码注释为 API 文档
 date:   2014-05-05 21:03:10
 categories: haxe
 
@@ -11,6 +11,8 @@ categories: haxe
 
 
 <!-- more -->
+
+<br />
 
 #### 注释内容规范
 

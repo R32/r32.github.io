@@ -57,29 +57,16 @@ comment
 
 #### 调用函数
 
-假设你编写了一个函数,叫 `repeated`, 实现了 重复一个字符串 n 次
-
-```c
-repeated("hello",3); 	/* 这是 C 代码 */
-```
-
-ocaml 和其它通过括号调用函数不同: **注意: 没有小括号,各参数之间没逗号**
+假设你编写了一个函数,叫 `repeated`, 实现了 重复一个字符串 n 次, ocaml 和其它通过括号调用函数不同: **注意: 没有小括号,各参数之间没逗号**
 
 ```ocaml
 repeated "hello" 3		(* 这是 OCaml 代码 *)
 ```
 
-添加另一项功能 `prompt_string`, 从用户输入读取字符串并返回, 我们想要把该字符串传递给 `repeated`, 以下是 C 和 OCaml 的版本:
-
-```c
-repeated(prompt_string("Please Type: "),3); 	/* 这是 C 代码 */
-```
-
-注意: 小括号内部表示另一个函数调用.
+添加另一项功能 `prompt_string`, 从用户输入读取字符串并返回, 我们想要把该字符串传递给 `repeated`, 以下是 C 和 OCaml 的版本: 注意: 小括号内部表示另一个函数调用.
 
 ```ocaml
 repeated (prompt_string "Please Type: ") 3		(* 这是 OCaml 代码 *)
-
 
 (* 更多示例 *)
 f 5 (g "hello") 3    (* f 有 3 个参数, g 有 1 个参数 *)
@@ -350,7 +337,7 @@ my_ref := 100;;
  *)
 ```
 
-**因此**: `:=` 操作符用来给引用赋值, `!` 操作符用来取出引用的值.下边是一个粗略的比较:
+**因此**: `:=` 用于更改 ref 的值, `!` 用于 取出 ref 的值.下边是一个粗略的比较:
 
 ```
 ocaml						c/c++
@@ -1371,8 +1358,6 @@ module List = struct
 end;;
 ```
 
-(TODO: 第一次见 function 这种语法)
-
 它创建了Extensions.List模块，这个模块有标准的List模块的所有东西，加上一个新的optmap函数。从另一个文件看，要覆盖默认的List模块我们所要做的只是在 .ml 文件的开头open Extensions
 
 ```ocaml
@@ -1524,7 +1509,9 @@ for variable = start_value downto end_value do
   expression
 done
 
-(* 简单示例：相当于 for(int i = 0; i<5; i++){} *)
+(* 简单示例：相当于 for(int i = 0; i<=5; i++){} 
+   注意: 和 haxe 的 for 循环最大区别是 for(i in 0...5), i 的值最大为 4, 而 ocaml 为 5	
+*)
 for i = 0 to 5  do
   print_int i
 done
@@ -1712,6 +1699,76 @@ String.fill 和 String.blit 分别是 C 语言 memset 和 strcpy, String.copy �
 
 (注: 通道(channel) 应该就是所谓的 **文件流** 吧,类似于 stderr,stdio,stdin 之类的)
 
+<br />
+
+
+扩展
+------
+
+#### 数组
+
+数组的表达式形式为: `[| el; e2; e3; .... |]`, 和链表很像, 只是中括号二边多了 '|' 符号.一个展示 for 循环的示例:
+
+```ocaml
+ let add_vect v1 v2 =
+    let len = min (Array.length v1) (Array.length v2) in
+    let res = Array.make len 0.0 in
+    for i = 0 to len - 1 do
+      res.(i) <- v1.(i) +. v2.(i)
+    done;
+    res;;
+	
+add_vect [| 1.0; 2.0 |] [| 3.0; 4.0 |];;
+(* - : float array = [|4.; 6.|] *)
+```
+
+#### 异常
+
+```ocaml
+exception Empty_list;;
+
+let head l =
+    match l with
+      [] -> raise Empty_list
+    | hd :: tl -> hd;;
+	
+head [1;2];;	(* - : int = 1 *)
+
+head [];;		(* Exception: Empty_list. *)
+
+(* 定义异常和定义 variant 一样.. *)
+
+exception SomeLog of string;;
+
+raise (SomeLog "hello");;
+```
+
+#### 独立程序
+
+使用 `ocamlc` 和 `ocamlopt` 编译 ml 文件,	打印斐波那契数字:
+
+```ocal
+(* File fib.ml *)
+let rec fib n =
+  if n < 2 then 1 else fib (n-1) + fib (n-2);;
+let main () =
+  let arg = int_of_string Sys.argv.(1) in
+  print_int (fib arg);
+  print_newline ();
+  exit 0
+let () = main()
+```
+
+编译测试:
+
+```bash
+$ ocamlc -o fib fib.ml
+
+$ ./fib 10
+89
+$ ./fib 20
+10946
+```
 
 
 <br />
