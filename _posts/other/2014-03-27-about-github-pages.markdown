@@ -11,6 +11,10 @@ categories: other
 
 https://help.github.com/categories/github-pages-basics/
 
+https://github.com/Shopify/liquid/wiki/Liquid-for-Designers
+
+http://jekyllcn.com/
+
  * 创建一个名为 `user.github.io` 的特殊项目
 
 	> github 将自动通过 `jekyll` 编译 项目中的文件为静态网页
@@ -51,3 +55,5 @@ https://help.github.com/categories/github-pages-basics/
  * [jemoji](https://github.com/jekyll/jemoji) 支持表情字符串, [表情字符清单](http://www.emoji-cheat-sheet.com/)
 
  * [jekyll-mentions](https://github.com/jekyll/jekyll-mentions) **`@mention`** support for your Jekyll site
+
+<br />

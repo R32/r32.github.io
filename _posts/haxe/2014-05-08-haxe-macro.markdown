@@ -7,7 +7,7 @@ categories: haxe
 
 ---
 
-宏 是 Haxe 最主要的特性
+宏 是 Haxe 最主要也是最强大的特性
 
 > 宏可以在编译时通过计算初使化一些值,比如 UI 的配置等等.
 > 宏可以扫描资源文件夹,用于自动嵌入文件或者 IDE 智能提示
@@ -22,7 +22,7 @@ categories: haxe
 
  > defines: 编译标志(Compiler Flag)
 
- > 编译标志是一个可配置的值, 这些标志通过使用 -D key=value 或只是 -D key 来设置, 未设置 value 默认值将为 1. 
+ > 编译标志是一个可配置的值, 这些标志通过使用 -D key=value 或只是 -D key 来设置, 未设置 value 默认值将为字符串 1. **所有 -D 定义标记的值都为字符串**
 
 ```haxe
 #if flash
@@ -437,7 +437,7 @@ The syntax for reification is `macro expr`, where `expr` is any valid Haxe expre
 
 #### 宏构建`@:build`
 
-通过宏的方式动态构建 `class` 或 `enum`.
+通过宏的方式动态构建 `class` 或 `enum`. **注意: @:build 或@:autoBuild 调用的方法没有添加 macro**
 
 需要理解 AST,以前了解 haxe.macro 包中的所有类. [新参考](http://haxe.org/manual/macro-type-building.html) [参考](http://old.haxe.org/manual/macros/build) 
 
@@ -451,12 +451,208 @@ build宏函数 与 普通的宏函数不一样的地方:
 
  * 不是直接调用,而是将元标记 `@:build` 或 `@:autoBuild` 放在一个 `class` 或 `enum` 定义中.
 
+[build 一个示例]({% post_url haxe/2014-05-13-tips-on-haxe %}#自定义元标记 Metadata), 其实 haxelib heaps 库中 hxd 目录下有很多很好的宏构建示例
+
+
+<br />
+
+#### Compiler
+
+haxe.macro.Compiler 的一些方法, 这个类的方法运行在编译时, 当编译参数 `--macro` 后调用方法时,默认为这个包下的方法.
+
+例如: 'haxe --macro define('SomeFlag','Hello')', 记得字符串用 **单引号** 而不是 双引号.
+
+[haxe 命令行编译参数]({% post_url haxe/2014-03-30-haxe-commands %}#haxe)
+
+```haxe
+// 就像 haxe 编译的参数 -cp, 将指定的路径添加类路径
+addClassPath(path:String):Void;
+
+//
+addGlobalMetadata(pathFilter:String, meta:String, recursive:Bool = true, toTypes:Bool = true, toFields:Bool = false):Void
+
+//
+addMetadata(meta:String, className:String, field:String = null, isStatic:Bool = null):Void
+
+
+// Adds a native library depending on the platform (eg : -swf-lib for Flash)
+addNativeLib(name:String):Void
+
+
+// 
+allowPackage(v:String):Void
+
+// 像 haxe 编译参数 -D  
+define(flag:String, value:String = null):Void
+
+// Exclude a given class or a complete package from being generated
+// 排除给定的包或类名在编译时, 由于编译参数 -dce 的关系, 事实上你不用调用这个方法
+exclude(pack:String, rec:Bool = true):Void
+
+
+// Exclude classes listed in an extern file (one per line) from being generated.
+// 读取指定文件, 排除 外部类清单 每行一个
+excludeFile(fileName:String):Void
+
+// 得到 -D 定义的值.
+getDefine(key:Dynamic):Dynamic
+
+// 未知. 估计是用于 代码 编辑器
+getDisplayPos():Null<{pos:Int, file:String}>
+
+// 得到编译时输出的绝对全文件名, 例如: haxe -main Main -swf main.swf, 那么这个方法返回 D:\path\main.swf
+function getOutput():String
+
+/**
+ 	这个方法形为像在代码中的 import pack.*;
+ @param rec		归递扫描子项, 表示包含所有子项
+ @param ignore	要忽略的类名数组, 包含路径在内的全名.
+ @param classPaths	相当于 -cp 指定的路径, 也就是 addClassPath(path)
+*/
+ function include(pack:String, rec:Bool = true, ignore:Array<String> = null, classPaths:Array<String> = null)
+
+// JS 平台. 嵌入 JS 文件到 输出端, 目前 haxe 只提供 jQuery 和 swfObject 二个 JS 文件
+includeFile(fileName:Dynamic):Dynamic;
+
+/**
+	防止 包 或类 或字段 被 -dce 编译参数删除, 参见  命令行编译参数 的 @:keep 元标记
+	 
+	这个标记经常被以 @:keep 的形式添加到 类或静态字段上
+	
+@param path			包,模块或 子类型
+@param paths		包,模块或 子类型 数组, 就是 path 参数的数组形式,
+@param recursive	如果为 true, 将归递包含 sub-packages 针对 paths	
+*/
+keep(path:String = null, paths:Array<String> = null, recursive:Bool = true):Void
+
+// 加载 flash 补丁文件, 因该只能用于 flash 端的 http://r32.github.io/{% post_url haxe/2014-05-10-tips-haxe-flash%}#patch files
+patchTypes(file:String):Void
+
+// 移除指定字段
+removeField(className:String, field:String, isStatic:Bool = null):Void
+
+// 自定义 js 输出, bing 上自行搜索教程.
+setCustomJSGenerator(callb:JSGenApi -> Void):Void
+
+// 设置字段类型
+setFieldType(className:String, field:String, type:String, isStatic:Bool = null):Void
+
+// 设置输出文件名, 绝对路径包括磁盘全名. 例如编译到 hello.swf, 那么 输出文件名为 X:\path\to\hello.swf
+setOutput(fileOrDir:String):Void
+```
+
+<br />
+
+
+#### Context
+
+haxe.macro.Context 上下文,就是调用这个类方法的环境, 也就是说如果在 Test.hx 代码的 第 6 行调用了一个自定义的宏方法例如: Um.some(), 那么这第 6 行就是 宏的上下文环境. Um.some 方法体内的 currentPos() 也只是返回第 6 行, getLocalModule 也只是返回 第 6 行处所在的 类模块.
+
+```haxe
+package;
+
+class Test{
+	public static function(){
+		trace("Context");
+		Um.some();
+	}	
+}
+
+class Um{
+	macro static function some(){
+		trace(haxe.Context.currentPos());		//输出在编译端: #pos(Test.hx:6: characters 2-7)
+		trace(haxe.Context.getLocalModule());	//输出在编译端: Test
+		return macro null;
+	}
+}
+```
+
+这个类的方法经常用于 宏方法, 宏构建中
+
+```haxe
+// 添加资源文件, haxe.Resource 类能获得这个方法定义的资源文件, 通过 -resource file@name 在编译命令行定义
+addResource(name:String, data:Bytes):Void
+
+// 返回上下文的位置,
+function currentPos():Position
+
+// 定义新模块, 也就是像在一个 hx 文件中写几个类或定义. 通常来说 defineType 就够用了.
+defineModule(modulePath:String, types:Array<TypeDefinition>, imports:Array<ImportExpr> = null, usings:Array<TypePath> = null):Void
+
+// 定义一个类型 ,示例见: heaps 游戏引擎 hxd.res.FileTree.hx 
+defineType(t:TypeDefinition):Void
+
+// 检测是否存在一个 -D 定义
+function defined(s:String):Bool
+
+// 检测 -D 定义的值, 如果仅定义标记,那么默认为 字符串 1, 
+definedValue(key:String):String
+
+// 抛出编译错误, 并中断当前宏调用
+error(msg:String, pos:Position):Dynamic
+
+// 抛出编译错误, 并中断当前编译
+fatalError(msg:String, pos:Position):Dynamic
+
+// Follows a type. See haxe.macro.TypeTools.follow for details.
+follow(t:Type, once:Bool = null):Type
+
+// 用于 宏构建 @:build 或 @:autoBuild 所在上下文
+getBuildFields():Array<Field>
+
+// 得到编译时类全部路径,包括调用的 haxelib 所在路径, -cp 包含的路径, 甚至包含调用了 haxe 标准库下的 std及各目标平台的 _std 目录路径 
+getClassPath():Array<String>
+
+// Returns the constructor arguments that are used to construct the current @:genericBuild class, if available.
+// Returns null if the current macro is not a build-macro which was called from constructing a @:genericBuild instance.
+getConstructorArguments():Null<Array<Expr>>
+
+// haxe 3.2+ 得到所有 -D 的定义
+getDefines():Map<String, String>
+
+// 
+getExpectedType():Null<Type>
+
+// 得到上下文所在 类名
+getLocalClass():Null<Ref<ClassType>>
+
+// 得到上下文所在 方法名
+getLocalMethod():Null<String>
+
+// 得到上下文所在 模块名(hx源码文件名,但不包含文件扩展名)
+getLocalModule():String
+
+//
+getLocalTVars():Map<String, TVar>
+
+//
+getLocalType():Null<Type>
+
+//
+getLocalUsing():Array<Ref<ClassType>>
+
+//
+getLocalVars():Map<String, Type>
+
+// 得到指定模块名(hx源码文件名,但不包含文件扩展名)所定义的类型数组
+getModule(name:String):Array<Type>
+
+// 得到上下文所在位置信息
+getPosInfos(p:Position):{min:Int, max:Int, file:String}
+
+// 取得所有 -resource 定义的资源
+getResources():Map<String, Bytes>
+
+// 得到已经存在的指定类型, 如: getType("Int")
+getType(name:String):Type
+
+// TODO: TO Be Continued...
+```
+<br />
 
 
 
-### 宏高级特性
-
-我并未理解这章全部内容,感觉有些肉容已经过时了.
+#### 宏高级特性
 
 [参考](http://old.haxe.org/manual/macros/advanced)
 

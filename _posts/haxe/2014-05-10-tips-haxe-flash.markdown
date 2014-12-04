@@ -234,7 +234,7 @@ class LEByteArray extends ByteArray{
 
 <br />
 
-#### patch files(补丁文件)
+#### patch files
 
 当在 haxe 中调用 flash 的 swc 库时, haxe 编译器能自动提取里边的定义,虽然大多数情况下不会造成问题,
 
