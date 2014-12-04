@@ -9,7 +9,7 @@ categories: other
 
 #### 未整理 
 
- https://pages.github.com/
+https://help.github.com/categories/github-pages-basics/
 
  * 创建一个名为 `user.github.io` 的特殊项目
 

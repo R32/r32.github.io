@@ -1747,7 +1747,7 @@ raise (SomeLog "hello");;
 
 使用 `ocamlc` 和 `ocamlopt` 编译 ml 文件,	打印斐波那契数字:
 
-```ocal
+```ocaml
 (* File fib.ml *)
 let rec fib n =
   if n < 2 then 1 else fib (n-1) + fib (n-2);;
