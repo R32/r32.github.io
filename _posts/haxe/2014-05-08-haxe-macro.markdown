@@ -1,7 +1,7 @@
 ---
 
 layout: post
-title:	macro 宏编译 
+title:	条件编译 和 宏
 date:   2014-05-08 10:26:10
 categories: haxe
 
@@ -16,7 +16,8 @@ categories: haxe
 <!-- more -->
 <br />
 
-### 条件编译
+条件编译
+------
 
 [条件编译 (Conditional Compilation)](http://haxe.org/manual/lf-condition-compilation.html). Haxe 通过使用 `#if #else #elseif #end` 来 **检测编译器标志**, 用于实现 **条件编译**. 严格来说我不应该把 这一节内容放在 宏 这一章
 
@@ -134,8 +135,12 @@ class Foo{
 
 <br />
 
+宏
+------
 
-### 宏方法
+**Tips:** haxe 标准库中有很多 工具类能更好地构建, 如: macro.TypeTools, macro.ExprTools, 以及其它以 Tools 结尾的类, 通常是使用 using 关键字添加这些工具类.
+
+#### 宏方法
 
 内容只适用于 haxe 3. 宏相当于一个在编译时运行的 neko 平台.例如: 在编译时输出 `--macro Sys.println('Hello macro!')`
 
@@ -277,7 +282,7 @@ class Foo{
 	}
 	```
 
-### 小抄
+#### 小抄
 
 ```haxe
 class Main{
@@ -374,7 +379,7 @@ class Um{
 	}
 	```
 
-### Reification Escaping
+#### Reification Escaping
 
 The Haxe Compiler allows reification of expressions, types and classes to simplify working with macros. 
 
@@ -435,26 +440,6 @@ The syntax for reification is `macro expr`, where `expr` is any valid Haxe expre
  	```
 <br />
 
-#### 宏构建`@:build`
-
-通过宏的方式动态构建 `class` 或 `enum`. **注意: @:build 或@:autoBuild 调用的方法没有添加 macro**
-
-需要理解 AST,以前了解 haxe.macro 包中的所有类. [新参考](http://haxe.org/manual/macro-type-building.html) [参考](http://old.haxe.org/manual/macros/build) 
-
-build宏函数 与 普通的宏函数不一样的地方:
-
- * 返回的类型不是 `Expr` ,而是 `Array<Field>`. (`haxe/macro/Expr.hx` 文件中定义了 `Field`)
-
- * build 宏函数内部的 macro.Context 没有 getLocalMethid 和 getLocalVars. 
-
- * build 宏函数内部的 macro.Context 有方法 getBuildFields()
-
- * 不是直接调用,而是将元标记 `@:build` 或 `@:autoBuild` 放在一个 `class` 或 `enum` 定义中.
-
-[build 一个示例]({% post_url haxe/2014-05-13-tips-on-haxe %}#自定义元标记-Metadata), 其实 haxelib heaps 库中 hxd 目录下有很多很好的宏构建示例
-
-
-<br />
 
 #### Compiler
 
@@ -537,7 +522,7 @@ setCustomJSGenerator(callb:JSGenApi -> Void):Void
 // 设置字段类型
 setFieldType(className:String, field:String, type:String, isStatic:Bool = null):Void
 
-// 设置输出文件名, 绝对路径包括磁盘全名. 例如编译到 hello.swf, 那么 输出文件名为 X:\path\to\hello.swf
+// 设置输出文件名, 绝对路径全名包括磁盘. 例如编译到 hello.swf, 那么 输出文件名为 X:\path\to\hello.swf
 setOutput(fileOrDir:String):Void
 ```
 
@@ -567,7 +552,7 @@ class Um{
 }
 ```
 
-这个类的方法经常用于 宏方法, 宏构建中
+这个类的方法经常用于 宏方法, 宏构建中, 下列方法未注释的请参数 API 文档描述.
 
 ```haxe
 // 添加资源文件, haxe.Resource 类能获得这个方法定义的资源文件, 通过 -resource file@name 在编译命令行定义
@@ -646,11 +631,114 @@ getResources():Map<String, Bytes>
 // 得到已经存在的指定类型, 如: getType("Int")
 getType(name:String):Type
 
-// TODO: TO Be Continued...
+// Returns a syntax-level expression corresponding to typed expression t.
+// This process may lose some information
+getTypedExpr(t:TypedExpr):Expr
+
+/**
+Builds an expression from v, 自动解析 v 的值 构建相应的 Expr
+
+This method generates AST nodes depending on the macro-runtime value of v. As such, only basic types and enums are supported and the behavior for other types is undefined
+
+The provided Position pos is used for all generated inner AST nodes.
+*/
+makeExpr(v:Dynamic, pos:Position):Expr
+
+// Builds a Position from inf.
+makePosition(inf:{min:Int, max:Int, file:String}):Position
+
+//
+onAfterGenerate(callback:Void -> Void):Void
+
+//
+onGenerate(callback:Array<Type> -> Void):Void
+
+//
+onMacroContextReused(callb:Void -> Bool):Void
+
+//
+onTypeNotFound(callback:String -> TypeDefinition):Void
+
+// 解析字符串代码, 实际上经常用 parseInlineString 代替这个方法
+parse(expr:String, pos:Position):Expr
+
+// 解析字符串代码
+parseInlineString(expr:String, pos:Position):Expr
+
+// 注册模块依赖, 以缓存编译, 如果你没有使用 --wait --connect 缓存编译, 将没有任何效果.
+// 在 heaps 的 hxd.res 库中经常能见到这个方法示例.
+registerModuleDependency(modulePath:String, externFile:String):Void
+
+// Add a macro call to perform in case the module is reused by the compilation cache.
+registerModuleReuseCall(modulePath:String, macroCall:String):Void
+
+// 从 classPaths 是否存在指定文件名, 并返回 绝对路径全名. 参考 getClassPath 将会返回哪些类路径
+// 对于 windows 平台会将 /path/to/file 这种 unix 斜线路径转成 windows 系统能识别的反斜线.
+resolvePath(file:String):String
+
+// 返回 MD5 值, 但我总觉得这个方法返回的 MD5 值不对.
+signature(v:Dynamic):String
+
+// 根据指定类型创建复杂类型 , 参看 makeExpr
+// toComplexType( getType("Int") ) 等于 (macro : Int) 等于 TPath({name:"StdTypes", pack:[], params:[], sub:"Int" })
+toComplexType(t:Type):Null<ComplexType>
+
+// Types expression e and returns the corresponding TypedExpr.
+typeExpr(e:Expr):TypedExpr
+
+// Types expression e and returns its type.
+typeof(e:Expr):Type
+
+// Returns true if t1 and t2 unify, false otherwise
+unify(t1:Type, t2:Type):Bool
+
+// Displays a compilation warning msg at the given Position pos
+warning(msg:String, pos:Position):Void
 ```
 <br />
 
+#### 宏构建
 
+通过宏的方式动态构建 `class` 或 `enum`. **注意: @:build 或@:autoBuild 调用的方法没有添加 macro**
+
+需要理解 AST,以前了解 haxe.macro 包中的所有类. [新参考](http://haxe.org/manual/macro-type-building.html) [参考](http://old.haxe.org/manual/macros/build) 
+
+build宏函数 与 普通的宏函数不一样的地方:
+
+ * 返回的类型不是 `Expr` ,而是 `Array<Field>`. (`haxe/macro/Expr.hx` 文件中定义了 `Field`)
+
+ * build 宏函数内部的 macro.Context **没有** getLocalMethid 和 getLocalVars. 
+
+ * build 宏函数内部的 macro.Context **有** getBuildFields()
+
+ * 不是直接调用,而是将元标记 `@:build` 或 `@:autoBuild` 放在一个 `class` 或 `enum` 定义中.
+
+[build 一个示例]({% post_url haxe/2014-05-13-tips-on-haxe %}#自定义元标记-metadata), 其实 haxelib heaps 库中 hxd 目录下有很多很好的宏构建示例
+
+<br />
+
+**在宏构建方法中, 使用 macro 关键字能省很多麻烦的事情**, 比如宏动态创建字段时: 注意 kind 字段
+
+```haxe
+// 创建一个 MIN 的静态常量值.
+public static function buildMIN(){
+	var fields = Context.getBuildFields();
+	var pos = Context.currentPos();
+	fields.push({
+		name : "MIN",
+		access : [APublic,AStatic,AInline],	 
+		
+		//下行的第一个参数也可以用 FVar(TPath({name:"Int" ,pack:[]})
+		//kind : FVar(TPath({name:"StdTypes", pack:[], params:[], sub:"Int" }), {expr: EConst(CInt("200")), pos: pos }), 
+		//kind : FVar(Context.toComplexType(Context.getType("Int")), Context.makeExpr(200,pos))	// Context类有一些方法
+		kind: FVar(macro :Int, macro 200),	// 使用 macro 让一切变得简单
+		pos : pos
+	});
+	return fields;
+}
+```
+
+<br />
 
 #### 宏高级特性
 
@@ -668,9 +756,7 @@ getType(name:String):Type
 
  * 更可读
 
-	> 大部分宏方法使用 Expr 类型参数并且返回的也是 Expr类型,为了让代码更为可读
-
-	> 你可以使用 `ExprOf<Type>` 来替代 `Expr`
+	> 大部分宏方法使用 Expr 类型参数并且返回的也是 Expr类型,为了让代码更为可读, 你可以使用 `ExprOf<Type>` 来替代 `Expr`
 
 	> 请注意,这只是个提示,如果你查看源码的话会发现其实 `typedef ExprOf<T> = Expr`
 
@@ -693,11 +779,13 @@ getType(name:String):Type
 
  * 基准测试 / 优化 (Benchmarking / Optimization)
 
-### 其它
+<br />
 
-	* `Context.unify(t1,t2)` 检测二个类型是否能(统一?),难道是类似于 二个数字的公约数的东西?? **未知**
+#### 其它
 
- 	* `Context.follow(t,notRecursion=false)` ,在调用 unify() 之后调用这个方法,提升到 unify ??? **同上**
+	* `Context.unify(t1,t2)` 检测二个类型是否能(统一?),是检测二个类型是否能隐式转换到其中的一种???
+
+ 	* `expr.follow(t,notRecursion=false)` ,在调用 unify() 之后调用这个方法,提升到 unify ??? **同上**
 
 	```haxe
 	using haxe.macro.TypeTools;
