@@ -29,6 +29,38 @@ categories: haxe
 	}
 	```
 
+<br />
+
+#### 时区处理
+
+对于 Date 的 **通用时区(UTC)时间** 和 **本地时区时间** 可以参考 AS3 手册的API, Haxe 标准库中没有 UTC 时区的方法, 因此我在Github 找到一个不错的 haxelib [DateTime](https://github.com/RealyUniqueName/DateTime) 用于处理时区问题
+
+**Date** ,下边说明同样适用于 JS 以及 AS3. 
+
+ * 在 Date 的内部都是以时间戳(Float)的形式来存储的. 时间戳值绝对以 **通用时区(UTC)** 形式表现,例如 Date::getTime 返回的数字
+
+ * 但是 Date 下的普通方法(Haxe 标准库中没有像 JS 或 AS3 那样的 getUTCXxxx 方法),全都是以 **本地时区** 表现的, 这说明 Date 会将时间戳值自动从 UTC时区转换到本地然后再表现
+
+ * 反过来说, local = new Date(2012,10,10, 2,2,2) 的参数会被认为是 本地时区时间, 在存为 时间戳 时,会自动从 本地时间转换到 UTC时间.
+
+ * 综上所叙, 只有 utc = Date.UTC(2012,10,10, 2,2,2)(注: Haxe 标准库没有这个方法) 的参数才会当成是 UTC时区,也不会发生转换, Date::getUTCxxxx 这些方法依旧返回的是 UTC时区 时间,不会发生任何自动转换
+
+ * 假设本地时区为 北京时间, 北京时间则比UTC时区大了 8 个小时, 那么上边示例中由于 local 会被自转换换成 UTC时区形式保存(local减去8小时), 而 utc 则不会转换, 因此 utc 将比 local 大 8 个小时.
+
+
+**DateTime**
+
+这个类是基于 Float 的抽像类, 需要注意的是 这个库的月份是 1~12, 而标准库为 0~11, 以及 DateTime::.getTime() 返回的值不包含微秒.也就是说 `Date.now().getTime() == DateTime.now().getTime() * 1000`;
+
+ * DateTime 的所有值将全部以 UTC 时区表现. 除非主动调用 utc() 或 local() 否则不会发生任何转换.
+
+ * 这也是为什么 DateTime.now() 输出时, 和本地时区不一至, 因为这个类始终以 UTC时区表现
+
+ * utc = DateTime.make(2012,10,10, 2,2,2) 参数也将被认为是 UTC时区, 同样不会发生转换
+
+ * 上边示例, utc 如果要转换到本地时区只要简单的调用 utc.local() 就行了.
+
+<br />
 
 #### for and while
 

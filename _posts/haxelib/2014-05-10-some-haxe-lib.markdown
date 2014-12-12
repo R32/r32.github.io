@@ -27,6 +27,10 @@ categories: haxelib
 
  * **[format](https://github.com/HaxeFoundation/format)** 用于解析各种文件或数据.
 
+ 
+ * **[datetime](https://github.com/RealyUniqueName/DateTime)** [Haxe UTC时区处理]({%post_url haxe/2014-09-13-tips-on-haxe-2%}#时区处理)
+
+
  * **[dox](https://github.com/dpeek/dox)**
 
 	> 帮助文档生成器, haxe 官网目前使用这个,而丢弃了以前的文档生成器. [示例: h3d API]({% post_url haxe/2014-05-05-haxe-doc-gen %})

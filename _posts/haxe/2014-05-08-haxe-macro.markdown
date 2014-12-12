@@ -19,11 +19,9 @@ categories: haxe
 条件编译
 ------
 
-[条件编译 (Conditional Compilation)](http://haxe.org/manual/lf-condition-compilation.html). Haxe 通过使用 `#if #else #elseif #end` 来 **检测编译器标志**, 用于实现 **条件编译**. 严格来说我不应该把 这一节内容放在 宏 这一章
+[条件编译 (Conditional Compilation)](http://haxe.org/manual/lf-condition-compilation.html). 通过使用 `#if #else #elseif #end` 来 **检测编译器标志**
 
- > defines: 编译标志(Compiler Flag)
-
- > 编译标志是一个可配置的值, 这些标志通过使用 -D key=value 或只是 -D key 来设置, 未设置 value 默认值将为字符串 1. **所有 -D 定义标记的值都为字符串**
+ > 编译定义(define), 通过使用 -D key=value 或只是 -D key 来设置, 未设置 value 默认值将为字符串 1. **所有 -D 定义标记的值类型都为字符串**
 
 ```haxe
 #if flash
@@ -622,7 +620,8 @@ getLocalVars():Map<String, Type>
 // 得到指定模块名(hx源码文件名,但不包含文件扩展名)所定义的类型数组
 getModule(name:String):Array<Type>
 
-// 得到上下文所在位置信息
+// 得到上下文所在位置信息, 
+// Tips: 通过这个方法可以得到一个 上下文所在的文件路径, 在自定义库中加载资源很方便.
 getPosInfos(p:Position):{min:Int, max:Int, file:String}
 
 // 取得所有 -resource 定义的资源

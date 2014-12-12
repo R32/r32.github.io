@@ -23,11 +23,72 @@ categories: haxelib
 
 <br />
 
+### hxd
+
+这里只记录部分类, 其它都写在 fork 版本的注释上了.
+
+#### BitsBuilder
+
+通过宏构建自动生成一些进制位的 掩码及其它, 当你喜欢用二进制的不同位来当标记使用时, 
+
+使用方法:
+	
+ - 通过在类上添加 @:build(hxd.impl.BitsBuilder.build())
+
+ - 必需要定义名为 bits:Int 的字段,然后初使化为 0. 因为所有对 被标记 `@:bits` 的字段的操作都会改变这个的值.
+
+ - 把 @:bits(len) 附加到各字段上. 接受 Int, Bool, Enum 类型的字段. 如果你需要用 EnumFlags 来配合 enum, 那么请选译 Int 类型. 
+
+   - Int 必须指定 len
+
+   - Enum 类型 len 为可选, 如果不指定将会自计算. 如果 Enum 有 12 个子项, 那么将自动为 4 位, 因为4位就可以表示 15 以下的
+
+   - Bool 则可省略, 自动为 1
+
+```
+pubic var bits(default,null):Int = 0;	必须声明 bits 变量,赋值为 0.
+
+@:bits(4) public var lang:Int;			随意自定义一个变量.
+
+这里将会生成静态方法 getLang(v:Int):Int ,	用于将 v 过滤成属性 lang 能接受的值, 这个方法会自动 移位,自动掩码.
+										所以 getLang(this.bits) == this.lang,
+
+静态常量:		lang_bits:Int	= 4		;表示 lang 所占用的宽度
+			lang_offset:Int	= 0		;由于这是第一个 @:bits, 所以为0, 0 表示为32位数字中最右位
+			lang_mask:Int 	= 0xF	;掩码.
+
+成员方法:		lang_set()				;	这个 setter 通过调用 getLang 来过滤  
+
+通常来说不必理会静态方法及静态常量, 正常赋值就行了(会自动调用setter过滤) 
+
+参看 h3d.mat.Pass 如何使用它
+```
+
+**如果想直接把一个很大的值直接赋值给 bits, 需要小心**,需要调用 getName 的静态方法,如上示例: this.lang = getLang(bits_num),
+把每个分配了 `@:bits` 的字段,依次通过 静态方法 getName 过滤就行了.
+
+本来给这个类添加一些代码,让支持 EnumFlags 的, 但是发现 setter 的参数返回值 和 字段类型冲突. 因此无法实现:
+
+```haxe
+case "haxe.EnumFlags":
+	switch(vt.toType()) {
+		case TAbstract(_, ae):
+			//et = ae[0].toComplexType(); 
+			bits = ae[0].getEnum().names.length;
+		case _: throw "Class instance expected";		
+	}
+	macro Type.enumIndex(v);
+``` 
+
+
+<br />
+
 ### hxsl
 
 一些概念可以先参考 haxelib 中的 hxsl 文档 http://old.haxe.org/manual/hxsl
 
 一些 AGAL 的内容.http://www.adobe.com/cn/devnet/flashplayer/articles/what-is-agal.html
+
 
 #### 着色器表达式(Shader expression)
 
@@ -146,9 +207,7 @@ enum VarQualifier {
 
 <br />
 
-### hxd
 
-<br />
 
 旧的内容
 ------

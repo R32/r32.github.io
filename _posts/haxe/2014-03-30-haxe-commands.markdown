@@ -23,7 +23,14 @@ haxedoc 命令已经被弃用,而改用了另一个叫haxelib dox, **但是** �
 
 ### haxelib
 
-haxelib 用于管理 haxe库
+haxelib 用于管理 haxe库,  `haxelib run libname` 可以调用指定库下边的 run.n 文件, 并将当前命令行路径作为最后一个参数传递.
+
+ > 以 haxelib run 运行的命令, 内部的 Sys.setCwd() 将返回 libname 所在的绝对路径,而不是调用的当前路径, 当前路径为 args 最后一个参数
+
+ > 而以 neko run.n 调用的命令 内部的 Sys.setCwd() 将则指向当前路径.
+
+
+ * 当一个 haxelib 有 ndll 目录时, haxelib path libname 会有一个 -L 的定义指向这个 ndll 目录.
 
  * 命令行下只输入 `haxelib` 将显示一些帮助信息.
 
@@ -124,32 +131,35 @@ Haxe Compiler 3.13 - (C)2005-2014 Haxe Foundation
 ```bash
 
 # 添加源码目录, 通常我们习惯将源码放置于 src 目录下, 所以能经常看到 -cp src
--cp <path> : add a directory to find source files
+-cp <path>		: add a directory to find source files
 
 # 编译代码为 javascript 平台的 .js 文件
--js <file> : compile code to JavaScript file
+-js <file>		: compile code to JavaScript file
 
 # 编译代码为 flash 平台的 .swf 文件
--swf <file> : compile code to Flash SWF file
+-swf <file>		: compile code to Flash SWF file
 
 # 解析代码为 flash 平台的 .as3 源码, 指定输出目录 
--as3 <directory> : generate AS3 code into target directory
+-as3 <directory>	: generate AS3 code into target directory
 
 # 编译代码为 neko 平台的 .n 文件
--neko <file> : compile code to Neko Binary
+-neko <file>		: compile code to Neko Binary
 
 # 编译代码为 php 平台的 .php 文件, 指定输出目录
--php <directory> : generate PHP code into target directory
+-php <directory>	: generate PHP code into target directory
 
 # 编译代码为 c++ 平台的 .cpp 文件, 指定输出目录, 
 # 第一次编译时可能会花上一段时间, Tips: 可以编译成 neko 平台用于快速测试.
--cpp <directory> : generate C++ code into target directory
+-cpp <directory>	: generate C++ code into target directory
 
 # 编译代码为 c# 平台的 .cs 文件, 指定输出目录, 需要安装 hxcs 库
--cs <directory> : generate C# code into target directory
+-cs <directory>		: generate C# code into target directory
 
 # 编译代码为 java 平台的 .java 文件, 指定输出目录, 需要安装 hxjava 库
--java <directory> : generate Java code into target directory
+-java <directory>	: generate Java code into target directory
+
+# haxe 3.2 + 编译代码为 python 
+-python <file>		: generate Python code as target file
 
 # 导出代码API注释内容为 xml 文件
 -xml <file> : generate XML types description
@@ -209,7 +219,7 @@ Haxe Compiler 3.13 - (C)2005-2014 Haxe Foundation
 --flash-strict : more type strict flash API
 
 # 编译时忽略所有 trace 语句
---no-traces : do not compile trace calls in the program
+--no-traces	: do not compile trace calls in the program
 
 # 解析 flash 的 swf/swc 库并自动生成 extern class, 感觉是一个自动写 extern class 的工具, 可惜只能用于 flash 库.
 # 既然 haxe 能直接使用 swc 库, 个人感觉 就已经不需要 extern class 类了.也就是说 --gen-hx-classes 多余了.
@@ -217,42 +227,51 @@ Haxe Compiler 3.13 - (C)2005-2014 Haxe Foundation
 --gen-hx-classes : generate hx headers for all input classes
 
 # 分隔 haxe 编译, hxml 文件中经常能见到
---next : separate several haxe compilations
+--next		: separate several haxe compilations
 
 # 这个命令是给 (代码编辑器)IDE 用的, 用于给 IDE 提供 语法智能提示
 # http://ncannasse.fr/blog/haxe_completion?lang=en
---display : display code tips
+--display	: display code tips
 
 # 编译但是不输出, 通常用于测试是否能通过编译, 或 导出 API 注释文档(haxe -xml)时用到
---no-output : compiles but does not generate any file
+--no-output	: compiles but does not generate any file
 
 # 显示 编译花费的时间
---times : measure compilation times
+--times		: measure compilation times
 
 # 停用 inline 关键字, inline 关键字将被忽略
---no-inline : disable inlining
+--no-inline	: disable inlining
 
 # 停用代码优化
---no-opt : disable code optimizations
+--no-opt	: disable code optimizations
 
 # 设置主文件名, 默认为: index.php
---php-front <filename> : select the name for the php front file
+--php-front <filename>	: select the name for the php front file
 
 # 设置库文件夹名, 文件夹名默认为: lib
---php-lib <filename> : select the name for the php lib folder
+--php-lib <filename>	: select the name for the php lib folder
 
 # 为所有类添加字符前缀
---php-prefix <name> : prefix all classes with given name
+--php-prefix <name>		: prefix all classes with given name
 
 # 映射 package 到 target. 相当于 为 target 取一个别名 package. 例: --remap flash:openfl
 --remap <package:target> : remap a package to another one
 
-# ???单步
---interp : interpret the program using internal macro system
+# ???单步, 参看下边 --eval 的示例, 如果不加 --interp 将不会有显示..
+--interp	: interpret the program using internal macro system
 
 # 调用 macro 命令, 默认为 macro.Compiler 下的 宏(macro)方法, --macro keep("SomeClass")
 # 但其实可以是任意方法,例如: --macro Sys.println("Hello World!")
---macro  : call the given macro before typing anything else
+# 或者像这样: haxe -cp src --macro Main.main()
+--macro 	: call the given macro before typing anything else
+
+# 大概是被 --macro 取代了的命令. 是直接运行指定的文件类, 相当于 --macro Main.main()
+--run		: 直接运行指定的类, 以 neko 平台.
+
+# 运行代码. https://github.com/HaxeFoundation/haxe/pull/3309
+# 就像是 js 里边的 eval("code"), 例如: 可以复制示例粘贴到 CMD中去
+# haxe --eval "class Foo{static public function main(){Sys.print('Hello world!');}}" --interp
+--eval		: evaluates argument as Haxe module code 
 
 # 绑定当前工作目录到 host:port, 用于缓存编译, 适用于大型项目, 减少编译时间, 参看下边示例
 --wait <[host:]port> : wait on the given port for commands to run)

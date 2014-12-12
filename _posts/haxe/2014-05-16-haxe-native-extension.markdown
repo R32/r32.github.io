@@ -16,6 +16,8 @@ categories: haxe
 
 ### hxcpp
 
+一篇新的教学 http://www.wighawag.com/blog/2014/12/Hxcpp-extern
+
 [hxcpp](https://github.com/HaxeFoundation/hxcpp) is the runtime support for the c++ backend of the haxe compiler. This contains the headers, libraries and support code required to generate a fully compiled executable from haxe code.
 
 hxcpp 是 haxe 编译器的后端 C++ 运行时支持, 这包含 头文件, 库 和从 haxe 源码生成可执行文件所需代码. 使用这个库时你需要对不同平台(windows, linux, mac) 重新编译生成静态链接库, 不同平台所依赖的编译器也不同.可以在 toolchain 目录找到这些配置:
