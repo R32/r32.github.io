@@ -9,11 +9,23 @@ categories: haxelib
 
 [**`heaps`**](https://github.com/ncannasse/heaps) 当目标平台为 flash 时将基于 flash.stage3D, 而 平台为 js 时, 将使用 webgl. 以前名字为 h3d, 如果需要使用以前旧的 h3d 版本, 在 github 页面上找到 h3d 这个分支即可
 
+注: 很多说明都已经直接在 fork 版本的源代码中已经给出注释. 这里只是提到一下而已
+
 <!-- more -->
 
 <br />
 
 ### h3d
+
+ * **System** 提供一些静态方法
+
+  - 包含 enum Cursor, 用于定义 鼠标的不同形状, 允许自定义
+
+  - 所有方法或属性都是静态类型. 参考 API 或源码.
+
+ * **Engine** 不同平台驱动(driver)方式, 内存(mem)管理
+
+  - 构造函数的 antiAlias 参数,似乎不会起任何作用,像是没实现. 一些基础设置,如修改背影颜色,或设置全屏...
 
 <br />
 
@@ -21,11 +33,59 @@ categories: haxelib
 
 游戏示例: [ld-30 Connected Worlds](https://github.com/ncannasse/ld30)
 
+ * **Scene** 2D 场影.
+  
+	> 通过 setFixedSize(w, h) 来设置一个宽高的基准值, 每次 resize 事件,将会自动以这个值进行缩放.
+
+	> 所以当出现缩放时 h2d.Scene 的 width,height 和 h3d.Engine,并不一致.对于 像素类的 2D 游戏,通常 会设一个很小的基准高宽值,然后缩放到指定大小. 这类游戏 Engine 的高宽值一般为 Scene 的二或三倍.
+	
+ * **Interactive** 用于交互.
+
+	```haxe
+	// 如何给 h2d.Bitmap 添加事件.
+	var bmp = new h2d.Bitmap(Res.some_png.toTile(), s2d );
+
+	var it = new Interactive(s2d.width, s2d.height, bmp);
+	it.onClick = function(e : hxd.Event){
+		trace(e); // ERelease[e.relX,e.relY]
+	}
+	```	
+
+#### comp
+
+这个目录提供一些 2D UI组件, 可以使用 HTML,CSS 来配置这些, 参看 sample/comps 示例.
+
+ * **Context**
+
+	```haxe
+	// 在初使化 h3d 之前可以修改组件默认的 css fileString
+	public static var DEFAULT_CSS = hxd.res.Embed.getFileContent("h2d/css/default.css");
+	// 优先返回缓存 字体
+	public static function getFont( name : String, size : Int ):hxd.Font{}
+	// 优先返回缓存 Tile
+	public static function makeTileIcon( pixels : hxd.Pixels ) : h2d.Tile {} 
+	```
+
+
 <br />
 
 ### hxd
 
 这里只记录部分类, 其它都写在 fork 版本的注释上了.
+
+ * bitmap font 工具 https://github.com/andryblack/fontbuilder
+
+  1. fontBuilder 生成的 xml 文件, 一些字体可能 height 的值过高, 可以改为 size + 4 
+  
+  2. 去掉 fontBuilder 的 Smoothing 选项,这样字体会更清淅,生成的 png 文件更小
+
+  3. 把导出的 `.xml` 扩展名改为 `.fnt`,导出选项里把大写PNG换成小写的
+
+  4. 在 Res.initEmbed({fontsChars: "只支持直接常量字符"}) 或在 initEmbed 之前修改 Charset.DEFAULT_CHARS 
+
+  5. 使用 Res 管理资源, 例: var font:h2d.Font = Res.adobe_fan_heiti_std_b_12.toFont();
+
+<br />
 
 #### BitsBuilder
 
@@ -83,6 +143,35 @@ case "haxe.EnumFlags":
 
 <br />
 
+#### res目录
+
+这个目录包含用于处理资源的类.
+
+ * **Embed** 
+
+	> 例如: 宏方法 `Embed.embedFont("nokiafc22.ttf");` 将资源文件夹或系统字体文件夹下的字体嵌入到 SWF. 
+
+	> 不支持 otf 类型.嵌入后通过调用 FontBuilder.getFont() 运行时方法,将指字的字符一个一个地画到Tile上. 字体嵌入不是必须的.
+
+	> 宏方法 getFileContent(path2name) 一个从文件中加载字符
+
+	> 宏方法 getResource(path2name) 返回一个 hxd.res.Any 对象.这个方法还展现了如何将一个 Bytes 的变量传递给回宏返回.
+
+ * **FileTree**  扫描资源文件夹,res 主要的宏构建类.
+
+	> 如果打算将 wav 转换成 mp3(if options.compressSounds), 则需要下载 `lame` 转换器,并且添加到路径,  
+	
+	> 另外`LocalFileSystem.hx` 文件(仅限于本地文件系统),LocalEntry 类的方法 convertToMP3,这里需要修改 lame 的正确路径. 最好在外部先调用命令行转换成 mp3 再放入资源目录.
+ 
+ * 使用设备字体输出中文字符,只适用于 flash
+
+	> 当中文字符太长(3750个字符),在嵌入时将会发生 IO 错误. 所以还是使用外部 bitmap font 工具来生成吧.
+
+	```haxe
+	// CN_STR 为常用中文字符(3750).
+	// 实际上 FontBuilder 是将字符一个一个地 draw 到 bitmapData 中
+	var font = FontBuilder.getFont("simfang", 16, { chars: MRes.CN_STR,antiAliasing : false} );
+	```
 ### hxsl
 
 一些概念可以先参考 haxelib 中的 hxsl 文档 http://old.haxe.org/manual/hxsl
@@ -214,17 +303,6 @@ enum VarQualifier {
 
 **注意:** 下边是以前旧的内容,也就是 heaps的 h3d 分支内容. 这个分支使用的是 haxelib hxsl.
 
-### h3d/h3d
-
- * **Engine** 
-
-	> 构选函数的 antiAlias 参数,似乎不会起任何作用,像是没实现.
-  
-	> 一些基础设置,如修改背影颜色,或设置全屏...
-
- * impl 文件夹
-
-  - **Driver** 核心类不同平台接口.
 
 ### h3d/h2d
 
@@ -283,11 +361,7 @@ enum VarQualifier {
 
  * **Texture** 
 
- * **System**
 
-   - 包含 enum Cursor, 用于定义 鼠标的不同形状, 允许自定义
-
-   - 所有方法或属性都是静态类型. 参考 API 或源码.
 
  * Stage 对 flash.display.Stage 进行了包装.
 
@@ -302,35 +376,13 @@ enum VarQualifier {
 
 		> 将图片转出为 hxd/res 下的各种格式。
 
-  - **Embed** 
-
-		> 例如: 宏方法 `Embed.embedFont("nokiafc22.ttf");` 将资源文件夹或系统字体文件夹下的字体嵌入到 SWF. 
-
-		> 不支持 otf 类型.嵌入后通过调用 FontBuilder.getFont() 运行时方法,将指字的字符一个一个地画到Tile上. 字体嵌入不是必须的.
-
-		> 宏方法 getFileContent(path2name) 一个从文件中加载字符
-
-		> 宏方法 getResource(path2name) 返回一个 hxd.res.Any 对象.这个方法还展现了如何将一个 Bytes 的变量传递给回宏返回.
-
-  - 使用设备字体输出中文字符,只适用于 flash
-
-		> 由于中文字符太大(3750个字符),在嵌入时发生了 IO 错误.
-
-		```haxe
-		// CN_STR 为常用中文字符(3750).
-		// FontBuilder 其实一个字符一个字符的 draw 到 bitmapData 中
-		var font = FontBuilder.getFont("simfang", 16, { chars: MRes.CN_STR,antiAliasing : false} );
-
-		```
   - **Sound**
 
 		> 不知道,为什么不用 @:sound("file.wav|mp3") 的方式嵌入???
 		
 		> 这个类播放声音是以 Bytes 的方式加载音乐的.
 
-  - **FileTree**  扫描资源文件夹,res 主要的宏构建类.
 
-		> 如果打算将 wav 转换成 mp3(if options.compressSounds), 则需要下载 `lame` 转换器,并且添加到路径,  另外`LocalFileSystem.hx` 文件(仅限于本地文件系统),LocalEntry 类的方法 convertToMP3,这里需要修改 lame 的正确路径. 结论: 最好在外部先调用命令行转换成 mp3 再放入资源目录.
 		
   - **Loader**  建立在 各文件类 上的一个方法汇总
 
@@ -367,38 +419,15 @@ enum VarQualifier {
 
 ### 源码简析
 
- * **Scene** 2D 场影.
-  
-  - 通过 setFixedSize(w, h) 来设置一个宽高的基准值, 每次 resize 事件,将会自动以这个值进行缩放.
-
-		> 所以当出现缩放时 h2d.Scene 的 width,height 和 h3d.Engine,并不一致.对于 像素类的 2D 游戏,通常 会设一个很小的基准高宽值,然后缩放到指定大小. 这类游戏 Engine 的高宽值一般为 Scene 的二倍.
 
 
 
- * **Interactive** 用于交互.
 
-	```haxe
-	// 如何给 h2d.Bitmap 添加事件.
-	var bmp = new h2d.Bitmap(Res.some_png.toTile(), s2d );
 
-	var it = new Interactive(s2d.width, s2d.height, bmp);
-	it.onClick = function(e : hxd.Event){
-		trace(e); // ERelease[e.relX,e.relY]
-	}
-	```	
 
  * comp
 
-  - **Context**
 
-		```haxe
-		// 在初使化 h3d 之前可以修改组件默认的 css 
-		public static var DEFAULT_CSS = hxd.res.Embed.getFileContent("h2d/css/default.css");
-		// 优先返回缓存 字体
-		public static function getFont( name : String, size : Int ):hxd.Font{}
-		// 优先返回缓存 Tile
-		public static function makeTileIcon( pixels : hxd.Pixels ) : h2d.Tile {} 
-		```
   - **Parser** HTML 解析器. 
 
 		> 这个类使用了 **`hscript`** 来动态解析 html 标签上的 脚本.

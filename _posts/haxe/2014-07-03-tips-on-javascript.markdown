@@ -60,6 +60,9 @@ haxe.js.html 下的对象类型挺吓人的. 所以应该使用 js.JQuery 来操
 	
  * `@:runtime` (since 2.10) 未知
 
+ * `@:selfCall` : Translates method calls into calling object directly (js only)
+                       
+
 
 <br />
 

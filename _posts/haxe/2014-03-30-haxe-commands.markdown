@@ -185,7 +185,7 @@ Haxe Compiler 3.13 - (C)2005-2014 Haxe Foundation
 # 指定 flash 版本, 例: -swf-version 10.3, 或 -swf-version 11.6
 -swf-version <version> : change the SWF version (6 to 10)
 
-# 指定 flash 文件头, 例: -swf-header 800:600:FFFFFF
+# 指定 flash 文件头, 例: -swf-header 800:600:30:FFFFFF
 -swf-header <header> : define SWF header (width:height:fps:color)
 
 # 添加 swf 库, 文件通常为 swc 格式
@@ -314,6 +314,8 @@ absolute-path          : Print absolute file path in trace output
 
 # 添加 Scout (aka Monocle) 支持. Since SVN r5429
 advanced-telemetry     : Allow the SWF to be measured with Monocle tool
+
+analyzer               : Use static analyzer for optimization (experimental)
 
 as3                    : Defined when outputing flash9 as3 source code
 
@@ -465,6 +467,11 @@ swf-use-doabc          : Use DoAbc swf-tag instead of DoAbcDefine
 
 sys                    : Defined for all system platforms
 
+unity-std-target       : Changes C# source location so that each generated C#
+                         source is relative to the Haxe source location. If the 
+						location is outside the current directory, the value set
+						here will be used.
+
 unsafe                 : Allow unsafe code when targeting C#
 
 use-nekoc              : Use nekoc compiler instead of internal one
@@ -487,6 +494,8 @@ haxe --help-metas, 这类元标记一般添加在代码中, 也可以在 宏(mac
 # 允许声明的包访问当前包 类或字段
 @:allow              : (Target path)Allows private access from package, type or field
 
+@:analyzer           : Used to configure the static analyzer
+
 @:annotation         : Annotation (@interface) definitions on -java-lib imports will be annotated with this metadata. Has no effect on types compiled by Haxe (java only)
 
 @:arrayAccess        : Allows [] access on an abstract
@@ -499,6 +508,9 @@ haxe --help-metas, 这类元标记一般添加在代码中, 也可以在 宏(mac
 
 # 示例: @:bitmap("myfile.png|jpg|gif") class MyBitmapData extends flash.display.BitmapData {}
 @:bitmap             : (Bitmap file path)Embeds given bitmap data into the class (must extend flash.display.BitmapData) (flash only)
+
+@:bridgeProperties   : Creates native property bridges for all Haxe properties
+                       in this class. (cs only)
 
 # 使用宏构建这个类或枚举
 @:build              : (Build macro call)Builds a class or enum from a macro
@@ -574,7 +586,7 @@ haxe --help-metas, 这类元标记一般添加在代码中, 也可以在 宏(mac
 
 @:functionTailCode   :  (cpp only)
 
-# 用于替换掉需要接口 haxe.rtti.Generic类,用于声明泛型类. 当 new T()时, 需要添加这个标记 (since 3.0）
+# **常用**.当 new T()时, 需要添加这个标记  用于替换掉需要接口 haxe.rtti.Generic类,用于声明泛型类. (since 3.0.
 @:generic            : Marks a class or class field as generic so each type parameter combination generates its own type/field
 
 @:genericBuild       : Builds instances of a type using the specified macro
@@ -603,6 +615,13 @@ haxe --help-metas, 这类元标记一般添加在代码中, 也可以在 宏(mac
 # 如果你使用了这个标记, 通常是你的 getter,setter 写得不合规范化。因此学习正确的 getter/setter 方式.
 @:isVar              : Forces a physical field to be generated for properties that otherwise would not require one
 
+@:javaCanonical      : (Output type package,Output type name)Used by the Java
+                        target to annotate the canonical path of the type (java only)
+
+# nodejs 的 extern class 经常有 @:native("(require('fs'))"), 由于这样导出的代码不美观, haxe 3.2 将会有新的
+# 例: @:jsRequire("fs") , 或加载子项 @:jsRequire("http", "Server") 相当于 js 的 require("http").Server
+@:jsRequire 标记      : Generate javascript module require expression for given extern (js only)
+
 # 防止被 dce 清除, 如果在一个 类 上使用, 将影响所有字段, 如果用于字段, 则仅影响当前字段.
 @:keep               : Causes a field or type to be kept by DCE
 
@@ -619,12 +638,12 @@ haxe --help-metas, 这类元标记一般添加在代码中, 也可以在 宏(mac
 
 @:multiType          : (Relevant type parameters)Specifies that an abstract chooses its this-type from its @:to functions
 
-# nodejs 的 extern class 经常有 @:native("(require('fs'))"), 由于这样导出的代码不美观, haxe 3.2 将会有新的
-# 例: @:jsRequire("fs") , 或加载子项 @:jsRequire("http", "Server") 相当于 js 的 require("http").Server
-@:jsRequire 标记
-
 # 重写输出类或枚举的包名, 例: @:native("my.real.Cls"). 使它更容易绑定到 extern 类, 可能有不一样的名称.
 @:native             : (Output type path)Rewrites the path of a class or enum during generation
+
+@:nativeChildren     : Annotates that all children from a type should be
+                       treated as if it were an extern definition - platform
+                       native (for cs,java)
 
 @:nativeGen          : Annotates that a type should be treated as if it were an extern definition - platform native (for cs,java)
 
@@ -669,6 +688,8 @@ haxe --help-metas, 这类元标记一般添加在代码中, 也可以在 宏(mac
 # 将类的所有字段声明为 public, 这样就可以避免给每一个字段都添加 public (since 3.0)
 @:publicFields       : Forces all class fields of inheriting classes to be public
 
+@:pythonImport       : Generates python import statement for extern classes (python only)
+                       
 @:readOnly           : Generates a field with the 'readonly' native keyword (cs only)
 
 @:remove             : Causes an interface to be removed from all implementing classes before generation
@@ -686,6 +707,8 @@ haxe --help-metas, 这类元标记一般添加在代码中, 也可以在 宏(mac
 
 # 表明 abstract 类型为运行时类型, 通常用于包装各平台底层类型
 @:runtimeValue       : Marks an abstract as being a runtime value
+
+@:selfCall           : Translates method calls into calling object directly (js only)
 
 # 当 override flash 的类字段时. 注意 重写 flash 的 setter 时, 返回为 Void. 例: @:setter(endian) function set_endian(endian:String):Void{}
 @:setter             : (Class field name)Generates a native getter function on the given field (flash only)
