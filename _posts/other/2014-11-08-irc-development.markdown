@@ -139,17 +139,17 @@ IRC 协议是一个基于文本的协议，以及能够连接到服务器的最�
 
 #### 内容
 
- 1. [前言(INTRODUCTION)](#前言(INTRODUCTION))
+ 1. [前言(INTRODUCTION)](#前言(introduction))
 
-  1. [服务器(Servers)](#服务器(Servers))
+  1. [服务器(Servers)](#服务器(servers))
 
-  2. 客户端(Clients)
+  2. [客户端(Clients)](#客户端(clients))
 
-     1. 管理者(Operators)
+     1. [管理者(Operators)](#管理者(operators))
 
-  3. [频道(Channels)](#频道(Channels))
+  3. [频道(Channels)](#频道(channels))
 
-     1. 频道管理者(Channel Operators)
+     1. [频道管理者(Channel Operators)](频道管理者(channel-operators))
 	
  2. IRC 规范(THE IRC SPECIFICATION)
 
