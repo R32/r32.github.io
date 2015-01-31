@@ -1,9 +1,11 @@
 ---
 layout: post
-title:  haxe 编译 flash 小记
+title:  编译为 flash
 date:   2014-05-10 15:16:10
 categories: haxe
 ---
+
+这是 haxe 最初的平台
 
 #### 跨域安全沙箱错误
 

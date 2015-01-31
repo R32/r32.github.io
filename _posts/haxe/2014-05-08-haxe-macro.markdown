@@ -462,14 +462,14 @@ addMetadata(meta:String, className:String, field:String = null, isStatic:Bool = 
 addNativeLib(name:String):Void
 
 
-// 
+//　允许访问指定的包, 例如: 默认情况下当目标平台为 neko 时, 不允许访问 flash 包, 参见 openfl 编译选项
 allowPackage(v:String):Void
 
 // 像 haxe 编译参数 -D  
 define(flag:String, value:String = null):Void
 
 // Exclude a given class or a complete package from being generated
-// 排除给定的包或类名在编译时, 由于编译参数 -dce 的关系, 事实上你不用调用这个方法
+// 手动排除给定的包或类名在编译时, 由于编译参数 -dce 的关系, 事实上你不用调用这个方法
 exclude(pack:String, rec:Bool = true):Void
 
 
@@ -484,15 +484,15 @@ getDefine(key:Dynamic):Dynamic
 getDisplayPos():Null<{pos:Int, file:String}>
 
 // 得到编译时输出的绝对全文件名, 例如: haxe -main Main -swf main.swf, 那么这个方法返回 D:\path\main.swf
-function getOutput():String
+getOutput():String
 
 /**
  	这个方法形为像在代码中的 import pack.*;
- @param rec		归递扫描子项, 表示包含所有子项
+ @param rec		归递包含所有子项
  @param ignore	要忽略的类名数组, 包含路径在内的全名.
- @param classPaths	相当于 -cp 指定的路径, 也就是 addClassPath(path)
+ @param classPaths pack　的所在路径, TODO: 即使指定了这个路径同样需要以 -cp 的方式添加路径,所以这个参数好像有 Bug, 因为如果指定了 -cp 也就不需要这个参数了.
 */
- function include(pack:String, rec:Bool = true, ignore:Array<String> = null, classPaths:Array<String> = null)
+include(pack:String, rec:Bool = true, ignore:Array<String> = null, classPaths:Array<String> = null)
 
 // JS 平台. 嵌入 JS 文件到 输出端, 目前 haxe 只提供 jQuery 和 swfObject 二个 JS 文件
 includeFile(fileName:Dynamic):Dynamic;

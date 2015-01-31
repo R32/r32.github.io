@@ -6,21 +6,40 @@ categories: other
 ---
 
 
-由于国内使用 irc 客户端的很少, 而 webchat.freenode.com 又引用了 google 的文件，国内因被墙而打不开,尝试使用 haxe 写一个客户端, 桌面端用 flash, 基它 html5, 服务器连接选择 IRC://irc.freenode.net, 
-
-客户端选择及所有 IRC 相关:  http://www.irc-wiki.org/Main_Page
+由于国内使用 irc 客户端的很少, 而 webchat.freenode.com 又引用了 google 的文件，国内因被墙而打不开,尝试使用 haxe 写一个客户端, 桌面端用 flash, 基它 html5, 服务器连接选择 freenode
 
 <br />
 
 <!-- more -->
 
-### 相关参考
+客户端选择及所有 IRC 相关:  http://www.irc-wiki.org/Main_Page
 
-https://github.com/gf3/IRC-js
+ * 桌面端
+
+  - mIRC 收费
+
+  - HexChat Win7/8,Linux, OS X, Github 开放源码, hexchat.github.io 看上去不错, 但未使用过.
+
+  - nettalk 感觉还行.
+
+ * android 手机端从用户列表中选择一个 nickname 都不太方便,
+
+  - Yaaic github 开放源码, 界面好看, 能自动加入频道,验证密码, 
+
+  - AndroIRC 每次输入时都会将输入自动改成 Abc, 
+
+
+### 源码参考
+
+
+**Start 2404** Web IRC client: http://shout-irc.com/  
+
+**Start 156** The best IRC library for node.js https://github.com/gf3/IRC-js 
+
+**Start 1873** 基于 node-webkit 的应用 https://github.com/slate/slate 
 
 flash 客户端源码参考: https://github.com/unic0rn/tiramisu
 
-freenode 参考: http://freenode.net/faq.shtml#whatwhy
 
 ### 基本命令
 
@@ -64,14 +83,141 @@ DIE						# Instructs the server to shut down.
 															# 服务器端
 
 ERROR <error message>	# 由IRC 服务器端用于报告错误给其它服务器.同样也用于客户端连接之前 .RFC 1459
-				
+
+
+HELP					# 返回 服务器帮助
+
+INFO [<target>]			# 返回 <target> 服务器的信息, 如果省略 <target> 则为当前服务器,	也可能是其它相关信息, 例如: nettalk  会返回其软件的版本信息
+						# 由 RFC 1459 定义
+
+INVITE <nickname> <channel>				# 邀请 <nickname> 到 <channel>. <channel> 并不存在, 
+										# 如果 <channel> 存在,那么只有 频道内的成员邀请其它客户端, 
+										# 如果 频道模式(channel mode)为 i, 只有 频道管理者(channel operators)才可以
+										# 由 RFC 1459 定义
+										
+ISON <nicknames>						# is on, 查询服务器 nicknames(用空格分隔的呢称列表) 是否在线, 并返回在线的 nicknames(同样是用空格分隔)
+										# 例: /ison AAA BBB CCC, 如果 BBB 不在线,那么只返回 AAA CCC, rfc1459
+						
+JOIN <channels> [<keys>]				# 加入到指定 <channels>(用逗号分隔频道的列表), <keys> 为频道密码(同样用逗号分隔，  如果频道有指定密码)
+										# 如果 频道<channel> 不存在, 将会被创建. rfc1459
+										
+KICK <channel> <client> [<message>]		# 将 nick (<client>) 踢出频道(<channel>), 可选的踢出原因(<message>) 仅频道管理者可用, RFC 1459
+
+KILL <client> <comment>					# 从网络上移除 <client>, 仅 IRC 管理者(IRC服务器管理员)可用. rfc1459.
+
+KNOCK <channel> [<message>]				# 发送一个 "通知" 和可选的 <message>  到 <channel>(不能自由加入只能被邀请的频道), 请求加入. 
+										# 注: 这有点像 QQ中请求加入到一个 QQ 群, 因为 QQ 群就不能随意加入.
+										# 这个命令没有在 RFC 中定义, 但大多数主要的 IRC 服务器都支持
+										# Support is indicated in a RPL_ISUPPORT reply (numeric 005) with the KNOCK keyword
+										
+
+LINKS [<remote server> [<server mask>]]	# Lists all server links matching <server mask>, if given, on <remote server>, or the current server if omitted. rfc1459
+
+LIST [<channels> [<server>]]			# 省略参数将列出当前服务器上所有频道, 如果 指定了 <channels>(用逗号分隔), 将列出这些频道的 topic, 如果指定了 <server>,则只针对指定的服务器. rfc1459
+
+LUSERS [<mask> [<server>]]				# 如果省略参数将返回整个网络规模统计信息. 
+										# rfc2812
+
+
+MODE <nickname> <flags> (user)			# 设置用户模式, <flags> 通过 + 或 -  来设置或取消  rfc1459
+										# i - 是否隐身, 当设为隐身时, 命令 /NAMES 和 /WHO 无法检索到你, 也就无法知道你的存在(marks a users as invisible)
+										# s - 是否接收服务器通告, (marks a user for receipt of server notices)
+										# w - 是否接收管理员用 /WALLOPS 发来的信息 (user receives wallops)
+										# o - 管理员标记, 管理员 呢称 前缀字符为 @ (operator flag)
+										## 如果用户尝试给自已 +o 设置管理员,设置将被忽略, 然而尝试 -o 取消管理员 将会得到:
+										## MODE 命令只能取消该管理员标记。要设置该状态必须用 OPER 命令
+										
+										## ERR_NEEDMOREPARAMS              RPL_CHANNELMODEIS
+										## ERR_CHANOPRIVSNEEDED            ERR_NOSUCHNICK
+										## ERR_NOTONCHANNEL                ERR_KEYSET
+										## RPL_BANLIST                     RPL_ENDOFBANLIST
+										## ERR_UNKNOWNMODE                 ERR_NOSUCHCHANNEL
+										## ERR_USERSDONTMATCH              RPL_UMODEIS
+										## ERR_UMODEUNKNOWNFLAG
+										
+MODE <channel> <flags> [<args>]			# 设置 频道模式, 
+										# o - 设置/解除 频道管理员, 可以一次设置多个人用空格分隔(give/take channel operator privileges)
+										## example: /mode #test +o tom` 或 `/mode #test +ooo tom ben jak
+										## + 或 - 可以混合 `/mode #test +oo-o tom ben jak`
+										# p - 私有频道(private channel flag)
+										# s - 设置/解除 隐藏频道(secret channel flag)
+										# i - 设置/解除 只有被邀请的人才能进入(invite-only channel flag)
+										# t - 锁定 topic 只有频道管理员才能更改, (topic settable by channel operator only flag)
+										# n - 设置/解除 不接受频道外部消息 TODO: 不太理解(no messages to channel from clients on the outside)
+										# m - 旁听模式, 只有管理员和被许可的人才能发言(moderated channel)
+										# l - 限定频道人数(set the user limit to channel)
+										# b - 禁止/取消禁止 某个 mask (set a ban mask to keep users out)
+										## 凡是与被禁止 mask 匹配的用户都不能进入频道, 已经在频道内的将无法说话.
+										## 例: /mode #test +b *!*@*.edu ; prevent any user from a hostname
+                                matching *.edu from joining
+										## TODO: 使用的正则表达式未知
+										# v - 当 +m 模式时, 设置/解除 某人发言权(give/take the ability to speak on a moderated channel)
+										# k - 设置/解除 频道密码(set a channel key (password))
+
+MOTD [<server>]							# 如果省略 <server> 则返回当前服务器 一天的消息(message of the day)
+
+
+NAMES [<channels>] 						# rfc1459
+NAMES [<channels> [<server>]] 			# rfc2812
+										# 返回指定频道(用逗号分隔各个频道, 省略则为当前) 的 呢称列表(空格分隔), 
+										# 返回的列表中的呢称包含前缀,前缀为由其所在频道身份属性. (@ 为频道管理者, + 为lower voice)
+										# IRCv3 版本,支持呢称 多个前缀, 目前绝大多数 IRC 客户端或服务器支持 IRCv3
+										
+PROTOCTL NAMESX							# Instructs the server to send names in an RPL_NAMES reply prefixed with all their respective channel statuses instead of just the highest one (similar to IRCv3's multi-prefix).
+
+
+NICK <nickname> [<hopcount>] 			# rfc1459 允许客户端更改 呢称, Hopcount is for use between servers to specify how far away a nickname is from its home server
+NICK <nickname> 						# rfc2812
+
+NOTICE <msgtarget> <message>			# 这个命令很像 PRIVMSG, 但是不会收到 自动应答的消息, rfc1459
+										# 注: 对于大多数客户端, PRIVMSG 会打开一个新窗口, 但 NOTICE 则不会. 像是当前频道的悄悄话(whisper)
+										
+OPER <username> <password>				# 验证用户是否为 IRC 管理员 rfc1459
+
+PART <channels> [<message>]				# 离开指定频道(如果多个频道则用逗号分隔)
+
+PASS <password>							# TODO: 细节不清楚. 估计是用于连接需要密码的服务器
+										# 设置 "连接密码(connection password)", 这个命令必须在 验证 nick/user 之前发送
+										
+PING <server1> [<server2>]				# ping server1, 如果指定了 <server2>, 则该消息传递给它. rfc1459
+										# TODO: 实际上 freenode 服务器 测试为 PING [<channel|nickname]
+										
+PONG <server1> [<server2>]				# 用于应答 PING, 其它和 PING 一样
+
+PRIVMSG <msgtarget> <message>			# 发送 <message> 到 msgtarget(频道或呢称). rfc1459
+										# TODO:  感觉和 /MSG 一样, 而 /QUERY 会主动打开一个新窗口, 而 PRIVMSG 只有接受者才会打开新窗口
+
+QUIT [<message>]						# 断开到服务器的连接
+
+REHASH						# 使服务器重新读取配置文件. 仅限于 IRC 管理员
+
+RESTART						# 重启服务器, 仅限于 IRC 管理员
+
+RULES						# Requests the server rules.
+							# This command is not formally defined in an RFC, but is used by most major IRC daemons.
+
+SERVER <servername> <hopcount> <info>	# 用于通知服务器连接的另一端为服务器, 同样用于传送全网服务器数据
+										# <hopcount> details how many hops (server connections) away <servername> is
+										# <info> 包含附加可阅读的服务器信息.
+
+SERVICE <nickname> <reserved> <distribution> <type> <reserved> <info>	# 在网络上注册新的服务器. rfc2812
+									
+
+SERVLIST [<mask> [<type>]]				# 列出当前网络服务器清单(好像只适用用于服务器端) rfc2812
+
+SQUERY <servicename> <text>				# 和 PRIVMSG 完成一样, 除了接受方必须为 服务器
+
+SQUIT <server> <comment>				# 使 <server> 退出网络
+
+SETNAME <new real name>					# 允许客户端更改 真实姓名(real name), 当已经验证连接.
+										# 非 RFC 标准, 但一些 IRC Daemons 支持. 通过 RPL_ISUPPORT 检测是否支持
 ```
 
 <br />
 
-### 用户注册
+### freenode
 
-不同的 IRC 服务器的注册是不一样的, 这里及后边所有内容如果没有说明则都是针对 **freenode**.
+[freenode](http://www.freenode.com/) 是大多数人使用的服务器,除了这个其它服务器都基本没人.
 
 IRC 聊天不需要注册, 填写 呢称(nickname) 之后,就可以连接服务器, 但是如果想常期使用同一个呢称, 就需要注册了.呢称是唯一的.
 
@@ -149,7 +295,7 @@ IRC 协议是一个基于文本的协议，以及能够连接到服务器的最�
 
   3. [频道(Channels)](#频道(channels))
 
-     1. [频道管理者(Channel Operators)](频道管理者(channel-operators))
+     1. [频道管理者(Channel Operators)](#频道管理者(channel-operators))
 	
  2. IRC 规范(THE IRC SPECIFICATION)
 
@@ -405,6 +551,17 @@ IRC 协议是一个基于文本的协议，以及能够连接到服务器的最�
 
 #### 频道(Channels)
  
+频道是一个有名字的群组, 用于多个客户端之间的交流. 就像 QQ 群.
+
+频道由第一个进入的客户端自动建立, 当最后一个客户端离开时, 频道将不存在. 当频道存在时, 任意客户端都可以能过频道名称引用这个频道.
+
+频道名称由字符串组成(以 `&` 或 `#` 字符开始)最多 200个字符, 除了要求第一个字符为 `&` 或 `#`, 唯一的要求是不能包含有空格(`0x20`),控制字符(`ASCII 7`)以及 逗号(`,` 逗号根据协议将被用作于分隔符).
+
+协议允许二种类型频道:
+
+  * 一个为 分布式频道, 将所有服务器连接到网络
+
+  * 
 
 ##### 频道管理者(Channel Operators)
 

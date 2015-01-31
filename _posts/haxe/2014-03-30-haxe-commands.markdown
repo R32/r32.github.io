@@ -366,6 +366,7 @@ haxe-ver               : The current Haxe version value
 
 hxcpp-api-level        : Provided to allow compatibility between hxcpp versions
 
+# 作用于 cpp 平台
 include-prefix         : prepend path to generated include files
 
 interp                 : The code is compiled to be run with --interp
@@ -378,6 +379,8 @@ js-es5                 : Generate JS for ES5-compliant runtimes
 
 # 使用更少的对象属性构建类, 例如: 默认情况下会创建的类有时似于 Main.a.b.c   加这个属性后将为 Main_a_b_c 这样就降低了访问对象的深度
 js-flatten             : Generate classes to use fewer object property lookups
+
+keep-old-output        : Keep old source files in the output directory (for C#/Java)
 
 # 参看 haxe --help 中的 --macro
 macro                  : Defined when we compile code in the macro context
@@ -692,6 +695,7 @@ haxe --help-metas, 这类元标记一般添加在代码中, 也可以在 宏(mac
                        
 @:readOnly           : Generates a field with the 'readonly' native keyword (cs only)
 
+# ??? 一个示例 用于 宏构建的接口 https://github.com/ncannasse/hxsdl/blob/master/sdl/NativeWrapper.hx
 @:remove             : Causes an interface to be removed from all implementing classes before generation
 
 # 宏条件, 需要满足条件才能访问这个类的所有字段.
