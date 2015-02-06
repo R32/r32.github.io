@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  编译为 flash
+title:  Flash
 date:   2014-05-10 15:16:10
 categories: haxe
 ---
@@ -30,7 +30,7 @@ categories: haxe
 仅针对 flash 平台, 这个清单可能并不完整治,
 
 ```bash
-##### 可以直接跟在 haxe 命令后的. haxe --help
+######## 编译参数 #########
 
 # 更严格的类型检测, 反正加上就是
 --flash-strict : more type strict flash API
@@ -44,8 +44,7 @@ categories: haxe
 # 添加 swf 库, 文件通常为 swc 格式
 -swf-lib <file> : add the SWF library to the compiled SWF
 
-
-##### 通过 -D 定义的. haxe --help-defines
+######## 编译标记  #########
 
 # 使用 `haxe` 名, 作为 flash 的引导类名, 替换掉默认的 boot_xxx 名, 这项定义将会 自动用于编译成 swc 时
 haxe-boot              : Given the name 'haxe' to the flash boot class instead of a generated name
@@ -93,7 +92,7 @@ advanced-telemetry     : Allow the SWF to be measured with Monocle tool
 # 实际上 hx 中的 private 仅仅只用于限制 hx 代码, 生成 swf 后, 都为 public
 swf-protected          : Compile Haxe private as protected in the SWF instead of public
 
-##### 元标记. haxe --help-metas
+######## 元标记  #########
 
 @:bind				  : 覆盖 flash 的同名定义, 当在 Haxe 中声明了一个类(不是extern类)已经存在于 SWF 库, 将会报错.
 

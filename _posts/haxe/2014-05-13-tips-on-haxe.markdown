@@ -1,11 +1,9 @@
 ---
 layout: post
-title:  一些语法记录 1
+title:  语法记录-1
 date:   2014-05-13 12:26:10
 categories: haxe
 ---
-
- 这里的内容看上去非常混乱, 因为刚开始时我没想到内容会越来越多,
 
  * [Haxe3 迁移指南](http://old.haxe.org/manual/haxe3/migration) 以及 [新特性](http://old.haxe.org/manual/haxe3/features)
 
@@ -16,7 +14,6 @@ categories: haxe
   - `untyped` 可以放在整个语句块`{}`前,如函数块之前 参看 `Date.hx`
 		
 <!-- more -->
-#### Tips
 
  * [windows-installer 最新的开发版本下](http://hxbuilds.s3-website-us-east-1.amazonaws.com/builds/haxe/windows-installer/haxe_latest.tar.gz) 由于目前无法访问 google.api,所以 build.haxe.org 内容为空.
 
@@ -24,11 +21,11 @@ categories: haxe
 
  * 字面量初使化 Map 的格式为:  `var map = [ 1 => 10, 2 => 20, 3 => 30]`
 
- * $type
+ * $type(val)　以警告的形式输出值类型, 在编译期这个标记会移除, 但是具有这个标记的表达式会保留
 
- 	> `$type(express)` 是一个类似于`console.warn(typeof(express))`的方法,会在编译时输出警告信息:显示表达式的类型
+ 	> `var i = $type(0);`
 
- * haxe.Serializer
+ * haxe.Serializer 将任意值序列化成字符串
 
 	> Serializer.run() 除了普通数据或二进制类型,还可以序列化**类实例**,但只能是纯Haxe的类,如果涉及到原生平台方法,将失败.
  
@@ -171,7 +168,7 @@ categories: haxe
  	<haxeflag name="--macro keep(null,['PlayState','flixel.system.FlxAssets','flixel.system.ui','flixel.ui'])" />
  	```
 
- * hscript 使用类似于 for(i in 0...10) 循环时
+ * hscript 使用类似于 for(i in 0...10) 循环时,(最新版的 haxe 可能已经修复了这个问题)
 
 	```bash
 	--macro keep('IntIterator')
@@ -201,14 +198,69 @@ class Bind {
 
 <br />
 
-#### 区分 编译标记 和 编译定义
+#### 编译参数和标记
 
- 如果使用 openfl 的 xml 配置文件能更好的理解 编译标记(haxeflag) 和 编译定义(haxedef)
+ 如果使用 openfl 的 xml 配置文件能更好的理解 编译参数(haxeflag) 和 编译标记(haxedef)
 
  haxedef 属于 haxeflag 的 `-D <var>`,因此在 openfl 的 xml 配置文件中
 
  `<haxedef name="foo" />` 等于 `<haxeflag name="-D" value="foo" />`
 
+
+<br />
+
+#### extern class
+
+用于声明 这个类是外部的,也就是源生平台类, 因此只要提供外部类的各字段以及方法的类型说明就可以了, 不需要写方法体. 下边是一个 JS 端的示例: 你应该注意到了 get_JTHIS 有方法体,
+
+ * 类声明为 extern class
+
+ * 方法没有方法体(特殊除外),以及方法的参数及返回类型必须是显示声明的
+
+```haxe
+extern class Math{
+    static var PI(default,null) : Float;
+    static function floor(v:Float):Int;
+}
+```
+
+特殊的带有 方法体的 extern class, 但必须为 inline, 这样转接到别的不是同名的方法上. TODO: `@:runtime` 表示什么了?
+
+```haxe
+// python/_std/Array.hx
+@:native("list")
+@:coreApi
+extern class Array<T> implements ArrayAccess<T> extends ArrayImpl {
+	public var length(default,null) : Int;
+	
+	private inline function get_length ():Int return ArrayImpl.get_length(this);
+	
+	//.....
+	
+	public inline function copy() : Array<T> {
+		return ArrayImpl.copy(this);
+	}
+
+	@:runtime public inline function iterator() : Iterator<T> {
+		return ArrayImpl.iterator(this);
+	}
+
+	public inline function insert( pos : Int, x : T ) : Void {
+		ArrayImpl.insert(this, pos, x);
+	}
+
+
+	@:runtime public inline function join( sep : String ) : String {
+		return ArrayImpl.join(this, sep);
+	}
+
+	public inline function toString() : String {
+		return ArrayImpl.toString(this);
+	}	
+}
+```
+
+各平台对于 extern class 可能会有一些细节的部分需要注意, 如一些 元标记的使用 以及使用 黑魔法 代码调用原生平台的类或方法
 
 <br />
 
@@ -282,29 +334,14 @@ var i:Null<Int> = null;
 
 Haxe has built-in support for [**regular expressions**](http://haxe.org/manual/std-regex.html).
 
-
 <br />
 
 
-#### `openfl xml` 配置文件
+#### 静态扩展(Static Extension)
 
-[openfl xml 配置参考](http://www.openfl.org/documentation/projects/project-files/xml-format/) ,也可以查看 `lime-tools\1,4,0\project\ProjectXMLParser.hx`
+使用 `using` 代替 `import` 导入类, haxe 会自动识别被 using 导入类的所有静态方法的第一个参数类型.
 
- * `swf lib` 跨平台使用 swf 内部的元件
-	
-	The SWF release on haxelib is compatible with the older openfl-html5-dom backend
-
-	you can use `<set name="html5-backend" value="openfl-html5-dom />` before using `<haxelib name="openfl" />`
-
-<br />
-
-#### 静态扩展 `Static Extension`
-
-  通过自定义的静态方法,第一个参数类型,然后上下文中使用 `using`
-
-  影响代码可读性：`x.f4().f3().f2().f1()` 比 `f1(f2(f3(f4(x))))` 更直观
-
-  不用担心性能问题, haxe 编译器会很好地处理这个.
+通过静态扩展使得 代码：`x.f4().f3().f2().f1()` 比 `f1(f2(f3(f4(x))))` 更直观, 
 
 ```haxe
 using Main.IntExtender;
@@ -320,11 +357,13 @@ class Main {
 }
 ```
 
+通常使用 静态扩展的形式在类上增加方法(这样不必修改原来的类), haxe 编译器会自动删除没有调用的方法, 因此不用担心加载过多类.
+
 <br />
 
-#### 对于 [`enum`](http://haxe.org/manual/types-enum-instance.html) 的理解
+#### `enum`
 
-一. 配合 EnumFlags,将 enum 用作于多项选译, 如下描述一个人能说几种语言, .
+haxe 中的 enum 其实和 ocaml 或其它函数式编程语言的 Variants 一样. 并非 C 语言的 enum, 配合 EnumFlags,将 enum 用作于多项选译, 如下描述一个人能说几种语言, .
 
 ```haxe
 enum Lang{
@@ -349,18 +388,17 @@ var t:Enum<Dynamic> = Lang;	// 或 t:Enum<Lang> = Lang; 这里才是把 Lang 作
 function foo<T>(eu:Enum<T>):Void {} // foo(Lang);
 ```
 
-
-二. 配合 switch , 用于描述抽像的数据类型,感觉像是单项选译, 详情见官方文档.
+配合 switch , 用于描述抽像的数据类型,感觉像是单项选译, 详情见官方文档.
 
  > 比如写一个特殊的文件格式解析器时, 可以用 `enum` 标记各字节的抽象意义,使代码更好理解.
 
  > 参考 `format` 库的和 `data.hx` 以及 下边的 `switch`
 
- 对于 `EnumValue` 类型的数据
+
+对于 `EnumValue` 类型的数据
  
  > 所有 `EnumValue` 都会以 二个大写字母开头.这并不是强制性的
  
-
  > `EnumValue` 包含有 :`getName(),getIndex(),getParameters(),equals()`,来自 `haxe.EnumValueTools`.
 
 
@@ -368,13 +406,12 @@ function foo<T>(eu:Enum<T>):Void {} // foo(Lang);
 
 #### `switch`
 
-Haxe 的 `switch` 表达式还是挺复杂的.参考: [Pattern Matching](http://haxe.org/manual/lf-pattern-matching.html)
+挺复杂的.参考: [Pattern Matching](http://haxe.org/manual/lf-pattern-matching.html), 如果你了解 Ocaml 或其它函数式编程的话, 那么对 Pattern Matching 应该很熟悉.
 
  > 匹配总是从顶部到底部. _ 匹配任何字符，所以case _： 相当于 default:
 
 	
 ```haxe
-
 enum Tree<T> {
 	Leaf(v:T);
 	Node(l:Tree<T>, r:Tree<T>);
@@ -486,21 +523,19 @@ class Helo{
 <br />
 
 
-#### `Type<T>`
+#### 泛型
 
  * [泛型 (Type Parameters)](http://haxe.org/ref/type_params)  
 
  * [高级类型(Type Advanced)](http://haxe.org/ref/type_advanced) 
  
- 	> 描述了 `structure`,`typedef`,`Functions`,`Unknown`,以及 快速扩展 `structure`
- 	
- 	> 重点为当把**类实例**赋值于 `typedef` 定义的类型时, 可以访问 **类实例** 标记为 `private` 的方法.
- 
- * 有些时候需要在使用了`<T>` 的类中,要添加前缀 `@:generic`,比如使用了 `new T()` 这样的代码.
+ * **有些时候** 需要在使用了`<T>` 的类中,要添加前缀 `@:generic`,比如使用了 `new T()` 这样的代码.
 
- * 也许会看到 `<T:{prev:T,next:T}>`或 `<K:{ function hashCode():Int;}>` 这样的源码
+ * 泛型限定 `<T:Foo>`, 将 T 限定为 Foo,
+
+	> 对于 `<T:{prev:T,next:T}>`或 `<K:{ function hashCode():Int;}>` 这样的源码
  
- 	> 实际上 `{}` 可以看成类型,然后这个类型只要包含 `prev next` 属性 或 `hasCode` 方法就行了, 分析 `haxe.macro.Type.hx` 的 `Ref`
+ 	> 实际上 `{}` 可以看成匿名类型,然后这个类型只要包含 `prev next` 属性 或 `hasCode` 方法就行了, 分析 `haxe.macro.Type.hx` 的 `Ref`
 	
 		```haxe
 	 	typedef Ref<T> = {
@@ -514,38 +549,13 @@ class Helo{
 <br />
 
 
-#### `General metadata` 
+#### 元标记(metadata) 
 
- [Tips and Tricks](http://haxe.org/manual/tips_and_tricks)
+[Tips and Tricks](http://haxe.org/manual/tips_and_tricks)
 
-[所有元标签 @](http://old.haxe.org/doc/glossary/at)
+[全部内建元标记]({% post_url haxe/2014-03-30-haxe-commands %})
 
- ```bash
- Starting from Haxe 3.0 , you can get the list of supported compiler flags by running haxe --help-metas
- ``` 
- * **`@:overload`** 方法重载,只适用于 extern 类
-
- 	> can be used when interfacing an external class method with arguments of different types. You can have several overload declarations, the return type of the first one that is matched will be used. Overload metadata is only useful for extern classes, it is most likely not usable for user-written Haxe classes. A simple example: 
-
- 	```haxe
-	extern class JQueryHelper {
-		@:overload(function(j:JQuery):JQuery{})
-		@:overload(function(j:DOMWindow):JQuery{})
-		@:overload(function(j:Element):JQuery{})
-		public static inline function J( html : String ) : JQuery {
-			return new JQuery(html);
-		}
-	}
- 	```
-<br />
-
-#### 自定义元标记 Metadata
-
-haxe 允许自定义一些元标记在 类, 字段, 或 枚举上. 格式为 `@some` 通过 haxe.rtti.Meta 能在运行时访问这些标记. 
-
-和 haxe-metas 不一样的是, haxe-metas 是控制编译器行为的, 格式为 `@:some` 比自定义元标记多了一个冒号(:)
-
-当然自定义元标记可以控制 部分编译器 行为, 可以在宏构建的方法中调用 (macro.Compiler)来实现.
+除了编译器内建的, haxe 允许自定义元标记, 格式为 `@` 字符作前缀(编译器内建的以 `@:` 为前缀, 当然你也能定义以 `@:` 作前缀的元标记, 这只是规范,　并没有强制要求). 例: `@some`. 可以通过 haxe.rtti.Meta 在运行时访问这些元标记内容, 
 
 ```haxe
 #if !macro @:build(Foo.build()) #end
@@ -563,10 +573,8 @@ haxe 允许自定义一些元标记在 类, 字段, 或 枚举上. 格式为 `@s
 	}
 }
 
-/**
-	其实很少有 自定义元标记, 用于在 运行时(rtti)访问的
-	但在宏构建(@:build)中经常用到, 如在编译时检测一些自定义标记, 然后在宏编译时检测这些值,作一些改变,
-*
+// 然而大多数情况下 大家都是以　宏 的形式访问元标记以控制编译器的一些形为
+
 class Foo {
 	macro public static function build():Array<haxe.macro.Expr.Field>{
 		var fields = haxe.macro.Context.getBuildFields();
@@ -589,19 +597,21 @@ class Foo {
 
 <br />
 
-#### `typedef` 和 [`abstract`](http://haxe.org/manual/abstracts) 个人理解
+#### typedef
 
- > `typedef` 用来定义一种数据结构,包含变量,及方法(**没有方法体**),也没有 `public` `private` 以及 `static` 这些访问控制,
+ * typedef 用来定义一种数据结构,包含变量,及方法(没有方法体),也没有 `public` `private` 以及 `static` 这些访问控制
 
- > 所以 `typedef` 定义的类型不可以 `new`(实例化).
+ * typedef 定义的类型不可以 new(实例化).
 
- > `typedef` 象是一种别名的工具.像定义了一个 接口,但是不需要写 `implements`,可直接赋值包含有 `typedef` 对象.
+ * typedef 象是一种别名的工具.像定义了一个 接口,但是不需要写 `implements`,可直接赋值包含有 `typedef` 对象.
 
- 如上, `typedef` 像是 C语言 中用 `typedef struct` 定义的一个数据块. C 中可以强制转换结构指针,同样 Haxe 也用 cast 来强制转换.
+ * 当把 **类实例** 赋值于 `typedef` 定义的类型时, 可以访问 类的 `private` 的方法.
 
- > `typedef struct` 会稍微影响 *静态平台* 的[性能](http://haxe.org/manual/types-structure-performance.html)，但动态平台却没有影响.
+ 如上, typedef 像是 C语言 中用 typedef struct 定义的一个数据块. C 中可以强制转换结构指针,同样 Haxe 也用 cast 来强制转换.
 
- > 如果你想把一个 直接结构量`{x:0,y:0,width:`100}` 赋值给一个变量, typedef struct 是最好的选择了.
+ * `typedef struct` 会稍微影响 *静态平台* 的[性能](http://haxe.org/manual/types-structure-performance.html)，但动态平台却没有影响.
+
+ * 如果你想把一个 直接结构量`{x:0,y:0,width:`100}` 赋值给一个变量, typedef struct 是最好的选择了.
 
 	```haxe
 	typedef Abc = {
@@ -630,11 +640,13 @@ class Foo {
 	var w:Window = {x:0,y:0};	
 	```
 
-`abstract` 抽象化数据结构,用于包装底层类型, 其行为更像是 inline,编译器将作自动替换.
+#### abstract
 
- > 用 new 实例化, 可以有方法体,除非添加 @:enum 否则不可以有成员变量.
+abstract 用于抽象化数据结构,用于包装底层类型, 其行为更像是 inline,编译器将作自动替换.
 
- > 改正: 通过添加 `@:enum` 可以使 abstract 类有成员变量.成员变量会被当成常量处理,或者`getter`
+ > 用 new 实例化, 可以有方法体,除非添加 `@:enum` 否则不可以有成员变量.
+
+ > 通过添加 `@:enum` 可以使 abstract 类有成员变量. 这时成员变量会被当成常量处理,或者`getter`
 
  > 从示例中可以看到,和 `typedef` 的区别是抽象类型是要有原形(小括号Int)的,并且 `abstract` 可以有方法体,和一些类型写类型转换规则
 

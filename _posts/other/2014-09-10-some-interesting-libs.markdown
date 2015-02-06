@@ -1,7 +1,7 @@
 ---
 
 layout: post
-title:  一些有意思东西.
+title:  一些有意思东西
 date:   2014-9-10 7:15:56
 categories: haxelib
 

@@ -1,7 +1,7 @@
 ---
 
 layout: post
-title:  命令行及参数
+title:  命令行相关
 date:   2014-03-30 21:10:10
 categories: haxe
 
@@ -34,9 +34,43 @@ haxelib 用于管理 haxe库,  `haxelib run libname` 可以调用指定库下边
 
  * 命令行下只输入 `haxelib` 将显示一些帮助信息.
 
- * 一些常用命令:
+ * 命令行, 注: 很多命令是交互式的, 会提示你如何操作
 
-	```bash
+	```bash		
+	Haxe Library Manager 3.1.0-rc.4 - (c)2006-2013 Haxe Foundation
+	  Usage: haxelib [command] [options]
+	  Basic
+	    install   : 在线安装指定库, 或 hxml 文件中的所有库
+	    upgrade   : 在线更新所以已经安装了的库
+	    update    : 在线更新指定库
+	    remove    : 移除指定库(从磁盘上删除 haxelib 根目录中的库,但不会删除外部的 dev 库)
+	    list      : 列出指定库或名称相匹配的库(如果指定参数)
+	    set       : 设定库的版本, 用于多个版本库的选择, 注意:如果通过 haxelib dev 指定了开发版本, 那么 dev 版本仍优先于指定的版本号
+		
+		            https://github.com/HaxeFoundation/hxcpp/issues/143
+	    new       : 创建新的本地仓库, 将在当前目前创建一个 .haxelib 的目录, 当位于这个目录上时, haxelib 的所有操作将指向这个新建的目录
+	    delete    : 删除 new 创建的本地仓库(将从磁盘中), 
+	  Information
+	    search    : 在线搜询名称相关库, 
+	    info      : 在线列出指定库的详细信息, 全名匹配, 例: haxelib info lime
+	    user      : 列出指定用户的信息及这个用户提交的所有 haxe 库. 
+	    config    : 打印 haxelib 仓库所在目录(绝对路径)
+	    path      : 得到指定库的所在路径(绝对路径), 库的版本信息, 及　ndll 库目录(如果有的话)
+	  Development
+	    submit    : 提交或更新自已写的 haxe 库到　haxelib 服务器
+	    register  : 注册 haxelib 新用户
+	    local     : 离线方式安装库, 压缩包名字随意. 例: haxelib local xxx.zip
+	    dev       : 设置指定目录为库, 常用于 fork 别人的库 例: haxelib dev openfl fork_openfl_dir
+	    git       : 连接下载 git 版本库, 需要 git 命令支持
+	  Miscellaneous
+	    setup     : 设置 haxelib 仓库路径(默认为 haxe 根目录的 lib)
+	    selfupdate: 更新 haxelib 自身
+	    convertxml: 转换 haxelib.xml 文件为 haxelib.json
+	    run       : 运行指定类库下的 run.n 文件
+	    proxy     : 设置 Http 代理.
+	
+	============== 一些常用命令 ==============
+		
 	haxelib info lime #在线查询列出关于 lime 库的信息
 		
 	haxelib list  # 列出本地所有安装包,用`[]` 中适号包含着的为当前所使用版本
@@ -64,10 +98,11 @@ haxelib 用于管理 haxe库,  `haxelib run libname` 可以调用指定库下边
 		
 	haxelib remove libname #删除库,这个库将会从磁盘移除
 	 
-	haxelib run libname #运行 libname库目录下 编译为neko平台的 libname.n 文件
+	haxelib run libname #运行 libname库目录下 编译为neko平台的 run.n 文件		
 	```
 
  * 开发并上传库 见:[haxe.org/com/haxelib](http://haxe.org/com/haxelib)
+
 
 
 #### hxml
@@ -420,6 +455,8 @@ no-pattern-matching    : Disable pattern matching
 
 no-root                : GenCS internal
 
+no-simplify            : Disable simplification filter
+
 # 禁用 swf 压缩
 no-swf-compress        : Disable SWF output compression
 
@@ -560,8 +597,9 @@ haxe --help-metas, 这类元标记一般添加在代码中, 也可以在 宏(mac
 # JS 将类导出到 window对象 下, 如果 window 未定义,则导出到 export对象(nodejs) 下
 @:expose             : (?Name=Class path)Makes the class available on the window object (js only)
 
-# @:extern static inline function foo(){ } - 此函数总是会内联, 但不会生成作为结果代码的一部分。(since 2.09)
-# 个人感觉和如果添加了 -dce full ,即使没有添加 @:extern 标记的内联函数同样也不会生成作为结果代码的一部分
+# 表明这个字段为 外部字段, 但是 Haxe 中　要么整个类都是 外部类(extern class), 几乎很少有用这个标签的.
+# 示例 js平台:						@:extern public var prototype:Dynamic;
+# 不能写在方法上所以方法写成变量的形式: 	@:extern public var hasOwnProperty:String->Bool;	
 @:extern             : Marks the field as extern so it is not generated
 
 # 作用于 enum, 参看 页尾的示例. 个人感觉 haxe 3.1 之后, 由于 enum 的改动,这个元标记似乎被弃用
@@ -642,6 +680,7 @@ haxe --help-metas, 这类元标记一般添加在代码中, 也可以在 宏(mac
 @:multiType          : (Relevant type parameters)Specifies that an abstract chooses its this-type from its @:to functions
 
 # 重写输出类或枚举的包名, 例: @:native("my.real.Cls"). 使它更容易绑定到 extern 类, 可能有不一样的名称.
+# 示例 @:native("global") extern class Node {}, 这样在 Haxe 这边调用 Node 而其实输出端调用的是 global
 @:native             : (Output type path)Rewrites the path of a class or enum during generation
 
 @:nativeChildren     : Annotates that all children from a type should be
@@ -659,7 +698,8 @@ haxe --help-metas, 这类元标记一般添加在代码中, 也可以在 宏(mac
 
 @:noImportGlobal     : Prevents a static field from being imported with import Class.*
 
-@:noPackageRestrict  : ?
+# 如果找到其第一个类型, 跨目标允许模块可以被访问. TODO: 无模块限制???
+@:noPackageRestrict  : Allows a module to be accessed across all targets if found on its first type
 
 @:noStack            :  (cpp only)
 
@@ -707,11 +747,12 @@ haxe --help-metas, 这类元标记一般添加在代码中, 也可以在 宏(mac
 # 编译器添加 rtti 信息, 可以通过 haxe.rtti.Rtti.getRtti 检索这些信息 
 @:rtti               : Adds runtime type informations (since 3.2)
 
-@:runtime            : ? (js only since 2.10)
+@:runtime            : ?
 
 # 表明 abstract 类型为运行时类型, 通常用于包装各平台底层类型
 @:runtimeValue       : Marks an abstract as being a runtime value
 
+# 调用自身 见 javascript 页面
 @:selfCall           : Translates method calls into calling object directly (js only)
 
 # 当 override flash 的类字段时. 注意 重写 flash 的 setter 时, 返回为 Void. 例: @:setter(endian) function set_endian(endian:String):Void{}
@@ -740,6 +781,8 @@ haxe --help-metas, 这类元标记一般添加在代码中, 也可以在 宏(mac
 @:unsafe             : Declares a class, or a method with the C#'s 'unsafe' flag (cs only)
 
 @:usage              : ?
+
+@:void               : use Cpp native `void` return type(cpp only)
 
 @:volatile           : (for cs,java)
 

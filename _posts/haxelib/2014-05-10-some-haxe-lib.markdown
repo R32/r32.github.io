@@ -17,13 +17,15 @@ categories: haxelib
 
  * http://haxe.io 主要是一些 haxe 的新闻, 经常能看到一些惊异的东西.
 
- * http://thx-lib.org [fponticelli](https://github.com/fponticelli)的个人库, 一些有意思的东西
-
- * http://player03.com [player-03](https://github.com/player-03) 在 openfl 的论坛上还蛮活跃的. 
-
 <br />
 
 #### 工具
+
+ * **[hxBitcoin](https://github.com/cbatson/hxBitcoin)** the Bitcoin, cryptocurrency and cryptography library for Haxe 
+
+ * **[hxparse](https://github.com/Simn/hxparse/)** haxe Lexer/Parser library
+
+	> haxe 词法分析器
 
  * **[format](https://github.com/HaxeFoundation/format)** 用于解析各种文件或数据.
 
@@ -31,17 +33,21 @@ categories: haxelib
  * **[datetime](https://github.com/RealyUniqueName/DateTime)** [Haxe UTC时区处理]({%post_url haxe/2014-09-13-tips-on-haxe-2%}#时区处理)
 
 
- * **[dox](https://github.com/dpeek/dox)**
+ * **[unifill](https://github.com/mandel59/unifill)** Shim your code to support Unicode across all platforms.
 
-	> 帮助文档生成器, haxe 官网目前使用这个,而丢弃了以前的文档生成器. [示例: h3d API]({% post_url haxe/2014-05-05-haxe-doc-gen %})
+	> neko 以及 cpp 是无法检测中文字符串长度的. 
 
- * **[hxsl](https://github.com/ncannasse/hxsl)**
+ * **[hxsl](https://github.com/ncannasse/hxsl)** 但是目前感觉 heaps 库下的 hxsl 才是最新的
 
-	> 写 adobe AGAL 变得如此简单. [使用指南](http://haxe.org/manual/hxsl).
+	> adobe AGAL . [使用指南](http://haxe.org/manual/hxsl).
 
  * [hscript](https://github.com/HaxeFoundation/hscript) Parser and interpreter for Haxe expressions
 
  	> 用于 **运行时** 解析并运行 haxe 代码. hscript 在设计时为了保持更轻量,和容易, 所以对 haxe 代码有限制
+
+ * **[dox](https://github.com/dpeek/dox)**
+
+	> 帮助文档生成器, haxe 官网目前使用这个,而丢弃了以前的文档生成器. [示例: h3d API]({% post_url haxe/2014-05-05-haxe-doc-gen %})
 
  * [hx-lua](https://github.com/MattTuttle/hx-lua) Simple lua wrapper in a haxe extension
 
@@ -100,7 +106,11 @@ categories: haxelib
 
  * **[tora](https://github.com/HaxeFoundation/tora)** NekoVM Application Server
 
-	> 类似于 php, 用于处理网页动态内容, 我倒是有一个 [nginx + tora:FastCGI](https://github.com/R32/my-test/blob/master/test/neko-nginx-tora/Nx.hx) 的 demo. 
+	> 类似于 php, 用于处理网页动态内容, 我的一个 [nginx + tora:FastCGI](https://github.com/R32/my-test/blob/master/test/neko-nginx-tora/Nx.hx) 的 demo. 
+
+ * **[promhx](https://github.com/jdonaldson/promhx)** A promise and functional reactive programming
+
+	> 用于流程控制. 普罗米修斯(先知)和响应式编程
 
  * **[openfl-bitfive](https://github.com/YellowAfterlife/openfl-bitfive)**
 
@@ -146,7 +156,7 @@ categories: haxelib
 				类似于 haxe.ds.Option
 				C 语言中常常返回 0, 表示正确, 非 0 值为错误代码
 	
-	Future	:	这个的文档太长, hehe.
+	Future	:	文档太长, 但大概类似于 Promise 之类的东西
 	
 	Ref		:	感觉没必要. 这个类使用 Vector 的第一个元素存储值.来达到引用效果.
 	

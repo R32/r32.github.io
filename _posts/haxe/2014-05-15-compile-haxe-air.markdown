@@ -1,7 +1,7 @@
 ---
 
 layout: post
-title:  导出 SWF 文件为 AIR
+title:  将 SWF 打包成 AIR
 date:   2014-05-13 9:26:10
 categories: haxe
 
@@ -10,6 +10,8 @@ categories: haxe
 最简单的方法是用 `flashdevelop` 创建一个 `haxe/air` 的示例.
 
 <!-- more -->
+
+对于一些 AIR 属性的类, 你需要使用 haxe 的类库 air3,详情见: `haxelib info ari3`
 
 #### 创建 `air app.xml`
 

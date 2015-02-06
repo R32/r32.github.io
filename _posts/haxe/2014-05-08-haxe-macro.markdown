@@ -1,7 +1,7 @@
 ---
 
 layout: post
-title:	条件编译 和 宏
+title:	条件编译以及宏
 date:   2014-05-08 10:26:10
 categories: haxe
 
@@ -21,7 +21,7 @@ categories: haxe
 
 [条件编译 (Conditional Compilation)](http://haxe.org/manual/lf-condition-compilation.html). 通过使用 `#if #else #elseif #end` 来 **检测编译器标志**
 
- > 编译定义(define), 通过使用 -D key=value 或只是 -D key 来设置, 未设置 value 默认值将为字符串 1. **所有 -D 定义标记的值类型都为字符串**
+ > 编译标志(define), 通过使用 -D key=value 或只是 -D key 来设置, 未设置 value 默认值将为字符串 1. **所有 -D 定义标记的值类型都为字符串**
 
 ```haxe
 #if flash
@@ -109,10 +109,9 @@ class Foo{
  * 编译标记除了用于条件编译,还可以用于传值:
 
 	> 例如 宏函数 只支持常量不支持使用变量传值,这时使用 条件编译标记 来赋值,
-
 	> 然后在代码使用 `haxe.macro.Compiler.getDefine(flag)` 来获得
 	
-	> 对于 Compiler.define 的定义,只能通过 Context 类下的方法获得
+	> 对于 Compiler.define,只能通过 Context 类下的方法获得
 
  * 这里假设需定义一个叫 hello 的标记, 并且将 hello 赋值为 world.
 
@@ -755,7 +754,7 @@ public static function buildMIN(){
 
  * 更可读
 
-	> 大部分宏方法使用 Expr 类型参数并且返回的也是 Expr类型,为了让代码更为可读, 你可以使用 `ExprOf<Type>` 来替代 `Expr`
+	> 大部分宏方法使用 Expr 类型参数并且返回的也是 Expr 类型,为了让代码更为可读, 你可以使用 `ExprOf<Type>` 来替代 `Expr`
 
 	> 请注意,这只是个提示,如果你查看源码的话会发现其实 `typedef ExprOf<T> = Expr`
 

@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  一些语法记录 2
+title:  语法记录-2
 date:   2014-09-13 17:21:10
 categories: haxe
 ---
@@ -218,7 +218,15 @@ Sys.sleep(3);
 
 #### Tls
 
-在 haxe 中 感觉和线程的的局部变量没区别, 也许只是 堆栈(局部)变量 和 tls 变量的区别. 在 主线程中创建 new Tls<T>(), 虽然各线程都能访问, 但各 tls.value  取到的值都为 null, 子线程无法获得 主线程中对 tls.value 的设置, 同样主线程中也无法获得 子线程对 tls.value 的赋值. 好像没什么用处, 注意和 ssl/tls 区别.
+~~在 haxe 中 感觉和线程的的局部变量没区别, 也许只是 堆栈(局部)变量 和 tls 变量的区别. 在 主线程中创建 new Tls<T>(), 虽然各线程都能访问, 但各 tls.value  取到的值都为 null, 子线程无法获得 主线程中对 tls.value 的设置, 同样主线程中也无法获得 子线程对 tls.value 的赋值. 好像没什么用处, 注意和 ssl/tls 区别.~~
+
+作为 thread 的局部变量, 为解决多线程程序的并发问题提供了一种新的思路,  示例见 `std/haxe/io/FPHelper.hx`
+
+声明静态绑定线程的本地对象和变量时必须遵守下列原则：但是不知道 haxe 是否需要遵守这些 原文见 https://msdn.microsoft.com/zh-cn/library/6yh4a9k1.aspx
+
+ * 只能应用于 数据声明和定义, 不能用于函数声明或定义
+
+ * 只能用在具有　static 作用域的数据项上(haxe 的 static 只能作用于类字段)
 
 #### Mutex
 
@@ -227,8 +235,6 @@ TODO:
 #### Poll
 
 TODO: 从名字看上去像是轮循, 这个类没有任何文档.
-
-
 
 
 #### Socket
@@ -256,6 +262,10 @@ input或output 默认都是阻塞类型的,
 
 
 其实使用 vm.net.ThreadServer 就好了...
+
+
+#### SPOD
+
 
 
 #### FPHelper

@@ -1,18 +1,36 @@
 ---
 layout: post
-title:  openfl 编译 android 小记
+title:  openfl
 date:   2014-05-10 16:03:10
 categories: haxe
 ---
 
+openfl 是建立在 Haxe 上的一个跨平台类库, 提供一套　统一的 API(类似于 AS3 API)以实现同一套代码可以编译成多个平台.
 
-一些内容并非只是 android 平台.
+由于 API 基本和 flash API 一致, 如果你是 AS3 开发人员, 打算学习Haxe 强烈建议从 openfl 入手慢慢熟悉.
 
 
 <!-- more -->
 
+ * 在使用　flashdevelop 开发 openfl 项目时, 应该修改 xml 配置文件, 而不是在 flashdevelop 的项目配置里设置
+
+
+#### `openfl xml` 配置文件
+
+[openfl xml 配置参考](http://www.openfl.org/documentation/projects/project-files/xml-format/) ,也可以查看 `lime-tools\1,4,0\project\ProjectXMLParser.hx`
+
+ * `swf lib` 跨平台使用 swf 内部的元件
+	
+	The SWF release on haxelib is compatible with the older openfl-html5-dom backend
+
+	you can use `<set name="html5-backend" value="openfl-html5-dom />` before using `<haxelib name="openfl" />`
 
 <br />
+
+
+### android
+
+  * android apk 很多情况下也能先以 neko 测试.如果不涉及 java 源生扩展
 
 #### 创建 certificate
 

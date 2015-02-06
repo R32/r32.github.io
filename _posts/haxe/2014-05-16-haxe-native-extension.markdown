@@ -1,7 +1,7 @@
 ---
 
 layout: post
-title:  创建原生扩展
+title:  hxcpp
 date:   2014-05-16 7:16:19
 categories: haxe
 
@@ -14,13 +14,9 @@ categories: haxe
 <!-- more -->
 
 
-### hxcpp
+#### 简介
 
-一篇新的教学 http://www.wighawag.com/blog/2014/12/Hxcpp-extern
-
-[hxcpp](https://github.com/HaxeFoundation/hxcpp) is the runtime support for the c++ backend of the haxe compiler. This contains the headers, libraries and support code required to generate a fully compiled executable from haxe code.
-
-hxcpp 是 haxe 编译器的后端 C++ 运行时支持, 这包含 头文件, 库 和从 haxe 源码生成可执行文件所需代码. 使用这个库时你需要对不同平台(windows, linux, mac) 重新编译生成静态链接库, 不同平台所依赖的编译器也不同.可以在 toolchain 目录找到这些配置:
+[hxcpp](https://github.com/HaxeFoundation/hxcpp) 是 haxe 编译器的后端 C++ 运行时支持, 这包含 头文件, 库 和从 haxe 源码生成可执行文件所需代码. 使用这个库时你需要对不同平台(windows, linux, mac) 重新编译生成静态链接库, 不同平台所依赖的编译器也不同.可以在 toolchain 目录找到这些配置:
 
 ```
 windows:	MSVC 或 MingW
@@ -34,15 +30,23 @@ tizen:
 webos:		PalmPDK
 ```
 
-#### 编译外部库
+ * C++ 代码可以先在 neko 平台中快速测试,调整. 最后再以 cpp 的形式 release.
 
-直接将外部库编译成 静态链接库, 参考 nme-dev, 
+#### 将源码编译为外部库
 
------
+直接将外部库编译成 静态链接库, 参考 nme-dev 的 readme, 通常只要模仿 xml 文件然后用 hxcpp 编译就完成了. TODO: 应该有更简单的类似于 SWIG 的导出工具, 或者 hxcpp 本身就提供这样的功能只是目前我没有找到.
 
-#### `cpp`
+#### 编译标志
 
-需要安装 openfl 的 lime 才能做这些.
+.......
+
+#### 编译元标记
+
+.......
+
+#### CFFI
+
+快速示例: 需要安装 openfl 的 lime 才能做这些.
 
  * 运行 `lime create extension myext` 快速创建样板文件. lime 属于 openfl 库
 
@@ -75,7 +79,7 @@ webos:		PalmPDK
 	 haxelib run hxcpp Build.xml -Diphoneos -DHXCPP_ARMV7	#需要 Xcode 环境
 	 ```
  
-##### 一： `.hx` 编译为 `cpp或neko` __不使用 openfl__
+**不使用 openfl** 编译为 cpp 或 neko
 
  > 例如你想写一个 命令行程序, 
 
@@ -104,7 +108,7 @@ copy ndll\windows\ext.ndll hbin\
 ```
  
 <br />
-##### 二： `.hx` 编译多平台 __使用 openfl__
+**使用 openfl** 编译到平台 
 
  * 需要将 myext 添加到 haxelib 本地库.否则oepnfl在分析 ndll 路径时将出错.
  
@@ -161,68 +165,10 @@ copy ndll\windows\ext.ndll hbin\
  * 编译
 
 	 ```bash
-	
 	 lime test project.xml windows
 	 lime test project.xml neko
 	 lime test project.xml android
 	 ```
-
- * 小技巧
-
-	> C++ 代码可以先在 neko 平台中快速测试,调整. 最后再以 cpp 的形式 release.
-
-	> android apk 很多情况下也能先以 neko 测试.如果不涉及 java 源生扩展
-
-
+	
 <br />
-#### `android`
 
- * 参考 cpp 的前部分.`dependencies/` 目录就是属于 android 原生扩展 
- 
- * [haxe android JNI]({% post_url haxe/2014-05-10-tips-openfl-android %})
- 
-
-<br /> 
-#### `flash`
-
- * 当编译成flash时,haxe可以直接引用 SWC 库.并且提供输入智能提示
-
- * [haxe 中引用 SWC 文件 ]({% post_url haxe/2014-05-10-tips-haxe-flash %})
-
-
-<br />
-#### `javascript`
-
- * [JavaScript Tutorials](http://old.haxe.org/doc/js)
-
-
-<br />
-#### `Java`
-
- * 空
-
-
-<br />
-#### `php`
-
- * [php ](http://old.haxe.org/doc/php/extern_libraries)
-
-
-<br />
-#### `C#`
-
- * 空
-
-
-<br />
-#### `ios`
- 
- * 空
-
-#### 通用
-
- * [黑魔法](http://old.haxe.org/doc/advanced/magic)
-
- * [文档](http://old.haxe.org/doc)
- 
-<br />
