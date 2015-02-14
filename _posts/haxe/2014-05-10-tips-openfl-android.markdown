@@ -7,12 +7,12 @@ categories: haxe
 
 openfl 是建立在 Haxe 上的一个跨平台类库, 提供一套　统一的 API(类似于 AS3 API)以实现同一套代码可以编译成多个平台.
 
-由于 API 基本和 flash API 一致, 如果你是 AS3 开发人员, 打算学习Haxe 强烈建议从 openfl 入手慢慢熟悉.
-
 
 <!-- more -->
 
  * 在使用　flashdevelop 开发 openfl 项目时, 应该修改 xml 配置文件, 而不是在 flashdevelop 的项目配置里设置
+
+
 
 
 #### `openfl xml` 配置文件

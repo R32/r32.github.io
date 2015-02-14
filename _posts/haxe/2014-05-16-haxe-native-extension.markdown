@@ -32,9 +32,33 @@ webos:		PalmPDK
 
  * C++ 代码可以先在 neko 平台中快速测试,调整. 最后再以 cpp 的形式 release.
 
+
+
 #### 将源码编译为外部库
 
-直接将外部库编译成 静态链接库, 参考 nme-dev 的 readme, 通常只要模仿 xml 文件然后用 hxcpp 编译就完成了. TODO: 应该有更简单的类似于 SWIG 的导出工具, 或者 hxcpp 本身就提供这样的功能只是目前我没有找到.
+直接将外部库编译成 静态链接库, 参考 nme-dev 的 readme, 通常只要模仿 xml 文件然后用 hxcpp 编译就完成了.
+
+
+一个基于 hxcpp 的项目的　文件夹组织
+
+```
+include			C/C++ 项目源码 依赖的头文件,
+tools			一些命令行工具类源码, 如果通常这个文件夹内会包含  run.n, build.n 的源码等等
+project			依赖的 C/C++ 项目源码, 一般通过 haxelib run hxcpp Build.xml 或 neko build.n 编译
+lib				编译了的 C/C++ 项目源码的　中间文件,
+ndll 			haxelib run hxcpp Build.xml 的最终结果
+```
+
+ * 通过 project 目录下的 Build.xml
+
+ * 通过　继承 hxcpp 库目录下的 hxcpp/Builder.hx 生成 build.n
+
+解析 haxelib/run.n 源码:
+
+ > 通过 `neko.vm.Loader.local().loadModule("./hxcpp.n")` 加载了 `hxcpp/tools/hxcpp/BuildTool.hx`
+
+解析 haxelib/hxcpp.n 源码:
+
 
 #### 编译标志
 

@@ -25,9 +25,9 @@ haxedoc 命令已经被弃用,而改用了另一个叫haxelib dox, **但是** �
 
 haxelib 用于管理 haxe库,  `haxelib run libname` 可以调用指定库下边的 run.n 文件, 并将当前命令行路径作为最后一个参数传递.
 
- > 以 haxelib run 运行的命令, 内部的 Sys.setCwd() 将返回 libname 所在的绝对路径,而不是调用的当前路径, 当前路径为 args 最后一个参数
+ > 以 haxelib run 运行的命令, 内部的 Sys.getCwd() 将返回 libname 所在的绝对路径,而不是调用的当前路径, 当前路径为 args 最后一个参数
 
- > 而以 neko run.n 调用的命令 内部的 Sys.setCwd() 将则指向当前路径.
+ > 而以 neko run.n 调用的命令 内部的 Sys.getCwd() 将则指向当前路径.
 
 
  * 当一个 haxelib 有 ndll 目录时, haxelib path libname 会有一个 -L 的定义指向这个 ndll 目录.
@@ -516,6 +516,7 @@ unsafe                 : Allow unsafe code when targeting C#
 
 use-nekoc              : Use nekoc compiler instead of internal one
 
+# 允许在编译时访问注释文档
 use-rtti-doc           : Allows access to documentation during compilation
 
 vcproj                 : GenCPP internal

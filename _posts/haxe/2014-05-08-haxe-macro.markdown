@@ -654,7 +654,7 @@ onGenerate(callback:Array<Type> -> Void):Void
 //
 onMacroContextReused(callb:Void -> Bool):Void
 
-//
+// 
 onTypeNotFound(callback:String -> TypeDefinition):Void
 
 // 解析字符串代码, 实际上经常用 parseInlineString 代替这个方法

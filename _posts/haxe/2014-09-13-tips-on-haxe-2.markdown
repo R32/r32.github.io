@@ -62,6 +62,52 @@ categories: haxe
 
 <br />
 
+#### 模板
+
+haxe.Template http://old.haxe.org/doc/cross/template
+
+```haxe
+class App {
+    static function main() {
+        // 双冒号 :: 作为替换分隔符
+		var text = "My name is <strong>::name::</strong> and I'm <em>::age::</em> years old.";	
+        var t = new haxe.Template(text);
+        var output = t.execute({ name : "John", age : 33 });
+        trace(output);
+    }
+}
+```
+
+haxe 自带的模板 支持 if/else/elseif, foreach, sub-templates, Macros(这个名字有些??)
+
+```html
+::if flag:: OK ! ::end::
+::if flag:: OK ! ::else:: FAILED ! ::end::
+::if flag1:: OK ! ::elseif flag2:: MAYBE ::else:: NO ::end::
+
+<table>
+<tr><td>Name :</td><td>Age :</td></tr>
+::foreach users::<tr><td>::name::</td><td>::age::</td></tr>::end::
+</table>
+<!-- foreach 循环中可以使用特殊变量 __current__ -->
+```
+
+```haxe
+class App {
+    // macro 示例: 注意第一个参数。　
+	// a macro returns a string
+    static function myfun( resolve : String -> Dynamic, title : String, p : Int ) {        
+        return "["+title+"="+(p * resolve("mult"))+"]";
+    }
+
+    static function main() {
+        var t1 = new haxe.Template("Call macro : $$myfun(Hello,::param::)");
+        var str = t1.execute({ param : 55, mult : 2 },{ myfun : myfun });
+        trace(str); //output: "Call macro : [Hello=110]"
+    }
+}
+```
+
 #### for and while
 
 首先看下 javascript 中的闭包..
@@ -74,7 +120,6 @@ for(var i = 0; i<3; i += 1){
 	},500)
 }
 
-
 // 第二个, 值传递到闭包.避免上面问题,输出 0, 1, 2
 for(var i = 0; i<3; i += 1){
 	setTimeout((function(n){
@@ -86,7 +131,6 @@ for(var i = 0; i<3; i += 1){
 ```
 
 上边的示例在 flash 中显示的结果也一致, 再来对比一下 haxe 中 for 和 while 循环的区别:
-
 
 ```haxe
 // while 循环,	-	输出为: 3, 3, 3 
@@ -260,12 +304,7 @@ input或output 默认都是阻塞类型的,
  * `connect(host:Host, port:Int):Void`
 
 
-
 其实使用 vm.net.ThreadServer 就好了...
-
-
-#### SPOD
-
 
 
 #### FPHelper

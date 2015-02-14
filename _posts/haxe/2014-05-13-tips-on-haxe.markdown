@@ -29,7 +29,7 @@ categories: haxe
 
 	> Serializer.run() 除了普通数据或二进制类型,还可以序列化**类实例**,但只能是纯Haxe的类,如果涉及到原生平台方法,将失败.
  
- * Context.resolvePath 除了检索当前项目的目录之外,还将检索　-lib 库目录,　haxe/std 目录.
+ * Context.resolvePath 除了检索当前项目的目录之外,Context.getClassPath 的路径, 这个路径包括 -lib 库目录(JSON文件 指定的目录)及 　haxe/std 等等.
 
  * 其它
 
@@ -64,6 +64,10 @@ categories: haxe
 	// 	haxe 编译器 将自动为第二个参数填入 null,
 	foo(10,0.123); //output => 10, 0.123
 	```	
+
+ * 隐藏包名 当包名以 `_` 为前缀时, 代码编辑器不会智能提示出这个包名, 相当于添加了 `@:noCompletion`
+
+ * `import pack.path.Cls in ReCls`, 将导入的 类重命名
 
  * **`__this__`**
 

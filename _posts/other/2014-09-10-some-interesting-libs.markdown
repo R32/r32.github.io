@@ -17,6 +17,10 @@ categories: haxelib
 	> JavaScript library that can create animated GIFs from media streams, videos, or images
 http://yahoo.github.io/gifshot/
 
+ * **[patorjk.com](http://www.patorjk.com/software/taag/#p=display&f=Graffiti&t=Type%20Something)**
+
+	> 一个在线工具用于将 文本转换为 Acsii art 的在工具,
+
 <!-- more -->
 
 <br />
@@ -27,6 +31,14 @@ http://yahoo.github.io/gifshot/
 这个章节的大多数内容都是用于美化的 CSS 或 Javascript , 大多数似乎在 ie8 中都会报错.
 
  * [KaTeX](https://github.com/Khan/KaTeX) 用于在网页中展示数学公式.
+
+ * [网页设计](https://github.com/showcases/design-essentials) 
+
+ * **[startbootstrap](https://github.com/IronSummitMedia/startbootstrap)**  Bootstrap themes and templates
+
+ * [modernizr](https://github.com/Modernizr/Modernizr) 检测浏览器的 html5 和 css3 支持情况
+
+ * [html5 boilerplate](https://github.com/h5bp/html5-boilerplate) 一套专业的前端模版,用以开发快速、健壮、适应性强的app或网站
 
  * **[intro.js](https://github.com/usablica/intro.js)**
 
