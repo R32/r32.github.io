@@ -693,8 +693,10 @@ haxe --help-metas, 这类元标记一般添加在代码中, 也可以在 宏(mac
 # 作用是 代码编辑器(IDE) 将不会对这个字段产生智能提示.
 @:noCompletion       : Prevents the compiler from suggesting completion on this field
 
+# 即使有加编译参数 -debug,也不生成 debug 信息到 swf文件,仅适用于 flash
 @:noDebug            : Does not generate debug information into the Swf even if -debug is set (flash only)
 
+# 防止被文档生成器添加
 @:noDoc              : Prevents a type from being included in documentation generation
 
 @:noImportGlobal     : Prevents a static field from being imported with import Class.*

@@ -307,6 +307,40 @@ input或output 默认都是阻塞类型的,
 其实使用 vm.net.ThreadServer 就好了...
 
 
+#### XML
+
+XML http://old.haxe.org/doc/cross/xml
+
+xml nodeType, 参见 Xml下静态属性
+
+ * Document 9: 文档类型, 通常为 Xml.parse 返回的对象
+
+ * Element 1: 元素类型
+
+ * DocType 10: DTD DOCTYPE 文档类型,例: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">`
+
+ * CData 4:  `<![CDATA[ ]]>`
+
+ * Comment 8:  `<!-- -->`
+
+ * PCData　3：　即文本(Text)节点
+
+ * ProcessingInstruction 7: 例 `<?xml version="1.0" encoding="utf-8" ?>` 
+
+firstChild() 和 firstElement() 的区别是 child 不仅仅只有 Element,
+
+FAST http://old.haxe.org/doc/advanced/xml_fast
+
+```haxe
+var xml = Xml.parse('<root>
+	<data id="one">1</data>
+	<data id="two">2</data>
+	<data id="three">3</data>
+</root>');
+
+var fast = new Fast(xml.firstElement)
+```
+
 #### FPHelper
 
 最新特性

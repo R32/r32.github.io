@@ -30,6 +30,8 @@ http://yahoo.github.io/gifshot/
 
 这个章节的大多数内容都是用于美化的 CSS 或 Javascript , 大多数似乎在 ie8 中都会报错.
 
+ * [Frontend stuff](https://github.com/moklick/frontend-stuff) 前端资源
+
  * [KaTeX](https://github.com/Khan/KaTeX) 用于在网页中展示数学公式.
 
  * [网页设计](https://github.com/showcases/design-essentials) 

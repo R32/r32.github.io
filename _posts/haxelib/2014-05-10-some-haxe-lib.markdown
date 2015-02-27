@@ -110,8 +110,174 @@ categories: haxelib
 
  * **[promhx](https://github.com/jdonaldson/promhx)** A promise and functional reactive programming
 
-	> 用于流程控制. 普罗米修斯(先知)和响应式编程, 感觉和 msignal 有些像
+	> 响应式编程,用于流程控制. 一个 promise|stream 需要一个或多个 deferred.resolve
+	
+	> Promise 和 Stream 的最主要的区别是 Promise 只能调用一次 resolve, 而　Stream　能多次,所以 Promise 适用于 初使化和加载资源，而 Stream 可用于类似于事件管理
+	
+  - Error management
 
+		> 提供许多运行时方法用于错误管理, 如 catchError, errorThen, errorPipe, 参见源码注释
+		
+		> 通过定义 -D PromhxExposeErrors 可以避免回调方法内部的 throw 被内部捕获, 这个定义能用于调试一些特殊行为
+	
+  - Event Loop Management
+
+		> consider using more promises and streams to break the update operation up across multiple event loops.
+	
+  - Promhx Http Class　提供非常类似于 haxe.Http
+
+		```haxe
+		var h = new promhx.haxe.Http("somefile.txt");
+		h.then(function(x){
+			trace(x); // this will be the text content from somefile.txt
+		});
+		h.request(); // initialize request.
+		```
+		
+  - EventTools 用于适应已经存在的事件系统如 JS 或 Flash, 推荐用 `using using promhx.haxe.EventTools` 引入
+
+		> 注: 由于使用的是 Promise 而非 Stream ,因此只能用于一次性的事件, 感觉是　源码最后一行返回错误
+
+		```haxe
+		using promhx.haxe.EventTools;
+		//...
+		var cur = flash.Lib.current.stage;
+        var p = cur.eventStream(cur, 'click');
+		p.then(function(e:MouseEvent){trace(e.localX);});
+		```
+	
+  - JQueryTools 同样通过 `using`, 但是这个没有 EventTools 那样的一次性事件错误
+
+		```haxe
+		var ts = new JQuery("#target").eventStream('click');
+		ts.then(function(e:JqEvent){});
+		```
+	
+  - Macro do-notation  形为上像是操作符重载的东西,无视它
+	
+  - Detaching Streams 仅限于 Stream
+
+		> 通过 保存 then 方法的返回,之后能解除 
+
+		```haxe
+		var ds = new Deferred<Int>();
+		var s = ds.stream();
+		var s2 = s.then(function(x){
+			trace("这个方法不会被调用,因为已经被解除");
+		});
+
+		s.detachStream(s2);
+		ds.resolve(1);
+		```
+	
+  - Bound Deferreds: As of v 1.08 promhx includes a "DeferredPromise" and "DeferredStream" option. 
+	
+	```haxe
+		static function main() {
+		// 声明 Deferred,  which is the writable interface
+		var dp1 = new Deferred<Int>();
+
+		// 声明 Promise,  使用 Deferred 实例 作为参数
+		var p1 = new Promise<Int>(dp1);
+		// var p1 = dp1.promise();			// 可替换上行
+		
+		// 简单: 当 value 有效时传递 promise ,  Stream 同样
+		p1.then(function(x) { trace("delivered " + x); } );
+		
+		
+		// 传递多个 promises 当它们全部有效时.
+		// "then" 方法必须匹配　参数类型 及 参数数量 根据 "when" 的参数		
+		var dp2 = new Deferred<Int>();
+		var p2 = dp2.promise();
+		Promise.when(p1, p2).then(function(x, y) { trace(x + y); } );
+		
+		
+		// Stream 有其自已的 "when" 方法, 叫做 "whenever"
+		// 注意 返回的 Stream 将随时处理(resolve) *任意一项* 当 stream 参数发生改变
+		// 注上: 就是第一次需要 多个 resolve才能触发, 之后 任意一个 resolve 都将触发
+		var ds1 = new Deferred<Int>();
+		var ds2 = new Deferred<Int>();
+		var s1 = ds1.stream();
+		var s2 = new Stream(ds2);
+		Stream.whenever(s1, s2).then(function(x, y) { trace(x + y); } );
+		
+		// Stream.whenever 可以混合使用 Stream 和 Promise
+		// 注: 虽然文档说可以支持,但下行通过 haxe 编译, 因此是不支持混合的,
+		//Stream.whenever(s1, p1).then(function(x, y) trace(x + y));
+		
+		// "then" 的返回值是另一个 Promise实例, 因此可以　链式调用
+		// TODO: 不知道这种 可无返回值的函数是如何定义的 Unknown<0>
+		Promise.when(p1, p2).then(function(x, y) { return x + y; } ).then(function(x) { trace(x); } );
+		
+		
+		var dp3 = new Deferred<String>();
+		var p3 = dp3.promise();
+		
+		// pipe 方法让你能手动指示新的 Promise 实例用于链式调用
+		// 它能预先存在或在回调方法中创建,  Stream 也同样类似
+		// 个人注: pipe 需要返回 Promise|Stream 实例, 而 then 只要返回　值就能自动返回一个新的 Promise|Stream
+		// 因此 pipe 似乎没有什么存在的作用???
+		Promise.when(p1, p2).then(function(x, y) { return x + y; } )
+			.pipe(function(x) return p3)	// 在 pipe 参数方法中返回 promise 实例
+			.then(function(x) trace(x));	// 函数接受 dp3.resolve 的值
+		
+		// 可以很容易捕获错误在指定的回调函数中
+		Promise.when(p1, p2).then(function(x, y) { throw "an error"; } )
+			.catchError(function(x) { trace(x); } );
+		
+		// Errors 通过 promise 链传播.
+		// 可以重新抛出通过 haxe's try/catch 语法
+		// Stream 同样类似
+		Promise.when(p1, p2).then(function(x, y) { throw "an error"; return "hello"; } )
+			.then(function(x) { trace(x + " world!"); } )
+			.catchError(function(x) { 
+				try{
+					throw(x);	
+				}catch(e:String){
+					trace('caught a string: ' + e);
+				}catch(e:Dynamic){
+					trace('caught something unknown:' + e);
+				}
+			} );
+			
+		// 回调函数内部的 throw 将会被忽略, 除非定义 -D PromhxExposeErrors
+		
+		// errorThen 可以在抛出错误之后继续后边的调用链
+		// 如果 errorThen 前边的 then 有　返回值, 那么这个 errorThen 也必须有返回值才能匹配
+		p1.then(function(x) { throw "-- IfElse --" + x; return "-- If --"; } ).errorThen(function(x) { trace(x); return "-- Else --"; } ).then(function(s) { trace(s); } );		
+		
+		// Promises 能通过各种状态检测
+		
+		// 检测 是否已经处理(resolve),(因为 Promise 只能 resolve 一次)
+		trace(p1.isResolved());
+		
+		// 检测　是否 挂起(pending) 操作于下一次循环
+		// 有时候　promise 并没有完成 resolve, 
+		// 这个发生在 promise 延迟执行(on flash, js) 或处于更新其它 promise 中. TODO: 未理解
+		trace(p1.isPending());
+		
+		
+		// Check to see if the promise has completed fulfilling its updates.
+		trace(p1.isFulfilled());
+		
+		// Check to see if a promise has been rejected.  This can happen if
+		// the promise throws an error, or if the current promise is waiting
+		// on a promise that has thrown an error.
+		trace(p1.isRejected());
+		
+		// finally, resolve the promise values, which will start the
+		// evaluation of all promises.
+		dp1.resolve(1);
+		dp2.resolve(2);
+		dp3.resolve('hi');
+
+		// You can "resolve" a stream as well
+		ds1.resolve(1);
+		ds1.resolve(1);
+		ds2.resolve(2);
+	}
+	```
+	
  * **[openfl-bitfive](https://github.com/YellowAfterlife/openfl-bitfive)**
 
 	> readme 写着比 openfl 默认的 **html5后端** 更好.
@@ -119,19 +285,22 @@ categories: haxelib
  * **[mcli](https://github.com/waneck/mcli)** 简单创建 CLI 程序,mcli 可以把 文档注释 通过宏处理变成 相应的帮助,这点非常好.
 
 	```bash
-	# 用于字段上元标记
+	## 用于字段上元标记
 	@:skip						# 避免 public 字段被 宏 解析成 命令参数
 	@:msg(string)				# 添加附属的说明, 常用于添加　分隔线
 	
-	# 用于 注释中的元数据
+	## 用于 注释中的元数据
 	@alias <name>				# 别名, 常用于做一个 单字母的别名, 对于单字母可以用一个 -　调用
 	@command <name>				# 更改命令的实际名称, 常用于 将 map 字段更名为 D
 	@region <string>			# 同 @:msg(string), 注: 换行符 需要有空格字符作参数的 @region
 	@key <name>					# 将默认说明用的 key 改为其它字符, 参见下列示例的 var D:Map<String,String>;
 	@value <name>				# 同@key, 将默认说明用的 value 改为其它字符, 
 	
-	# 重要说明 方法 的参数类型可以为 Array<String> 但是参数名必须为 varArgs 或 rest
-	# 这个特性常用于 runDefault 方法的参数
+	## 高级 
+	# 重要说明 方法 的参数类型可以为 Array<String> 但是参数名必须为 varArgs 或 rest, 这个特性常用于 runDefault 方法的参数
+	# Dispatch.addDecoder 可用于添加自定义的 解释器, 必须在 new Dispatch 之前调用, 参看 sample/git/
+	# 可以添加 sub command, 记得继承类加 @:keep, 参看 sample/git/
+	
 	```
 	
 	```haxe
@@ -207,8 +376,6 @@ categories: haxelib
 	}
 	```
 	
-	> 注 需要给继承类加上 `@:keep` 否则对应的方法会被清理掉, 注释中的 @alias 会被定义为　简写
-
  * [hxargs](https://github.com/Simn/hxargs)
 
 	> 简单创建 CLI 程序, 帮助写在自定义的元标签 `@doc` 上.

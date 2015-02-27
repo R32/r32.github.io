@@ -388,7 +388,7 @@ The syntax for reification is `macro expr`, where `expr` is any valid Haxe expre
 
  	> `${}` 或 `$e{}`: `Expr -> Expr`
 
- 	> `$a{}` : `Expr -> Array<Expr>`
+ 	> `$a{}` : `Expr -> Array<Expr>` 用于把数量未确定的参数传递给 作参数的函数, 示例见 Promhx 库的 Promise.when
 
  	> `$b{}` : `Array<Expr> -> Expr`
 
@@ -678,7 +678,8 @@ resolvePath(file:String):String
 signature(v:Dynamic):String
 
 // 根据指定类型创建复杂类型 , 参看 makeExpr
-// toComplexType( getType("Int") ) 等于 (macro : Int) 等于 TPath({name:"StdTypes", pack:[], params:[], sub:"Int" })
+// toComplexType( getType("Int") ) 等于 `macro :Int` 等于 `TPath({name:"StdTypes", pack:[], params:[], sub:"Int" })`
+// 那么简单类型就是 `macro Int` 返回的值 `src/Main.hx:34: { expr => EConst(CIdent(Int)), pos =>...}`
 toComplexType(t:Type):Null<ComplexType>
 
 // Types expression e and returns the corresponding TypedExpr.
@@ -755,8 +756,7 @@ public static function buildMIN(){
  * 更可读
 
 	> 大部分宏方法使用 Expr 类型参数并且返回的也是 Expr 类型,为了让代码更为可读, 你可以使用 `ExprOf<Type>` 来替代 `Expr`
-
-	> 请注意,这只是个提示,如果你查看源码的话会发现其实 `typedef ExprOf<T> = Expr`
+	> 如果你查看源码的话会发现其实 `typedef ExprOf<T> = Expr`
 
 
  * 成员宏方法
