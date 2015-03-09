@@ -426,6 +426,11 @@ categories: haxelib
 	CallbackList:	abstract CallbackList<T>(Array<Cell<T>>){}
 	```
 
+ * [cleversort](https://github.com/jasononeil/cleversort) Haxe macro for helping to sort arrays based on multiple properties with a very simple syntax 
+
+ * [cereal](https://github.com/submain/cereal) Haxe serialization library for XML,将 haxe 的类序列化为 xml 字符串
+
+<br />
 
 
 

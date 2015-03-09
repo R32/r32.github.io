@@ -29,6 +29,15 @@ categories: haxe
 	}
 	```
 
+ * [MacroType usage](https://github.com/HaxeFoundation/haxe/issues/3947)
+
+	```haxe
+	private typedef Init = haxe.macro.MacroType < [cdb.Module.build("data.cdb")] > ;
+	typedef Time = LevelData_time;
+	//...
+	// 更细的示例: https://gist.github.com/Simn/8581ee291b95c6c22813
+	```
+
 <br />
 
 #### 时区处理
@@ -331,6 +340,26 @@ firstChild() 和 firstElement() 的区别是 child 不仅仅只有 Element,
 
 FAST http://old.haxe.org/doc/advanced/xml_fast
 
+ * `.name` 返回当前元素名字（和 Xml.nodeName 一样）
+
+ * `.x` 返回当前相应的 Xml 实例(注:Fast 和 Xml 是二个不同类)
+
+ * `.att.<name>` 访问给定的属性, 如果不存在将抛出异常
+
+ * `.has.<name>` 检测是否存在属性
+
+ * `.elements` 返回所有　元素(Xml.Element)　清单
+
+ * `.node.<name>` 返回指定名称的第一个子节点,如果不存在将抛出异常
+
+ * `.nodes.<name>` 返回指定名称的所有子节点
+
+ * `.hasNode.<name>` 检测是否存在指定子节点
+
+ * `.innerData` 返回内部 文本节点内容或 CData, 注: 如果没有符合条件的子节点(不包含孙节点)将导致异常
+
+ * `.innerHTML` innerHTML String
+
 ```haxe
 var xml = Xml.parse('<root>
 	<data id="one">1</data>
@@ -344,6 +373,7 @@ var fast = new Fast(xml.firstElement)
 #### FPHelper
 
 最新特性
+
 
 <br />
 
