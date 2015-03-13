@@ -22,9 +22,9 @@
 	div.post li{
 		margin: 15px 0;
 	}	
-	</style>{% elsif page.layout == 'default' %} {%endif%}
+	</style>{%endif%}
 	<!--[if lt IE 9]>
 		<script type="text/javascript" src="/assets/js/html5shiv.js"></script>
     	<script type="text/javascript" src="/assets/js/css3-mediaqueries.js"></script>
 	<![endif]-->
-</head>{% assign p_categories = page.url | replace: "\", "/" | split:"/" %}{% if p_categories[1] == 'index.html' %}{% assign p_category = 'home' %}{% else %}{% assign p_category = p_categories[1] %}{% endif %}
+</head>

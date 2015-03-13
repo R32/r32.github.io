@@ -42,20 +42,15 @@ doc_url_path: https://github.com/R32/r32.github.io/blob/master/
 ##### 一些自定义的数据
 
 custom_menu:
-  - name: home
-    url: /
+  - url: /
     label: 主页
-  - name: haxe
-    url: /haxe/
+  - url: /haxe/
     label: Haxe
-  - name: haxelib
-    url: /haxelib/
+  - url: /haxelib/
     label: Haxelib    
-  - name: other
-    url: /other/
+  - url: /other/
     label: 其它
-  - name: person
-    url: /person/
+  - url: /person/
     label: 个人
 
 

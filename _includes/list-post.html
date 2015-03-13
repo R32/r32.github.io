@@ -1,46 +1,21 @@
-
-{% assign p_cats_exists = false %}
-
-{% assign p_cats_list = site.categories[p_category] %}
-
-{% for post in p_cats_list %}
-    {% if post.categories[0] ==  p_category %}
-		{% assign p_cats_exists = true %}
-	{% break %}	
-    {%endif%}
-{%  endfor %}
-
-{% if p_cats_exists %}
+{% assign p_category = page.dir | remove_first: '/' %}
 	<div class="row-fluid">
 		<div class="col-md-3">
 			<div class="bs-sidebar hidden-print affix-top" role="complementary" data-spy="affix">
 				<ul class="nav bs-sidenav"> <!-- 列出sidebar -->
-	{% for post in p_cats_list %}
-	    {% if post.categories[0] ==  p_category %}
+	{% for post in site.categories[p_category] %}
 			<li><a href="#{{ post.url | replace:'\','/' | split:'/' | last | remove_first: '.html' }}"> {{ post.title }}</a></li>
-	    {%endif%}
 	{%  endfor %}				
 				</ul>
 			</div>		
 		</div>
-	
-		
+
 		<div class="col-md-9" role="main">
-		{% for post in p_cats_list %}
-		    {% if post.categories[0] ==  p_category %}
+		{% for post in site.categories[p_category] %}
 				<div class="bs-docs-section" id="{{ post.url | replace:'\','/' | split:'/' | last | remove_first: '.html' }}">
 					<a href="{{post.url}}" target="_self" class="artice-list">{{ post.title }}</a>
-					<div class="excerpt">{{ post.excerpt }}</div>
-					<i class="get-more">......</i>	
+					<div class="excerpt">{{ post.excerpt }}<i class="get-more">......</i></div>
 				</div>
-
-		    {%endif%}
 		{%  endfor %}
 		</div>
 	</div>
-{% else %}
-<div class="jumbotron">
-  <h3 style="font-family:'微软雅黑'">{{page.title}}</h3>
-  <br />
-</div>
-{% endif %}

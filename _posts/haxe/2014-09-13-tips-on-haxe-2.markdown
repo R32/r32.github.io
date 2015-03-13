@@ -37,6 +37,18 @@ categories: haxe
 	//...
 	// 更细的示例: https://gist.github.com/Simn/8581ee291b95c6c22813
 	```
+ * Either 二个类型, 这样可以让一个函数返回二种类型
+
+	```haxe
+	typedef MyResult = Either<Error, String>;
+	
+	var result:MyResult = Left(new Error("something smells"));
+	
+	var result:MyResult = Right("the answer is 42");
+	
+	// 注意区别 haxe.ds.Option
+	// An Option is a wrapper type which can either have a value (Some) or not a value (None).
+	```
 
 <br />
 

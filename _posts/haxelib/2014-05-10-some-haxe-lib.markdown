@@ -9,8 +9,6 @@ categories: haxelib
 
 收集的一些 haxe 类库,通常这些库都能在 github 找到.
 
-
-<!-- more -->
 #### 个人
 
 这一章节,主要收集一些个人Blog或网站, 本来想写在另一篇档案中的. 还是算了.
@@ -22,6 +20,8 @@ categories: haxelib
 #### 工具
 
  * **[hxBitcoin](https://github.com/cbatson/hxBitcoin)** the Bitcoin, cryptocurrency and cryptography library for Haxe 
+
+<!-- more -->
 
  * **[hxparse](https://github.com/Simn/hxparse/)** haxe Lexer/Parser library
 
@@ -393,6 +393,14 @@ categories: haxelib
 
 	> A cross platform Haxe library for loading resources with utilities for queueing and caching requests. Supports AVM2, JavaScript, Neko and C++
 
+ * [thx.core](https://github.com/fponticelli/thx.core) 
+
+	```
+	Set		:  A Set is a list of unique values.
+	
+	Tuple	:  A Tuple is a value containing multiple values of potentially different types.
+	```
+
  * [tink_core](https://github.com/haxetink/tink_core) 
 
 	```
@@ -429,6 +437,8 @@ categories: haxelib
  * [cleversort](https://github.com/jasononeil/cleversort) Haxe macro for helping to sort arrays based on multiple properties with a very simple syntax 
 
  * [cereal](https://github.com/submain/cereal) Haxe serialization library for XML,将 haxe 的类序列化为 xml 字符串
+
+ * [casahx](https://github.com/andyli/casahx) 有一些 utils 的工具类,如 StringUtils, 但并不是所有类都是跨平台的
 
 <br />
 
