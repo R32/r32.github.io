@@ -40,6 +40,10 @@ Liquid 模板语法参见  https://github.com/Shopify/liquid/wiki/Liquid-for-Des
 
  * 2015-2-2 更简洁的结构,设计更改, 不需要所有页面都使用 default.layout 这样后期不好维护更改.特别是 主页需要独立出来
 
+	> 抛弃变量 post.categories[0] 而转而使用 page.dir 来控制目录
+
+
+
 
 #### 需要做的
 

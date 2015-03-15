@@ -40,17 +40,17 @@ doc_url_path: https://github.com/R32/r32.github.io/blob/master/
 
 
 ##### 一些自定义的数据
-
+##### 目录(dir)不要以 / 结尾
 custom_menu:
-  - url: /
+  - dir: /
     label: 主页
-  - url: /haxe/
+  - dir: /haxe
     label: Haxe
-  - url: /haxelib/
+  - dir: /haxelib
     label: Haxelib    
-  - url: /other/
+  - dir: /other
     label: 其它
-  - url: /person/
+  - dir: /person
     label: 个人
 
 

@@ -30,11 +30,17 @@ http://yahoo.github.io/gifshot/
 
 这个章节的大多数内容都是用于美化的 CSS 或 Javascript , 大多数似乎在 ie8 中都会报错.
 
- * [Frontend stuff](https://github.com/moklick/frontend-stuff) 前端资源
+ * **[网页设计](https://github.com/showcases/design-essentials)** 这个是 github 自已整理的
+
+ * **[Frontend stuff](https://github.com/moklick/frontend-stuff)** 前端资源
+
+ * [Font-Awesome](https://github.com/FortAwesome/Font-Awesome/) 矢量图标字体
+
+	> http://fortawesome.github.io/Font-Awesome/examples/
+	
+ * [angular.js](https://github.com/angular/angular.js) 用于经常需要修改及更新的数据
 
  * [KaTeX](https://github.com/Khan/KaTeX) 用于在网页中展示数学公式.
-
- * [网页设计](https://github.com/showcases/design-essentials) 
 
  * **[startbootstrap](https://github.com/IronSummitMedia/startbootstrap)**  Bootstrap themes and templates
 

@@ -1,4 +1,5 @@
-<div id="header" class="navbar navbar-inverse navbar-static-top">
+{% assign p_category = page.dir | remove_first: "/" | split: "/" | first | prepend: "/" %}
+<div id="header" class="navbar navbar-inverse navbar-static-top {{include.class}}">
 	<div class="container">
 		<div class="navbar-header">
 			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">   
@@ -11,8 +12,8 @@
 		<div class="navbar-collapse collapse">
 			<ul class="nav navbar-nav navbar-right">
 				{% for item in site.custom_menu %}
-					{% if page.dir == item.url %}<li class="active">{% else %}<li>{% endif %}
-						<a href="{{item.url}}">{{item.label}}</a></li>
+					{% if p_category == item.dir %}<li class="active">{% else %}<li>{% endif %}
+						<a href="{{item.dir | append: '/' | replace: '//','/'}}">{{item.label}}</a></li>
 				{% endfor %}
 			</ul>
 		</div>
