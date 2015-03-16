@@ -12,7 +12,7 @@ categories: haxe
 <!-- more -->
 
 
-#### 编译标记
+### 编译标记
 
 编译标记即为使用 `-D` 定义的值, 通过 `haxe --help-defines` 查询所有内建定义
 
@@ -24,7 +24,7 @@ categories: haxe
 
 	> 目前只有 `jQuery 1.6.4` 和 `swfObject 1.5` 这二个 since 3.0
 
-#### 元标记
+### 元标记
 
  * `@:jsRequire(moduleName,?subModName)` 需要 haxe 3.2+
 	
@@ -88,7 +88,7 @@ categories: haxe
 
 
 
-#### `extern class`
+### extern class
 
 由于 Javascript **上下文** 的随意性, 并没有好的工具能自动创建 extern class, 所以需要自已手动为这些外部 JS 文件写 extern class 声明. 
 
@@ -142,7 +142,7 @@ private static function __init__() : Void untyped {
 
 这个段落的内容仅适用于 浏览器中的 javascript
 
-#### `HTML DOM`
+#### HTML DOM
 
 haxe.js.html 下的对象类型挺吓人的. 所以应该使用 js.JQuery 来操作 DOM 对象.
 

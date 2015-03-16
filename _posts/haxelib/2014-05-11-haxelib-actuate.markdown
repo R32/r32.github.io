@@ -7,8 +7,6 @@ categories: haxelib
 
 ---
 
-#### 前言
-
 Actuate 是一个动画补间库. 你可以使用 bing 翻译来查看下边英文.
 
 Actuate is not the only tween library that could be used with OpenFL, but it is highly recommended.

@@ -105,7 +105,7 @@ haxelib 用于管理 haxe库,  `haxelib run libname` 可以调用指定库下边
 
 
 
-#### hxml
+### hxml
 
 通常 hxml 是用于编译 hx 代码的默认文件, 需要注意的是 有一个特殊的叫 `extraParams.hxml` 的文件, 这个文件一般在一些 haxelib 中可以见到(和 haxelib.json 位于同级目录), 用于当使用 -lib libname 编译时附加一些编译参数. 如果是基于 openfl 的项目库,那么这个特殊文件将是 `include.xml`
 
@@ -795,7 +795,7 @@ haxe --help-metas, 这类元标记一般添加在代码中, 也可以在 宏(mac
 
 
 
-##### 缓存编译
+#### 缓存编译
 
 用于绑定目录到指定端口,缓存编译, 这样使得每次编译时不会重新解析所有
 
@@ -819,7 +819,7 @@ lime build flash --connect 6000 --times
 
 
 
-##### 一些简单的示例:
+#### 一些简单的示例
 
 ```haxe
 //@:fakeEnum(Int) 示例

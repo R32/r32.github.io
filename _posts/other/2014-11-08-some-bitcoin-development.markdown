@@ -7,10 +7,9 @@ categories: other
 
 尝试使用 haxe 开发 dogecoin 轻钱包, 用于 nodejs 服务器, 所有山寨币都是基于 bitcoin 源码, 需要了解一些 bitcoin 的基础.
 
-
 <!-- more -->
 
-#### 基础
+### 基础
 
 首先是些基础概念, 这些可以在网络搜索得到.  比特币结合P2P对等网络技术和密码学原理，来维持发行系统的安全可靠性。与有中心服务器的中央网络系统不同，在P2P网络中无中心服务器，每个用户端既是一个节点，也有服务器的功能，任何一个节点都无法直接找到其他节点,必须依靠其户群进行信息交流。
 
@@ -33,7 +32,7 @@ categories: other
 
 然后下边是主要是 haxe 源码 https://github.com/cbatson/hxBitcoin 的 readme 文件内容.
 
-#### Bitcoin
+### Bitcoin
 
  * [BIP0038(encrypted private keys)](https://github.com/bitcoin/bips/blob/master/bip-0038.mediawiki) 私钥格式的一种. 为了实现纸钱包
 	
@@ -83,7 +82,7 @@ categories: other
  * No additional/external dependencies
 
 
-#### 源码参考
+### 源码参考
 
 bitcoin 项目组 https://github.com/bitcoin 
 
