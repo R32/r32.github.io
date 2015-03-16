@@ -10,7 +10,7 @@ categories: haxe
  计划慢慢使用 haxe 来写 js, 内容包括二个部分 nodejs 和 浏览器的js, 大多数情况下它们都是通用的,
  
 <!-- more -->
-<br />
+
 
 #### 编译标记
 
@@ -86,7 +86,7 @@ categories: haxe
 	```
                        
 
-<br />
+
 
 #### `extern class`
 
@@ -117,7 +117,7 @@ class Main {
 }
 ```
 
-<br />
+
 
 通过源码可以发现 macro.Compiler 下有**宏**方法 includeFile, 但仅限于 js 平台使用. 示例:
 
@@ -131,7 +131,7 @@ private static function __init__() : Void untyped {
 }
 ```
 
-<br />
+
 
 ### nodejs
 
@@ -146,7 +146,7 @@ private static function __init__() : Void untyped {
 
 haxe.js.html 下的对象类型挺吓人的. 所以应该使用 js.JQuery 来操作 DOM 对象.
 
-<br />
+
 
 
 

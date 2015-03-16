@@ -12,7 +12,7 @@ categories: haxe
 
 <!-- more -->
 
-<br />
+
 
 #### 注释内容规范
 
@@ -70,7 +70,7 @@ categories: haxe
 
 
 
-<br />
+
 
 
 
@@ -112,7 +112,7 @@ categories: haxe
 	-D  --defines
 	```
 
-<br />
+
 
 
 
@@ -154,7 +154,7 @@ clean:
 	@rm -rf $(TARGET_DIR)
 
 ```
-<br />
+
 
  * 生成的结果
 

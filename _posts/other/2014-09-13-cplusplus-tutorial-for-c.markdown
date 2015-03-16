@@ -10,7 +10,7 @@ categories: other
 原文: http://www.4p8.com/eric.brasseur/cppcen.html, 这里只记录一些 C++ 个人觉得好的的方法, 一些如 运算符重载(太过于混乱)或引用(个人习惯使用指针,为了避免弄混),将被丢弃.
 
 默认使用 gcc 的 g++ 命令编译下边示例, 如果使用 gcc 则需加上 `-lstdc++`
-<br />
+
 
 <!-- more -->
 
@@ -60,7 +60,7 @@ categories: other
 		}	
 	};
 	```
-<br />
+
 
 #### 头文件引用
 
@@ -421,7 +421,7 @@ int main (){
 
  * 对于 char,int,float,double,struct ,基本类型的对象没有析构函数,他们等价
 
-<br />
+
 
 #### 结构体
 
@@ -799,7 +799,7 @@ public:
 int Vector::count = 0; // 外部初使化, 并且加上类型, 这里是 int
 ```
 
-<br />
+
 
 
 

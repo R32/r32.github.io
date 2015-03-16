@@ -9,7 +9,7 @@ categories: haxe
  
 <!-- more -->
 
-<br />
+
 
 #### 杂项
 
@@ -50,7 +50,7 @@ categories: haxe
 	// An Option is a wrapper type which can either have a value (Some) or not a value (None).
 	```
 
-<br />
+
 
 #### 时区处理
 
@@ -81,7 +81,7 @@ categories: haxe
 
  * 上边示例, utc 如果要转换到本地时区只要简单的调用 utc.local() 就行了.
 
-<br />
+
 
 #### 模板
 
@@ -387,7 +387,7 @@ var fast = new Fast(xml.firstElement)
 最新特性
 
 
-<br />
+
 
 
 

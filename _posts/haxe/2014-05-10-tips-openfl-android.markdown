@@ -25,7 +25,7 @@ openfl 是建立在 Haxe 上的一个跨平台类库, 提供一套　统一的 A
 
 	you can use `<set name="html5-backend" value="openfl-html5-dom />` before using `<haxelib name="openfl" />`
 
-<br />
+
 
 
 ### android
@@ -51,7 +51,7 @@ openfl 是建立在 Haxe 上的一个跨平台类库, 提供一套　统一的 A
 [create certificate]:http://www.openfl.org/archive/community/general-discussion/openfl-android-singing-guide/
 
 
-<br />
+
 
 
 #### 版本兼容
@@ -66,7 +66,7 @@ openfl 是建立在 Haxe 上的一个跨平台类库, 提供一套　统一的 A
 <architecture name="armv6" exclude="armv7" />
 ```
 
-<br />
+
 
 
 #### 自定义模板
@@ -91,7 +91,7 @@ openfl 是建立在 Haxe 上的一个跨平台类库, 提供一套　统一的 A
 ```
 
 
-<br />
+
 
 #### `openfl JNI`
 
@@ -139,7 +139,7 @@ openfl 是建立在 Haxe 上的一个跨平台类库, 提供一套　统一的 A
 
 
 
-<br />
+
 
 
 #### 中文显示
@@ -168,7 +168,7 @@ openfl 是建立在 Haxe 上的一个跨平台类库, 提供一套　统一的 A
 	> [lime 0.9.7] Bug ??? 如果不将 `textField`的 `selectable` 设为 `false`,字符很容易会变成方块
 
 
-<br />
+
 
 
 #### 其它
@@ -235,4 +235,4 @@ openfl 是建立在 Haxe 上的一个跨平台类库, 提供一套　统一的 A
  * 其它的以后再添加....
 
 
- <br />
+ 

@@ -13,7 +13,7 @@ categories: haxelib
 
 <!-- more -->
 
-<br />
+
 
 ### h3d
 
@@ -27,7 +27,7 @@ categories: haxelib
 
   - 构造函数的 antiAlias 参数,似乎不会起任何作用,像是没实现. 一些基础设置,如修改背影颜色,或设置全屏...
 
-<br />
+
 
 ### h2d
 
@@ -67,7 +67,7 @@ categories: haxelib
 	```
 
 
-<br />
+
 
 ### hxd
 
@@ -85,7 +85,7 @@ categories: haxelib
 
   5. 使用 Res 管理资源, 例: var font:h2d.Font = Res.adobe_fan_heiti_std_b_12.toFont();
 
-<br />
+
 
 #### BitsBuilder
 
@@ -141,7 +141,7 @@ case "haxe.EnumFlags":
 ``` 
 
 
-<br />
+
 
 #### res目录
 
@@ -294,7 +294,7 @@ enum VarQualifier {
 ```
 
 
-<br />
+
 
 
 
@@ -415,7 +415,7 @@ enum VarQualifier {
 		```
  * poly2tri 文件夹  多边形 to 三角形???
 					 
-<br />
+
 
 ### 源码简析
 
@@ -452,7 +452,7 @@ enum VarQualifier {
 
   - **default.css** 组件默认的样式配置. 在初使化之前可以通过 comp.Context.DEFAULT_CSS 修改默认组件样式
 
-<br />
+
 
 ### `tool`
 
@@ -489,4 +489,3 @@ enum VarQualifier {
 	> 这是一个很好的如何使用 `format.zip` 和 如何创建一个简单命令行程序的示例
 
 
-<br />

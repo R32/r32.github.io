@@ -7,7 +7,7 @@ categories: other
 
 ---
 
-#### 未整理 
+### 未整理 
 
 https://help.github.com/categories/github-pages-basics/
 
@@ -28,16 +28,15 @@ http://jekyllcn.com/
 	> 对于非 `user.github.io` 名字,Github Pages 只解析分支 `gh-pages`中的文件.
 	
 	> 可以通过添加 `CNAME.txt` 文件来绑定域名.[免费]
-	
-	
+		
 <!-- more -->
-#### 安装 
+
+### 安装 
 
  参考 [Cygwin 环境安装 Jekyll]({% post_url other/2014-03-29-jekyll-on-windows-with-cygwin %})
 
-<br />
 
-#### 插件使用
+### 插件使用
 
  Github pages在线[支持的插件](https://pages.github.com/versions/), 可使用 gem 命令检测本机插件版本和 github pages 进行对比
 
@@ -56,4 +55,7 @@ http://jekyllcn.com/
 
  * [jekyll-mentions](https://github.com/jekyll/jekyll-mentions) **`@mention`** support for your Jekyll site
 
-<br />
+### 其它
+
+ * Toc https://github.com/ghiculescu/jekyll-table-of-contents 一个 js 的脚本用于自动生成 table of contents
+

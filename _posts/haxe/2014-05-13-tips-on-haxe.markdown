@@ -147,7 +147,7 @@ categories: haxe
 		> ![flashdevelop setting](/assets/img/fd_setter_completionServer.png) 
 
 
-<br />
+
 
 #### 遇见的一些错误
 
@@ -177,7 +177,7 @@ categories: haxe
 	```bash
 	--macro keep('IntIterator')
 	```
-<br />
+
 
 #### 函数绑定
 
@@ -200,7 +200,7 @@ class Bind {
 }
 ```
 
-<br />
+
 
 #### 编译参数和标记
 
@@ -211,7 +211,7 @@ class Bind {
  `<haxedef name="foo" />` 等于 `<haxeflag name="-D" value="foo" />`
 
 
-<br />
+
 
 #### extern class
 
@@ -266,7 +266,7 @@ extern class Array<T> implements ArrayAccess<T> extends ArrayImpl {
 
 各平台对于 extern class 可能会有一些细节的部分需要注意, 如一些 元标记的使用 以及使用 黑魔法 代码调用原生平台的类或方法
 
-<br />
+
 
 #### 单引号
 
@@ -283,7 +283,7 @@ var muline = '
 ';
 ```
 
-<br />
+
 
 #### `Null`
 
@@ -294,7 +294,7 @@ var i:Null<Int> = null;
 // 其它**基础类型**需要检测是否为 `null`,声明和上边类似
 ```
 
-<br />
+
 
 
 #### `Dynamic`
@@ -331,14 +331,14 @@ var i:Null<Int> = null;
 	// 可以实现接口的 resolve 方法,当访问属性时会自动转接到 resolve 上.
  	```
 
-<br />
+
 
 
 #### 正则表达式
 
 Haxe has built-in support for [**regular expressions**](http://haxe.org/manual/std-regex.html).
 
-<br />
+
 
 
 #### 静态扩展(Static Extension)
@@ -363,7 +363,7 @@ class Main {
 
 通常使用 静态扩展的形式在类上增加方法(这样不必修改原来的类), haxe 编译器会自动删除没有调用的方法, 因此不用担心加载过多类.
 
-<br />
+
 
 #### `enum`
 
@@ -406,7 +406,7 @@ function foo<T>(eu:Enum<T>):Void {} // foo(Lang);
  > `EnumValue` 包含有 :`getName(),getIndex(),getParameters(),equals()`,来自 `haxe.EnumValueTools`.
 
 
-<br />
+
 
 #### `switch`
 
@@ -505,7 +505,7 @@ trace(s); // 2
 ```
 
 
-<br />
+
 
 
 #### `Class` 
@@ -524,7 +524,7 @@ class Helo{
 }
 ```
 
-<br />
+
 
 
 #### 泛型
@@ -550,7 +550,7 @@ class Helo{
 		// 只要一个类型它包含了 get 及 toString ,就可以看成是 Ref
 		``` 
 
-<br />
+
 
 
 #### 元标记(metadata) 
@@ -599,7 +599,7 @@ class Foo {
 }
 ```
 
-<br />
+
 
 #### typedef
 
@@ -675,4 +675,3 @@ abstract Bcd(Int){
 }
 ```
 
-<br />

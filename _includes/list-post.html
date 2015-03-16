@@ -1,7 +1,7 @@
 {% assign p_category = page.dir | remove_first: "/" | split: "/" | first %}
 	<div class="row-fluid">
 		<div class="col-md-3">
-			<div class="bs-sidebar hidden-print affix-top" role="complementary" data-spy="affix">
+			<div class="bs-sidebar hidden-print affix-top" role="complementary" data-spy="affix" data-offset-top="2">
 				<ul class="nav bs-sidenav"> <!-- 列出sidebar -->
 	{% for post in site.categories[p_category] %}
 			<li><a href="#{{ post.id | split:'/' | last | replace:'-','_' }}"> {{ post.title }}</a></li>

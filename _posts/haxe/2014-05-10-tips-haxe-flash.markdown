@@ -23,7 +23,7 @@ categories: haxe
 </cross-domain-policy>
 ```
 <!-- more -->
-<br />
+
 
 #### 编译标记 及 元标记
 
@@ -108,7 +108,7 @@ swf-protected          : Compile Haxe private as protected in the SWF instead of
 ```
 
 
-<br />
+
 #### 嵌入资源
 
 haxe 中有几个 元标记,仅用于 flash 平台的资源嵌入. 当然 openfl 项目 或一些其它的库, 提供简单的资源嵌入方式.
@@ -186,7 +186,7 @@ haxe 中有几个 元标记,仅用于 flash 平台的资源嵌入. 当然 openfl
 [参看-B]:http://old.haxe.org/manual/swc?lang=cn
 
 
-<br />
+
 
 #### 自定义 Preloader
 
@@ -200,7 +200,7 @@ haxe 中有几个 元标记,仅用于 flash 平台的资源嵌入. 当然 openfl
 	<app preloader="com.myname.Preloader" />
 	```
 
-<br />
+
 
 #### override flash 方法
 
@@ -233,7 +233,7 @@ class LEByteArray extends ByteArray{
 ```
 
 
-<br />
+
 
 #### patch files
 
@@ -271,7 +271,7 @@ enum flash.text.TextFieldAutoSize;
 
 You can use a patch file with --macro patchTypes('patchFile')
 
-<br />
+
 
 
 #### --gen-hx-classes
@@ -284,7 +284,7 @@ You can use a patch file with --macro patchTypes('patchFile')
 haxe -swf nothing.swf --no-output -swf-lib lib.swc --gen-hx-classes
 ```
 
-<br />
+
 
 #### 其它
 
@@ -295,6 +295,6 @@ haxe -swf nothing.swf --no-output -swf-lib lib.swc --gen-hx-classes
 一些编绎相关选项参看 [编译-flag](http://haxe.org/doc/compiler) 和 [编译-define](http://haxe.org/manual/tips_and_tricks), Haxe 语法的 private 只限制 Haxe 语法编译器自身,编译成 flash 后,在swf中所有private成员都是 public 可见的.
 
 	> 编译定义(-D) `swf-protected` : by default the compiler turns all private fields public in SWF output. This flag will keep them protected instead.(Haxe private == AS3 protected) 
-<br />
+
 
 

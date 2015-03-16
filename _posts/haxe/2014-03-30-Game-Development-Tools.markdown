@@ -57,7 +57,7 @@ categories: haxe
  
 	> BFXR 是一个移植于 AS3 SFXR 并改进添加了更多特性.It has moved in the direction of increased complexity and range of expression.
 
-<br />
+
 
 
 ### 其它
@@ -70,4 +70,3 @@ categories: haxe
 
  * http://7soul1.deviantart.com/?rnrd=74632 图像
 
-<br />

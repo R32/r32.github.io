@@ -31,7 +31,7 @@ ocamlc -o hello Hello.ml
 Hello world!
 ```
 
-<br />
+
 
 基础知识
 -----
@@ -52,7 +52,7 @@ comment
 *)
 ```
 
-<br />
+
 
 
 #### 调用函数
@@ -73,7 +73,7 @@ f 5 (g "hello") 3    (* f 有 3 个参数, g 有 1 个参数 *)
 f (g 3 4)            (* f 有 1 个参数, g 有 2 个参数 *)
 ```
 
-<br />
+
 
 
 #### 函数定义
@@ -122,7 +122,7 @@ List.map (fun i -> i*2) [1;2;3];;
 
 还有个 [function](#function) 的形为蛮复杂的, 放在后边再说.
 
-<br />
+
 
 
 #### 基本类型
@@ -149,7 +149,7 @@ string      字符串不是 (lists of characters)字符列表, 它有它自已�
 unit        Written as (),写成空括号(), 将会被解析成 unit, 有点像 C 语言中的 void
 ```
 
-<br />
+
 
 
 #### 显式转换
@@ -184,7 +184,7 @@ float i +. f
 
 **请注意和 C 语言不一样, 一个类型和一个函数具有相同的名称 这是完全有效的**
 
-<br />
+
 
 #### 普通函数和递归函数
 
@@ -215,7 +215,7 @@ let positive_sum a b =
 
 在 let 和 let rec 定义的函数之间并没有性能差异, 所以如果你愿意可以一直使用 `let rec`, 并得到 C 语言相同的语义.
 
-<br />
+
 
 #### 函数类型
 
@@ -255,7 +255,7 @@ let give_me_a_three x = 3;;
 参看 [函数定义](#函数定义) 那一小节, ocaml 不需要声明函数或变量的类型
 
 
-<br />
+
 
 
 Ocaml程序的结构
@@ -300,19 +300,19 @@ let f a b =
   ;;
 ```
 
-<br />
+
 
 #### 全局变量
 
 即全局表达式, 我们也可以在 top level 中像上边定义局部变量那样定义全局变量, 但实际上那些都不是真正的变量, 只是缩写别名.
 
-<br />
+
 
 #### let
 
 任何 let ..., 无论是在 top level (全局) 还是在函数内部, 称为 let-绑定
 
-<br />
+
 
 #### 引用
 
@@ -347,7 +347,7 @@ my_ref := 100;;				*my_ptr = 100;
 !my_ref						*my_ptr
 ```
 
-<br />
+
 
 #### 嵌套函数
 
@@ -386,7 +386,7 @@ let read_whole_channel chan =
 
 通常我们如上面的例子中那样让函数定义缩进，如果你函数是递归的记住用let rec代替let，如上面的例子中那样。
 
-<br />
+
 
 #### 模块和open
 
@@ -396,13 +396,13 @@ OCaml带有很多有趣的模块（含有用代码的库）。例如标准模块
 
 例如如果想用Graphics中的函数，存在两种方法。一是在程序开头声明open Graphics;;。二是在所有函数调用前加上前缀，比如Graphics.open_graph。`open` 有点象Java中的 `import` 语句，不过更象Perl中的 use语句。
 
-<br />
+
 
 #### Pervasives模块
 
 有一个模块我们无需使用"open"。这就是Pervasives模块. (我的cygwin 在 `/lib/ocaml` 目录下)
 
-<br />
+
 
 #### 重命名模块
 
@@ -418,7 +418,7 @@ read_line ();;
 
 实际上这在引入一个嵌套模块（模块可以被嵌套）而又不想每次键入完整路径名的时候非常有用。
 
-<br />
+
 
 #### 使用;;或;或两者都不用
 
@@ -507,7 +507,7 @@ let name [parameters] = expression
 let sum_list = List.fold_left ( + ) 0
 ```
 
-<br />
+
 
 数据类型和匹配
 ------
@@ -868,7 +868,7 @@ val to_string : expr -> string = <fun>
 但有时候并不需要匹配所有 constructor ,所以表达式 `| e -> e` 将代替所有剩余的模式, 相当于其它语言中 `switch` 中的 `default:` (注: 在 haxe 中,如果 switch 中检测 enum 时值也是如此.)
 
 
-<br />
+
 
 空指针,断言和警告
 ------
@@ -928,7 +928,7 @@ open Printf
 eprintf("message")
 ```
 
-<br />
+
 
 
 函数式编程
@@ -1123,7 +1123,7 @@ let bar = function
 bar Zh;; (* - : int = 1 *)
 ```
 
-<br />
+
 
 模块
 ------
@@ -1216,7 +1216,7 @@ ocamlopt -c amodule.ml
 
 (注: 官方文档也没解释什么是 签名(signature). 不过个人感觉 从后边的子模块来看, 签名只是子模块对接口的另一种叫法)
 
-<br />
+
 
 #### 抽像类型
 
@@ -1366,7 +1366,7 @@ open Extensions
 List.optmap ...
 ```
 
-<br />
+
 
 
 条件 循环 递归
@@ -1699,7 +1699,7 @@ String.fill 和 String.blit 分别是 C 语言 memset 和 strcpy, String.copy �
 
 (注: 通道(channel) 应该就是所谓的 **文件流** 吧,类似于 stderr,stdio,stdin 之类的)
 
-<br />
+
 
 
 扩展
@@ -1771,7 +1771,7 @@ $ ./fib 20
 ```
 
 
-<br />
+
 
 ocaml 命令行
 ------

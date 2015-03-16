@@ -100,6 +100,6 @@ jekyll: command not found, 需要添加路径 `export PATH=$HOME/bin:$PATH`
 
 
 
-<br />
+
 
 [Jekyll]:http://jekyllrb.com/

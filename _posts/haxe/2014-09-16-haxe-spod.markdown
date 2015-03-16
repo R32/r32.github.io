@@ -9,8 +9,6 @@ categories: haxe
  
 <!-- more -->
 
-<br />
-
 ### 创建 SPOD
 
 通过继承 `sys.db.Object`, 
@@ -498,8 +496,4 @@ SDate 是二进制的 blob. 为了允许任何类型的序列化(文本或二进
 ### 自动插入,搜索,编辑生成
 
 [SpodAdmin](http://github.com/ncannasse/spodadmin) 项目提供了一个基于 HTML 的界面, 允许插入和搜索/编辑和删除 SPOD 对象根据已编译的 SPOD 信息, 它还允许数据库同步根据 SPOD 结构在编译时自动检测差异在编译时和当前 DB之间.  
-
-
-
-<br />
 

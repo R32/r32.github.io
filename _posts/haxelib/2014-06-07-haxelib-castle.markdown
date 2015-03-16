@@ -28,7 +28,7 @@ categories: haxelib
  
 <!-- more -->
 
-<br />
+
 
 ### 安装
 
@@ -68,7 +68,7 @@ categories: haxelib
 
  * **帮助文档** 在解压包的 www 目录 中. 当处于 Node Webkit　时,可以点开 标题菜单的 dev 打开 控制台, 输入 `_.data` 将是 你用 这个编辑器输入的 JSON 数据.
 
-<br />
+
 
 ### 列类型
 
@@ -201,7 +201,7 @@ private typedef Init = haxe.macro.MacroType < [cdb.Module.build("test.cdb")] > ;
 ```
 
 
-<br />
+
 
 ### 更多特性
 
@@ -214,7 +214,7 @@ private typedef Init = haxe.macro.MacroType < [cdb.Module.build("test.cdb")] > ;
  * Add Group 
 
 
-<br />
+
 
 
 ### 其它
@@ -233,7 +233,7 @@ private typedef Init = haxe.macro.MacroType < [cdb.Module.build("test.cdb")] > ;
 
 
 
-<br />
+
 
 
 ### 个人感觉

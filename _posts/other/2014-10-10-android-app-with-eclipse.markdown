@@ -21,7 +21,7 @@ categories: other
 
 <!-- more -->
 
-<br />
+
 
 ### Hello World
 
@@ -81,7 +81,7 @@ public class Helo extends Activity {
 
 ```
 
-<br />
+
 
 
 ### AndroidManifest
@@ -90,7 +90,7 @@ public class Helo extends Activity {
 其它链接: [中文](http://wiki.eoeandroid.com/Android_Manifest)
 
 
-<br />
+
 
 
 ### 其它
@@ -176,7 +176,7 @@ Theme.Dialog.AppError
 Theme.Dialog.RecentApplications
 ```
 
-<br />
+
 
 
 

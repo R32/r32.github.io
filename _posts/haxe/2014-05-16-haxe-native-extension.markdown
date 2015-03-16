@@ -131,7 +131,7 @@ haxe -cpp hbin -main Test1
 copy ndll\windows\ext.ndll hbin\
 ```
  
-<br />
+
 **使用 openfl** 编译到平台 
 
  * 需要将 myext 添加到 haxelib 本地库.否则oepnfl在分析 ndll 路径时将出错.
@@ -194,5 +194,5 @@ copy ndll\windows\ext.ndll hbin\
 	 lime test project.xml android
 	 ```
 	
-<br />
+
 

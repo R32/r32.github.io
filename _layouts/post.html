@@ -7,21 +7,26 @@
     <title>{{ page.title }}</title>
     <link rel="stylesheet" type="text/css" href="/assets/css/metro-bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="/assets/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/github-markdown.css" />
     <style type="text/css">
-      div.post{
-        font-size:15px;
-      }      
-      div.post blockquote p {
-        color:#666666;
-        font-size: 14px
-      }
-      div.post li{
-        margin: 15px 0;
-      } 
+    /* 调整左边的浮动 table of contents */
+    .bs-sidenav {
+      background-color: transparent;
+    }
+    .bs-sidebar .nav > .active > a,
+    .bs-sidebar .nav > .active:hover > a,
+    .bs-sidebar .nav > .active:focus > a {
+      color: #428bca;
+      border-right: 1px solid #428bca;
+    }
+
+    .bs-sidebar.affix-top{
+      padding-top: 4px;
+    }
     </style>
     <!--[if lt IE 9]>
       <script type="text/javascript" src="/assets/js/html5shiv.js"></script>
-        <script type="text/javascript" src="/assets/js/css3-mediaqueries.js"></script>
+      <script type="text/javascript" src="/assets/js/css3-mediaqueries.js"></script>
     <![endif]-->
   </head>
     <body>
@@ -29,14 +34,14 @@
           {% include header.html %}
          <div id="mainContainer" class="container row-fluid">       
           <div class="col-md-3">
-            <div class="bs-sidebar hidden-print affix-top" role="complementary" data-spy="affix">
+            <div class="bs-sidebar hidden-print affix-top" role="complementary" data-spy="affix" data-offset-top="4">
             </div>
           </div>
 
           <div class="col-md-9 container" role="main">
             <h2 style="margin-top:0">{{ page.title }}</h2>
             <p class="text-muted">{{ page.date | date: '%Y年%m月%d日 %H:%MGMT+8' }} <a href="{{site.doc_url_path | append: page.path}}" target="_blank" class="badge doc-edit" data-toggle="tooltip" title=" 如有错误可点击尝试修改 ">改正错误...</a></p>
-            <div class="post">{{ content }}</div>   
+            <div class="markdown-body">{{content}}</div>   
           </div> 
 
           
@@ -48,8 +53,41 @@
       </div>
 {% include footer.html %}<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
 <script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/assets/js/toc.js"></script>
+<script type="text/javascript" src="/assets/js/setImmediate.js"></script>
 <script type="text/javascript">
-  $('a.doc-edit:first').tooltip({placement: 'right'});
+  jQuery('a.doc-edit:first').tooltip({placement: 'right'});
+
+  // 关于 toc.js
+  // 移除了 16,17,18 行的 encodeURIComponent
+  var eToc = jQuery('#mainContainer .bs-sidebar:first');
+
+  eToc.toc({
+      noBackToTopLinks: true,
+      showEffect: "none",
+      title: '',
+      listType: 'ul class="nav bs-sidenav"'         // 这里我修改了 toc.js 的第 78 行
+  });
+
+  setImmediate(function(){
+    // 当 table of content 高度大于 窗口时,固定住而不是, 不再考虑窗口的 resize 事件
+    if((eToc.height() + 40) >= jQuery(window).height()){
+      $(window).off('.affix');
+      eToc.removeAttr("data-spy").removeClass("affix");
+      return;
+    } 
+
+    try{
+      jQuery('body').scrollspy({
+        target:'div.bs-sidebar:first',
+        offset: $('#header').outerHeight(true) + 4
+      });
+    }catch(err){
+     console && console.log("已知如果 ID 中包含有 () 则将失败");
+    }
+
+  });
+
 
 /*  
   // 暂时不使用评论.

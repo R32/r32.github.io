@@ -3,14 +3,14 @@
 /**
 * Code hightliht
 */
-.highlight  { background: #ffffff; font-family: Consolas,"Liberation Mono","Courier New",Courier,monospace;}
-.highlight .c { color: #777777; } /* Comment */
+.highlight  { background: #ffffff;}
+.highlight .c { color: #999988; font-style: italic } /* Comment */
 .highlight .err { color: #a61717; background-color: #e3d2d2 } /* Error */
 .highlight .k { font-weight: bold } /* Keyword */
 .highlight .o { font-weight: bold } /* Operator */
 .highlight .cm { color: #999988; font-style: italic } /* Comment.Multiline */
 .highlight .cp { color: #999999; font-weight: bold } /* Comment.Preproc */
-.highlight .c1 { color: #777777; } /* Comment.Single */
+.highlight .c1 { color: #999988; font-style: italic } /* Comment.Single */
 .highlight .cs { color: #999999; font-weight: bold; font-style: italic } /* Comment.Special */
 .highlight .gd { color: #000000; background-color: #ffdddd } /* Generic.Deleted */
 .highlight .gd .x { color: #000000; background-color: #ffaaaa } /* Generic.Deleted.Specific */
@@ -64,39 +64,6 @@
 .highlight .vi { color: #008080 } /* Name.Variable.Instance */
 .highlight .il { color: #009999 } /* Literal.Number.Integer.Long */
 
-blockquote{
-  border-left: 4px solid #DDD;
-}
-
-code, tt {
-    background-color: #F8F8F8;
-    border-radius: 3px;
-    border: 1px solid #DDD;
-    margin: 0px 2px;
-    padding: 0px 5px;
-    font-family: Consolas,"Liberation Mono","Courier New",Courier,monospace;
-    color:#555;
-    font-size:14px;
-    white-space: nowrap;
-}
-
-
-.highlight code,.highlight tt{
-  border: 0;
-}
-
-em code{
-  color:#C7254E;
-  font-style: normal;
-}
-
-h1 code,h2 code,h3 code,h4 code,h5 code,h6 code{
-  font-size: inherit;
-  border:0;
-  margin:0;
-  padding:0;
-}
-
 
 /*
  for IE 
@@ -106,9 +73,6 @@ h1 code,h2 code,h3 code,h4 code,h5 code,h6 code{
 @-ms-viewport       { width: device-width; }
 @-o-viewport        { width: device-width; }
 @viewport           { width: device-width; }
-
-
-
 
 
 /* Custom page CSS
@@ -155,9 +119,6 @@ body {
 #footer > div.container{
   padding-top: 1.5em;
 }
-
-
-div.bs-sidebar.affix {display:none;}
 
 #mainContainer div.bs-docs-section{
   margin:15px 0 22px 0;
@@ -251,11 +212,6 @@ div.bs-sidebar.affix {display:none;}
  * sections of docs content.
  */
 
-/* By default it's not affixed in mobile views, so undo that */
-.bs-sidebar.affix {
-  position: static;
-  margin-top: 2px;
-}
 
 /* First level of nav */
 .bs-sidenav {
@@ -295,10 +251,16 @@ div.bs-sidebar.affix {display:none;}
   padding-left: 30px;
 }
 
+.bs-sidebar.affix-top{
+  padding-top: 2px;
+}
+
+@media all and (max-width: 991px) {
+  div.bs-sidebar{display: none;}
+}
+
 /* Show and affix the side nav when space allows it */
 @media all and (min-width: 992px) {
-
-  div.bs-sidebar.affix {display: block;}
   
   #mainContainer div.bs-docs-section{
     margin:22px 0 32px 0;
@@ -321,16 +283,15 @@ div.bs-sidebar.affix {display:none;}
   }
   /* Widen the fixed sidebar */
   .bs-sidebar.affix,
-  .bs-sidebar.affix-bottom {
+  .bs-sidebar.affix-top{
     width: 213px;
   }
+
   .bs-sidebar.affix {
     position: fixed; /* Undo the static from mobile first approach */
     
   }
-  .bs-sidebar.affix-bottom {
-    position: absolute; /* Undo the static from mobile first approach */
-  }
+
   .bs-sidebar.affix-bottom .bs-sidenav,
   .bs-sidebar.affix .bs-sidenav {
     margin-top: 0;
@@ -341,7 +302,7 @@ div.bs-sidebar.affix {display:none;}
 
 @media all and (min-width: 1200px) {
   /* Widen the fixed sidebar again */
-  .bs-sidebar.affix-bottom,
+  .bs-sidebar.affix-top,
   .bs-sidebar.affix {
     width: 263px;
   }
@@ -352,9 +313,6 @@ div.bs-sidebar.affix {display:none;}
 hr.gh{ background:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAECAYAAACtBE5DAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6OENDRjNBN0E2NTZBMTFFMEI3QjRBODM4NzJDMjlGNDgiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OENDRjNBN0I2NTZBMTFFMEI3QjRBODM4NzJDMjlGNDgiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo4Q0NGM0E3ODY1NkExMUUwQjdCNEE4Mzg3MkMyOUY0OCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo4Q0NGM0E3OTY1NkExMUUwQjdCNEE4Mzg3MkMyOUY0OCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PqqezsUAAAAfSURBVHjaYmRABcYwBiM2QSA4y4hNEKYDQxAEAAIMAHNGAzhkPOlYAAAAAElFTkSuQmCC") repeat-x scroll 0px 0px transparent; border:0px none; color:#CCCCCC; height:4px; margin:15px 0px; padding:0px; }
 h1,h2,h3,h4,h5,h6{font-family:'微软雅黑'}
 
-div.post h1,div.post h2,div.post h3,div.post h4,div.post h5,div.post h6{
-  line-height:1.1; margin-bottom:10px; margin-top:30px;
-}
 
 .zh-st{
   font-family: "宋体"
@@ -375,8 +333,6 @@ div.post h1,div.post h2,div.post h3,div.post h4,div.post h5,div.post h6{
 }
 
 div.excerpt{font-size: 90%;}
-
-div.excerpt h4,div.excerpt h3{color:#777; font-size: 15px}
 
 div.excerpt a{
   color: #555;

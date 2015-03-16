@@ -8,7 +8,7 @@ categories: other
 
 由于国内使用 irc 客户端的很少, 而 webchat.freenode.com 又引用了 google 的文件，国内因被墙而打不开,尝试使用 haxe 写一个客户端, 桌面端用 flash, 基它 html5, 服务器连接选择 freenode
 
-<br />
+
 
 <!-- more -->
 
@@ -213,7 +213,7 @@ SETNAME <new real name>					# 允许客户端更改 真实姓名(real name), 当
 										# 非 RFC 标准, 但一些 IRC Daemons 支持. 通过 RPL_ISUPPORT 检测是否支持
 ```
 
-<br />
+
 
 ### freenode
 
@@ -264,9 +264,9 @@ nodejs 源码参考: https://github.com/gf3/IRC-js
 
 
 
-<br />
 
-<br />
+
+
 
 RFC 1459
 ------
@@ -566,4 +566,3 @@ IRC 协议是一个基于文本的协议，以及能够连接到服务器的最�
 ##### 频道管理者(Channel Operators)
 
 频道管理者(同样被称为 "chop" 或 "chanop")
-<br />

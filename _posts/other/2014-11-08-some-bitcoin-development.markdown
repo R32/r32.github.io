@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  虚拟币开发相关
+title:  加密货币开发
 date:   2014-11-08 10:7:26
 categories: other
 ---
@@ -10,7 +10,7 @@ categories: other
 
 <!-- more -->
 
-### 基础
+#### 基础
 
 首先是些基础概念, 这些可以在网络搜索得到.  比特币结合P2P对等网络技术和密码学原理，来维持发行系统的安全可靠性。与有中心服务器的中央网络系统不同，在P2P网络中无中心服务器，每个用户端既是一个节点，也有服务器的功能，任何一个节点都无法直接找到其他节点,必须依靠其户群进行信息交流。
 
@@ -29,7 +29,7 @@ categories: other
 ![btc-gen-key](/assets/img/btc-gen-key.png)
 
 
-<br />
+
 
 然后下边是主要是 haxe 源码 https://github.com/cbatson/hxBitcoin 的 readme 文件内容.
 

@@ -11,7 +11,7 @@ categories: haxelib
  
 <!-- more -->
 
-<br />
+
 
 haxe.unit test
 ------
@@ -67,7 +67,7 @@ public function testArray(){
 }
 ```
 
-<br />
+
 
 haxelib munit
 ------
@@ -138,7 +138,7 @@ haxelib run munit gen -filter ExampleTest
  6. 使用这个测试框架时, 有时候关联的 haxelib 太多经常不能通过测试编译
 
 
-<br />
+
 
 
 依赖
@@ -158,4 +158,4 @@ munit 上边的内容已经够用了, 只是这个类依赖的库有些多,
 
 [hamcrest](https://github.com/mikestead/hamcrest-haxe)
 
-<br />
+

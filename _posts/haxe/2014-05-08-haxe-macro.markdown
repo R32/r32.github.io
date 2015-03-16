@@ -14,7 +14,7 @@ categories: haxe
 > 最新的[官网参考](http://haxe.org/manual/macro.html)
 
 <!-- more -->
-<br />
+
 
 条件编译
 ------
@@ -102,7 +102,7 @@ class Foo{
 ```
 
  
-<br />
+
 
 其它:
 
@@ -130,7 +130,7 @@ class Foo{
 	#end
 	```
 
-<br />
+
 
 宏
 ------
@@ -435,7 +435,7 @@ The syntax for reification is `macro expr`, where `expr` is any valid Haxe expre
     	}
     }
  	```
-<br />
+
 
 
 #### Compiler
@@ -523,7 +523,7 @@ setFieldType(className:String, field:String, type:String, isStatic:Bool = null):
 setOutput(fileOrDir:String):Void
 ```
 
-<br />
+
 
 
 #### Context
@@ -694,7 +694,7 @@ unify(t1:Type, t2:Type):Bool
 // Displays a compilation warning msg at the given Position pos
 warning(msg:String, pos:Position):Void
 ```
-<br />
+
 
 #### 宏构建
 
@@ -714,7 +714,7 @@ build宏函数 与 普通的宏函数不一样的地方:
 
 [build 一个示例]({% post_url haxe/2014-05-13-tips-on-haxe %}#自定义元标记-metadata), 其实 haxelib heaps 库中 hxd 目录下有很多很好的宏构建示例
 
-<br />
+
 
 **在宏构建方法中, 使用 macro 关键字能省很多麻烦的事情**, 比如宏动态创建字段时: 注意 kind 字段
 
@@ -737,7 +737,7 @@ public static function buildMIN(){
 }
 ```
 
-<br />
+
 
 #### 宏高级特性
 
@@ -777,7 +777,7 @@ public static function buildMIN(){
 
  * 基准测试 / 优化 (Benchmarking / Optimization)
 
-<br />
+
 
 #### 其它
 
