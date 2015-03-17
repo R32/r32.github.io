@@ -24,6 +24,29 @@
     .bs-sidebar.affix-top{
       padding-top: 4px;
     }
+
+
+	@media print {
+		#header{
+			display: none;	
+		}
+
+		#footer{
+			display:none;
+		}
+
+		#mainContainer div.col-md-3{
+			display: none;
+		}
+
+		#mainContainer div.col-md-9{
+			width: 100%;
+		}
+
+		#mainContainer a.doc-edit{
+			display:none;
+		}
+	}
     </style>
     <!--[if lt IE 9]>
       <script type="text/javascript" src="/assets/js/html5shiv.js"></script>
