@@ -23,19 +23,15 @@ categories: haxelib
 
 <!-- more -->
 
- * **[hxparse](https://github.com/Simn/hxparse/)** haxe Lexer/Parser library
-
-	> haxe 词法分析器
+ * **[hxparse](https://github.com/Simn/hxparse/)** haxe Lexer/Parser library 词法分析器
 
  * **[format](https://github.com/HaxeFoundation/format)** 用于解析各种文件或数据.
 
- 
  * **[datetime](https://github.com/RealyUniqueName/DateTime)** [Haxe UTC时区处理]({%post_url haxe/2014-09-13-tips-on-haxe-2%}#时区处理)
-
 
  * **[unifill](https://github.com/mandel59/unifill)** Shim your code to support Unicode across all platforms.
 
-	> neko 以及 cpp 是无法检测中文字符串长度的. 
+	> 默认情况的 neko 以及 cpp 是无法检测中文字符串长度的. 
 
  * **[hxsl](https://github.com/ncannasse/hxsl)** 但是目前感觉 heaps 库下的 hxsl 才是最新的
 
@@ -58,7 +54,7 @@ categories: haxelib
 
  * **[heaps(h3d)](https://github.com/ncannasse/heaps)**
 
-	> 大神的游戏引擎,使用 stage3D,webGl,openGl, 没有文档, 未发布过,但是已经有他自已的几个大游戏使用
+	> 使用 stage3D,webGl,openGl, 没有文档, 未发布
 
  * **[haxeflixel](https://github.com/haxeflixel)**
 
@@ -278,107 +274,11 @@ categories: haxelib
 	}
 	```
 	
- * **[openfl-bitfive](https://github.com/YellowAfterlife/openfl-bitfive)**
+ * **[openfl-bitfive](https://github.com/YellowAfterlife/openfl-bitfive)** readme 上写着比 openfl 默认的 **html5后端** 更好.
 
-	> readme 写着比 openfl 默认的 **html5后端** 更好.
-	
- * **[mcli](https://github.com/waneck/mcli)** 简单创建 CLI 程序,mcli 可以把 文档注释 通过宏处理变成 相应的帮助,这点非常好.
-
-	```bash
-	## 用于字段上元标记
-	@:skip						# 避免 public 字段被 宏 解析成 命令参数
-	@:msg(string)				# 添加附属的说明, 常用于添加　分隔线
-	
-	## 用于 注释中的元数据
-	@alias <name>				# 别名, 常用于做一个 单字母的别名, 对于单字母可以用一个 -　调用
-	@command <name>				# 更改命令的实际名称, 常用于 将 map 字段更名为 D
-	@region <string>			# 同 @:msg(string), 注: 换行符 需要有空格字符作参数的 @region
-	@key <name>					# 将默认说明用的 key 改为其它字符, 参见下列示例的 var D:Map<String,String>;
-	@value <name>				# 同@key, 将默认说明用的 value 改为其它字符, 
-	
-	## 高级 
-	# 重要说明 方法 的参数类型可以为 Array<String> 但是参数名必须为 varArgs 或 rest, 这个特性常用于 runDefault 方法的参数
-	# Dispatch.addDecoder 可用于添加自定义的 解释器, 必须在 new Dispatch 之前调用, 参看 sample/git/
-	# 可以添加 sub command, 记得继承类加 @:keep, 参看 sample/git/
-	
-	```
-	
-	```haxe
-	/**
-	* 类注释将被解析成帮助信息, 比如 copyright 之类的信息
-	*/
-						// 在编译时,记得加上 -D use_rtti_doc, 如果你使用了 -lib mcli 则不需要做这一步
-	@:keep				// 推荐添加, 继承了 CommandLine 可以加上 @:keep 防止被 -dce full 清除 
-	class Test extends mcli.CommandLine{
-		
-		/**
-		* 这个参数的帮助信息, 如果命令行中有 --cache 将会使这个变量变为 true
-		* 当名字只有一个字母时, 可以使用一个减号(-),这里可以用 -c 来代替 --cache
-		* @alias c
-		*/
-		public var cache:Bool = false;
-		
-		/**
-		×　记住这个标记是加上 类字段上的, 非 public 的字段不需要加这个也会被忽略
-		*/
-		@:skip
-		public var skip:Bool;
+ * [mcli](https://github.com/waneck/mcli)  to easily create CLI applications [中文说明]({% post_url haxelib/2014-07-06-cn-haxelib-mcli %})
 			
-		/**
-		* 支持 map 类型, 
-		* 原本为 -D key=value 通过 @key和@value 将显示为 -D property=val
-		* @command D
-		* @key property
-		* @value val
-		*/
-		public var map:Map<String,String> = new Map();
-		
-		/**
-		* 当调用 --help 或 -h 时将调用这个方法
-		* @alias h
-		* @region ---------------------------
-		**/
-		public function help(){
-			Sys.println(this.showUsage());
-		}
-		
-		/**
-		* 方法接受参数, 参数数量随意
-		*/
-		@:msg("\n\n=========================")
-		public function sum(a:Int, b:Int){
-			Sys.println(a + b);
-		}
-		
-						// runDefault 是一个很重要的方法, 常用来接收不带 `-` 的参数
-						// 这个方法的参数数量任意, 可以通过 preventDefault() 来禁用这个方法
-						// 当 `neko test.n hehe` 时,将输出: typed: hehe
-						// 但是 `neko test.n hehe haha` 有二个参数和下边方法定义参数个数不一致，这时只会输出帮助信息
-						// 例: neko test.n -D hello=world hehe 或 neko test.n hehe -D hello=world
-		public function runDefault(?name:String) {
-			if(name != null){
-				var stak = new Array<String>();
-				for(k in map.keys()){
-					stak.push(k + ":" + map.get(k));
-				}
-				Sys.println("typed: " + name);
-				Sys.println("Define: " + stak.join(", "));
-			}else{
-				this.help();
-			}
-			
-		}
-		
-		static function main() {
-						// 如果是 nodejs, Sys.args() 记得要手动删除命令自身的参数
-			new mcli.Dispatch(Sys.args()).dispatch(new Test());
-		}
-	}
-	```
-	
- * [hxargs](https://github.com/Simn/hxargs)
-
-	> 简单创建 CLI 程序, 帮助写在自定义的元标签 `@doc` 上.
+ * [hxargs](https://github.com/Simn/hxargs) 简单创建 CLI 程序, 帮助写在自定义的元标签 `@doc` 上.
 
  * [Cocktail](https://github.com/silexlabs/Cocktail)
 

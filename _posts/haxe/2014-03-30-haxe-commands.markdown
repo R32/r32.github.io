@@ -17,7 +17,6 @@ haxedoc 命令已经被弃用,而改用了另一个叫haxelib dox, **但是** �
  * [如何生成 Haxe API 文档]({% post_url haxe/2014-05-5-haxe-doc-gen %})
 
 
-
 <!-- more -->
 
 
@@ -48,7 +47,7 @@ haxelib 用于管理 haxe库,  `haxelib run libname` 可以调用指定库下边
 	    set       : 设定库的版本, 用于多个版本库的选择, 注意:如果通过 haxelib dev 指定了开发版本, 那么 dev 版本仍优先于指定的版本号
 		
 		# https://github.com/HaxeFoundation/hxcpp/issues/143
-		# 似乎已经和 delete 一起被移除了,因为感觉没什么用.
+		# haxe 3.2 new 和 delete 已经更名为 newrepo 以及 deleterepo
 	    new       : 创建新的本地仓库, 将在当前目前创建一个 .haxelib 的目录, 当位于这个目录上时, haxelib 的所有操作将指向这个新建的目录
 	    delete    : 删除 new 创建的本地仓库(将从磁盘中), 
 	  
@@ -125,19 +124,17 @@ haxelib 用于管理 haxe库,  `haxelib run libname` 可以调用指定库下边
 
 ### hxml
 
-通常 hxml 是用于编译 hx 代码的默认文件, 需要注意的是 有一个特殊的叫 `extraParams.hxml` 的文件, 这个文件一般在一些 haxelib 中可以见到(和 haxelib.json 位于同级目录), 用于当使用 -lib libname 编译时附加一些编译参数. 如果是基于 openfl 的项目库,那么这个特殊文件将是 `include.xml`
+hxml 就是将命令行下输入的 haxe 命令的文件形式, 需要注意的是 有一个特殊的叫 `extraParams.hxml` 的文件, 这个文件一般在一些 haxelib 中可以见到(和 haxelib.json 位于同级目录), 用于当使用 -lib libname 编译时附加一些编译参数. 如果是基于 openfl 的项目库,那么这个特殊文件将是 `include.xml`
 
 hxml 的内容为 haxe --help 中的命令. 注释用 # 符号.简单示例:
 
 ```bash
-# 这个符号后接的为注释内容
-# 使用宏, 
+# 这个符号后接的为注释内容 
 --macro Sys.println('Begin...')
 -cp src
 -lib format
-
-# 指示入口类
 -main Main
+-js main.js
 ``` 
 
 
@@ -163,8 +160,6 @@ nekotools 是一个安装 haxe 时附带的强力工具,nekotools 很简单只�
  * **`nekotools boot`**	将 neko平台的 .n 文件转换成独立的 exe 文件
 
  	> 转换成的 exe 文件,需要 neko 环境才能运行(安装了haxe), 如果没有, 可以复制 neko 所需要的 dll 文件和 exe 文件放同一目录就行了.
-
-
 
 
 ### haxe
@@ -344,15 +339,12 @@ Haxe Compiler 3.2.0 - (C)2005-2015 Haxe Foundation
 --help  Display this list of options
 ```
 
-haxe --help-defines, haxe Compiler Flag 
+
+#### defines
+
+haxe --help-defines. 使用 -D 设定, 一些和上边重叠的不会再描述. 例如 `haxe -dce full` 和 `haxe -D dce=full` 将产生一样的效果.
 
 **注意:** 如果你想在 条件编译 或 宏代码 中访问这些定义,应该将 减号(-)替换成 下划线(_)
-
-使用 -D 设定下列值, 一些和上边重复的不会再描述. 例如 `haxe -dce full` 和 `haxe -D dce=full` 将产生一样的效果.
-
-在代码中可以通过调用 Context.defined 检测是否定义 或用 Context.definedValue 检测其值
-
-这个列表按文件名排序, 并且没有按平台把它们区分开来: 
 
 ```bash
 # 在 trace 语句中 打印绝对路径
@@ -556,7 +548,9 @@ vcproj                 : GenCPP internal
 
 ```
 
-haxe --help-metas, 这类元标记一般添加在代码中, 也可以在 宏(macro) 中添加. 有些标签需要详细说明, 需自行搜索
+#### metas
+
+haxe --help-metas, 这类元标记一般添加在代码中, 也可以在 宏(macro) 中添加.
 
 ```bash
 @:abi                : Function ABI/calling convention (cpp only)
@@ -778,7 +772,8 @@ haxe --help-metas, 这类元标记一般添加在代码中, 也可以在 宏(mac
                        
 @:readOnly           : Generates a field with the 'readonly' native keyword (cs only)
 
-# ??? 一个示例 用于 宏构建的接口 https://github.com/ncannasse/hxsdl/blob/master/sdl/NativeWrapper.hx
+# 添加在 interface 之前, 用于移除所有实现类的 interface 代码 在编译之前, 
+# 目的是减小输出文件大小, 也就是说在输出时,根本就不存在 interface 相关的代码，但是所有 实现类却都实现 interface
 @:remove             : Causes an interface to be removed from all implementing classes before generation
 
 # 宏条件, 需要满足条件才能访问这个类的所有字段.
@@ -840,7 +835,7 @@ haxe --help-metas, 这类元标记一般添加在代码中, 也可以在 宏(mac
 ```
 
 
-
+### 其它
 
 
 #### 缓存编译
@@ -864,6 +859,7 @@ haxe --times --connect 6000 build.hxml
 lime build flash --connect 6000 --times
 ```
 
+**实际上** flashdevelop 可以在　`工具-> 设置-> HaxeContext` 里设置, 将 Completion Mode 改为 CompletionServer 就行了, 这样偶尔会出错, 如果出错，更新(touch)下出错的文件就 ok 了.
 
 
 
