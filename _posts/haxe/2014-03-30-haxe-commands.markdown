@@ -37,7 +37,7 @@ haxelib 用于管理 haxe库,  `haxelib run libname` 可以调用指定库下边
  * 命令行, 注: 很多命令是交互式的, 会提示你如何操作
 
 	```bash		
-	Haxe Library Manager 3.1.0-rc.4 - (c)2006-2013 Haxe Foundation
+	Haxe Library Manager 3.2.0-rc.1 - (c)2006-2015 Haxe Foundation
 	  Usage: haxelib [command] [options]
 	  Basic
 	    install   : 在线安装指定库, 或 hxml 文件中的所有库
@@ -47,27 +47,45 @@ haxelib 用于管理 haxe库,  `haxelib run libname` 可以调用指定库下边
 	    list      : 列出指定库或名称相匹配的库(如果指定参数)
 	    set       : 设定库的版本, 用于多个版本库的选择, 注意:如果通过 haxelib dev 指定了开发版本, 那么 dev 版本仍优先于指定的版本号
 		
-		            https://github.com/HaxeFoundation/hxcpp/issues/143
+		# https://github.com/HaxeFoundation/hxcpp/issues/143
+		# 似乎已经和 delete 一起被移除了,因为感觉没什么用.
 	    new       : 创建新的本地仓库, 将在当前目前创建一个 .haxelib 的目录, 当位于这个目录上时, haxelib 的所有操作将指向这个新建的目录
 	    delete    : 删除 new 创建的本地仓库(将从磁盘中), 
+	  
 	  Information
 	    search    : 在线搜询名称相关库, 
 	    info      : 在线列出指定库的详细信息, 全名匹配, 例: haxelib info lime
 	    user      : 列出指定用户的信息及这个用户提交的所有 haxe 库. 
 	    config    : 打印 haxelib 仓库所在目录(绝对路径)
 	    path      : 得到指定库的所在路径(绝对路径), 库的版本信息, 及　ndll 库目录(如果有的话)
+		version   : 当前 haxelib 自身版本
+		help      : 显示可选列表
+	  
 	  Development
 	    submit    : 提交或更新自已写的 haxe 库到　haxelib 服务器
 	    register  : 注册 haxelib 新用户
 	    local     : 离线方式安装库, 压缩包名字随意. 例: haxelib local xxx.zip
 	    dev       : 设置指定目录为库, 常用于 fork 别人的库 例: haxelib dev openfl fork_openfl_dir
 	    git       : 连接下载 git 版本库, 需要 git 命令支持
+	  
 	  Miscellaneous
 	    setup     : 设置 haxelib 仓库路径(默认为 haxe 根目录的 lib)
-	    selfupdate: 更新 haxelib 自身
+		
+		# 估计就是上边的被移除了的 new 和 delete
+		newrepo   : [EXPERIMENTAL] create a new local repository
+        deleterepo: delete the local repository
+	    
+		selfupdate: 更新 haxelib 自身
 	    convertxml: 转换 haxelib.xml 文件为 haxelib.json
 	    run       : 运行指定类库下的 run.n 文件
 	    proxy     : 设置 Http 代理.
+	  
+	  Available switches
+	    --flat    : do not use --recursive cloning for git
+	    --always  : answer all questions with yes
+	    --debug   : run in debug mode
+	    --never   : answer all questions with no
+	    --global  : force global repo if a local one exists	
 	
 	============== 一些常用命令 ==============
 		
@@ -157,13 +175,10 @@ nekotools 是一个安装 haxe 时附带的强力工具,nekotools 很简单只�
 
  * [haxe completion](http://haxe.org/manual/completion)
 
-Haxe Compiler 3.13 - (C)2005-2014 Haxe Foundation
-
- Usage: `haxe.exe -main <class> [-swf|-js|-neko|-php|-cpp|-as3] <output> [options]`
-
- Options :
-
 ```bash
+Haxe Compiler 3.2.0 - (C)2005-2015 Haxe Foundation
+ Usage : haxe.exe -main <class> [-swf|-js|-neko|-php|-cpp|-as3] <output> [options]
+ Options :
 
 # 添加源码目录, 通常我们习惯将源码放置于 src 目录下, 所以能经常看到 -cp src
 -cp <path>		: add a directory to find source files
@@ -229,16 +244,12 @@ Haxe Compiler 3.13 - (C)2005-2014 Haxe Foundation
 # 参见英文描述
 -swf-lib-extern <file> : use the SWF library for type checking
 
-# 参见英文描述
 -java-lib <file> : add an external JAR or class directory library	
 
-# 参见英文描述
 -net-lib <file>[@std] : add an external .NET DLL file
 
-# 参见英文描述
 -net-std <file> : add a root std .NET DLL search path
 
-# 参见英文描述
 -x <file> : shortcut for compiling and executing a neko file
 
 # 添加资源文件, 例: -resource path/hello.txt@hello
@@ -263,6 +274,9 @@ Haxe Compiler 3.13 - (C)2005-2014 Haxe Foundation
 
 # 分隔 haxe 编译, hxml 文件中经常能见到
 --next		: separate several haxe compilations
+
+# 用于 单个hxml文件(或单条CLI命令)的多目标编译, 在 --each 之前的参数将用于所有 --next
+--each
 
 # 这个命令是给 (代码编辑器)IDE 用的, 用于给 IDE 提供 语法智能提示
 # http://ncannasse.fr/blog/haxe_completion?lang=en
@@ -300,7 +314,7 @@ Haxe Compiler 3.13 - (C)2005-2014 Haxe Foundation
 # 或者像这样: haxe -cp src --macro Main.main()
 --macro 	: call the given macro before typing anything else
 
-# 大概是被 --macro 取代了的命令. 是直接运行指定的文件类, 相当于 --macro Main.main()
+# [隐藏]大概是被 --macro 取代了的命令. 是直接运行指定的文件类, 相当于 --macro Main.main()
 --run		: 直接运行指定的类, 以 neko 平台.
 
 # 运行代码. https://github.com/HaxeFoundation/haxe/pull/3309
@@ -316,9 +330,6 @@ Haxe Compiler 3.13 - (C)2005-2014 Haxe Foundation
 
 # 设置当前工作目录, 这个命令会影响到 缓存编译的　--wait 和 --connect
 --cwd <dir> : set current working directory
-
-# 用于 单个hxml文件(或单条CLI命令)的多目标编译, 在 --each 之前的参数将用于所有 --next
---each
 
 # 仅仅显示 haxe 当前版本
 -version : print version and exit
@@ -358,6 +369,9 @@ check-xml-proxy        : Check the used fields of the xml proxy
 
 core-api               : Defined in the core api context
 
+core-api-serialize     : Sets so some generated core api classes be marked 
+                         with the Serializable attribute on C#
+
 cppia                  : Generate experimental cpp instruction assembly
 
 dce                    : The current DCE mode
@@ -380,14 +394,27 @@ dump                   : Dump the complete typed AST for internal debugging
 
 dump-dependencies      : Dump the classes dependencies
 
+dump-ignore-var-ids    : Dump files do not contain variable IDs (helps with
+                          diff)
+
+erase-generics         : Erase generic classes on C#
+
 # 启用交互式调试的 Flash 内容。它在 SWF 输出中包含调试器标记，并添加额外的调试信息。这也将把 trace 输出重定向到 flashlog.txt, 而不是 swf 中的 Textfiled
 fdb                    : Enable full flash debug infos for FDB interactive debugging
+
+file-extension         : Output filename extension for cpp source code
 
 # 更严格的类型检测, 反正加上就是
 flash-strict           : More strict typing for flash target
 
 # 示例参看 http://old.haxe.org/doc/flash/preloader
 flash-use-stage        : Keep the SWF library initial stage. To be used together with -swf-lib. Place objects found on the stage of the SWF lib. (Not to be used together with -swf-header)
+
+force-lib-check        : Force the compiler to check -net-lib and -java-lib 
+                         added classes (internal)
+
+force-native-property  : Tag all properties with :nativeProperty metadata for 
+                         3.1 compatibility
 
 format-warning         : Print a warning for each formated string, for 2.x compatibility
 
@@ -412,10 +439,16 @@ js-classic             : Don not use a function wrapper and strict mode in JS ou
 
 js-es5                 : Generate JS for ES5-compliant runtimes
 
+js-unflatten           : Generate nested objects for packages and types
+
 # 使用更少的对象属性构建类, 例如: 默认情况下会创建的类有时似于 Main.a.b.c   加这个属性后将为 Main_a_b_c 这样就降低了访问对象的深度
+# [注] 或许 haxe 3.2 这个已经是默认属性了, 如果想换回以前的默认, 使用 js-unflatten
 js-flatten             : Generate classes to use fewer object property lookups
 
 keep-old-output        : Keep old source files in the output directory (for C#/Java)
+
+loop-unroll-max-cost   : Maximum cost (number of expressions * iterations)
+                          before loop unrolling is canceled (default 250)
 
 # 参看 haxe --help 中的 --macro
 macro                  : Defined when we compile code in the macro context
@@ -526,6 +559,7 @@ vcproj                 : GenCPP internal
 haxe --help-metas, 这类元标记一般添加在代码中, 也可以在 宏(macro) 中添加. 有些标签需要详细说明, 需自行搜索
 
 ```bash
+@:abi                : Function ABI/calling convention (cpp only)
 
 @:abstract           : Sets the underlying class implementation as 'abstract' (for cs,java)
 
@@ -574,7 +608,9 @@ haxe --help-metas, 这类元标记一般添加在代码中, 也可以在 宏(mac
 # 定义 abstract 核心类型 - 用于包装各平台底层数类型.
 @:coreType           : Identifies an abstract as core type so that it requires no implementation
 
-@:cppFileCode        :  (cpp only)
+@:cppFileCode        : Code to be injected into generated cpp file (cpp only)
+
+@:cppInclude         : File to be included in generated cpp file (cpp only)
 
 @:cppNamespaceCode   :  (cpp only)
 
@@ -591,7 +627,7 @@ haxe --help-metas, 这类元标记一般添加在代码中, 也可以在 宏(mac
 @:depend             :  (cpp only)
 
 # 如果一个字段或类, 被添加这个标记, 编译器将在编译时输出警告信息
-@:deprecated         : Automatically added by -java-lib on class fields annotated with @Deprecated annotation. Has no effect on types compiled by Haxe.
+@:deprecated         : Automatically added by -java-lib on class fields annotated with @Deprecated annotation. Has no effect on types compiled by Haxe.(java only)
 
 @:event              : Automatically added by -net-lib on events. Has no effect on types compiled by Haxe. (cs only)
 
@@ -638,11 +674,13 @@ haxe --help-metas, 这类元标记一般添加在代码中, 也可以在 宏(mac
 
 @:hack               : Allows extending classes marked as @:final
 
-@:headerClassCode    :  (cpp only)
+@:headerClassCode    : Code to be injected into the generated class, in the header (cpp only))
 
-@:headerCode         :  (cpp only)
+@:headerCode         : Code to be injected into the generated header file (cpp only)
 
-@:headerNamespaceCode:  (cpp only)
+@:headerInclude      : File to be included in generated header file (cpp only)
+
+@:headerNamespaceCode: (cpp only)
 
 @:hxGen              : Annotates that an extern class was generated by Haxe (for cs,java)
 
@@ -674,6 +712,8 @@ haxe --help-metas, 这类元标记一般添加在代码中, 也可以在 宏(mac
 @:keepSub            : Extends @:keep metadata to all implementing and extending classes
 
 @:macro              : (deprecated)
+
+@:mergeBlock         : Merge the annotated block into the current scope
 
 # 生成相应的 Flash 元数据, 例: @:meta(Event(name="test",type="Foo"))
 @:meta               : Internally used to mark a class field as being the metadata field. (flash only)
@@ -764,8 +804,16 @@ haxe --help-metas, 这类元标记一般添加在代码中, 也可以在 宏(mac
 # 嵌入声音文件到 swf 文件中去. 例: @:sound("file.wav|mp3") class MySound extends flash.media.Sound{}
 @:sound              : (File path)Includes a given .wav or .mp3 file into the target Swf and associates it with the class (must extend flash.media.Sound) (flash only)
 
+@:sourceFile         : Source code filename for external class (cpp only)
+
+@:strict             : Used to declare a native C# attribute or a native Java
+                        metadata. Is type checked (for cs,java)
+						
 @:struct             : Marks a class definition as a struct. (cs only)
 
+@:structAccess       : Marks an extern class as using struct access('.') not
+                        pointer('->') (cpp only)
+						
 @:suppressWarnings   : Adds a SuppressWarnings annotation for the generated Java class (java only)
 
 @:throws             : (Type as String)Adds a 'throws' declaration to the generated function. (java only)

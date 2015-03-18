@@ -16,9 +16,11 @@ categories: haxe
 
 编译标记即为使用 `-D` 定义的值, 通过 `haxe --help-defines` 查询所有内建定义
 
- * **`js-flatten`** 平坦模式. Generate classes to use fewer object property lookups
+ * ~~**`js-flatten`**~~ 平坦模式. Generate classes to use fewer object property lookups
 
 	> 使用更少的对象属性构建类, 例如: 默认情况下会创建的类有时似于 Main.a.b.c 加这个属性后将为 Main_a_b_c 这样就降低了访问对象的深度
+	
+ * **js-unflatten** 因为 haxe 3.2 中默认已经为 js-flatten 了, 
 	
  * **`embed-js`** 当调用到相关类时,自动嵌入 haxe 安装包标准库内部的 JS 文件.
 
@@ -44,9 +46,9 @@ categories: haxe
 	}	// 导出的JS代码为:	var Barr = require("http").Server;
 	```
 	
- * `@:expose(?Name=Class path)` Makes the class available on the window object (js only)
+ * **`@:expose(?Name=Class path)`** Makes the class available on the window object (js only)
 
-	> 将类导出到 window对象 下, 如果 window 未定义,则导出到 exports对象(nodejs) 下
+	> 如果没有定义默认不会导出, 这个元标记将类导出到 window对象 下, 如果 window 未定义,则导出到 exports对象(nodejs) 下
 
  * `@:initPackage` 用来初使化 包及路径 (仅限于 javascript)
 

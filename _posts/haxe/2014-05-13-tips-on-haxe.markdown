@@ -501,7 +501,43 @@ trace(s); // 2
 
 
 // Extractors . since Haxe 3.1.0
-// ......
+// http://haxe.org/manual/lf-pattern-matching-extractors.html
+enum Test {
+  TString(s:String);
+  TInt(i:Int);
+}
+
+class Main {
+  static public function main() {
+    var e = TString("fOo");
+    switch(e) {
+      case TString(temp):
+        switch(temp.toLowerCase()) {
+          case "foo": true;
+          case _: false;
+        }
+      case _: false;
+    }
+  }
+}
+
+// 使用 Extractors(=>) 语法之后为:
+enum Test {
+  TString(s:String);
+  TInt(i:Int);
+}
+
+class Main {
+  static public function main() {
+    var e = TString("fOo");
+    var success = switch(e) {
+      case TString(_.toLowerCase() => "foo"):
+        true;
+      case _:
+        false;
+    }
+  }
+}
 ```
 
 
