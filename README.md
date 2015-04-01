@@ -43,6 +43,13 @@ Liquid 模板语法参见  https://github.com/Shopify/liquid/wiki/Liquid-for-Des
 	> 抛弃变量 post.categories[0] 而转而使用 page.dir 来控制目录
 
 
+ * 2015-3-25
+
+  - 将 css3-mediaqueries.js 替换为 Respond.js, 将 html5shiv 与 respond 整合为 lt-ie9 文件
+
+  - 添加  IE10 viewport hack 于 comm.js
+
+  - 尝试修正 ie8　的 strick-footer 的显示问题, 但最后维持不变,因为新的解决方法不适合文档页面
 
 
 #### 需要做的
@@ -51,6 +58,21 @@ Liquid 模板语法参见  https://github.com/Shopify/liquid/wiki/Liquid-for-Des
 
  * 找到合适的 **个人** 模板, 
 
+ * 一些颜色值
+
+	```bash
+	blue:	#4183c4
+	green:	#6cc644
+	red:	#bd2c00
+	orange:	#f93
+	purple:	#6e5494
+
+	gray-light:	#999
+	gray:		#666
+	gray-dark:	#333
+	```
+
+颜色值来自 http://primercss.io/colors/
 
 #### 主要设计结构
 
@@ -88,7 +110,6 @@ Liquid 模板语法参见  https://github.com/Shopify/liquid/wiki/Liquid-for-Des
 
 #### 错误
 
-~~目前在 Cygwin 下安装 jemoji 时出错.~~
 
 
 

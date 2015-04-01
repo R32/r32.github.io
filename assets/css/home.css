@@ -1,0 +1,77 @@
+#header{
+	position: absolute;
+	width: 100%;
+	top:0;
+	left:0;
+	z-index: 990;	/* slick 插件的 fade 模式设置的是 900,在 IE 中*/
+	background-color: transparent;
+	border-bottom-color: transparent;
+}
+
+
+#banner{
+
+}
+
+#banner .bs-warp{	
+	height: 500px;
+	margin: 0;
+	padding-top: 4em;
+	font-family: '微软雅黑',Arial,'宋体';
+	transition:background-color .8s linear;-webkit-transition:background-color .8s linear;-moz-transition:background-color .8s linear;
+}
+
+#banner .bs-container{	
+	background-color: transparent;
+	height: 100%;
+	color: #fff;
+	padding-right: 15px;	/* 调整 jumbotron 的 padding-left right */
+	padding-left: 15px;
+}
+
+/* 使用 css 控制颜色守滤 */
+.bg-purple{
+	background-color: #6e5494;
+	
+}
+.bg-dark{
+	background-color: #222;
+}
+
+.bg-blue{
+	background-color: #4183c4;
+}
+
+@media all and (min-width: 768px) {
+
+	#header a.zh-tf{
+		color: #eee;
+	}
+
+	#header .navbar-nav > li > a {
+		background-color: transparent;
+	}
+}
+
+/* 在IE 中这类语法需要放在 css 文件中去才会起作用 */
+@media all and (max-width: 768px) {
+	#header{
+		position: static;
+		background-color: #222;
+		margin:0;
+	}
+
+
+	#header .navbar-nav > li > a {
+		background-color:#222;
+	}
+	#header .navbar-nav > li > a:hover {
+		background-color:#555;
+	}
+
+	#banner .bs-warp{
+		padding:0;
+		height: 300px;
+	}
+
+}
