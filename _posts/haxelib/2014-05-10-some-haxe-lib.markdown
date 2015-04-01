@@ -56,7 +56,7 @@ categories: haxelib
 
 	> 使用 stage3D,webGl,openGl, 没有文档, 未发布
 
- * **[haxeflixel](https://github.com/haxeflixel)**
+ * [haxeflixel](https://github.com/haxeflixel)
 
 	> 全位图游戏引擎,社区以及周边都远比 haxepunk 强大
 

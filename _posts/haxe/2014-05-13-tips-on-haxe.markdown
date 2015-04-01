@@ -17,7 +17,7 @@ categories: haxe
 
  * [windows-installer 最新的开发版本下](http://hxbuilds.s3-website-us-east-1.amazonaws.com/builds/haxe/windows-installer/haxe_latest.tar.gz) 由于目前无法访问 google.api,所以 build.haxe.org 内容为空.
 
- * 对于命令行(CLI)程序, 文件代码应该为 anti ,dos 中才会正确显示中文.
+ * 对于命令行(CLI)程序, 文件代码应该为 ansi ,dos 中才会正确显示中文.
 
  * 字面量初使化 Map 的格式为:  `var map = [ 1 => 10, 2 => 20, 3 => 30]`
 
@@ -144,7 +144,13 @@ categories: haxe
 
   - flashdevelop
 
-		> ![flashdevelop setting](/assets/img/fd_setter_completionServer.png) 
+		> ![flashdevelop setting](/assets/img/fd_setter_completionServer.png)
+		
+ * ansi code `"A".code` 将会被编译成 65, 注意:只限于单字符
+
+ * field 和 property的区别
+
+	> field 是用 var 声明的普通变量, 而 property 是带用 setter/getter 的变量
 
 
 

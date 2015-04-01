@@ -43,7 +43,7 @@ categories: other
  
 	> GUI 这里需要自已单击已经修改了的冲突文件,而不是点击 缓存 按钮
 
- * **rebase**
+ * rebase
 
   - `git rebase bob/master` 这个命令比 merge 要好,如果 fork 别的人项目
 
@@ -73,3 +73,24 @@ git submodule add 仓库地址 本地存放路径
 git submodule init
 git submodule update
 ```
+
+
+#### 其它
+
+windows 同一台电脑多账号提交到 github, 最好的方法是 为不同账号创建 用户, 这样 ssh 便不会冲突,　**只在提交的时候** 切换`win+L`一下用户就行了
+
+记得保存 msysgits 或 ssh 工具生成的 `C:\Documents and Settings\%user%\.ssh` 目录下的文件,以方便移到其它计算机上
+
+msysgits 右键菜单移除, 添加的话 去掉 参数 /u 就行了
+
+```bat
+:: 64-Bit Windows
+cd "C:\Program Files (x86)\Git\git-cheetah"
+regsvr32 /u git_shell_ext64.dll
+
+:: 32-Bit Windows
+cd "C:\Program Files\Git\git-cheetah"
+regsvr32 /u git_shell_ext.dll
+```
+
+注: windows 多用户登录时指定默认的用户, `win+r` 之后键入:`control userpasswords2` 在打开的面板中将 "要使用本机用户必须键入密码" 的勾去掉,然后确定.挑选一个默认用户就行了

@@ -7,7 +7,7 @@ categories: haxe
 
 ---
 
-这里主要描述 haxe安装包下, haxe, haxelib, nekotools 三个命令,  haxe 命令行会经常在 .hxml 文件中用到
+主要描述 haxe, haxelib, nekotools 三个命令, haxe 命令行会经常在 .hxml 文件中用到
 
 
 ### haxedoc
@@ -120,8 +120,6 @@ haxelib 用于管理 haxe库,  `haxelib run libname` 可以调用指定库下边
 
  * 开发并上传库 见:[haxe.org/com/haxelib](http://haxe.org/com/haxelib)
 
-
-
 ### hxml
 
 hxml 就是将命令行下输入的 haxe 命令的文件形式, 需要注意的是 有一个特殊的叫 `extraParams.hxml` 的文件, 这个文件一般在一些 haxelib 中可以见到(和 haxelib.json 位于同级目录), 用于当使用 -lib libname 编译时附加一些编译参数. 如果是基于 openfl 的项目库,那么这个特殊文件将是 `include.xml`
@@ -135,17 +133,14 @@ hxml 的内容为 haxe --help 中的命令. 注释用 # 符号.简单示例:
 -lib format
 -main Main
 -js main.js
-``` 
-
+```
 
 
 ### nekotools
 
-nekotools 是一个安装 haxe 时附带的强力工具,nekotools 很简单只有二个命令
+nekotools 是一个安装 haxe 时附带的工具,nekotools 很简单只有二个命令
 
- * **`nekotools --help`**
-
- * **`nekotools server`** 建立一个 web 服务器,可以用于 http 服务
+ * **`nekotools server`** 建立一个 web 服务器,可以用于 http 服务,这样可以不再依赖 apache 或 nigix
 
 	> nekotools server 不仅仅能将 html 输出到浏览器,还能处理 neko 文件并输出.
 
@@ -153,11 +148,12 @@ nekotools 是一个安装 haxe 时附带的强力工具,nekotools 很简单只�
 	#做网页相关的东西时,很多功能需要以 http 的形式访问才能正常.
 	#不带参数快速绑定当前目录到 localhost:2000
 	nekotools server
+	
 	# 绑定 d:\dev 目录到 0.0.0.0:80
 	nekotools server -p 80 -h 0.0.0.0 -d d:\dev
 	```
-
- * **`nekotools boot`**	将 neko平台的 .n 文件转换成独立的 exe 文件
+	
+ * `nekotools boot`	将 neko平台的 .n 文件转换成独立的 exe 文件
 
  	> 转换成的 exe 文件,需要 neko 环境才能运行(安装了haxe), 如果没有, 可以复制 neko 所需要的 dll 文件和 exe 文件放同一目录就行了.
 
@@ -262,7 +258,7 @@ Haxe Compiler 3.2.0 - (C)2005-2015 Haxe Foundation
 # 编译时忽略所有 trace 语句
 --no-traces	: do not compile trace calls in the program
 
-# 解析 flash 的 swf/swc 库并自动生成 extern class, 感觉是一个自动写 extern class 的工具, 可惜只能用于 flash 库.
+# 解析 flash 的 swf/swc 库并自动生成 extern class, 感觉是一个自动写 extern class 的工具, 只能用于 flash.
 # 既然 haxe 能直接使用 swc 库, 个人感觉 就已经不需要 extern class 类了.也就是说 --gen-hx-classes 多余了.
 # 示例: haxe -swf empty.swf --no-output -swf-lib some.swc --gen-hx-classes
 --gen-hx-classes : generate hx headers for all input classes
@@ -372,7 +368,7 @@ dce-debug              : Show DCE log
 
 debug                  : Activated when compiling with -debug
 
-# 在 openfl 项目的源码经常能看到, 用来给 IDE 提供语法提示用的., 也就是说 #if display #end 之间的内容是提供给 代码编辑器 用来做一些语法智能提示.
+# 用来给 IDE 提供语法提示用的., 也就是说 #if display #end 之间的内容是提供给 代码编辑器 用来做一些语法智能提示.
 display                : Activated during completion
 
 dll-export             : GenCPP experimental linking

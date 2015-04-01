@@ -30,6 +30,12 @@ http://yahoo.github.io/gifshot/
 
 这个章节的大多数内容都是用于美化的 CSS 或 Javascript , 大多数似乎在 ie8 中都会报错.
 
+ * **(Primer)[https://github.com/primer/primer]** Github 官方的 CSS 前端设计
+
+  - 几个颜色值 http://primercss.io/colors/
+
+ * **(holder)[https://github.com/imsky/holder]** 生成图像占位符,但是不需要
+
  * **[网页设计](https://github.com/showcases/design-essentials)** 这个是 github 自已整理的
 
  * **[Frontend stuff](https://github.com/moklick/frontend-stuff)** 前端资源
@@ -76,11 +82,8 @@ http://usablica.github.com/intro.js/
 
 
 
-#### 未分类
+#### 收集
 
  * [awesome-nodejs](https://github.com/sindresorhus/awesome-nodejs) 收集了一些有趣的 nodejs库
 
-
-
-
-
+<br />

@@ -7,101 +7,139 @@ categories: haxe
 
 ---
 
-内容已经发生更改, 现在主要是记录对 haxelib **hxcpp** 的认识
+当把 haxe 代码编译成 cpp 时, 需要[haxelib hxcpp](https://github.com/HaxeFoundation/hxcpp) 的支持。　这里主要记录一些和 hxcpp 相关的东西, 由于我没有找到 hxcpp 的相关文档, 因此不证内容的正确性.
 
-原生扩展提供 Haxe 代码的接口, 如果你想要创建您自己的本地扩展，您可以找到一些教程, [haxeflixel 的文章](http://haxeflixel.com/documentation/native-extensions/).
+
+### Hello World
+
+```haxe
+class Main{
+	public function new(){
+		trace("Hello World!");
+	}
+	public static function main(){
+		new Main();
+	}
+}
+```
+
+hxcpp 会自动根据平台选择不同的 C++编译器. 任意平吧上编译命令为: `haxe -main Main -cpp cpp`
 
 <!-- more -->
 
+### Tips
 
-#### 简介
+ * 第一次编译到 cpp 时会需要花一定时间, 之后就会很快　
 
-[hxcpp](https://github.com/HaxeFoundation/hxcpp) 是 haxe 编译器的后端 C++ 运行时支持, 这包含 头文件, 库 和从 haxe 源码生成可执行文件所需代码. 使用这个库时你需要对不同平台(windows, linux, mac) 重新编译生成静态链接库, 不同平台所依赖的编译器也不同.可以在 toolchain 目录找到这些配置:
+ * 实际上你可以在 neko 中快速开发及测试,因为 cpp 和 neko 的 API 基本一致,等到将要 release 时再以 hxcpp 编译
 
+
+
+### 细节
+
+一个 hxcpp 示例: https://github.com/ncannasse/hxsdl 不过有些复杂.
+
+#### defines
+
+内容有些长，而且没有说明.　http://haxe.org/manual/target-cpp-defines.html
+
+#### metas
+
+In order to [improve support for interacting](http://haxe.1354130.n2.nabble.com/hxcpp-native-access-td6968232.html) with CPP
+
+```bash
+@:headerCode("#include <stdio.h>")	# Inject code into class header file - eg for types of injected members.
+@:headerClassCode("code")			# Inject code into header class definition - eg member variables/functions.
+@:cppFileCode("code")				# Inject code into top of cpp file
+									# eg local includes, local functions, static variables.
+@:functionCode("code")				# Inject code into top of function - eg, whole implementation.
+@:functionTailCode("code")			# Inject code into end of function
+									# eg, close functionCode, or continue processing.
+@:buildXml("xml fragment")			# Inject code into the bottom of the build.xml code.
+@:cppNamespaceCode("code")			# ...
+@:headerNamespaceCode("code")		# ...
+@:noStack 				# ...
+@:depend("code")		# Add a dependency in the build.xml file.
+@:include("ClassName")	# Generate "#include ..." to .h/.cpp where the class is being imported.
 ```
-windows:	MSVC 或 MingW
-linux:		GCC
-mac:		GCC;需要xcode环境
-ios:		GCC;需要xcode环境
-android:	NDK
-emscripten:		
-blackberry:
-tizen:
-webos:		PalmPDK
-```
 
- * C++ 代码可以先在 neko 平台中快速测试,调整. 最后再以 cpp 的形式 release.
+#### 调试
 
+http://gamehaxe.com/2012/09/14/hxcpp-built-in-debugging/
 
+### 编译外部库
 
-#### 将源码编译为外部库
-
-直接将外部库编译成 静态链接库, 参考 nme-dev 的 readme, 通常只要模仿 xml 文件然后用 hxcpp 编译就完成了.
-
+直接将外部库编译成 静态链接库, 参考 [nme-dev](https://github.com/haxenme/nme-dev) 的 Readme
 
 一个基于 hxcpp 的项目的　文件夹组织
 
-```
-include			C/C++ 项目源码 依赖的头文件,
-tools			一些命令行工具类源码, 如果通常这个文件夹内会包含  run.n, build.n 的源码等等
-project			依赖的 C/C++ 项目源码, 一般通过 haxelib run hxcpp Build.xml 或 neko build.n 编译
-lib				编译了的 C/C++ 项目源码的　中间文件,
-ndll 			haxelib run hxcpp Build.xml 的最终结果
+```bash
+include/			# C/C++ 源码所依赖的头文件,
+lib/				# 编译 C/C++ 时的中间文件,
+project/			# C/C++ 源码目录
+tools/				# 一些命令行工具类源码, 如果通常这个文件夹内会包含  run.n, build.n 的源码等等
+ndll/ 				# 最终结果目录, 不同平台将分开在各自的目录
 ```
 
- * 通过 project 目录下的 Build.xml
+编译, 一般通过 haxelib run hxcpp Build.xml 或者 neko build.n
 
- * 通过　继承 hxcpp 库目录下的 hxcpp/Builder.hx 生成 build.n
+ * Build.xml 目前我没找到自动生成的方法,只能照着别的库写
+
+ * build.n 是通过编译了 hxcpp/Builder.hx 或它的继承类
+
+```bash
+cd project
+haxelib run hxcpp Build.xml								# 如windows系统 则在 ndll/windows/ 生成 .ndll 文件	
+haxelib run hxcpp Build.xml -Dandroid					# 在ndll/android/下 生成 .so 文件
+haxelib run hxcpp Build.xml -Dandroid -DHXCPP_ARMV7		# armv7
+
+# mac 系统
+haxelib run hxcpp Build.xml -Diphoneos -DHXCPP_ARMV7	#需要 Xcode 环境
+```
+
+### CFFI
+
+.....
+
+#### openfl 的示例
+
+如果你使用 openfl 项目,那么运行 `lime create extension myext` 将创建一个 CFFI 样板文件
+
+```
+dependencies/		# android java 原生扩展, 相对于这篇文章主题可以不用关心它
+project/
+Myext.hx			# openfl 引用示例, - 文档类
+haxelib.json		# 如果要将这个库上传至 haxelib 
+include.xml			# openfl 引用示例, - 配置
+ndll/				
+```
+
+
+### 源码分析
+
+在 toolchain 目录下的 xml 文件可以找到这些平台支持细节
+
+```
+windows:		MSVC 或 MingW
+linux:			GCC
+mac:			GCC;需要xcode环境
+ios:			GCC;需要xcode环境
+android:		NDK
+emscripten:			
+blackberry:
+tizen:
+webos:			PalmPDK
+```
 
 解析 haxelib/run.n 源码:
 
  > 通过 `neko.vm.Loader.local().loadModule("./hxcpp.n")` 加载了 `hxcpp/tools/hxcpp/BuildTool.hx`
 
-解析 haxelib/hxcpp.n 源码:
+<br />
 
+### 旧的内容
 
-#### 编译标志
-
-.......
-
-#### 编译元标记
-
-.......
-
-#### CFFI
-
-快速示例: 需要安装 openfl 的 lime 才能做这些.
-
- * 运行 `lime create extension myext` 快速创建样板文件. lime 属于 openfl 库
-
-	> 这时当前目录将得到一个名为 myext 的示例目录.
-
-	```bash
-	cd myext	# 进入到示例目录
-	# - - - - - -
-	dependencies/	# android java 原生扩展
-	ndll/			# 将包含已经编译好了的原生扩展库 
-	project/		# C源码
-	Myext.hx		# openfl 引用示例, - 文档类
-	haxelib.json	# 如果要将这个库上传至 haxelib 
-	include.xml		# openfl 引用示例, - 配置
-	```
-
- * 编译 C 源码
-
-	> 查看头文件 `hx/CFFI.h`
-
-	> C 源码的写法请参照 project/common 下的 cpp 文件
-
-	 ```bash
-	 cd project
-	 haxelib run hxcpp Build.xml	#如windows系统 则在 ndll/windows/ 生成 .ndll 文件	
-	 haxelib run hxcpp Build.xml -Dandroid	# 在ndll/android/下 生成 .so 文件
-	 haxelib run hxcpp Build.xml -Dandroid -DHXCPP_ARMV7	# armv7 
-	
-	 # mac 系统
-	 haxelib run hxcpp Build.xml -Diphoneos -DHXCPP_ARMV7	#需要 Xcode 环境
-	 ```
+从这里开始往下, 是以前旧的内容, 随时将会被删除
  
 **不使用 openfl** 编译为 cpp 或 neko
 
@@ -193,6 +231,3 @@ copy ndll\windows\ext.ndll hbin\
 	 lime test project.xml neko
 	 lime test project.xml android
 	 ```
-	
-
-

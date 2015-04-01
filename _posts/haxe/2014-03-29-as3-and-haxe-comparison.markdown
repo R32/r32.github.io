@@ -17,7 +17,7 @@ categories: haxe
 这个文档源文来自: [Haxeflixel's guide](http://haxeflixel.com/documentation/as3-and-haxe-comparison/).
 
 <!-- more -->
-<h3>Basic Types(基础类型)</h3>
+<h3 id="基础类型">Basic Types(基础类型)</h3>
 <div class="row">
   <div class="col-md-6 as3">
   <h4>AS3</h4>
@@ -49,7 +49,7 @@ Array<String>
 </div>
 <hr />
 
-<h3>Const (常量)</h3>
+<h3 id="常量">Const (常量)</h3>
 <div class="row">
 <div class="col-md-6 as3">
 <h4>AS3</h4>
@@ -71,7 +71,7 @@ static inline var MAX:Int = 100;
 </div>
 <hr />
 
-<h3>Package Declarations(包声明)</h3>
+<h3 id="包声明">Package Declarations(包声明)</h3>
 
 <div class="row">
 <div class="col-md-6 as3">
@@ -96,7 +96,7 @@ package com.example.myapplication;
 </div>
 
 <hr />
-<h3>Defining a Class(定义类)</h3>
+<h3 id="类定义">Defining a Class(定义类)</h3>
 
 <div class="row">
 <div class="col-md-6 as3">
@@ -131,7 +131,7 @@ class MyClass {
 </div>
 
 <hr />
-<h3>Loops(循环)</h3>
+<h3 id="循环">Loops(循环)</h3>
 <div class="row">
 <div class="col-md-6 as3">
 <h4>AS3</h4>
@@ -172,7 +172,7 @@ for (propertyName in fields) {
 </div>
 
 <hr />
-<h3>Switch Statements</h3>
+<h3 id="switch">Switch Statements</h3>
 
 <div class="row">
 <div class="col-md-6 as3">
@@ -213,7 +213,7 @@ switch (value) {
 </div>
 
 <hr />
-<h3>Type Inference(类型推断)</h3>
+<h3 id="类型推断">Type Inference(类型推断)</h3>
 
 <div class="row">
 <div class="col-md-6 as3">
@@ -242,7 +242,7 @@ var hi = "Hello World";
 </div>
 
 <hr />
-<h3>Type Casting(类型转换)</h3>
+<h3 id="类型转换">Type Casting(类型转换)</h3>
 
 <div class="row">
 <div class="col-md-6 as3">
@@ -275,7 +275,7 @@ var toInteger = Std.int (10.1);
 </div>
 
 <hr />
-<h3>Type Details</h3>
+<h3 id="类型细节">Type Details</h3>
 
 <div class="row">
 <div class="col-md-6 as3">
@@ -312,7 +312,7 @@ name = Type.getClassName (type);
 </div>
 
 <hr />
-<h3>Checking for Null</h3>
+<h3 id="是否为Null">Checking for Null</h3>
 
 <div class="row">
 <div class="col-md-6 as3">
@@ -343,7 +343,7 @@ if (object == null) {
 </div>
 
 <hr />
-<h3>Hash Tables</h3>
+<h3 id="哈希字典">Hash Tables</h3>
 
 <div class="row">
 <div class="col-md-6 as3">
@@ -388,7 +388,7 @@ table.remove ("key");
 </div>
 
 <hr />
-<h3>Rest Parameters(可变参数)</h3>
+<h3 id="可变参数">Rest Parameters(可变参数)</h3>
 
 <div class="row">
 <div class="col-md-6 as3">
@@ -419,7 +419,7 @@ Reflect.makeVarArgs (test) (1, 2, 3);
 </div>
 
 <hr />
-<h3>Reflection(反射)</h3>
+<h3 id="反射">Reflection(反射)</h3>
 
 <div class="row">
 <div class="col-md-6 as3">
@@ -446,7 +446,7 @@ Reflect.callMethod (this, bar, [ "hi" ]);
 </div>
 
 <hr />
-<h3>Function Types(函数类型)</h3>
+<h3 id="函数的类型">Function Types(函数类型)</h3>
 
 <div class="row">
 <div class="col-md-6 as3">
@@ -480,7 +480,7 @@ var type2:Dynamic = hello;
 </div>
 
 <hr />
-<h3>Getters and Setters</h3>
+<h3 id="Getter-Setters">Getters and Setters</h3>
 
 <div class="row">
 <div class="col-md-6 as3">
@@ -525,7 +525,7 @@ function set_x(value:Float):Float {
 
 
 <hr />
-<h3>Read-Only Properties(只读属性)</h3>
+<h3 id="只读属性">Read-Only Properties(只读属性)</h3>
 
 <div class="row">
 <div class="col-md-6 as3">
@@ -558,7 +558,7 @@ function set_y(v:Float):Float{
 
 
 <hr />
-<h3>延时</h3>
+<h3 id="延时">延时</h3>
 
 <div class="row">
 <div class="col-md-6 as3">
@@ -588,7 +588,7 @@ timer.stop(); // 取消
 </div>
 
 <hr />
-<h3>类实例对比</h3>
+<h3 id="等于">类实例对比</h3>
 
 <div class="row">
 <div class="col-md-6 as3">
@@ -622,7 +622,7 @@ trace(this == cast(root,DisplayObject));
 
 <hr />
 
-<h3>条件编译</h3>
+<h3 id="条件编译">条件编译</h3>
 <div class="row">
 <div class="col-md-6 as3">
 <h4>AS3</h4>
@@ -653,7 +653,7 @@ CONFIG::DEBUG{
 
 
 
-#### Additional Features
+### Additional Features
 
 Haxe 增加了一些 Actionscript 3 没有的语法特性:
 
