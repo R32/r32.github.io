@@ -19,7 +19,7 @@ if(!(/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/.test(naviga
 		allowFullscreen: {%if include.allowFullscreen %}"{{ include.allowFullscreen }}"{% else %}'true'{% endif %},
 		allowScriptAccess: {%if include.allowScriptAccess %}"{{ include.allowScriptAccess }}"{% else %}'always'{% endif %},
 		scale: {%if include.scale %}"{{ include.scale }}"{% else %}'noScale'{% endif %},
-		menu: {%if include.menu %}"{{ include.menu }}"{% else %}'false'{% endif %},
+		menu: {%if include.menu %}"{{ include.menu }}"{% else %}'false'{% endif %}
 		});
 }
 </script>
