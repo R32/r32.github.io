@@ -6,7 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="description" content="{{page.title}}" />
     <title>{{ page.title }}</title>
-    <link rel="stylesheet" type="text/css" href="/assets/css/metro-bootstrap.min.css" />
+	{% if site.use_cdn == true %}
+	<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css">
+	{% else %}
+	<link rel="stylesheet" type="text/css" href="/assets/css/bootstrap.min.css" />
+	{% endif %}    
     <link rel="stylesheet" type="text/css" href="/assets/css/custom.css" />
     <link rel="stylesheet" type="text/css" href="/assets/css/github-markdown.css" />
     <style type="text/css">
@@ -55,7 +59,7 @@
     <body>
       <div id="wrap">
           {% include header.html %}
-         <div id="mainContainer" class="container row-fluid">       
+         <div id="mainContainer" class="container row">       
           <div class="col-md-3">
             <div class="bs-sidebar hidden-print affix-top" role="complementary" data-spy="affix" data-offset-top="4">
             </div>
@@ -74,8 +78,13 @@
          </div>
         
       </div>
-{% include footer.html %}<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+{% include footer.html %}{% if site.use_cdn == true %}
+<script src="http://cdn.bootcss.com/jquery/1.11.2/jquery.min.js"></script>
+<script src="http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+{% else %}
+<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
 <script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
+{% endif %}
 <script type="text/javascript" src="/assets/js/comm.js"></script>
 <script type="text/javascript" src="/assets/js/toc.js"></script>
 <script type="text/javascript" src="/assets/js/setImmediate.js"></script>

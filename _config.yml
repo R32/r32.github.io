@@ -12,7 +12,6 @@ redcarpet:
 gems:
   - jekyll-sitemap
 
-# 更改这个配置文件需要重启一下
 destination: /cygdrive/r/_site
 
 
@@ -59,4 +58,6 @@ powered_by:
     url: pages.github.com
   - name: Metro Bootstrap
     url: talkslab.github.io/metro-bootstrap
+
+use_cdn: true
 
