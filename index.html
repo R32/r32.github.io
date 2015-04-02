@@ -2,9 +2,16 @@
 layout: home
 title: lwm
 ---
-<div class="jumbotron">
-  <h2 style="font-family:'微软雅黑'">未完成...</h2>
-  	<div id="swf_content"></div>
+<div class="row bs-section-1">
+ <div class="col-md-5 only-desktop">
+  <div id="swf_content"></div>
+ </div>
+ <div class="col-md-7">
+   <h2>旧的游戏音乐播放器</h2>
+   <p class="text-danger">使用 flash alchemy 编译了的 C++ Lib - Blargg 的音频库。</p>
+   <p><b class="only-desktop">双击播放!</b>,支持 NES,GBS,SPC,AY,GYM,HES,KSS...等游戏音乐文件,也可以将音乐文件压成 zip 加载</p>
+   <br />
+   <p><a class="btn btn-primary" href="https://github.com/R32/flash-gme" role="button">详细 »</a></p>
+ </div>
 </div>
-
 {% include insert-swf.html swf_url='/assets/swf/fixme.swf?file=/assets/swf/nsf.zip'  id='swf_content' width='135' height='168' init_js=true %}

@@ -16,11 +16,11 @@ categories: haxe
 
 编译标记即为使用 `-D` 定义的值, 通过 `haxe --help-defines` 查询所有内建定义
 
- * ~~**`js-flatten`**~~ 平坦模式. Generate classes to use fewer object property lookups
+ * ~~`js-flatten`~~ 平坦模式.  由于 haxe 3.2 中这将是默认行为,应此被移除
 
 	> 使用更少的对象属性构建类, 例如: 默认情况下会创建的类有时似于 Main.a.b.c 加这个属性后将为 Main_a_b_c 这样就降低了访问对象的深度
 	
- * **js-unflatten** 因为 haxe 3.2 中默认已经为 js-flatten 了, 
+ * **js-unflatten** 由于 haxe 3.2 已经默认为 js-flatten, 因此想反过来的话... 
 	
  * **`embed-js`** 当调用到相关类时,自动嵌入 haxe 安装包标准库内部的 JS 文件.
 

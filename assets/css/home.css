@@ -14,7 +14,7 @@
 }
 
 #banner .bs-warp{	
-	height: 500px;
+	height: 400px;
 	margin: 0;
 	padding-top: 4em;
 	font-family: '微软雅黑',Arial,'宋体';
@@ -48,7 +48,7 @@
 		color: #eee;
 	}
 
-	#header .navbar-nav > li > a {
+	#header .navbar-nav > li > a,#header .navbar-nav > li > a:hover {
 		background-color: transparent;
 	}
 }
@@ -74,4 +74,10 @@
 		height: 300px;
 	}
 
+}
+
+#swf_content{
+	float: right;
+	margin: 1.5em 0 0 0;
+	*margin-right: 1.5em;
 }

@@ -1,12 +1,43 @@
 <!DOCTYPE html>
-<html>
-    {% include head.html %}
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="{{page.title}}" />
+	<title>{{page.title}}</title>
+	{% if site.use_cdn == true %}
+	<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css">
+	{% else %}
+	<link rel="stylesheet" type="text/css" href="/assets/css/bootstrap.min.css" />
+	{% endif %}  
+	<link rel="stylesheet" type="text/css" href="/assets/css/custom.css" />
+	<link rel="stylesheet" type="text/css" href="/assets/css/home.css" />
+	<!--[if lt IE 9]>
+		<script type="text/javascript" src="/assets/js/lt-ie9.js"></script>
+	<![endif]-->
+	</head>
     <body>
       <div id="wrap">
-          {% include header.html %}
-         <div id="mainContainer" class="container">
+        {% include header.html %}
+		<div id="banner">
+			<div class="bs-warp bg-purple">
+				<div class="container jumbotron bs-container">
+					<div class="row">
+					 <div class="col-sm-5">			
+						<h1>更新中...</h1>
+						<p>写些什么了，或许有照片什么的会更好！</p>	
+					 </div>
+					</div> 
+				</div>
+			</div>
+		</div>
+		<div id="mainContainer" class="container" style="margin-top:3em;">
           {{content}}
-         </div>
+        </div>
       </div>
       {% include footer.html %}
 {% if site.use_cdn == true %}
@@ -17,5 +48,53 @@
 <script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
 {% endif %}
 <script type="text/javascript" src="/assets/js/comm.js"></script>
-    </body>
+<script type="text/javascript">
+    (function($) {
+        /**
+        * 依次给 Selector 更换 list 中的 className 值
+        * @return {Int} 如果 > 0,则为 可以被 clearInterval 清除的值
+        */
+        $.fn.turnClass = function (obj) {
+            // body...
+            var cfg = $.extend({
+               list  : [],              // css-className 数组清单
+               delay : 8000,
+               callback: null           // 接受 i 作为参数, i 表示为当前 list 的 索引值
+            }, obj || {});
+
+            if(this.length == 0 && cfg.list.length < 2){
+                return -1; 
+            }
+
+            cfg.i = 0;
+            cfg.node = this; 
+            
+            cfg.node.addClass(cfg.list[0]);          // 初使化为第一个 class
+
+            return setInterval(function(){
+                var ref = cfg;
+                ref.node.removeClass(ref.list[ref.i]);
+                ref.i += 1; 
+                if(ref.i >= ref.list.length){
+                    ref.i = 0;
+                }
+                ref.node.addClass(ref.list[ref.i]);
+                if(typeof ref.callback === "function"){
+                  ref.callback(ref.i);
+                }
+            },cfg.delay);
+        };
+    })(jQuery);
+
+
+    $("#banner .bs-warp:first").turnClass({
+        list: ["bg-purple","bg-dark"],
+        
+        // 变换 .active 的 bg-color
+        callback: function(i){$("#header li.active a:first").css("background-color", i == 0 ? "#4183c4" : "#6e5494");},
+
+        delay: 16000
+    });
+</script>
+</body>
 </html>

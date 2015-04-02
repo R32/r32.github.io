@@ -9,7 +9,7 @@ if(!(/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/.test(naviga
 		"{{include.id}}",
 		"{{include.width}}",
 		"{{include.height}}",
-		{%if include.ver %}"{{ include.ver }}"{% else %}'10.0'{% endif %},
+		{%if include.ver %}"{{ include.ver }}"{% else %}'10.3'{% endif %},
 		{%if include.expressInstall %}"{{ include.expressInstall }}"{% else %}null{% endif %}, // expressInstall
 		null, // flashval
 		{
@@ -21,5 +21,7 @@ if(!(/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/.test(naviga
 		scale: {%if include.scale %}"{{ include.scale }}"{% else %}'noScale'{% endif %},
 		menu: {%if include.menu %}"{{ include.menu }}"{% else %}'false'{% endif %}
 		});
+}else{
+	$(".only-desktop").hide();
 }
 </script>

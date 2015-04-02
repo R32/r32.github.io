@@ -51,6 +51,8 @@ Liquid 模板语法参见  https://github.com/Shopify/liquid/wiki/Liquid-for-Des
 
   - 尝试修正 ie8　的 strick-footer 的显示问题, 但最后维持不变,因为新的解决方法不适合文档页面
 
+  - 引用公共bootstrap cdn服务器上的 jQuery引bootstrap, 在 _config.yml 中添加 use_cdn 变量
+
 
 #### 需要做的
 

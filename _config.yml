@@ -56,8 +56,8 @@ custom_menu:
 powered_by:
   - name: Github Pages
     url: pages.github.com
-  - name: Metro Bootstrap
-    url: talkslab.github.io/metro-bootstrap
+  - name: Bootstrap v3
+    url: v3.bootcss.com
 
 use_cdn: true
 
