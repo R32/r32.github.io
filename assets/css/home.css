@@ -14,7 +14,7 @@
 }
 
 #banner .bs-warp{	
-	height: 400px;
+	height: 380px;
 	margin: 0;
 	padding-top: 4em;
 	font-family: '微软雅黑',Arial,'宋体';
@@ -71,7 +71,7 @@
 
 	#banner .bs-warp{
 		padding:0;
-		height: 300px;
+		height: 270px;
 	}
 
 }
