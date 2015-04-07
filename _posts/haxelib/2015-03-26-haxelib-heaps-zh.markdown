@@ -15,7 +15,9 @@ categories: haxelib
 Heaps 被设计成为一个跨平台的高性能游戏引擎. 利用现代 GPU 通常可用于桌面和移动设备上.
 
 Heaps 目前使用 OpenGL 支持 HTML5 WebGL, Flash Stage3D, 原生移动平台(IOS和Android)　以及 桌面平台
+
 <!-- more -->
+
 Heaps 主要包含下边几个包:
 
  * h2d 用于 2D
@@ -214,15 +216,18 @@ H2D中, 可以访问 Anim 的下边属性和方法:
 
 在文本处理之前, 我们必须了解 h2d.Font 类:
 
- 1. h2d.Font 管理所有字符所指向的 Tile: 用于显示文本字符
+ 1. `h2d.Font` 把它想像成是一个 BitmapFont 管理器, 即给出 指定字符便返回相对应的 Tile.
 
  2. Ressource 管理器可以轻松实例化 h2d.Font;
 
  3. 实例化 h2d.Font 我们必须:
 
-  - BitmapFont 或
+  - BitmapFont(对应 hxd.res.BitmapFont) 或
 
-  - True Type 字体(C++ 除外)(个人注:不推荐,因为这实际上只上只是动态创建了 bitmapfont)
+  - True Type 字体(C++ 除外)(个人注:不推荐,因为这实际上只上只是 **运行时动态创建 h2d.Font** -> 参看 `hxd.res.FontBuilder` )
+
+		> windows 系统, 如果资源文件夹找不到指定名称的字体,将会查找 `%system%\WINDOWS\Fonts\` 下的字体,
+		> 因此只要知道 字体名就行了
 
 
 别忘了将 资源文件夹的指向添加到编译参数 `-D resourcesPath=yourPath`, 默认为当前目录的 res 文件夹
@@ -234,7 +239,19 @@ H2D中, 可以访问 Anim 的下边属性和方法:
 var font = hxd.Res.customFont.toFont();
 ```
 
-这里推荐一个 BitmapFont 的生成工具 https://github.com/andryblack/fontbuilder
+个人补充:
+
+heaps 由于都是 bitmapFont,显示中文没问题,但是 无法调用 IME 输入中文. 如果需要输入需要创建一个 原生的输入框,
+
+ * `h2d.Font` 如前所述, 下边的几个类最终将返回这个类的实例
+
+ * `hxd.res.Font`: (仅flash和html5)当把 ttf 放到 资源文件夹(`-D resourcesPath=yourPath`), 那么这个 ttf 将被 资源管理器(hxd.Res) 自动解析为这个类. 这个类仅仅是获得 ttf 的字体名称,然后调用 FontBuilder.getFont
+
+ * `hxd.res.BitmapFont` 解析 png 和 fnt 文件,返回 h2d.Font
+
+ * `hxd.res.FontBuilder`: (仅flash和html5)根据字体名称动态创建 h2d.Font
+
+这里推荐一个 BitmapFont 的生成工具 https://github.com/andryblack/fontbuilder.
 
 #### H2D Text
 

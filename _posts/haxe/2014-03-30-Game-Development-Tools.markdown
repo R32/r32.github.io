@@ -6,8 +6,6 @@ categories: haxe
 ---
 
 
- **使用正确的工具能容易地创建游戏,如果你觉得有哪些好用的工具可以修改本文档.**
-
  * [LudumDare List](http://www.ludumdare.com/compo/tools/)
 
 	> LudumDare 用清单列出一些非常强大的工具用于一般游戏开发 

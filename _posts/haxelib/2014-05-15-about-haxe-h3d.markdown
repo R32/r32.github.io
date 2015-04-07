@@ -1,15 +1,15 @@
 ---
 
 layout: post
-title:  heaps
+title:  heaps 详细
 date:   2014-05-13 8:26:10
 categories: haxelib
 
 ---
 
-[**`heaps`**](https://github.com/ncannasse/heaps) 当目标平台为 flash 时将基于 flash.stage3D, 而 平台为 js 时, 将使用 webgl. 以前名字为 h3d, 如果需要使用以前旧的 h3d 版本, 在 github 页面上找到 h3d 这个分支即可
+这里主要写 heaps 下一些类的一些细节. 
 
-注: 很多说明都已经直接在 fork 版本的源代码中已经给出注释. 这里只是提到一下而已
+注: 很多说明都我已经直接在个人的 fork 版本的源代码中已经给出注释. 这里只是提到一下而已
 
 <!-- more -->
 
