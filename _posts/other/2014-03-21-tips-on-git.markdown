@@ -94,3 +94,14 @@ regsvr32 /u git_shell_ext.dll
 ```
 
 注: windows 多用户登录时指定默认的用户, `win+r` 之后键入:`control userpasswords2` 在打开的面板中将 "要使用本机用户必须键入密码" 的勾去掉,然后确定.挑选一个默认用户就行了
+
+
+<br />
+
+GIT Server
+------
+
+建立 Git 服务器, 在提交之后自动调用 sh 文件编译项目, 发邮件给成员.
+
+http://ju.outofmemory.cn/entry/16893
+

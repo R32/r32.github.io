@@ -241,6 +241,8 @@ Haxe Compiler 3.2.0 - (C)2005-2015 Haxe Foundation
 
 -net-std <file> : add a root std .NET DLL search path
 
+-c-arg <arg> : pass option <arg> to the native Java/C# compiler
+
 -x <file> : shortcut for compiling and executing a neko file
 
 # 添加资源文件, 例: -resource path/hello.txt@hello
@@ -276,7 +278,7 @@ Haxe Compiler 3.2.0 - (C)2005-2015 Haxe Foundation
 # 编译但是不输出, 通常用于测试是否能通过编译, 或 导出 API 注释文档(haxe -xml)时用到
 --no-output	: compiles but does not generate any file
 
-# 显示 编译花费的时间
+# 显示 编译所花费的时间
 --times		: measure compilation times
 
 # 停用 inline 关键字, inline 关键字将被忽略
@@ -430,8 +432,8 @@ js-es5                 : Generate JS for ES5-compliant runtimes
 js-unflatten           : Generate nested objects for packages and types
 
 # 使用更少的对象属性构建类, 例如: 默认情况下会创建的类有时似于 Main.a.b.c   加这个属性后将为 Main_a_b_c 这样就降低了访问对象的深度
-# [注] 或许 haxe 3.2 这个已经是默认属性了, 如果想换回以前的默认, 使用 js-unflatten
-js-flatten             : Generate classes to use fewer object property lookups
+# [注] haxe 3.2 这个已经是默认属性了, 如果想换回以前的默认, 使用 js-unflatten
+# js-flatten             : Generate classes to use fewer object property lookups
 
 keep-old-output        : Keep old source files in the output directory (for C#/Java)
 

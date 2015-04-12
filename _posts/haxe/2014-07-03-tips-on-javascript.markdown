@@ -16,7 +16,7 @@ categories: haxe
 
 编译标记即为使用 `-D` 定义的值, 通过 `haxe --help-defines` 查询所有内建定义
 
- * ~~`js-flatten`~~ 平坦模式.  由于 haxe 3.2 中这将是默认行为,应此被移除
+ * `js-flatten` [deprecated]平坦模式.  由于 haxe 3.2 中这将是默认行为,应此被移除
 
 	> 使用更少的对象属性构建类, 例如: 默认情况下会创建的类有时似于 Main.a.b.c 加这个属性后将为 Main_a_b_c 这样就降低了访问对象的深度
 	

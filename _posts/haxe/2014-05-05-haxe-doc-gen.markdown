@@ -9,10 +9,14 @@ categories: haxe
 
 目前 haxe 官方抛弃了以前旧的文档生成器, 而转而使用了 [haxe dox](https://github.com/dpeek/dox) 来构建 API 文档.
 
+参考这个库的 Readme 你能直接获得最新Haxe API. 
 
+ * 参考 gen.hxml 如何从 hx源码中导出 xml 文件,
+
+ * 参考 std.hxml 如何获得 API HTML
 <!-- more -->
 
-
+由于库的改动, 下边内容很可能不再适用.
 
 #### 注释内容规范
 

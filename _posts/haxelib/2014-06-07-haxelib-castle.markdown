@@ -34,7 +34,7 @@ categories: haxelib
 
  - 下载 [Node Webkit], 如果已有则可以跳过这一步.
 
- - 下载 [CastleDB],  ~~将 `bin` 目录下的文件打包成一个 zip 文件(注意 **不要包含** bin 目录名). 这里我们打包成 castle.zip~~
+ - 下载 [CastleDB]
 
 	> 如需在 haxe 中调用,　可以 haxelib dev 的方式添加到本地库.
 	
@@ -42,9 +42,7 @@ categories: haxelib
 	# castle-master 为　解压后所在文件夹
 	haxelib dev castle castle-master
 	```
-
- - ~~在 命令行下输入: `nw.exe castle.zip` 就行了. 最好是写一个 bat 文件. 示例如下:~~
-
+	
  - 当位于 castle 的目录中内时, 在命令行下输入: `nw.exe bin` 就行了. bin 为目录名
 
 	```bat

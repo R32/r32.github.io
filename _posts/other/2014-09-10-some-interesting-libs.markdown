@@ -30,11 +30,29 @@ http://yahoo.github.io/gifshot/
 
 这个章节的大多数内容都是用于美化的 CSS 或 Javascript , 大多数似乎在 ie8 中都会报错.
 
- * **(Primer)[https://github.com/primer/primer]** Github 官方的 CSS 前端设计
+
+ * [responsive-html-email-template](https://github.com/charlesmudy/responsive-html-email-template)  邮件模板,如果你想发广告的话.
+
+ * **[Primer](https://github.com/primer/primer)** Github 官方的 CSS 前端设计
 
   - 几个颜色值 http://primercss.io/colors/
 
- * **(holder)[https://github.com/imsky/holder]** 生成图像占位符,但是不需要
+ * **[holder](https://github.com/imsky/holder)** 生成图像占位符,但是不需要
+
+ * [webify](https://github.com/ananthakumaran/webify) 转换 ttf 到 woff, eot 和 svg
+
+	```css
+	@font-face {
+        font-family: 'my-font-family';
+        src: url('my-font-filename.eot');
+        src: url('my-font-filename.eot?#iefix') format('embedded-opentype'),
+        url('my-font-filename.svg#my-font-family') format('svg'),
+        url('my-font-filename.woff') format('woff'),
+        url('my-font-filename.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+    }
+	```
 
  * **[网页设计](https://github.com/showcases/design-essentials)** 这个是 github 自已整理的
 

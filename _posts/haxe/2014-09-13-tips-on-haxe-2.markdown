@@ -9,7 +9,15 @@ categories: haxe
  
 <!-- more -->
 
+#### 最新API
 
+参考 https://github.com/dpeek/dox/ 的 ReadMe, 为了方便离线访问, 你可能需要修改:
+
+ * std.hxml
+
+  - 将 `-D source-path https://github.com/HaxeFoundation/haxe/blob/development/std/` 改为自已的本地目录, 虽然浏览器打开 源码显示的不怎么好
+
+  - 将 `-theme haxe-api` 移除, 因为这个模板引用了 google 字体，默认的模板已经够了对于离线文档
 
 #### 杂项
 
@@ -259,8 +267,6 @@ Sys.sleep(3);
 
 
 #### Tls
-
-~~在 haxe 中 感觉和线程的的局部变量没区别, 也许只是 堆栈(局部)变量 和 tls 变量的区别. 在 主线程中创建 new Tls<T>(), 虽然各线程都能访问, 但各 tls.value  取到的值都为 null, 子线程无法获得 主线程中对 tls.value 的设置, 同样主线程中也无法获得 子线程对 tls.value 的赋值. 好像没什么用处, 注意和 ssl/tls 区别.~~
 
 作为 thread 的局部变量, 为解决多线程程序的并发问题提供了一种新的思路,  示例见 `std/haxe/io/FPHelper.hx`
 

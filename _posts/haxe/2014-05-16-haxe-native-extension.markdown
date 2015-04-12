@@ -67,6 +67,12 @@ In order to [improve support for interacting](http://haxe.1354130.n2.nabble.com/
 
 http://gamehaxe.com/2012/09/14/hxcpp-built-in-debugging/
 
+### CFFI
+
+一个工具能自动写一些模板 https://github.com/player-03/ExtensionBoilerplate
+
+实际上发现一些库并没有使用这种方法,如 hxsdl, 它是混合了 C++ 在 haxe 代码中.
+
 ### 编译外部库
 
 直接将外部库编译成 静态链接库, 参考 [nme-dev](https://github.com/haxenme/nme-dev) 的 Readme
@@ -97,9 +103,7 @@ haxelib run hxcpp Build.xml -Dandroid -DHXCPP_ARMV7		# armv7
 haxelib run hxcpp Build.xml -Diphoneos -DHXCPP_ARMV7	#需要 Xcode 环境
 ```
 
-### CFFI
 
-.....
 
 #### openfl 的示例
 
@@ -137,7 +141,9 @@ webos:			PalmPDK
 
 <br />
 
-### 旧的内容
+
+旧的内容
+------
 
 从这里开始往下, 是以前旧的内容, 随时将会被删除
  

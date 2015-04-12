@@ -51,7 +51,7 @@ categories: other
 	
 	4. `chere -u` 将移除右键菜单. 参看 `chere --help`
 
- 5. ~~ `gem install jekyll`~~ `gem install github-pages` 就可以完成安装.	
+ 5. `gem install github-pages` 就可以完成安装.	
 
 	> 如运行 gem install 时弹出 UTF之类的错误, 可以把 dos 窗口编码改成 英文.
 	> 左上角图标 -> 默认值 -> 默认代码页, 然后重新打开 
