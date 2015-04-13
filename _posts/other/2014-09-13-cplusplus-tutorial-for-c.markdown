@@ -60,6 +60,34 @@ categories: other
 		}	
 	};
 	```
+	
+ * 匿名 namespace
+
+	> 相对于 C 的 static 声明来说, 可以在匿名的空间里面声明很多变量和函数,这样可以省去了对每个变量和函数添加static声明.
+	> 实质上匿名空间的功能跟static声明是一样的
+	
+ * define 中的 `#` 和 `##`
+
+  - `#` 在宏展开时会将 `#` 后边的参数替换成字符串
+
+		```cpp
+		#define p(exp) printf(#exp)
+		// 调用 p(test) 展开后为: printf("test")
+		```
+
+  - `##` 将前后两个的单词拼接在一起。
+
+		```cpp
+		#define cat(x,y) x##y
+		// 调用 cat(var, 123) 展开后为: var123
+		```
+
+  - `#@` 将值序列变为一个字符
+
+		```cpp
+		#define ch(c) #@c
+		// 调用 ch(a) 展开后为: 'a'
+		```
 
 
 #### 头文件引用

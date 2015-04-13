@@ -444,7 +444,7 @@ haxe.macro.Compiler 的一些方法, 这个类的方法运行在编译时, 当�
 
 例如: 'haxe --macro define('SomeFlag','Hello')', 记得字符串用 **单引号** 而不是 双引号.
 
-[haxe 命令行编译参数]({% post_url haxe/2014-03-30-haxe-commands %}#haxe)
+[haxe 命令行编译参数]({% post_url haxe/2014-03-30-commands %}#haxe)
 
 ```haxe
 // 就像 haxe 编译的参数 -cp, 将指定的路径添加类路径
@@ -507,7 +507,7 @@ includeFile(fileName:Dynamic):Dynamic;
 */
 keep(path:String = null, paths:Array<String> = null, recursive:Bool = true):Void
 
-// 加载 flash 补丁文件, 因该只能用于 flash 端的 http://r32.github.io/{% post_url haxe/2014-05-10-tips-haxe-flash%}#patch-files
+// 加载 flash 补丁文件, 因该只能用于 flash 端的 http://r32.github.io/{% post_url haxe/2014-05-10-flash %}#patch-files
 patchTypes(file:String):Void
 
 // 移除指定字段

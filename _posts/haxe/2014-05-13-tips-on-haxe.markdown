@@ -68,6 +68,10 @@ categories: haxe
 
  * **重命名导入类名** 通过关键字 `in` 例如: `import pack.path.Cls in ReCls`,
 
+ * ansi code `"A".code` 将会被编译成 65, 注意:只限于单字符
+
+ * field 和 property 的区别, field 是用 var 声明的普通变量, 而 property 是带用 setter/getter 的变量
+
  * `__this__`  仅适用于 js 或 as , **慎用**
 
 	> 在 haxe 中即使是局部方法, this 的指向永远为其所在的类,而一些如 JS 或 AS 平台却不是这样. `__this__` 必须接在 `untyped` 之后, 以表式目标平台类的 `this`, 可以将下列代码编译成 JS,以区别不同之处.
@@ -112,7 +116,7 @@ categories: haxe
 	}
 	```
 	
- * 泛型方法中有 new Some<T>() 这样的创建泛型实例时, 最好加上 `@:generic` 元标记.
+ * 泛型构造方法中有 new Some<T>() 这样的创建泛型实例时, 最好加上 `@:generic` 元标记.
 
 	```haxe
 	// 如果这个方法是 new Array<T>(),倒是没什么错误, 但是
@@ -162,9 +166,11 @@ categories: haxe
  * Sys.command 和 sys.io.Process
 
 	> Sys.command 可以执行 dos 命令如 `dir`　和 一些 (WIN + R)可以运行的CLI命令, 而 sys.io.Process 只能运行后者.
-	>(注意: 不要运行 cmd 或类似程序)
+	>(注意: 不要运行 cmd 这个命令避免陷入死循环)
 	
-	> Sys.command 返回 0 表示程序以 exit(0) 的方式正常退出, 非 0 值一般意味着出错, 如果需要获得 CLI程序的输出值(stdout|stderr)则应该使用 sys.io.Process. 这二个都会等待 CLI程序**完全运行结束**（我只用 nodejs 的 setTimeout 测试过）.
+	> Sys.command 返回 0 表示程序以 exit(0) 的方式正常退出, 非 0 值一般意味着出错, 
+	
+	> 如果需要获得 CLI 程序的输出值(stdout|stderr) 则应该使用 sys.io.Process. 这二个都会等待 CLI程序**完全运行结束**（我只用 nodejs 的 setTimeout 测试过）.
 
  * **缓存编译** 绑定目录到指定端口,缓存编译, 这样编译时不必每次都解析所有 .hx 文件,而只会解析修改过的文件
 
@@ -181,9 +187,6 @@ categories: haxe
 
 		> ![flashdevelop setting](/assets/img/fd_setter_completionServer.png)
 		
- * ansi code `"A".code` 将会被编译成 65, 注意:只限于单字符
-
- * field 和 property 的区别, field 是用 var 声明的普通变量, 而 property 是带用 setter/getter 的变量
 
 #### 遇见的一些错误
 
@@ -373,8 +376,6 @@ var i:Null<Int> = null;
 #### 正则表达式
 
 Haxe has built-in support for [**regular expressions**](http://haxe.org/manual/std-regex.html).
-
-
 
 
 #### 静态扩展(Static Extension)
@@ -629,7 +630,7 @@ class Helo{
 
 [Tips and Tricks](http://haxe.org/manual/tips_and_tricks)
 
-[全部内建元标记]({% post_url haxe/2014-03-30-haxe-commands %})
+[全部内建元标记]({% post_url haxe/2014-03-30-commands %})
 
 除了编译器内建的, haxe 允许自定义元标记, 格式为 `@` 字符作前缀(编译器内建的以 `@:` 为前缀, 当然你也能定义以 `@:` 作前缀的元标记, 这只是规范,　并没有强制要求). 例: `@some`. 可以通过 haxe.rtti.Meta 在运行时访问这些元标记内容, 
 
