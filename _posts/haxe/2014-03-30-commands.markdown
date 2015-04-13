@@ -1,7 +1,7 @@
 ---
 
 layout: post
-title:  命令行相关
+title:  命令行及参数
 date:   2014-03-30 21:10:10
 categories: haxe
 
@@ -659,6 +659,8 @@ haxe --help-metas, 这类元标记一般添加在代码中, 也可以在 宏(mac
 # **常用**.当 new T()时, 需要添加这个标记  用于替换掉需要接口 haxe.rtti.Generic类,用于声明泛型类. (since 3.0.
 @:generic            : Marks a class or class field as generic so each type parameter combination generates its own type/field
 
+# http://haxe.org/manual/macro-generic-build.html
+# 和 haxe.macro.MacroType 一样,参看 https://github.com/HaxeFoundation/haxe/commit/b7d9572cde3cab4629f4854103bcd56f3603d515
 @:genericBuild       : Builds instances of a type using the specified macro
 
 # 参看 @:setter
@@ -770,8 +772,7 @@ haxe --help-metas, 这类元标记一般添加在代码中, 也可以在 宏(mac
                        
 @:readOnly           : Generates a field with the 'readonly' native keyword (cs only)
 
-# 添加在 interface 之前, 用于移除所有实现类的 interface 代码 在编译之前, 
-# 目的是减小输出文件大小, 也就是说在输出时,根本就不存在 interface 相关的代码，但是所有 实现类却都实现 interface
+# 加上这个元标记使得 interface 只存在于编译阶段, 生成结果不会包含 interface 相关的代码
 @:remove             : Causes an interface to be removed from all implementing classes before generation
 
 # 宏条件, 需要满足条件才能访问这个类的所有字段.

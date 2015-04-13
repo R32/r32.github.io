@@ -212,9 +212,6 @@ private typedef Init = haxe.macro.MacroType < [cdb.Module.build("test.cdb")] > ;
  * Add Group 
 
 
-
-
-
 ### 其它
 
  * 修改 columns 时,别按回车键,因为默认为 `delete`
@@ -228,14 +225,3 @@ private typedef Init = haxe.macro.MacroType < [cdb.Module.build("test.cdb")] > ;
  * **separator** 用于将同一表格(sheet) 中的行分组(group)
 
 	> 表格名(sheet name)上右键菜单, 可以选择是否将 **分组** 属性添加到数据行(line).
-
-
-
-
-
-
-### 个人感觉
-
- * 输入 Dynamic 类型字段时,完全是 手工输入, 没有好的输入界面.
-
- * 无法绑定为 .cdb 的默认打开工具.估计要将 castle和 node webkit打包成单一文件.

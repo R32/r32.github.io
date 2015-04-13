@@ -1,7 +1,7 @@
 ---
 
 layout: post
-title:	条件编译以及宏
+title:	宏和条件编译
 date:   2014-05-08 10:26:10
 categories: haxe
 
@@ -461,7 +461,7 @@ addMetadata(meta:String, className:String, field:String = null, isStatic:Bool = 
 addNativeLib(name:String):Void
 
 
-//　允许访问指定的包, 例如: 默认情况下当目标平台为 neko 时, 不允许访问 flash 包, 参见 openfl 编译选项
+//　允许访问指定的包, 例如: 默认情况下当目标平台为 neko 时, 不允许访问 flash 包下的API., 参见 openfl 编译选项
 allowPackage(v:String):Void
 
 // 像 haxe 编译参数 -D  
@@ -737,6 +737,13 @@ public static function buildMIN(){
 }
 ```
 
+```haxe
+#if (haxe_ver >= 3.2)
+macro : Void;
+#else
+Context.getType("Void");
+#end
+```
 
 
 #### 宏高级特性
