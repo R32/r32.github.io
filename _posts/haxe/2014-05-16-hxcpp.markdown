@@ -28,17 +28,25 @@ hxcpp 会自动根据平台选择不同的 C++编译器. 任意平吧上编译�
 
 <!-- more -->
 
-### Tips
 
- * 第一次编译到 cpp 时会需要花一定时间, 之后就会很快　
+### 未整理
 
  * 实际上你可以在 neko 中快速开发及测试,因为 cpp 和 neko 的 API 基本一致,等到将要 release 时再以 hxcpp 编译
 
+#### Cpp Magic
+
+`__cpp__` 直接在 haxe 代码中嵌入 cpp 源码.　https://github.com/HaxeFoundation/haxe/pull/2875
 
 
-### 细节
+```haxe
+// __cpp__ 后边的 字符串不支持　字符串连接变量, 只是直接常量字符串
+untyped __cpp__('printf("hello world!")');
 
-一个 hxcpp 示例: https://github.com/ncannasse/hxsdl 不过有些复杂.
+// 使用下边方法传递变量到 __cpp__
+inline private static function setInt(bytes:haxe.io.BytesData, addr:Int, x:Int){
+	untyped __cpp__("*((int *) ({0}->GetBase() + {1})) = {2}",bytes,addr,x);
+}
+```
 
 #### defines
 
@@ -46,33 +54,119 @@ hxcpp 会自动根据平台选择不同的 C++编译器. 任意平吧上编译�
 
 #### metas
 
-In order to [improve support for interacting](http://haxe.1354130.n2.nabble.com/hxcpp-native-access-td6968232.html) with CPP
+In order to [improve support for interacting](http://haxe.1354130.n2.nabble.com/hxcpp-native-access-td6968232.html) with CPP. 这些元标记大多是加在 class 上边的.
+
 
 ```bash
-@:headerCode("#include <stdio.h>")	# Inject code into class header file - eg for types of injected members.
-@:headerClassCode("code")			# Inject code into header class definition - eg member variables/functions.
-@:cppFileCode("code")				# Inject code into top of cpp file
-									# eg local includes, local functions, static variables.
-@:functionCode("code")				# Inject code into top of function - eg, whole implementation.
-@:functionTailCode("code")			# Inject code into end of function
-									# eg, close functionCode, or continue processing.
-@:buildXml("xml fragment")			# Inject code into the bottom of the build.xml code.
-@:cppNamespaceCode("code")			# ...
-@:headerNamespaceCode("code")		# ...
-@:noStack 				# ...
-@:depend("code")		# Add a dependency in the build.xml file.
-@:include("ClassName")	# Generate "#include ..." to .h/.cpp where the class is being imported.
+## 提取自 haxe --help-metas
+#
+@:abi					# Function ABI/calling convention
+
+#
+@:buildXml				# Specify xml data to be injected into Build.xml
+
+@:cppFileCode			# Inject code into top of cpp file
+
+@:cppInclude			# File to be included in generated cpp file
+
+@:cppNamespaceCode		# ...
+
+@:decl					#
+
+@:depend 				# Add a dependency in the build.xml file.
+
+@:functionCode			# Inject code into top of function - eg, whole implementation.
+
+@:functionTailCode 		# Inject code into end of function - eg, close functionCode, or continue processing.
+
+
+# 注入 cpp 代码到 头文件(.h) Class 的内部 - 用于声明　成员变量或成员方法 例如: @:headerClassCode("int a,b")
+@:headerClassCode		# Code to be injected into the generated class, in the header
+
+# 注入 cpp 代码到 头文件(.h) Class 的外部 - 用于 添加 头文件引用或 宏定义 例如: @:headerCode("#include <stdio.h>")
+@:headerCode()			# Code to be injected into the generated header file
+
+# 在 头文件(.h) 中 注入 例如: @headerInclude("stdio.h")  - 个人注: 好像没什么用,因为只能添加一个头文件
+@:headerInclude(String)	# File to be included in generated header file
+
+@:headerNamespaceCode   # ..
+
+# @:include("ClassName") - Generate "#include ..." to .h/.cpp where the class is being imported.
+@:include				# 
+
+@:nativeProperty 		# Use native properties which will execute even with dynamic usage
+
+# 编译的cpp代码中不包含有类似于 HX_STACK_LINE...这些调试用的代码, 只用于字段或方法(但是好像无法作用于构造函数),
+@:noStack				# 
+
+# cpp 源文件名 用于 external class - 路径以当前 hx 文件所在为当前目录,参考 hxcpp/test/native 目录
+@:sourceFile("path/to/file.cpp")			# Source code filename for external class
+
+@:structAccess			# Marks an extern class as using struct access('.') not pointer('->')
+
+@:unreflective			#
+
+@:void					# Use Cpp native 'void' return type (cpp only)
 ```
 
 #### 调试
 
 http://gamehaxe.com/2012/09/14/hxcpp-built-in-debugging/
 
+### 混合编程
+
+发现一些库并没有使用 CFFI 那种方式,如 hxsdl, 它是混合了 C++ 在 haxe 代码中.　这样的代码比 cffi 性能更好.因为尽量避免了 haxe 变量和 cpp 变量的数据交换.
+
+参看 hxsdl 及 hxcpp 中的源码可以发现 混合编程即使用了 metas 来嵌入一些 cpp 源码, 只是有些是通过　宏自动实现的.多参考 `hxcpp/test` 下的示例
+
+
+#### 变量转换
+
+haxe 变量到 cpp 变量　之间的转换, 其它没有记录的类型如 Array String 都是属于 HXArray HXString 这些类
+
+可以参考 `hxcpp/include` 下的一些头文件查看一些定义:
+
+```cpp
+// hxcpp/include/hxcpp.h 部分代码
+
+// Basic mapping from haxe -> c++
+typedef int Int;
+typedef bool Bool;
+
+#ifdef HXCPP_FLOAT32
+typedef float Float;
+#else
+typedef double Float;
+#endif
+
+
+// Extended mapping - cpp namespace		
+namespace cpp{
+   typedef signed char Int8;
+   typedef unsigned char UInt8;
+   typedef char Char;
+   typedef signed short Int16;
+   typedef unsigned short UInt16;
+   typedef signed int Int32;
+   typedef unsigned int UInt32;
+   #ifdef _WIN32
+   typedef __int64 Int64;
+   typedef unsigned __int64 UInt64;
+   // TODO - EMSCRIPTEN?
+   #else
+   typedef int64_t Int64;
+   typedef uint64_t UInt64;
+   #endif
+   typedef float Float32;
+   typedef double Float64;
+};
+```
+
 ### CFFI
 
-一个工具能自动写一些模板 https://github.com/player-03/ExtensionBoilerplate
+将外部的 C/C++ 库编译成 lib.ndll 用于在　haxe 代码中调用. hxcpp 源码的 test 中有一个 cffi 的示例.
 
-实际上发现一些库并没有使用这种方法,如 hxsdl, 它是混合了 C++ 在 haxe 代码中.
+一个工具能自动写一些模板 https://github.com/player-03/ExtensionBoilerplate
 
 ### 编译外部库
 

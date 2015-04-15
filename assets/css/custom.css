@@ -264,7 +264,11 @@ body {
 .bs-sidebar .nav .nav > li > a {
   padding-top:    3px;
   padding-bottom: 3px;
-  padding-left: 30px;
+  padding-left: 25px;
+}
+
+.bs-sidebar .nav .nav > li > ul > li > a {
+  padding-left: 40px;
 }
 
 .bs-sidebar.affix-top{

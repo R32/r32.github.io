@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  语法记录-1
+title:  haxe 语法记录
 date:   2014-05-13 12:26:10
 categories: haxe
 ---
@@ -187,6 +187,28 @@ categories: haxe
 
 		> ![flashdevelop setting](/assets/img/fd_setter_completionServer.png)
 		
+
+ * 何时省略参数类型, 未来也许会修正这个 https://github.com/HaxeFoundation/haxe/issues/2548
+
+	```haxe
+	class Test {
+	    public static function bar (m){		// 这里最好明确 m 的类型如 bar(m:Foo2)
+	        m.doIt();
+	    }
+	    public static function main () {
+		// 编译到 cpp 为: m->__Field(HX_CSTRING("doIt"),true)()->__Field(HX_CSTRING("doIt"),true)();
+		// 如果 bar(m:Foo2) 则为：	m->doIt();
+	        bar(new Foo2());
+	    }
+	}
+	class Foo2{
+	    public function new () {}
+	    public function doIt():Foo2 {
+	        return this;
+	    }
+	}
+	```
+	
 
 #### 遇见的一些错误
 
