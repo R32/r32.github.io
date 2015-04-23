@@ -29,11 +29,12 @@ hxcpp 会自动根据平台选择不同的 C++编译器. 任意平吧上编译�
 <!-- more -->
 
 
-### 未整理
+### 编译
 
  * 实际上你可以在 neko 中快速开发及测试,因为 cpp 和 neko 的 API 基本一致,等到将要 release 时再以 hxcpp 编译
 
-#### Cpp Magic
+
+#### 黑魔法
 
 `__cpp__` 直接在 haxe 代码中嵌入 cpp 源码.　https://github.com/HaxeFoundation/haxe/pull/2875
 
@@ -48,37 +49,46 @@ inline private static function setInt(bytes:haxe.io.BytesData, addr:Int, x:Int){
 }
 ```
 
-#### defines
+`__global__` 参看 `\haxe\std\cpp\_std\Std.hx` 源码.
+
+
+
+#### Defines
 
 内容有些长，而且没有说明.　http://haxe.org/manual/target-cpp-defines.html
 
-#### metas
+#### Metas
 
-In order to [improve support for interacting](http://haxe.1354130.n2.nabble.com/hxcpp-native-access-td6968232.html) with CPP. 这些元标记大多是加在 class 上边的.
+In order to [improve support for interacting](http://haxe.1354130.n2.nabble.com/hxcpp-native-access-td6968232.html) with CPP.
 
+注意: 当前文件路径 `./` 不能省略. 比如上层目录要写成 `./../`
 
 ```bash
-## 提取自 haxe --help-metas
-#
+# TODO
 @:abi					# Function ABI/calling convention
 
-#
+# 嵌入 xml 到 build.xml, 文件格式参看下边 buildXml
 @:buildXml				# Specify xml data to be injected into Build.xml
 
+# 附加于 类 上. 代码注入于 namespace 的前边
 @:cppFileCode			# Inject code into top of cpp file
 
+# 附加于 类 上.. 在 .cpp 文件中头部添加　头文件引用, 注意: 只能添加一个
+# 示例: @:cppInclude("stdlib.h") => #include "stdlib.h"
 @:cppInclude			# File to be included in generated cpp file
 
-@:cppNamespaceCode		# ...
+# 附加于 类 上. 代码注入于 类 的前边.并包含当前类. 命名空间为 haxe 包名.
+@:cppNamespaceCode		#
 
+# __declspec 参看 hxcpp/include/hxcpp.h
 @:decl					#
 
-@:depend 				# Add a dependency in the build.xml file.
-
+# 注入代码到 函数开始处
 @:functionCode			# Inject code into top of function - eg, whole implementation.
 
-@:functionTailCode 		# Inject code into end of function - eg, close functionCode, or continue processing.
-
+# 注入代码到 函数结尾处, 在 return 之前. 
+# 注: 由于 haxe 转换成的 cpp 用 {} 包围形成了闭包, 因此无法访问函数内部定义的局部变量, 但是可以访问函数的参数
+@:functionTailCode 		# Inject code into end of function 
 
 # 注入 cpp 代码到 头文件(.h) Class 的内部 - 用于声明　成员变量或成员方法 例如: @:headerClassCode("int a,b")
 @:headerClassCode		# Code to be injected into the generated class, in the header
@@ -86,80 +96,342 @@ In order to [improve support for interacting](http://haxe.1354130.n2.nabble.com/
 # 注入 cpp 代码到 头文件(.h) Class 的外部 - 用于 添加 头文件引用或 宏定义 例如: @:headerCode("#include <stdio.h>")
 @:headerCode()			# Code to be injected into the generated header file
 
-# 在 头文件(.h) 中 注入 例如: @headerInclude("stdio.h")  - 个人注: 好像没什么用,因为只能添加一个头文件
+# 附加在 class 上, 在 头文件(.h) 中 注入 例如: @headerInclude("stdio.h") - 只能添加一个头文件
 @:headerInclude(String)	# File to be included in generated header file
 
-@:headerNamespaceCode   # ..
+@:headerNamespaceCode   # 头文件类声明, 类 的外部　命名空间内部
 
-# @:include("ClassName") - Generate "#include ..." to .h/.cpp where the class is being imported.
-@:include				# 
+# @:include("path/file.h") - 用于 extern 类, 指示 这个类应该导入哪个 头文件　和 @:sourceFile 一起使用
+@:include				# Generate "#include ..." to .h/.cpp where the class is being imported.
 
+# TODO
 @:nativeProperty 		# Use native properties which will execute even with dynamic usage
 
 # 编译的cpp代码中不包含有类似于 HX_STACK_LINE...这些调试用的代码, 只用于字段或方法(但是好像无法作用于构造函数),
 @:noStack				# 
 
-# cpp 源文件名 用于 external class - 路径以当前 hx 文件所在为当前目录,参考 hxcpp/test/native 目录
-@:sourceFile("path/to/file.cpp")			# Source code filename for external class
+# @:sourceFile("path/file.cpp") - 用于 external class,路径以当前 hx 文件所在为当前目录,参考 hxcpp/test/native 目录
+@:sourceFile			# Source code filename for external class
 
+# 重要: 用于 extern 类, 
 @:structAccess			# Marks an extern class as using struct access('.') not pointer('->')
 
-@:unreflective			#
+# 如果你不需要使用 Reflect 来动态查找类上的成员, 则可以加上这个标记
+@:unreflective			# not generate __Field and __SetField bodies by default
 
 @:void					# Use Cpp native 'void' return type (cpp only)
+
+# 附加在 extern 类上, 哪个类调用了这个 extern 类, 就会在 build.xml 中相关 cpp 新增一条 <depend name="file.h" />
+# 但是编译后在 build.xml 相关的 <file /> 元素上仅仅加上一条　<depend />　根本不起作用, 
+# 也就是说加了<depend /> 的 cpp 但却无法引用到 depend 的定义, 是个 Bug 吗?　[haxe 3.2 rc2.0]
+@:depend 				# Add a dependency in the build.xml file.
 ```
 
-#### 调试
+#### extern class
 
-http://gamehaxe.com/2012/09/14/hxcpp-built-in-debugging/
+参看 `hxcpp\test\native`, 重要的是： 
+
+ * 无法以 new 的方式来创建外部 cpp 类, 因为它返回的是一个指针, 只能用　静态方法创建
+
+	```haxe
+	@:native("new RGB")
+	public static function create(r:Int, g:Int, b:Int):Pointer<RGB>;
+	```
+
+ * 在 extern class 上加上 @:structAccess,
+
+ * 如果 extern class 源码没有定义命名空间, 那么 这个 hx 类 也不应该有包名
+
+  - 可以使用 -cp 将 hx 类添加进编译路径
+
+  - 或(推荐)用 `@:native("ClassName")`　省略掉包名就行了.
+
+
+总的来说 extern class 还是蛮复杂的, 不如创建一个 haxe 类, 然后混入 cpp 代码. 
+
 
 ### 混合编程
 
-发现一些库并没有使用 CFFI 那种方式,如 hxsdl, 它是混合了 C++ 在 haxe 代码中.　这样的代码比 cffi 性能更好.因为尽量避免了 haxe 变量和 cpp 变量的数据交换.
+发现一些库并没有使用 CFFI 那种方式,如 hxsdl, 它是混合了 C++ 在 haxe 代码中.　这样的代码比 cffi 性能更好.因为尽量避免了 haxe 变量和 cpp 变量的数据转换.
 
-参看 hxsdl 及 hxcpp 中的源码可以发现 混合编程即使用了 metas 来嵌入一些 cpp 源码, 只是有些是通过　宏自动实现的.多参考 `hxcpp/test` 下的示例
+参看 hxsdl 及 hxcpp/test 中的源码可以发现 混合编程即使用了 metas 来嵌入一些 cpp 源码, 只是有些是通过　宏自动实现的.多参考 `hxcpp/test` 下的示例
 
 
 #### 变量转换
 
-haxe 变量到 cpp 变量　之间的转换, 其它没有记录的类型如 Array String 都是属于 HXArray HXString 这些类
+一些 haxe 变量转换到 cpp 之后, 可以参考 `hxcpp/include/hxcpp.h` 下的一些头文件查看一些定义:
 
-可以参考 `hxcpp/include` 下的一些头文件查看一些定义:
+```
+HAXE    |    CPP    
+--------+-----------
+Int         int
+Float       float    #ifdef HXCPP_FLOAT32
+            double
+Bool        bool
 
-```cpp
-// hxcpp/include/hxcpp.h 部分代码
+####         namespace cpp
+cpp.Int8       signed char   
+cpp.UInt8      unsigned char
+cpp.Char       char
+cpp.Int16      signed short
+cpp.UInt16     unsigned short
+cpp.Int32      signed int
+cpp.UInt32     unsigned int
 
-// Basic mapping from haxe -> c++
-typedef int Int;
-typedef bool Bool;
+cpp.Float32    float
+cpp.Float64    double
+```
 
-#ifdef HXCPP_FLOAT32
-typedef float Float;
-#else
-typedef double Float;
-#endif
+只有上边几种类型是不需要转换的, 但上边只有数据基本类型,  其它 Array, String 都需要做一些转换. 
+
+ * **cpp.NativeArray** C 语言中所描述的数组, 即同类型连续排列的内存引用
+
+  - hxarray.(__unsafe_get,__unsafe_set,__get,__set) 带 unsafe 的方法没有做边界检测.
+
+	```haxe
+	// Pointer<T>, T 的类型和 数组类型一致
+	var pa:cpp.Pointer<Int> = cpp.NativeArray.address([1, 2, 3], 0); // 或者 Pointer.arrayElem([1,2,3], 0 )
+	var pa2:cpp.Pointer<Float> = cpp.NativeArray.address([1.0, 2.0, 3.0], 0);
+	```
+
+ * **cpp.NativeString**, 转换成 `char*` 也可以调用 `var cstr:ConstPointer<Char> = untyped hxstr.__s`
+
+	```haxe
+	using cpp.NativeString;
+	
+	//......
+	var str:String = "haxeString2CString";
+	
+	// 编译为 ::cpp::Pointer< ::cpp::Char > cstr = ::cpp::Pointer< ::cpp::Char >(::cpp::Pointer_obj::fromPointer(str.__s));
+	var cstr:ConstPointer<Char> = str.c_str();
+	
+	str = cstr.fromPointer();
+	
+	
+	// .__s 这个成员变量在　neko 平台也适用.
+	var cstr2:ConstPointer<Char> = untyped str.__s;
+	```
+
+### buildXml
+
+build.xml 用来配置 hxcpp 如何编译　haxe 源码。查看 `hxcpp/tools/hxcpp/BuildTool.hx` 的源码,所调用相关的类都在同目录下.
 
 
-// Extended mapping - cpp namespace		
-namespace cpp{
-   typedef signed char Int8;
-   typedef unsigned char UInt8;
-   typedef char Char;
-   typedef signed short Int16;
-   typedef unsigned short UInt16;
-   typedef signed int Int32;
-   typedef unsigned int UInt32;
-   #ifdef _WIN32
-   typedef __int64 Int64;
-   typedef unsigned __int64 UInt64;
-   // TODO - EMSCRIPTEN?
-   #else
-   typedef int64_t Int64;
-   typedef uint64_t UInt64;
-   #endif
-   typedef float Float32;
-   typedef double Float64;
-};
+```haxe
+var mDefines:StringMap<String>;			// 通过 "-D" 的定义和 "环境变量" 和 <set /><unset /> 设定的值
+var mCurrentIncludeFile:String;			// 
+var mIncludePath:Array<String>;			//
+
+var mCompiler:Compiler;					// 将 .cpp.c 等源文件编译到 .o 中间文件. <compiler>
+var mStripper:Stripper;					// strip工具, 用于去除调试多余信息. <strip>
+var mPrelinkers:StringMap<Prelinker>;	// ,预链接器, Target 通过 toolId 指定匹配. <prelinker id="">
+var mLinkers:StringMap<Linker>;			// ,链接器, Target 通过 toolId 指定. <linker id="">
+var mCopyFiles:Array<CopyFile>;			// 需要复制的文件配置 <copyFile>
+var mFileGroups:StringMap<FileGroup>;	// ,文件分组. <files id="">
+var mTargets:StringMap<Target>;			// ,目标. <target id="">
+var mFileStack:Array<String>;			//
+var mMakefile:String;					//
+var m64:Bool;				// -D HXCPP_M64
+var m32:Bool;				// -D HXCPP_M32
+```
+
+条件检测(if, unless)可以用于检测 `haxe -D` 定义的值,以及用 set 元素设置的变量.
+
+如果多个属性同时用于一个 xml元素, 那么只要第一个属性有效，便会忽略后边的,排序为 if, unless, ifExists
+
+```xml
+<!-- function valid(inEl:Fast,inSection:String):Bool -->
+
+<set name="var1" value="v1" if="D1" />			<!-- 如果 D1 存在, 则设置 var1=v1 -->
+<set name="var2" value="v2" if="D1 D2" />		<!-- 如果 D1 与 D2 定义同时存在, ... -->
+<set name="var3" value="v3" if="D1 || D2" />	<!-- 如果 D1 或 D2 定义存在, ... -->
+
+<echo value="hello" unless="D1" />		<!-- 只有当 D1 不存在时, 才打印 hello , 支持:或(||),与(" ") -->
+<echo value="world" ifExists="path/to/file" />	<!-- 检测文件或目录存在 -->
+```
+
+除了 if, 其它元素属性都支持使用 `${}` 来调用 set 设置的变量.
+
+```xml
+<echo value="${var1}" />
+<echo value="hello ${var1}" />
+```
+
+`${var}` 支持下边前缀: [第 1572 行: function substitute(str:String...]
+
+```bash
+haxelib:		- 返回haxelib库所在路径.  ${haxelib:hxcpp} => `G:\...` 
+
+# 示例: <flag value='-DHXCPP_API_LEVEL=${removeQuotes:hxcpp_api_level}' />
+removeQuotes:	- 去除变量返回值的双引号
+
+dospath:		- ??? 将变量返回值转换成DOS path.
+
+dir:			- ??? 和 dospath 一样, 只是多了检测
+```
+
+在 haxe 代码中通过 **`@:buildXml('')`** 来嵌入这些　xml。你可以参看 toolchain 目录下的 xml 文件.
+
+当要自定义一些 linker 时用到的参数, 可以嵌入一个相同 id 的 linker 元素,然后加要需要的参数
+
+```xml
+<set name="" value="" />		<!-- 设置变量 name=value, 在其它元素中通过 ${name} 来引用 value 的值　-->
+								<!-- 可用于变量条件检测, 示例 -->
+	<set name="someMsg" value="Hello world!" />
+	<echo value="${someMsg}" if="someMsg" />  								
+
+<unset name="" />				<!-- 移除变量 或 haxe -D -->
+
+<!-- hxcpp编译设置, 细节查看 Setup.hx -->
+<setup name="androidNdk|blackberry|msvc|mingw|emscripten" />				
+
+<echo value="" />				<!-- log -->
+<error value="" />				<!-- error, 将中断编译 -->
+
+<setevn name="" value="" />		<!-- 设置环境变量, 通过 Sys.putEnv 阶段性(session)  -->
+
+<path name="" />				<!-- 设置环境路径, 通过 Sys.putEnv("PATH",) 阶段性(session)  -->
+
+<include name="path/to/file.xml" />		<!-- 导入另一个 xml, 覆盖到当前 -->
+
+<!-- copyFile, 当你需要复制 文件 到输出文件夹(target.outputDir)时 -->
+  <!-- name: 要复制的文件名,可以是任意文件 -->
+  <!-- form: 从哪个目录 -->
+  <!-- [toolId]: 可选, 所选择 编译工具的 id 值, 某个 linker 元素的 id 值   -->
+  <!-- [allowMissing]: 是否允许缺失, 值为 1|t|true 时为真, 其它为假 -->
+<copyFile name="libstdc++-6.dll" from="${MINGW_ROOT}/bin" toolId="exe" allowMissing="true" unless="no_shared_libs" />
+
+<section if="Some"></section>			<!-- 所有条件相同的元素集合, 用于避免给每个元素加上同样的条件检测 -->
+
+
+<pleaseUpdateHxcppTool version="1" />	<!-- Int类型. 如果 hxcpp.n 小于某个版本,将出错误. 这个值似乎很久没用了 -->
+
+<!-- 文件组,id 为文件组标识符, 用于被其它元素引用, 同 id 的文件组, 后边的将覆盖前边的  -->
+<files id="__main__">														
+  <compilerflag value="-Iinclude" />	<!-- 文件分组编译参数 -->
+  <file name="src/__main__.cpp" />		<!-- 分组内的文件 -->
+    <depend name="include/Main.h" />	<!-- 所依剌的头文件,位于 file 元素内部只能有 name 属性  -->
+	<depend name="include/other.h" />
+  </file>
+  
+  <depend name="path/file.h" />			<!-- 依赖另一个文件,　注意 depend 属性要么是 name 或 files -->
+  <depend files="id" />					<!-- 依赖另一个文件组内的所有 depend.has.name 元素  -->
+
+  <!-- TODO:  fxc.exe /nologo /T %profile% %file% /Vn %variable% /Fh %target% -->
+  <hlsl name="path/tofile.fx" profile="" variable="" target="" />	
+										
+  <options name="Options.txt"/>			<!-- TODO: 不明确,反正都是 Options.txt -->
+  <precompiledheader name="" dir="" />  <!-- TODO: 预编译,  -->
+
+  <include name="path/to/file.xml" />	<!-- 导入另一个 xml, 覆盖到当前 -->
+  <section></section>
+</files>
+
+<!-- 编译, 将源码编译为中间文件时用到 -->
+  <!-- id: 名称标识符 -->
+  <!-- exe: 编译器命令名, 如 gcc, cl.exe ... -->
+<compiler id="android-gcc" exe="g++">
+ <exe name="${EXEPREFIX}-g++" if="" />	<!-- 同上,一般写在这里的会有条件检测, 如果重复将覆盖前边设置 -->
+ <flag value="" />						<!-- 编译器参数,用于所有 .c .cpp .m .mm -->
+ <flag value="-Dsome=value" />
+ <flag value="-I${HXCPP}/include" />
+ 
+ <cflag value="" />				<!-- 仅用于 .c 的编译参数 -->
+ <cppflag value="" />			<!-- 仅用于 .cpp 或 .c++ 的编译参数 -->
+ <objcflag value="" />			<!-- 仅用于 .m(object-c) 的编译参数  -->
+ <mmflag value="" />			<!-- 仅用于 .mm(object-c++) 的编译参数 -->
+ <pchflag value="" />			<!-- 仅用于 .pch(预编译头文件) 的编译参数 -->
+
+ <objdir value="" />			<!-- 指定编译中间文件时的目录, 默认为 obj -->
+ <outflag value="" />			<!-- 输出　编译标记, 通常为 -o 或 --output -->
+ <pch value="" />				<!-- TODO: 未知 - if(pch == "gcc"){...} -->
+ <getversion value="" />		<!-- TODO: 未知 - 示例上看 value 和 exe 元素的基本一样 -->
+ <ext value="" />				<!-- 输出　扩展名, 默认为 .o -->
+ <include name="" />			<!-- 导入另一个 xml, 覆盖到当前 -->
+ <section unless=""></section>	
+</compiler>
+
+
+<!-- strip 是一个去除编译生成的调试内容工具 -->
+  <!-- id: 名称标识符 -->
+  <!-- exe: strip 工具命令 -->
+<stripper id="strip" exe="strip" unless="nostrip">
+  <exe name="strip"/>				<!-- 执行 strip 命令名称 -->
+  <exe name="arm-none-linux-gnueabi-strip" if="webos" />
+  <exe name="${EXEPREFIX}-strip" if="EXEPREFIX" />
+  <exe name="${HXCPP_STRIP}" if="HXCPP_STRIP" />
+  <exe name="mipsel-linux-strip" if="gcw0" />
+
+  <flag value="-u" if="macos"/>		<!-- strip 命令参数 -->
+  <flag value="-r" if="macos"/>
+  <flag value="-x" if="macos"/>
+  <flag value="-d" if="linux"/>
+</stripper>
+
+
+
+<!-- 链接器 -->
+   <!-- id: 链接器标识符 -->
+   <!-- exe: 链接器命令名称 -->
+<linker id="dll" exe="link.exe" if="windows">
+  <exe name="" if="" />				<!-- 链接器命令名称 -->
+  <flag value="-nologo"/>			<!-- linker 命令行参数 -->
+  <lib name="${dll_import_link}" if="dll_import_link" />		<!-- 依赖的链接库 -->
+  
+  <libdir name="obj/lib" />			<!-- 依赖的链接库的文件夹 -->
+  <fromfile value="@" />			<!--  -->
+  <ext value=".dll" />				<!-- 输出扩展名, .exe,.dll,"",.so -->
+  <outflag value="-out:" />			<!-- 输出参数: windows通常是 -out:,而非windows通常为 -o -->
+
+  <prefix value="" />			<!-- 输出文件名前缀 -->	
+  <ranlib name="" />			<!--  -->
+  <recreate value="" />			<!--  -->
+  <expandAr value="" />			<!--  -->
+  <section></section>			<!--  -->
+</linker>
+
+<!-- linker 示例 -->
+<linker id="exe" exe="link.exe" unless="winrt">	
+  <fromfile value="@"/>
+  <flag value="-nologo"/>
+  <flag value="-machine:${MACHINE}"/>
+  <flag value="-debug" if="HXCPP_DEBUG_LINK"/>
+  <flag value="-subsystem:windows${SUBSYSTEM_VER}" if="SUBSYSTEMWINDOWS" />
+  <flag value="-subsystem:console${SUBSYSTEM_VER}" if="SUBSYSTEMCONSOLE" />
+  <flag value="-libpath:lib"/>
+  <flag value="user32.lib"/>
+  <ext value=".exe"/>
+  <outflag value="-out:"/>
+</linker>
+
+<prelinker id="" exe="">		<!-- 预链接器 -->
+  <exe name="" />				<!-- 执行 预链接的 命令名称 -->
+  <flag value="" />		
+  <outflag value="" />			<!-- 文件输出 标记,默认为 -o -->
+  <expandAr value="" />			<!-- 未知. 默认为 false. -->
+  <fromfile value="" />			<!-- 未知. 默认为 @ -->
+  <section></section>
+</prelinker>
+
+<!-- 目标 -->
+  <!-- id: 标识符 -->
+  <!-- tool: 似乎只有 linker 这一个值,   -->
+  <!-- toolid: id值用于链接器选择, 编译顺序从 prelinker 到 linker  -->
+  <!-- output:  输出文件名称,不带扩展名.-->
+  <!-- overwrite: 重写, 自已看源码定义 -->
+<target id="msvccompat" output="" tool="linker" toolid="${STD_MODULE_LINK}" >
+  <target id="" />				<!-- 子目标 -->
+  <lib name="some.lib" />		<!-- 库名  -->
+  <flag />						<!--  -->
+  <depend />					<!--  -->
+  <vflag />						<!--  -->
+  <dir />						<!--  -->
+  <outdir name="path/" />		<!--  -->
+  <builddir name="" />	<!--  -->
+  <ext />				<!--  --> 
+  <files id="__main__" />		<!-- 选择分组, 不同 id 表示不同分组 -->
+  <section></section>
+</target>
 ```
 
 ### CFFI
@@ -168,167 +440,3 @@ namespace cpp{
 
 一个工具能自动写一些模板 https://github.com/player-03/ExtensionBoilerplate
 
-### 编译外部库
-
-直接将外部库编译成 静态链接库, 参考 [nme-dev](https://github.com/haxenme/nme-dev) 的 Readme
-
-一个基于 hxcpp 的项目的　文件夹组织
-
-```bash
-include/			# C/C++ 源码所依赖的头文件,
-lib/				# 编译 C/C++ 时的中间文件,
-project/			# C/C++ 源码目录
-tools/				# 一些命令行工具类源码, 如果通常这个文件夹内会包含  run.n, build.n 的源码等等
-ndll/ 				# 最终结果目录, 不同平台将分开在各自的目录
-```
-
-编译, 一般通过 haxelib run hxcpp Build.xml 或者 neko build.n
-
- * Build.xml 目前我没找到自动生成的方法,只能照着别的库写
-
- * build.n 是通过编译了 hxcpp/Builder.hx 或它的继承类
-
-```bash
-cd project
-haxelib run hxcpp Build.xml								# 如windows系统 则在 ndll/windows/ 生成 .ndll 文件	
-haxelib run hxcpp Build.xml -Dandroid					# 在ndll/android/下 生成 .so 文件
-haxelib run hxcpp Build.xml -Dandroid -DHXCPP_ARMV7		# armv7
-
-# mac 系统
-haxelib run hxcpp Build.xml -Diphoneos -DHXCPP_ARMV7	#需要 Xcode 环境
-```
-
-
-
-#### openfl 的示例
-
-如果你使用 openfl 项目,那么运行 `lime create extension myext` 将创建一个 CFFI 样板文件
-
-```
-dependencies/		# android java 原生扩展, 相对于这篇文章主题可以不用关心它
-project/
-Myext.hx			# openfl 引用示例, - 文档类
-haxelib.json		# 如果要将这个库上传至 haxelib 
-include.xml			# openfl 引用示例, - 配置
-ndll/				
-```
-
-
-### 源码分析
-
-在 toolchain 目录下的 xml 文件可以找到这些平台支持细节
-
-```
-windows:		MSVC 或 MingW
-linux:			GCC
-mac:			GCC;需要xcode环境
-ios:			GCC;需要xcode环境
-android:		NDK
-emscripten:			
-blackberry:
-tizen:
-webos:			PalmPDK
-```
-
-解析 haxelib/run.n 源码:
-
- > 通过 `neko.vm.Loader.local().loadModule("./hxcpp.n")` 加载了 `hxcpp/tools/hxcpp/BuildTool.hx`
-
-<br />
-
-
-旧的内容
-------
-
-从这里开始往下, 是以前旧的内容, 随时将会被删除
- 
-**不使用 openfl** 编译为 cpp 或 neko
-
- > 例如你想写一个 命令行程序, 
-
- > 即使是命令行程序也是能引用 ndll lime,虽然没有界面. lime-tools 就是这样一个程序.
- 
-```haxe
-#if neko
-import neko.Lib;
-#else
-import cpp.Lib;
-#end
-class Test1 {
-	public static function main(){
-		Sys.println(myext_sample_method(16));
-	}
-	static var myext_sample_method = Lib.load ("myext", "myext_sample_method", 1);
-}
-```
-
-```bash
-#编译到 hbin 目录中去
-haxe -cpp hbin -main Test1
-	
-#复制 ndll文件到 hbin下 dos
-copy ndll\windows\ext.ndll hbin\
-```
- 
-
-**使用 openfl** 编译到平台 
-
- * 需要将 myext 添加到 haxelib 本地库.否则oepnfl在分析 ndll 路径时将出错.
- 
-	 ```bash
-	 #小数点为当前目录
-	 haxelib dev myext .
-	 ``` 
- 
- * 修改 include.xml 将与 android java 的原生扩展相关代码注释掉
-
-	> 因为那些从实现原理上来说属于 NDK JNI.
-
-	```xml
-	<?xml version="1.0" encoding="utf-8"?>
-	 <!-- inclucde.xml -->
-	 <project>
-		<ndll name="myext" />
-		<!-- dependency name="myext" path="dependencies/android" if="android" / -->
-		<!-- android extension="org.haxe.extension.Myext" / -->
-	 </project>
-	```
-
- * `project.xml` 和 `Main.hx`
- 
-	 ```xml
-	 <?xml version="1.0" encoding="utf-8"?>
-	 <!-- project.xml -->
-	 <project>
-	  <meta title="TestApp" package="me.lab.test" version="1.0.0" company="R.U.N" />
-	  <app main="Main" path="bin" file="TestApp" />
-	  <source path="." />
-	  <haxelib name="openfl" />
-	  <haxelib name="myext" />
-	 </project>
-	 ```
- 
-	 ```haxe
-	 // Main.hx
-	 #if neko
-	 import neko.Lib;
-	 #else
-	 import cpp.Lib;
-	 #end
-	 class Main {	
-		public static function main(){	
-			var t = new flash.text.TextField();
-			t.text = Std.string(myext_sample_method(16));
-			flash.Lib.current.addChild(t);
-		}
-		static var myext_sample_method = Lib.load ("myext", "myext_sample_method", 1);
-	 }
-	 ```
-
- * 编译
-
-	 ```bash
-	 lime test project.xml windows
-	 lime test project.xml neko
-	 lime test project.xml android
-	 ```

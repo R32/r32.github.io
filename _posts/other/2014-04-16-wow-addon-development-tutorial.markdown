@@ -13,7 +13,7 @@ http://wowprogramming.com/docs
 
 http://www.wowinterface.com/downloads/index.php  开发工具
 
-
+http://www.wowwiki.com/Making_a_macro 基础宏
 <!-- more -->
 
 ### 资源

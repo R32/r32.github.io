@@ -14,7 +14,54 @@ categories: haxe
 
 <!-- more -->
 
-#### 小贴士
+#### 最新改动
+
+haxe 3.2 ,细节查看 CHANGES.txt
+
+ * Compiler.keep 的行为发生了改变 https://github.com/HaxeFoundation/haxe/issues/4111
+
+ * haxe.ds.Either 二个类型, 这样可以让一个函数返回二种类型
+
+	```haxe
+	typedef MyResult = Either<Error, String>;
+	
+	var result:MyResult = Left(new Error("something smells"));
+	
+	var result:MyResult = Right("the answer is 42");
+	
+	// haxe.ds.Option 注意和 Either 区别
+	function foo(i:Int):Option<Int>{
+		return i < 0 ? None : Some(i);
+	}
+	```
+
+ * 处理 extern 类 haxe.extern.EitherType; 和  haxe.extern.Rest;	
+
+	```haxe
+	import haxe.extern.Rest;
+	import haxe.extern.EitherType;
+	
+	extern class MyExtern {
+		static function f1(s:String, r:Rest<Int>):Void;
+		static function f2(e:EitherType<Int, String>):Void;
+	}
+	
+	class Main {
+		static function main() {
+		MyExtern.f1("foo", 1, 2, 3); // use 1, 2, 3 as rest argument
+		MyExtern.f1("foo"); // no rest argument
+		//MyExtern.f1("foo", "bar"); // String should be Int
+	
+		MyExtern.f2("foo");
+		MyExtern.f2(12);
+		//MyExtern.f2(true); // Bool should be EitherType<Int, String>
+		}
+	}
+	```
+
+#### 未分类
+
+haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下, 在各包(文件夹或平台)下有 `_std` 目录, `_std` 将会嵌盖各自平台的类及方法.
 
 下边的一些内容也许并不适合于 haxe 的最新版
 
@@ -129,20 +176,7 @@ categories: haxe
 		return v
 	}
 	```
-
- * Either 二个类型, 这样可以让一个函数返回二种类型
-
-	```haxe
-	typedef MyResult = Either<Error, String>;
-	
-	var result:MyResult = Left(new Error("something smells"));
-	
-	var result:MyResult = Right("the answer is 42");
-	
-	// 注意区别 haxe.ds.Option
-	// An Option is a wrapper type which can either have a value (Some) or not a value (None).
-	```
-	
+		
  * `Std.int`: 包括 Math.round,Math.floor,Math.ceil 在处理较大数字时, 将超出Int界限
 
 	> haxe 中 Int(基本上所有平台都是32位) 类型表示的数字范围有限,因此一些库使用 Float(IEEE 64-bit) 来代替
@@ -360,9 +394,17 @@ var i:Null<Int> = null;
 
 #### `Dynamic`
 
-[Dynamic 参考](http://haxe.org/ref/dynamic). `Dynamic variables` , `Type Casting` , `Untyped` , `Unsafe Cast` 和 `Dynamic Methods`
+http://haxe.org/manual/types-dynamic.html 
 
-把一个 [匿名结构](http://haxe.org/manual/types-anonymous-structure.html) 赋值给声明为 Dynamic 的变量,就像 AS3或JS 的 `{}`,如果 变量没有声明为 Dynamic,则变量类型为 匿名结构,
+Dynamic类型变量可以赋值给其它任何变量, 也可以将任意值赋值给 Dynamic类型变量.
+
+```haxe
+// Dynamic类型变量可以赋值给其它任何变量, 因此 被赋值的 json 类型也不明确将为 Unknown<0>
+var json = haxe.Json.parse([1,2,3]);
+$type(json);	// Unknown<0>(即:Monomorphs)
+```
+
+把一个 [匿名结构](http://haxe.org/manual/types-anonymous-structure.html) 赋值给声明为 Dynamic类型变量
 
  * Parameterized Dynamic Variables
 
@@ -391,9 +433,6 @@ var i:Null<Int> = null;
 	// 参考 haxe.xml.Fast.hx 文件
 	// 可以实现接口的 resolve 方法,当访问属性时会自动转接到 resolve 上.
  	```
-
-
-
 
 #### 正则表达式
 

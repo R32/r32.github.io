@@ -112,7 +112,9 @@ Liquid 模板语法参见  https://github.com/Shopify/liquid/wiki/Liquid-for-Des
 
 #### 错误
 
+ * window 复制的文件,或新建文件由于没有 文件权限,当 `jekyll build` 后,无法打开这些没有权限的文件, 当本地测试时
 
-
-
-
+	```bash
+	# 通过这个命令将所有文件权限,避免本地测试时
+	chmod -R 755 ./
+	```

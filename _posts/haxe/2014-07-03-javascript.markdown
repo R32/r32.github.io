@@ -7,14 +7,33 @@ categories: haxe
 
 ---
 
- 计划慢慢使用 haxe 来写 js, 内容包括二个部分 nodejs 和 浏览器的js, 大多数情况下它们都是通用的,
+计划慢慢使用 haxe 来写 js, 内容包括二个部分 nodejs 和 browser-js, 大多数情况下它们都是通用的
  
 <!-- more -->
 
+### 编译
 
-### 编译标记
+`haxe -main Test -js test.js` 将 Test.hx 编译成 test.js 
 
-编译标记即为使用 `-D` 定义的值, 通过 `haxe --help-defines` 查询所有内建定义
+
+####　黑魔法
+
+ * `__js__` 用于直接嵌入 js 代码
+
+	```haxe
+	var s:String = untyped __js__("Navigator.plugin[\"Shockwave Flash\"]");
+	```
+
+ * `__instanceof__(o,cl)`: 相当于JS的 o instanceof c1,
+
+ * `__typeof__(o)`: 相当于JS的 typeof o
+
+ * `__strict_eq__(a,b)` 和 `__strict_neq__(a,b)`: 相当于JS的 a===b, a!==b
+
+
+#### Defines
+
+通过 `-D` 或相关宏定义的值
 
  * `js-flatten` [deprecated]平坦模式.  由于 haxe 3.2 中这将是默认行为,应此被移除
 
@@ -26,7 +45,7 @@ categories: haxe
 
 	> 目前只有 `jQuery 1.6.4` 和 `swfObject 1.5` 这二个 since 3.0
 
-### 元标记
+#### Metas
 
  * `@:jsRequire(moduleName,?subModName)` 需要 haxe 3.2+
 	
@@ -86,11 +105,8 @@ categories: haxe
 		Main.main();
 	})();
 	```
-                       
-
-
-
-### extern class
+                     
+#### extern class
 
 由于 Javascript **上下文** 的随意性, 并没有好的工具能自动创建 extern class, 所以需要自已手动为这些外部 JS 文件写 extern class 声明. 
 
@@ -147,10 +163,3 @@ private static function __init__() : Void untyped {
 #### HTML DOM
 
 haxe.js.html 下的对象类型挺吓人的. 所以应该使用 js.JQuery 来操作 DOM 对象.
-
-
-
-
-
-
-

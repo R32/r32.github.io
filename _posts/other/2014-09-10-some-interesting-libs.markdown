@@ -24,6 +24,7 @@ http://yahoo.github.io/gifshot/
 <!-- more -->
 
 
+ * http://adolfans.github.io/sdltutorialcn/ SDL 中文翻译
 
 
 #### web

@@ -489,7 +489,7 @@ getOutput():String
  	这个方法形为像在代码中的 import pack.*;
  @param rec		归递包含所有子项
  @param ignore	要忽略的类名数组, 包含路径在内的全名.
- @param classPaths pack　的所在路径, TODO: 即使指定了这个路径同样需要以 -cp 的方式添加路径,所以这个参数好像有 Bug, 因为如果指定了 -cp 也就不需要这个参数了.
+ @param classPaths pack　(自行查看最新的文档更新).
 */
 include(pack:String, rec:Bool = true, ignore:Array<String> = null, classPaths:Array<String> = null)
 
@@ -497,6 +497,9 @@ include(pack:String, rec:Bool = true, ignore:Array<String> = null, classPaths:Ar
 includeFile(fileName:Dynamic):Dynamic;
 
 /**
+	重要: haxe 3.2 改动 https://github.com/HaxeFoundation/haxe/issues/4111
+	- 最新的改动导致 这个命令似乎失去了作用, 但 @:keep 没变, 对于些文档构建请使用 include 
+	
 	防止 包 或类 或字段 被 -dce 编译参数删除, 参见  命令行编译参数 的 @:keep 元标记
 	 
 	这个标记经常被以 @:keep 的形式添加到 类或静态字段上
@@ -663,8 +666,8 @@ parse(expr:String, pos:Position):Expr
 // 解析字符串代码
 parseInlineString(expr:String, pos:Position):Expr
 
-// 注册模块依赖, 以缓存编译, 如果你没有使用 --wait --connect 缓存编译, 将没有任何效果.
-// 在 heaps 的 hxd.res 库中经常能见到这个方法示例.
+// 注册模块依赖用于缓存编译, 如果你没有使用缓存编译, 将没有任何效果.
+// 在 heaps 的 hxd.res 库中经常能见到这个方法示例. 如果 externFile 文件发生改变,那么所关联的 类(modulePath), 将会重刷新到缓存
 registerModuleDependency(modulePath:String, externFile:String):Void
 
 // Add a macro call to perform in case the module is reused by the compilation cache.
@@ -788,19 +791,18 @@ Context.getType("Void");
 
 #### 其它
 
-	* `Context.unify(t1,t2)` 检测二个类型是否能(统一?),是检测二个类型是否能隐式转换到其中的一种???
+unify 参考 http://haxe.org/manual/type-system-unification.html
 
- 	* `expr.follow(t,notRecursion=false)` ,在调用 unify() 之后调用这个方法,提升到 unify ??? **同上**
 
-	```haxe
-	using haxe.macro.TypeTools;
-	//....
-	var t = Context.typeof(macro null); // TMono(<mono>)    
-	var ts = Context.typeof(macro "foo"); //TInst(String,[])
-	Context.unify(t, ts);
-	trace(t); // TMono(<mono>)
-	trace(t.follow()); //TInst(String,[])
-	```
+```haxe
+using haxe.macro.TypeTools;
+//....
+var t = Context.typeof(macro null); // TMono(<mono>)    
+var ts = Context.typeof(macro "foo"); //TInst(String,[])
+Context.unify(t, ts);
+trace(t); // TMono(<mono>)
+trace(t.follow()); //TInst(String,[])
+```
 
 
 

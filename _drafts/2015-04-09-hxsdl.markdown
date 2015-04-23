@@ -1,0 +1,51 @@
+---
+
+layout: post
+title:  hxsdl
+date:   2014-04-09 08:12:29
+categories: haxelib
+
+---
+
+SDL 绑定用于 haxe/cpp,目前仅在 windows/MSVC 测试
+
+编译步骤:
+
+ * 获得 SDL2 SDK(include + libs)开发包, 然后放置到 `hxsdl/SDL2` 目录下
+
+ * 从 https://www.opengl.org/registry/) 取得 `glext.h`, 并放置于 `hxsdl/SDL2/include` 目录下
+
+<!-- more -->
+
+
+### 个人注
+
+目前用于 heaps 的 C++ 端, 个人觉得混合 C++ 和 haxe 代码的方式很奇特, 因此这里从源码分析一些原理, 未来如果自已需要包装 C++ 库时也将使用这种方式.
+
+
+Hello World!, 完成这个示例需要将 SDL2.dll 放置到相应目录.
+
+```haxe
+import sdl.Sdl;
+
+class Main {
+	
+	static function main() {
+		Sdl.init();
+		
+		Sdl.message("测试", "你好吗?");
+		
+		Sdl.quit();
+	}
+	
+}
+```
+
+
+
+
+
+
+
+
+

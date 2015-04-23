@@ -14,81 +14,6 @@ categories: other
 
 <!-- more -->
 
-#### 其它
-
- * `#ifdef __cplusplus` 一些源码能常见到的.
-
-	> C++ 语言在编译的时候为了解决函数的多态问题，会改变函数名称，但 C 语言则不会，因此会造成链接时找不到对应函数的情况，此时C函数就需要用extern “C”进行链接指定，这告诉编译器， **请保持我的名称，不要给我生成用于链接的中间函数名**.
-
-	```cpp
-	#ifdef __cplusplus
-		extern "C" { // extern C 修饰变量和函数按照 C 语言方式编译和连接;
-	#endif
-	
-		void gme_clear_playlist( Music_Emu* );
-		 	
-	#ifdef __cplusplus
-		}	// extern C 结尾
-	#endif
-	```
-
- 
- * 函数后边跟 const, 表示这个函数不会修改成员变量.
-
-	```cpp
-	int current_track() const;
-	
-	//....
-	
-	int current_track() const{
-		return x;
-	}
-	```
-
- * 初使化成员列表, 可以初使化 const 类型成员.
-
-	> 如果有一个类成员, 类型为 类或结构, 而这个成员需要参数来初使化, 这时就需要对这个类成员进行初使化.
-
-	```cpp
-	class Vector{
-	public:
-		double x;
-		double y;
-		const double PI;
-		Vector(): x(1.0), y(1.0), PI(3.1415926){
-		
-		}	
-	};
-	```
-	
- * 匿名 namespace
-
-	> 相对于 C 的 static 声明来说, 可以在匿名的空间里面声明很多变量和函数,这样可以省去了对每个变量和函数添加static声明.
-	> 实质上匿名空间的功能跟static声明是一样的
-	
- * define 中的 `#` 和 `##`
-
-  - `#` 在宏展开时会将 `#` 后边的参数替换成字符串
-
-		```cpp
-		#define p(exp) printf(#exp)
-		// 调用 p(test) 展开后为: printf("test")
-		```
-
-  - `##` 将前后两个的单词拼接在一起。
-
-		```cpp
-		#define cat(x,y) x##y
-		// 调用 cat(var, 123) 展开后为: var123
-		```
-
-  - `#@` 将值序列变为一个字符
-
-		```cpp
-		#define ch(c) #@c
-		// 调用 ch(a) 展开后为: 'a'
-		```
-
 
 #### 头文件引用
 
@@ -487,7 +412,7 @@ int main (){
 
  * class 继承默认是 private，而struct继承默认是public.
 
- * 对于 template <struct T>, 将报错为 未定义的类型, 因此需要写成 template <class T>
+ * 对于 `template <struct T>`, 将报错为 未定义的类型, 因此需要写成 `template <class T>`
 
 ```c++
 using namespace std;
@@ -681,7 +606,7 @@ int main(int argc, const char ** argv){
 }
 ```
 
-#### 虚函数(virtual)
+#### 虚函数
 
 如下示例, 当一个 Vector 的指针指向 TriVector实例时, 当调用 module()时,指向的将是 Vector 的方法
 
@@ -828,7 +753,109 @@ int Vector::count = 0; // 外部初使化, 并且加上类型, 这里是 int
 ```
 
 
+其它
+------
 
+ * `#ifdef __cplusplus` 一些源码能常见到的.
 
+	> C++ 语言在编译的时候为了解决函数的多态问题，会改变函数名称，但 C 语言则不会，因此会造成链接时找不到对应函数的情况，此时C函数就需要用extern “C”进行链接指定，这告诉编译器， **请保持我的名称，不要给我生成用于链接的中间函数名**.
 
+	```cpp
+	#ifdef __cplusplus
+		extern "C" { // extern C 修饰变量和函数按照 C 语言方式编译和连接;
+	#endif
+	
+		void gme_clear_playlist( Music_Emu* );
+		 	
+	#ifdef __cplusplus
+		}	// extern C 结尾
+	#endif
+	```
 
+ 
+ * 函数后边跟 const, 表示这个函数不会修改成员变量.
+
+	```cpp
+	int current_track() const;
+	
+	//....
+	
+	int current_track() const{
+		return x;
+	}
+	```
+
+ * 初使化成员列表, 可以初使化 const 类型成员.
+
+	> 如果有一个类成员, 类型为 类或结构, 而这个成员需要参数来初使化, 这时就需要对这个类成员进行初使化.
+
+	```cpp
+	class Vector{
+	public:
+		double x;
+		double y;
+		const double PI;
+		Vector(): x(1.0), y(1.0), PI(3.1415926){
+		
+		}	
+	};
+	```
+	
+ * 匿名 namespace
+
+	> 相对于 C 的 static 声明来说, 可以在匿名的空间里面声明很多变量和函数,这样可以省去了对每个变量和函数添加static声明.
+	> 实质上匿名空间的功能跟static声明是一样的
+	
+ * define 中的 `#` 和 `##`
+
+  - `#` 在宏展开时会将 `#` 后边的参数替换成字符串
+
+		```cpp
+		#define p(exp) printf(#exp)
+		// 调用 p(test) 展开后为: printf("test")
+		```
+
+  - `##` 将前后两个的单词拼接在一起。
+
+		```cpp
+		#define cat(x,y) x##y
+		// 调用 cat(var, 123) 展开后为: var123
+		```
+
+  - `#@` 将值序列变为一个字符
+
+		```cpp
+		#define ch(c) #@c
+		// 调用 ch(a) 展开后为: 'a'
+		```
+
+ * 关键字扩展
+  
+  - MSVC - `__declspec` http://www.cnblogs.com/ylhome/archive/2010/07/10/1774770.html
+
+  - 其它　- `__attribute__` 自已搜
+
+	```cpp
+	// 示例:
+	#ifdef _MSC_VER
+	  #if defined(HXCPP_DLL_IMPORT)
+	     #define HXCPP_EXTERN_CLASS_ATTRIBUTES __declspec(dllimport)
+	  #else
+	     #define HXCPP_EXTERN_CLASS_ATTRIBUTES __declspec(dllexport)
+	  #endif
+	#else
+	  #if defined(HXCPP_DLL_EXPORT)
+	     #define HXCPP_EXTERN_CLASS_ATTRIBUTES __attribute__((visibility("default")))
+	  #else
+	     #define HXCPP_EXTERN_CLASS_ATTRIBUTES
+	  #endif
+	#endif
+	```
+	
+ * `explicit` 用来修饰类的构造函数,防止隐式转换 http://www.educity.cn/develop/461209.html
+
+ * 子类中使用 using 声明引入基类成员 http://www.cnblogs.com/ustc11wj/archive/2012/08/11/2637316.html
+
+ * `operator new` http://blog.sina.com.cn/s/blog_3c6889fe0100tqe8.html
+
+<br />
