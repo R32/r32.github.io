@@ -121,9 +121,8 @@ In order to [improve support for interacting](http://haxe.1354130.n2.nabble.com/
 
 @:void					# Use Cpp native 'void' return type (cpp only)
 
+# 文件依赖, 也就是当依赖的文件发生过改动,将重将编译.
 # 附加在 extern 类上, 哪个类调用了这个 extern 类, 就会在 build.xml 中相关 cpp 新增一条 <depend name="file.h" />
-# 但是编译后在 build.xml 相关的 <file /> 元素上仅仅加上一条　<depend />　根本不起作用, 
-# 也就是说加了<depend /> 的 cpp 但却无法引用到 depend 的定义, 是个 Bug 吗?　[haxe 3.2 rc2.0]
 @:depend 				# Add a dependency in the build.xml file.
 ```
 
@@ -320,7 +319,7 @@ dir:			- ??? 和 dospath 一样, 只是多了检测
   <hlsl name="path/tofile.fx" profile="" variable="" target="" />	
 										
   <options name="Options.txt"/>			<!-- TODO: 不明确,反正都是 Options.txt -->
-  <precompiledheader name="" dir="" />  <!-- TODO: 预编译,  -->
+  <precompiledheader name="" dir="" />  <!-- 预编译头文件,name:文件名, dir:目录  -->
 
   <include name="path/to/file.xml" />	<!-- 导入另一个 xml, 覆盖到当前 -->
   <section></section>
@@ -337,7 +336,7 @@ dir:			- ??? 和 dospath 一样, 只是多了检测
  
  <cflag value="" />				<!-- 仅用于 .c 的编译参数 -->
  <cppflag value="" />			<!-- 仅用于 .cpp 或 .c++ 的编译参数 -->
- <objcflag value="" />			<!-- 仅用于 .m(object-c) 的编译参数  -->
+ <objcflag value="" />			<!-- 仅用于 .m(object-c) 的编译参数 -->
  <mmflag value="" />			<!-- 仅用于 .mm(object-c++) 的编译参数 -->
  <pchflag value="" />			<!-- 仅用于 .pch(预编译头文件) 的编译参数 -->
 
@@ -416,25 +415,26 @@ dir:			- ??? 和 dospath 一样, 只是多了检测
   <section></section>
 </prelinker>
 
-<!-- 目标 -->
-  <!-- id: 标识符 -->
-  <!-- tool: 似乎只有 linker 这一个值,   -->
-  <!-- toolid: id值用于链接器选择, 编译顺序从 prelinker 到 linker  -->
-  <!-- output:  输出文件名称,不带扩展名.-->
+<!-- 目标, 所属的一些元素将覆盖 linker 的设定,所以通过 target 元素来修改或增加 linker 的设定 -->
+  <!-- id: 标识符, 可以被其它 target 元素当子模块引用 -->
+  <!-- tool: 只有 "linker"" 这一个值,   -->
+  <!-- toolid: id值用于链接器选择, 编译顺序将从 prelinker 到 linker  -->
+  <!-- output:  输出文件名,不带扩展名.-->
   <!-- overwrite: 重写, 自已看源码定义 -->
 <target id="msvccompat" output="" tool="linker" toolid="${STD_MODULE_LINK}" >
-  <target id="" />				<!-- 子目标 -->
-  <lib name="some.lib" />		<!-- 库名  -->
-  <flag />						<!--  -->
-  <depend />					<!--  -->
-  <vflag />						<!--  -->
-  <dir />						<!--  -->
-  <outdir name="path/" />		<!--  -->
-  <builddir name="" />	<!--  -->
-  <ext />				<!--  --> 
-  <files id="__main__" />		<!-- 选择分组, 不同 id 表示不同分组 -->
+  <target id="" />				<!-- 子模块, 指定 id 值就行了 -->
+  <lib name="some.lib" />		<!-- 库名, [将覆盖加到 linker] -->
+  <flag value="" />				<!-- 编译参数,[将覆盖加到 linker]  -->
+  <depend name="" />			<!-- 文件依赖,将检测这些文件是否发生改动来决定是否重新编译 -->
+  <dir name="" />				<!-- (好像没用), 当调用 target.clean 时被将删除的目录 -->
+  <outdir name="path/to/" />	<!-- 最终输出文件存放目录 -->
+  <builddir name="" />			<!-- 将以指定目录用于中间文件存放, 像是 "目录前缀" -->
+  <ext value="" />				<!-- 输出扩展名, 如果指定将覆盖 linker 的设定 --> 
+  <files id="__main__" />		<!-- 选择需要编译的文件分组, 不同 id 表示不同分组 -->
   <section></section>
 </target>
+
+<!-- 最后建议参考 hxcpp/toolchain/haxe-target.xml -->
 ```
 
 ### CFFI
