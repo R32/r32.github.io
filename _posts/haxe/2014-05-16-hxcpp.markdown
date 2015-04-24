@@ -186,11 +186,11 @@ cpp.Float64    double
 
  * **cpp.NativeArray** C 语言中所描述的数组, 即同类型连续排列的内存引用
 
-  - hxarray.(__unsafe_get,__unsafe_set,__get,__set) 带 unsafe 的方法没有做边界检测.
+  - hxarray.(`__unsafe_get, __unsafe_set, __get, __set`) 带 unsafe 的方法没有做边界检测.
 
 	```haxe
 	// Pointer<T>, T 的类型和 数组类型一致
-	var pa:cpp.Pointer<Int> = cpp.NativeArray.address([1, 2, 3], 0); // 或者 Pointer.arrayElem([1,2,3], 0 )
+	var pa:cpp.Pointer<Int> = cpp.Pointer.arrayElem([1,2,3], 0 )
 	var pa2:cpp.Pointer<Float> = cpp.NativeArray.address([1.0, 2.0, 3.0], 0);
 	```
 
@@ -206,8 +206,7 @@ cpp.Float64    double
 	var cstr:ConstPointer<Char> = str.c_str();
 	
 	str = cstr.fromPointer();
-	
-	
+		
 	// .__s 这个成员变量在　neko 平台也适用.
 	var cstr2:ConstPointer<Char> = untyped str.__s;
 	```
@@ -342,10 +341,10 @@ dir:			- ??? 和 dospath 一样, 只是多了检测
  <mmflag value="" />			<!-- 仅用于 .mm(object-c++) 的编译参数 -->
  <pchflag value="" />			<!-- 仅用于 .pch(预编译头文件) 的编译参数 -->
 
- <objdir value="" />			<!-- 指定编译中间文件时的目录, 默认为 obj -->
+ <objdir value="" />			<!-- 输出文件夹目录, 默认为 obj -->
  <outflag value="" />			<!-- 输出　编译标记, 通常为 -o 或 --output -->
  <pch value="" />				<!-- TODO: 未知 - if(pch == "gcc"){...} -->
- <getversion value="" />		<!-- TODO: 未知 - 示例上看 value 和 exe 元素的基本一样 -->
+ <getversion value="some.exe" /><!-- TODO: 一个输出一些字符到 stderr　的工具命令,输出的字符将通过 md5 计算  -->
  <ext value="" />				<!-- 输出　扩展名, 默认为 .o -->
  <include name="" />			<!-- 导入另一个 xml, 覆盖到当前 -->
  <section unless=""></section>	
@@ -376,18 +375,21 @@ dir:			- ??? 和 dospath 一样, 只是多了检测
 <linker id="dll" exe="link.exe" if="windows">
   <exe name="" if="" />				<!-- 链接器命令名称 -->
   <flag value="-nologo"/>			<!-- linker 命令行参数 -->
-  <lib name="${dll_import_link}" if="dll_import_link" />		<!-- 依赖的链接库 -->
+
+  <lib name="libm.so" if="demo" />	<!-- 依赖的链接库 -->
+  <lib name="-llog" if="demo"/>
+  <lib name="${dll_import_link}" if="dll_import_link" />	
   
   <libdir name="obj/lib" />			<!-- 依赖的链接库的文件夹 -->
-  <fromfile value="@" />			<!--  -->
+  <fromfile value="@" />			<!-- 如果为 @,所有.obj　将以清单的形式写入到 all_objs. 默认为 @ -->
   <ext value=".dll" />				<!-- 输出扩展名, .exe,.dll,"",.so -->
   <outflag value="-out:" />			<!-- 输出参数: windows通常是 -out:,而非windows通常为 -o -->
 
   <prefix value="" />			<!-- 输出文件名前缀 -->	
-  <ranlib name="" />			<!--  -->
-  <recreate value="" />			<!--  -->
-  <expandAr value="" />			<!--  -->
-  <section></section>			<!--  -->
+  <ranlib name="" />			<!-- 命令工具,用于更新静态库的符号索引表,似乎只适用于 gcc 编译器 -->
+  <recreate value="1" />		<!-- 是否删除输出重新建立, 留空为 false,否则为 true.  -->
+  <expandAr value="" />			<!-- 解开 .a 库文件为多个 .o, 留空为 false,否则为 true.-->
+  <section></section>
 </linker>
 
 <!-- linker 示例 -->
@@ -404,12 +406,13 @@ dir:			- ??? 和 dospath 一样, 只是多了检测
   <outflag value="-out:"/>
 </linker>
 
-<prelinker id="" exe="">		<!-- 预链接器 -->
-  <exe name="" />				<!-- 执行 预链接的 命令名称 -->
+<!-- 预链接器, 似乎根本没使用过这个. 子元素参考 linker -->
+<prelinker id="" exe="">		
+  <exe name="" />				
   <flag value="" />		
-  <outflag value="" />			<!-- 文件输出 标记,默认为 -o -->
-  <expandAr value="" />			<!-- 未知. 默认为 false. -->
-  <fromfile value="" />			<!-- 未知. 默认为 @ -->
+  <outflag value="" />			
+  <expandAr value="" />			
+  <fromfile value="" />
   <section></section>
 </prelinker>
 
