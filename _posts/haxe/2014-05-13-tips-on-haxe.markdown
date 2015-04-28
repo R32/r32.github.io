@@ -858,6 +858,13 @@ class App {
 }
 ```
 
+`__current__` 可以用来循环数组:
+
+```
+var tp = new haxe.Template("<xml>::foreach __current__:: <file name="::__current__::" />  ::end::</xml>");
+var str = tp.execute(["a.txt", "b.txt", "c.txt"]);
+```
+
 #### for and while
 
 首先看下 javascript 中的闭包..

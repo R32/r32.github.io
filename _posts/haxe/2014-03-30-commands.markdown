@@ -299,7 +299,8 @@ Haxe Compiler 3.2.0 - (C)2005-2015 Haxe Foundation
 # 映射 package 到 target. 相当于 为 target 取一个别名 package. 例: --remap flash:openfl
 --remap <package:target> : remap a package to another one
 
-# ???单步, 参看下边 --eval 的示例, 如果不加 --interp 将不会有显示..
+# 使用内部宏系统执行, 当不需要指定输出时,
+# 参看下边 --eval 的示例, 如果不加 --interp 将不会有显示..
 --interp	: interpret the program using internal macro system
 
 # 调用 macro 命令, 默认为 macro.Compiler 下的 宏(macro)方法, --macro keep("SomeClass")
@@ -626,8 +627,7 @@ haxe --help-metas, 这类元标记一般添加在代码中, 也可以在 宏(mac
 # JS 将类导出到 window对象 下, 如果 window 未定义,则导出到 export对象(nodejs) 下
 @:expose             : (?Name=Class path)Makes the class available on the window object (js only)
 
-# 表明这个字段为 外部字段, 但是 Haxe 中　要么整个类都是 外部类(extern class), 几乎很少有用这个标签的.
-# 示例 js平台:						@:extern public var prototype:Dynamic;
+# 表明这个字段为 外部字段, 比如添加语法提示时可以用
 # 不能写在方法上所以方法写成变量的形式: 	@:extern public var hasOwnProperty:String->Bool;	
 @:extern             : Marks the field as extern so it is not generated
 

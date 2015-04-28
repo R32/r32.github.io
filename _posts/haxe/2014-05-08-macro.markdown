@@ -803,11 +803,3 @@ Context.unify(t, ts);
 trace(t); // TMono(<mono>)
 trace(t.follow()); //TInst(String,[])
 ```
-
-
-
-
-
-
-
-
