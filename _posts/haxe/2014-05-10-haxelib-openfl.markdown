@@ -163,7 +163,7 @@ openfl 是建立在 Haxe 上的一个跨平台类库, 提供一套　统一的 A
 
  * 显示中文字符,需要设置相关字体为`system/fonts/DroidSansFallback.ttf`
 
- * `textFiled` 无法中文输入. 只有调用 JNI 的原生输入框解决.[简单示例](https://github.com/R32/my-test/tree/master/test/android-zh-input)
+ * `textFiled` 无法中文输入. 只有调用 JNI 的原生输入框解决.[简单示例](https://github.com/R32/HelloWorld/tree/Older/test/android-zh-input)
 
 	> [lime 0.9.7] Bug ??? 如果不将 `textField`的 `selectable` 设为 `false`,字符很容易会变成方块
 

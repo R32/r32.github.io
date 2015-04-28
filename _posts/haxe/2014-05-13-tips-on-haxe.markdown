@@ -800,7 +800,7 @@ abstract 用于抽象化数据结构,用于包装底层类型, 其行为更像�
 	}
 	```
 
-[个人 abstract demo](https://github.com/R32/my-test/blob/master/test/hx-syntax-test/abstract/Source/Main.hx)
+[个人 abstract demo](https://github.com/R32/HelloWorld/blob/Older/test/hx-syntax-test/abstract/Source/Main.hx)
 ```haxe
 abstract Bcd(Int){
 	inline public function new(i:Int):Void {

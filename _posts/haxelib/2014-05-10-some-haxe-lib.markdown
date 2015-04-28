@@ -102,7 +102,7 @@ categories: haxelib
 
  * **[tora](https://github.com/HaxeFoundation/tora)** NekoVM Application Server
 
-	> 类似于 php, 用于处理网页动态内容, 我的一个 [nginx + tora:FastCGI](https://github.com/R32/my-test/blob/master/test/neko-nginx-tora/Nx.hx) 的 demo. 
+	> 类似于 php, 用于处理网页动态内容, 我的一个 [nginx + tora:FastCGI](https://github.com/R32/HelloWorld/blob/Older/test/neko-nginx-tora/Nx.hx) 的 demo. 
 
  * **[promhx](https://github.com/jdonaldson/promhx)** A promise and functional reactive programming
 
