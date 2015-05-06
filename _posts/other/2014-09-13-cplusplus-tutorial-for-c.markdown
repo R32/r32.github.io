@@ -606,6 +606,19 @@ int main(int argc, const char ** argv){
 }
 ```
 
+override http://blog.csdn.net/jszhangyili/article/details/7570311
+
+```cpp
+class Base ｛
+virtual void f();
+}；
+
+class Derived : public Base {
+void f() override; 		// 表示派生类重写基类虚函数f
+void F() override;		//错误：函数F没有重写基类任何虚函数
+}；
+```
+
 #### 虚函数
 
 如下示例, 当一个 Vector 的指针指向 TriVector实例时, 当调用 module()时,指向的将是 Vector 的方法

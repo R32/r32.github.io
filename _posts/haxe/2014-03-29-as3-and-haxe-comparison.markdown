@@ -141,7 +141,7 @@ for (var i:uint = 0; i < 100; i++) {
 
 }
 
-for each (var value:String in items) {
+for(var value:String in items) {
 
 }
 

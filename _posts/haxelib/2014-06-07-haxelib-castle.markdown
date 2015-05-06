@@ -74,31 +74,30 @@ categories: haxelib
 
  * **Unique Identifier** 唯一标识符。将允许引用这一行从其他 表(sheets) 或 列(columns)。唯一标识符必须是有效的代码标识符`[A-Za-z_][A-Za-z0_9_]*`
 
- * **Text** 字符串文本。 任意文本,目前不允许多行文本。注意: 字段名称为 name 将会有特殊意义,用于引用(Reference)
+ * **Text** 字符串文本。 任意文本,目前不允许多行文本.
 
  * **Boolean** true or false.
 
- * **Integer** 整数
+ * **Integer** 整数, 没有小数
 
  * **Float** 浮点数
 
- * **Enumeration** 枚举。类似于 单项选择, 添加 column 时, 用逗号分隔各项值
+ * **Color** 表示 RGB 的整形数值.
 
- * **Flags** 标志。 类似于 多项选择框。例如: `hasHat, hasShirt, hasShoes`, 添加 column 时, 用逗号分隔各项值
+ * **Enumeration** 单项选择, 添加 column 时, 用逗号分隔各项值
 
- * **Reference** 引用。 
+ * **Flags** 多项选择。例如: `hasHat, hasShirt, hasShoes`, 添加 column 时, 用逗号分隔各项值
+
+ * **Reference** 引用, 使用　uid　引用另一个行
 
 	> 引用`Unique Identifier` 或字段名为 `name` 的文本字段.(编辑器将自动提示这些)
 	
 	> 内容只能是同一个表,是以是别的表,但是建立后不能修改.
 
- * **List** 其实更像是 数组(Array)类型 an Array of structured objects
+ * **List** 其实更像是 数组(Array<Object>)类型 an Array of structured objects
 
 	> 当设置 列 的类型为 List 将创建一个新的隐藏工作表。
 	
-	> List 类似于 一对多个数据库关联。
-
- * **Color** 表示 RGB 的整形数值.
 
  * **File** 目标文件相对或绝对路径。
 
@@ -116,9 +115,10 @@ categories: haxelib
 
  * **Tile Layer** 这个字段由 castle 编辑器自行添加数据
 
- * **Custom Type** 自定义类型, 
+ * **Custom Type** 自定义类型
 
-	> 通过点击 IDE 的右下角的 `edit type` 打开一个空白页面, 我看到的示例都是 enum 类型的, 和普通的 Enumeration 比起来,
+	> 通过点击 IDE 的右下角的 `edit type` 打开一个空白页面, 示例都是 enum 类型的, 和普通的 Enumeration 比起来,
+	
 	> Custom Type 的 enum 是带有 构造方法的. 示例如下: 
 
 	```haxe
@@ -134,6 +134,31 @@ categories: haxelib
 		Monster( m : monsters );
 	}
 	```
+	
+	> custom type　的构造参数使用下列类型
+	
+	```
+	Int: 
+	Bool:
+	Float:
+	String:
+	CustomType: 自身
+	SheetName: 任意 sheet name
+	```
+	
+	> 构造参数可以添加前缀 `?`, 这意味着参数为可选参数可省略
+	
+	> custom type 储存原型为混合数组类型,数组第一个元素为 索引:
+	
+	```
+	Value example				Stored value
+	Fixed						[0]
+	Random(0.5)					[1,0.5]
+	Monster(MyMonsterId)		[2,"MyMonsterId"]
+	Or(Random(0.5),Fixed)		[3,[1,0.5],[0]]
+	```
+	
+	> 编辑器将严格验证 Custom type 的输入
 
 
 
@@ -142,20 +167,48 @@ categories: haxelib
 ### 2D 地图编辑器 
 
 
-为了将 sheet 变成 2D 地图编辑器,需要添加 width:Interger , height:Interger , props:Dynamic, layers:List(name:Text, data:Tile Layer) 字段,然后右键单击 sheet name, 选中 lever 选项. 这时 每添加一行数据将会出现 Edit 的按扭.
+#### Level
 
- * New Layer 将自动填充 layers:List
- 
- * Mode 这个选项将应用到当前 layer, Mode 保持为 Tiles 就好
-
-   - Tiles 默认
-
-   - Ground 地面
-
-   - Objects 对象
+首先你需要将 sheets 变为 Level,你需要 需要添加 width:Interger , height:Interger , props:Dynamic,然后右键单击 sheet name, 选中 lever 选项. 这时 每添加一行数据将会出现 Edit 的按扭允许你进入到 Level 
 
 
+#### Layers
 
+layer 是一个储存了 Level 的信息字段, 主要分为:
+
+ * **List Layer:** 列表层,如果你添加一个 List 到你的 Level sheet, 这个 List 包含有 Number 类型的 x 和 y 属性, 这将是 list layer,  可以以可视化的方式自动填充 x,y. 当每次当点击 map preview(纯色背景板) 时, 可以添加额外的属性/列到 List 能够直接输入到编辑器
+
+ * **Index Layers:** 索引层 如果你想要画一些东西储存在一个紧凑数组中, 添加 Layer 类型 column到 level sheet, 作为一些限制你可能不能定义每个单元格的类型, 如果你不是在 first layer, first layer(索引为0) 将不会显示而且被当成 "没有信息" 
+
+  - 感觉这里应该是 List<Layer> 类型,而不是 单纯的 Layer
+
+ * **Zone Layer** 区域层, 非常像 列表层除了还包含有 Number 属性 width,height, 它将被显示成为 map 区域在 地图编辑器中
+
+(个人注: 上边三种类型可以创建纯颜色块的2D 地图)
+
+Tips: 添加 layers:List(name:Text, data:Tile Layer)] 列, 可选将会出现 new Layer 按钮
+
+##### Layer Display
+
+layer 取得一些信息从引用它的目标
+
+ * 如果 reference 有字段类型 Image, 将使用这 图片 用于显示
+
+ * 如果 reference 有字段类型 Color, 将使用这 颜色 用于显示
+
+ * 如果无有效信息, 你可以在编辑器上自定义层颜色
+
+##### Grid and Precise coords
+
+栅栏与精确坐标, index layers 将总是为 grid-aligned. 其它 layers 可以有更精确的位置, 如果你使用 Float 类型作为位置(x,y)类型,即使这种情况下你仍然可以激活 Lock Grid 选项.
+
+默认的 grid size 为 16 像素, 可以在 level 选项中修改.
+
+#### 
+
+### 快捷键
+
+ * F4 跳到引用原行, F3 搜索引用
 
 ### 代码中调用
 
@@ -198,18 +251,37 @@ package dat;
 private typedef Init = haxe.macro.MacroType < [cdb.Module.build("test.cdb")] > ;
 ```
 
+#### 类型映射
 
-
+参考原文档.
 
 ### 更多特性
 
  * Display Column
 
- * Index
+	> 如果右键单击 column 并选译 `Display Column`, 这项 column　将替换 unique Identifier 显示行引用.
+	
+	> 这通常用于显示可读的名字相对于 unique Identifier
+	
+	> 但储存的的数据输入仍旧使用的是 uid,这项仅仅只影响编辑器如何显示
 
- * Separators 分隔符
+ * Index 行索引
 
- * Add Group 
+	> 通常 index 不是导出数据的一部分,但是你可以通过 右键 sheet name,把 add index 勾上.
+	
+	> 对于 List column　类型, index 具有唯一性.
+
+ * Separators 分隔符, 在检索数据时,可以通过分隔符来区划分数据
+
+	> 当　在行数数上单击右键, 选择 Separator 将创建一个小的可见分隔行在这行之上,
+	
+	> 同样你可以双击分隔符给它命名.
+
+ * Add Group
+
+	> sheet name 上右键选择 Add Group, 和 Separators 一起使用, 每个分隔符分开的分组的索引都将从 0 开始
+	
+	> 分组索引同样从 0 开始增
 
 
 ### 其它

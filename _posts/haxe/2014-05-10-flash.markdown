@@ -64,7 +64,18 @@ untyped __global__["undefined"];
 untyped __global__["uint"]; //basic type
 untyped __global__["flash.display.DisplayObject"];
 
+# 创建 as3 源生类
 __new__(className, arg1, arg2 ...)
+
+
+#这个在遍历 Object 对象时会比 Reflect 更好
+__keys__(obj)		# 将构建一个数组包含 obj　的 keys. 例: for(k in __key__(obj))
+
+__delete__(o, f)	# delete 
+
+__in__ (e,f) 		#
+
+__is__(e, t)		# 
 ```
 
 
