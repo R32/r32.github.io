@@ -23,22 +23,10 @@ http://yahoo.github.io/gifshot/
 
 <!-- more -->
 
+ * [web-bundle](https://github.com/haxorplatform/web-bundle) Tool to pack binary files into a PNG image.
 
- * http://adolfans.github.io/sdltutorialcn/ SDL 中文翻译
+	> 把多少文件打包成 png 图片形式, 然后可以解析这个图片获得文件, 用于在减少 http 请求的数据量.
 
-
-#### web
-
-这个章节的大多数内容都是用于美化的 CSS 或 Javascript , 大多数似乎在 ie8 中都会报错.
-
-
- * [responsive-html-email-template](https://github.com/charlesmudy/responsive-html-email-template)  邮件模板,如果你想发广告的话.
-
- * **[Primer](https://github.com/primer/primer)** Github 官方的 CSS 前端设计
-
-  - 几个颜色值 http://primercss.io/colors/
-
- * **[holder](https://github.com/imsky/holder)** 生成图像占位符,但是不需要
 
  * [webify](https://github.com/ananthakumaran/webify) 转换 ttf 到 woff, eot 和 svg
 
@@ -54,6 +42,19 @@ http://yahoo.github.io/gifshot/
         font-style: normal;
     }
 	```
+
+#### web
+
+这个章节的大多数内容都是用于美化的 CSS 或 Javascript , 大多数似乎在 ie8 中都会报错.
+
+
+ * [responsive-html-email-template](https://github.com/charlesmudy/responsive-html-email-template)  邮件模板,如果你想发广告的话.
+
+ * **[Primer](https://github.com/primer/primer)** Github 官方的 CSS 前端设计
+
+  - 几个颜色值 http://primercss.io/colors/
+
+ * **[holder](https://github.com/imsky/holder)** 生成图像占位符,但是不需要
 
  * **[网页设计](https://github.com/showcases/design-essentials)** 这个是 github 自已整理的
 

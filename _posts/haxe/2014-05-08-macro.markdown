@@ -7,11 +7,10 @@ categories: haxe
 
 ---
 
-宏 是 Haxe 最主要也是最强大的特性
+宏 是 Haxe 最主要也是最强大的特性,最新的[官网参考](http://haxe.org/manual/macro.html)
 
-> 宏可以在编译时通过计算初使化一些值,比如 UI 的配置等等.
-> 宏可以扫描资源文件夹,用于自动嵌入文件或者 IDE 智能提示
-> 最新的[官网参考](http://haxe.org/manual/macro.html)
+ > 在编译时通过计算初使化一些值,比如 UI 的配置等等.
+ > 扫描资源文件夹,用于自动嵌入文件或者 IDE 智能提示
 
 <!-- more -->
 
@@ -135,11 +134,17 @@ class Foo{
 宏
 ------
 
-**Tips:** haxe 标准库中有很多 工具类能更好地构建, 如: macro.TypeTools, macro.ExprTools, 以及其它以 Tools 结尾的类, 通常是使用 using 关键字添加这些工具类.
+haxe 宏分为三种类型:
+
+ * 表达式宏,
+
+ * 宏构建 `@:build`
+
+ * 初使化宏. 主要是通过 编译参数 --macro 来执行, 运行顺序在解析 main 之前, 所以通常用来配置编译器行为
 
 #### 宏方法
 
-内容只适用于 haxe 3. 宏相当于一个在编译时运行的 neko 平台.例如: 在编译时输出 `--macro Sys.println('Hello macro!')`
+**Tips:** haxe 标准库中有很多 工具类能更好地构建, 如: macro.TypeTools, macro.ExprTools, 以及其它以 Tools 结尾的类, 通常是使用 using 关键字添加这些工具类.
 
 **注意:** 通常应该把宏函数和其它函数分开放在不同文件,否则代码中的很多地方要加上**`#if macro`** 这样的条件编译才能通过编译.
 
@@ -207,7 +212,7 @@ class Foo{
 	// Tips: 在宏函数体中获得 Expr 的值
 	// getValue("hello");	then val = 'hello';
 	macro public static function getValue(ep:Expr){
-		var val = haxe.macro.ExprTools.getValue(ep)); //或者 using haxe.macro.ExprTools;
+		var val = haxe.macro.ExprTools.getValue(ep));
 		return macro null;
 	}
 	```
@@ -282,23 +287,6 @@ class Foo{
 #### 小抄
 
 ```haxe
-class Main{
-	static public function main(){
-		trace( Um.tut_const() );
-	}
-}
-
-class Um{
-	macro public static function tut_const() {
-	    return macro "simple";
-	}
-}
-```
-
-如上示例: 当调用 宏方法 Um.tut_const 时, Um.tut_const 的返回值将替换掉 Um.tut_const(), 也就是说 `trace( Um.tut_const() )` 将替换成 `trace("simple")`;
-
-
-```haxe
 class Main {
 	
 	static function main() {
@@ -338,7 +326,6 @@ class Um{
 
 **注意**: 宏方法 assign 和 noChange 只有返回值不一样, 充分说明了 宏返回值 将替换所 宏调用. 这一概念很重要.
 
-------
 
  * haxe.macro.ExprTools 类中的 toString 和 getValue 都是常用方法
 
@@ -610,7 +597,8 @@ getLocalModule():String
 //
 getLocalTVars():Map<String, TVar>
 
-//
+// Returns the current type in/on which the macro was called.
+// http://haxe.org/manual/macro-generic-build.html
 getLocalType():Null<Type>
 
 //

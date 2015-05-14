@@ -19,66 +19,54 @@ categories: haxelib
 
 #### 工具
 
+一些常见的工具如 format, hscript 将不在这里列出..
+
  * **[hxBitcoin](https://github.com/cbatson/hxBitcoin)** the Bitcoin, cryptocurrency and cryptography library for Haxe 
 
 <!-- more -->
 
  * **[hxparse](https://github.com/Simn/hxparse/)** haxe Lexer/Parser library 词法分析器
 
- * **[format](https://github.com/HaxeFoundation/format)** 用于解析各种文件或数据.
-
  * **[datetime](https://github.com/RealyUniqueName/DateTime)** [Haxe UTC时区处理]({% post_url haxelib/2015-03-17-haxelib-datetime %}#时区处理)
 
- * **[unifill](https://github.com/mandel59/unifill)** Shim your code to support Unicode across all platforms.
+ * [unifill](https://github.com/mandel59/unifill) Shim your code to support Unicode across all platforms.
 
-	> 默认情况的 neko 以及 cpp 是无法检测中文字符串长度的. 
+	> 默认情况的 neko 以及 cpp 是无法检测中文字符串长度的.
 
- * **[hxsl](https://github.com/ncannasse/hxsl)** 但是目前感觉 heaps 库下的 hxsl 才是最新的
-
-	> adobe AGAL . [使用指南](http://haxe.org/manual/hxsl).
-
- * [hscript](https://github.com/HaxeFoundation/hscript) Parser and interpreter for Haxe expressions
-
- 	> 用于 **运行时** 解析并运行 haxe 代码. hscript 在设计时为了保持更轻量,和容易, 所以对 haxe 代码有限制
-
- * **[dox](https://github.com/dpeek/dox)**
-
-	> 帮助文档生成器, haxe 官网目前使用这个,而丢弃了以前的文档生成器. [示例: h3d API]({% post_url haxe/2014-05-05-doc-gen %})
-
- * [hx-lua](https://github.com/MattTuttle/hx-lua) Simple lua wrapper in a haxe extension
-
-	> 用于 **运行时** 解析并运行 lua 代码, 因为是通过 hxcpp 调用 c 语言的,因此只适用于 cpp及neko 这二个或相关平台.
+ * **[dox](https://github.com/dpeek/dox)** API 文档生成	
 					
+ * [TileCraft](https://github.com/yupswing/TileCraft) Haxe/OpenFL 2.5D Modeling Tool (WIP)
+
+ * [differ](https://github.com/underscorediscovery/differ) A Separating Axis Theorom collision library for haxe
+
+	> 2D ONLY, COLLISION ONLY. No physics here. By design :)
+	
+ * [HxScout](https://github.com/jcward/hxScout) A free cross-platform Scout alternative, written in Haxe/OpenFL
 
 #### 游戏引擎
 
- * **[heaps(h3d)](https://github.com/ncannasse/heaps)**
+ * [flambe](https://github.com/aduros/flambe) flash stage3D + html5 2D 游戏引擎
 
-	> 使用 stage3D,webGl,openGl, 没有文档, 未发布
+ * [kha](https://github.com/KTXSoftware/Kha) Super portable software dev kit. 超级便携式软件开发包.
 
- * [haxeflixel](https://github.com/haxeflixel)
+ * **[heaps(h3d)](https://github.com/ncannasse/heaps)** 使用 stage3D,webGl,openGl, 没有文档
 
-	> 全位图游戏引擎,社区以及周边都远比 haxepunk 强大
+ * [haxeflixel](https://github.com/haxeflixel) 基于 openfl, 全位图游戏引擎, 文档非常完善
 
- * [haxepunk](https://github.com/HaxePunk) 全位图
-
-	> 全位图游戏引擎, 比 haxeflixel 更简单, 像是个人维护的项目
+ * [haxepunk](https://github.com/HaxePunk)  基于 openfl, 全位图游戏引擎 更简单, 像是个人维护的项目
 	
- * [luxe](https://github.com/underscorediscovery/luxe) **关注**
+ * [luxe](https://github.com/underscorediscovery/luxe) 
 
 	> for deploying games on Mac, Windows, Linux, Android, iOS and WebGL
 	
-	> 目前还处于 alpha 版. 没有 flash 平台,没有了多余的类,专注于游戏引擎. 感觉由于编译速度的原因,上边的 平台除了 WebGL 似乎都不太好调试,
+	> 没有 flash 平台,没有了多余的类,专注于2D游戏引擎. windows 需要 vs 2013
+	
 
 #### UI
 
  * [haxeui](https://github.com/ianharrigan/haxeui)
 
-	> 使 xml 配置布局, CSS 配置 skin.
-
-	> 感觉官方默认的 CSS 颜色配置并不好看, 1.3.0 版本时, CSS 出错了还不好找错在哪
-
-	> 希望这个库能使用 h3d/h2d 下的 css 解析器来处理 css 解析.
+	> 使 xml 配置布局, CSS 配置 skin. 但是 css 不小心出错不好查错.
 
 	> 加载和解析的时间比 stablexui 长.
 

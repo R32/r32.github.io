@@ -83,7 +83,7 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下, 在各包(文件夹或�
 
  * `std` , 例如:当你写一个 叫 `Math` 的类时,可以通过 `std.Math` 调用标准的 `Math`
 
- * `typedef SString<Const> = String`. 这个表达式相当于 `typedef SString<T> = String`
+ * `typedef SString<Const> = String`. http://haxe.org/manual/macro-generic-build.html
 	
 	```haxe
 	//这行在 sys.db.Type.hx 文件中.于是可以有如下定义

@@ -53,6 +53,8 @@ categories: other
 
   - `git clone git@github.com:yss/restjs.git localdir`
 
+  - 如果不需要历史可以加参数 `--depth 1`
+
 
 #### 更新
 

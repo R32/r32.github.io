@@ -5,15 +5,12 @@ date:   2014-03-30 21:50:10
 categories: haxe
 ---
 
+更多的资源, 其实这二个链接就包含了所有
 
- * [LudumDare List](http://www.ludumdare.com/compo/tools/)
+ * [LudumDare List](http://www.ludumdare.com/compo/tools/) LD 工具清单
 
-	> LudumDare 用清单列出一些非常强大的工具用于一般游戏开发 
 
- * [PixelProspector](http://www.pixelprospector.com/indie-resources/)
-
-	> 独立开发资源列表.
-
+ * [PixelProspector](http://www.pixelprospector.com/indie-resources/) 独立开发资源列表
 
 
 本文档源文件为: http://haxeflixel.com/documentation/game-development-tools/
@@ -21,7 +18,7 @@ categories: haxe
 
 <!-- more -->
 
-### 开放源代码工具
+### 图形编辑器
 
  * [Gimp](http://www.gimp.org/)
 
@@ -34,14 +31,14 @@ categories: haxe
 	> 高级矢量图像编辑器. Inkscape 的功能类似于一些商业软件如Adobe Illustrator, CorelDraw, 以及 Xara X. Inkscape 利用了 W3C 标准可缩放矢量图形 (SVG) 文件格式.
 
 	> Inkscape 支持许多高级的 SVG 功能特性（markers, clones, alpha blending, 等） 和非常简化的设计界面.很容易编辑 节点，执行复杂的路径运算，跟踪位图等等。
+	
+	
+ * [Krita](http://www.krita.org/)
 
- * [Blender](http://www.blender.org/)
+	> Krita 是一个免费的数字绘画和插图应用程序, Krita offers CMYK support, HDR painting, perspective grids, dockers, filters, painting assistants, and many other features you would expect
 
-	> Blender 是任何人都可以自由使用的 **3D** 创建工具。免费软件，优秀的社区和 100%开放。
- 
-	> 用 Blender 你可以建立 model，shade，animate、 render和composite.
 
-	> 更多详情见:[Blender 特性](http://www.blender.org/features-gallery/features/).
+### 声音编辑工具
 
  * [LMMS](http://lmms.sourceforge.net/)
 
@@ -49,14 +46,32 @@ categories: haxe
 
  * [SFXR](http://www.drpetter.se/project_sfxr.html)
 
-	> SFXR 是一个声音生成器, 被广泛用于创建于 Ludum 游戏声音特效。
+	> SFXR 用于创建于游戏声音特效。比如 跳,打击, pickup/coin
 
  * [BFXR](http://www.bfxr.net/)
  
-	> BFXR 是一个移植于 AS3 SFXR 并改进添加了更多特性.It has moved in the direction of increased complexity and range of expression.
+	> BFXR 是一个移植于 AS3 SFXR 并改进添加了更多特性.
 
 
+### 地图编辑器
 
+ * [Tiled](http://www.mapeditor.org/)
+
+	> Tiled 是一个通用的 tile 地图编辑器, [DEMO](http://haxeflixel.com/demos/TiledEditor/)
+	
+ * [Ogmo](http://www.ogmoeditor.com/)
+
+	> Ogmo 是通用级使用 windows 的独立游戏开发人员
+
+### 资源
+
+ * (ShoeBox)[http://renderhjs.net/shoebox/]
+
+	>　基于 AIR 的免费应用,它具有许多实用程序,使得资源管理更简单..
+
+ * (Texture Packer)[https://www.codeandweb.com/texturepacker]
+
+	>  将多个Sprite 打包成一个图像,容易使用.
 
 ### 其它
 

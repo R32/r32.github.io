@@ -549,8 +549,6 @@ vcproj                 : GenCPP internal
 
 #### metas
 
-haxe --help-metas, 这类元标记一般添加在代码中, 也可以在 宏(macro) 中添加.
-
 ```bash
 @:abi                : Function ABI/calling convention (cpp only)
 
@@ -737,6 +735,8 @@ haxe --help-metas, 这类元标记一般添加在代码中, 也可以在 宏(mac
 
 # 防止 被 * 符号导入, 例 import some.*;
 @:noImportGlobal     : Prevents a static field from being imported with import Class.*
+
+@:noPrivateAccess    : Disallow private access to anything for the annotated expression
 
 # 如果找到其第一个类型, 跨目标允许模块可以被访问. 例:如果目标为 flash,　那么就不可以访问 cpp 包下的类, 
 # 另一个方法可以做同样的行为 如: --macro allowPackage("sys")
