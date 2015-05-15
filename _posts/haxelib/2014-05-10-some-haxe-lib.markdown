@@ -45,6 +45,8 @@ categories: haxelib
 
 #### 游戏引擎
 
+haxe LD32游戏示例 : https://github.com/skial/haxe.io/issues/118
+
  * [flambe](https://github.com/aduros/flambe) flash stage3D + html5 2D 游戏引擎
 
  * [kha](https://github.com/KTXSoftware/Kha) Super portable software dev kit. 超级便携式软件开发包.

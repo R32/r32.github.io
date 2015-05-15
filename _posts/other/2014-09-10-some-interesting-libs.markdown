@@ -27,6 +27,7 @@ http://yahoo.github.io/gifshot/
 
 	> 把多少文件打包成 png 图片形式, 然后可以解析这个图片获得文件, 用于在减少 http 请求的数据量.
 
+ * [img2xls](https://github.com/Dobiasd/img2xls) Convert images to colored cells in an Excel table. -python
 
  * [webify](https://github.com/ananthakumaran/webify) 转换 ttf 到 woff, eot 和 svg
 
