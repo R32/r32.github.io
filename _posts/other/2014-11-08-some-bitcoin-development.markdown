@@ -152,7 +152,7 @@ block header 提供了一些容易改的字段，例如专用的nonce字段，�
 
 任何成功计算出 block header 哈希的矿工可以将整个 block 添加到块链中(假设这个block是有效的),这些block的正常处理是通过block height(块高度)--(我觉得其实就是block索引,类似于数组索引), 例如: block2016是第一个难度调整块(TODO: ??是因为由于0不在计算之内,因此这个数字不是2015).
 
-![btc-gen-key](/assets/img/en-blockchain-fork.svg)
+![btc-gen-key](/assets/img/bitcoin/en-blockchain-fork.svg)
 
 multiple blocks(参照上图注意区别单个block)可以有相同高度, 通常是二个或多个矿工创建一个block的时间大致相同,这将导致明显的叉支, 如上图所示
 
@@ -215,11 +215,11 @@ Note: 如果在同一个数据块找到了相同的 txid, 这有可能出现在�
 
 对于第一种情况, 被 **未升级** 节点拒绝, 矿工软件从未升级节点获取数据与此同时另一个矿工软件从已升级节点获得数据,他们拒绝在构建在同一块链上, 这将创建永久的分叉也称为硬分叉(hark soft) - 一条已经升级块链和未升级的块链
 
-![btc-gen-key](/assets/img/en-hard-fork.svg)
+![btc-gen-key](/assets/img/bitcoin/en-hard-fork.svg)
 
 对于第二种情况, 被 **已升级** 的节点拒绝. 假如已经升级的节点控制了主要的哈希频率那么则有可能维持永久分叉的块链, 那是因为在这示例中, 未升级节点同样将接受有效的blocks来自已升级的节点, 所以已升级节点可以创建强壮的链,而这未升级节点将接受这有效的块链, 这称为软分叉(soft fork)
 
-![btc-gen-key](/assets/img/en-soft-fork.svg)
+![btc-gen-key](/assets/img/bitcoin/en-soft-fork.svg)
 
 
 尽管在块链中这是真实的分叉, 修改一致性的规则经常被描述为创建硬或者软分叉. 如:增加block size到1Mb以上需要硬分叉, 在此实例中,实际的块链分叉不是必须的-但是它仍有可能发生.
@@ -258,7 +258,7 @@ SPV客户端还可以监测block和"交易"版本号的增加以确保它们处�
 
 为简单起见, 本节假装 coinbase transactions 不存在, coinbase transactions 仅可以被矿工创建而且是下边多数的规则的例外, 建议你阅读本指南 Block chain 的部分小节.
 
-![btc-gen-key](/assets/img/en-tx-overview.svg)
+![btc-gen-key](/assets/img/bitcoin/en-tx-overview.svg)
 
 上图显示了比特币交易的主要部分, 每个交易至少有一个收入和支出, 每个收入satoshi花费来自上个支出(output), 每个作为UTXOs的支出将等待下个收入(input)将其花费. 当钱包告诉你还有 10,000 satoshi 时, 这意味着你有 10,000 satoshi 在一个或多个UTXOs中.
 
@@ -270,7 +270,7 @@ SPV客户端还可以监测block和"交易"版本号的增加以确保它们处�
 
 下图有助于说明这些工作流程, Alice 发送一个交易给Bob,稍后Bob花掉这笔钱, Alice和Bo将使用常见的标准交易类型 Pay-To-Public-Key-Hash(P2PKH). P2PKH 让 Alice 发送 satoshis 到典型的bitcoin地址, 后续使用简单密钥配对(simple cryptographic key pair)让Bob花费掉这些 satoshis .
 
-![btc-gen-key](/assets/img/en-creating-p2pkh-output.svg)
+![btc-gen-key](/assets/img/bitcoin/en-creating-p2pkh-output.svg)
 
 在交易之前Bob首先必须生成密钥和公钥, 比特币使用椭圆曲线数字签名算法(ECDSA)的secp256k1曲线. private key(privkey)是256位的随机数值, 该数值的副本可确定性转换成public key(pubkey). 由于后续能可靠的再次建立,因此不需要存储 pubkey.
 
@@ -286,7 +286,7 @@ Alice 广播交易并将它添加到块链, 网络将它分类为 Unspend Transa
 
 scriptPubKey和scriptSigs 使secp256k1 pubkeys和signatures结合的条件逻辑,创建一种可编程的授权机制.
 
-![btc-gen-key](/assets/img/en-unlocking-p2pkh-output.svg)
+![btc-gen-key](/assets/img/bitcoin/en-unlocking-p2pkh-output.svg)
 
 对于 P2PKH-style 支出, Bob 的 scriptSigs 将包含以下数据片段:
 
@@ -296,7 +296,7 @@ scriptPubKey和scriptSigs 使secp256k1 pubkeys和signatures结合的条件逻辑
 
 Bob的secp256k1签名不仅证明Bob控制着privkey, 同样防止篡改交易的non-signature-script部分, 所以Bob可以安全地广播它们到P2P网络.
 
-![btc-gen-key](/assets/img/en-signing-output-to-spend.svg)
+![btc-gen-key](/assets/img/bitcoin/en-signing-output-to-spend.svg)
 
 如上图所示, Bob数据的signs包含 txid 和引用上个交易的支出索引(output index), 上个支出的scriptPubKey. 而Bob创建的scriptPubKey将让下个接收者花费这个当易的支出和satoshis余额. 从本质上说整个交易是已签名的除了 scriptSigs,它包含有 pubkey 和 secp256k1签名.
 
@@ -322,7 +322,7 @@ script语言是故意设计成 Forth-like 基于堆栈无状态和图灵不完�
 
 若要测试该交易是否有效, scriptSigs和scriptPubKey操作每次执行一项(???), 与Bos的scriptSigs开始,一直到Alice的scriptPubKey结束, 下图显示了一个标准的P2PKH scriptPubKey, 下面的图描述了过程:
 
-![btc-gen-key](/assets/img/en-p2pkh-stack.svg)
+![btc-gen-key](/assets/img/bitcoin/en-p2pkh-stack.svg)
 
 下边所描述的栈顶请参照上图箭头所指示:
 
@@ -353,11 +353,11 @@ scriptPubKey由对脚本做了什么不感兴趣的花费人创建, 而接收人
 
 如相所示这基本的 P2SH 工作流程看上去几乎等同于P2PKH工作流, Bob随意地创建了redeem script, 并求得哈希值, 并把哈希值给Alice, Alice创建一个P2SH-style包含了这个哈希值的支出.
 
-![btc-gen-key](/assets/img/en-creating-p2sh-output.svg)
+![btc-gen-key](/assets/img/bitcoin/en-creating-p2sh-output.svg)
 
 当Bob想要花掉Alice发给他的支出(output)时, 他需要同时提供signature和序列化的redeem script用于scriptSigs. P2P网络确保 redeem script hash 和Alice支出(output)中script hash有相同的值.然后处理redeem script哪果它是主要的scriptPubKey, 如果 redeem script 没有返回 false, 那么Bob可以花费掉余额.
 
-![btc-gen-key](/assets/img/en-unlocking-p2sh-output.svg)
+![btc-gen-key](/assets/img/bitcoin/en-unlocking-p2sh-output.svg)
 
 redeem script hash和pubkey_hash有相同的属性,因此它可以转换为标准的比特币地址格式,仅有一点小小的改变以区别其它标准地址. 这使得收集P2SH-style地址和收集P2PKH-style地址一样简单. hash同样可以在 redeem script 之中混淆任意pubkey. 因此 P2SH script 和 P2PKH pubkey_hash 一样安全
 
