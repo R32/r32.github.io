@@ -40,6 +40,10 @@ categories: haxe
 
 ### 声音编辑工具
 
+ * [bosca-ceoil](https://github.com/TerryCavanagh/boscaceoil/) 音乐编辑器, flash, 
+
+	> 下载 http://distractionware.com/blog/2013/08/bosca-ceoil/
+
  * [LMMS](http://lmms.sourceforge.net/)
 
 	> LMMS 是一个免费的跨平台软件，用于制做音乐。
@@ -54,6 +58,9 @@ categories: haxe
 
 
 ### 地图编辑器
+
+ * [**ANAmap**](http://deepnight.net/tools/tabletop-rpg-map-editor/) flash, 抽像化的地图编译器, 作出来图片很精美
+
 
  * [Tiled](http://www.mapeditor.org/)
 
