@@ -511,13 +511,47 @@ locktime 自身为无符号的4字节整数, 可以被解析为二种方式:
 
 默认情况下, 矿工保留50KB 每个block花费satoshis但是很长时间没有被花费交易的优先权. 每个block中的剩余空间通常分配给其费用根据每个字节的交易与更高支付交易开始添加以队列,直到所有的可用空间已填充
 
-Bitcoin Core 0.9, 交易将不计算高优先交易需要支付的最小费用(当前为 1,000 satoshi)
+Bitcoin Core 0.9, 交易将不计算高优先交易需要支付的最小费用(当前为 1,000 satoshi)的跨网络广播, 任何交意仅支付最低费用应该准备等待很长时间在block有足够预留空间将它添加进来之前. 请参阅为什么这将是重要验证付款部分.
+
+由于每个交易花费UTXOs, 因为UTXO仅只能被花费一次, UTXOs的全部价值必须花掉或作为交易费给矿工. 很少有人的UTXOs中的余额完全等于想要花费的,因此大多数交易包含一个零钱支出(change output).
+
+零钱支出是常规的支出将花费的satoshi余额从UTXOs返回到花费者. 他们可以重用相同的已经使用过的 P2PKH pubkey_hash 或 P2SH script hash于 UTXO. 但由于这个原因所述在下一个小节中, 强烈建议零钱支出(change output)被发送到新的 P2PKH或P2SH 地址
 
 #### Avoiding Key Reuse
 
+在交易中，发送者和接收者每个透露给对方在交易中使用的公共密钥或地址, 这使得任何人使用公共块链追踪过去和将来的交易,涉及其它人相同的公钥或址.
 
+如果相同的公钥经常使用, 发生在人们使用比特币地址(pubkey_hash)作为来变的支付地址, 其它人可以轻松地跟踪其的消费习惯, 包括有多少satoshis在已知的地址中.
+
+并不一定要那样,　如果每个pubkey只用了二次--一次用来接收另一次用于支出, 其它人可以获得大量的隐私.
+
+更妙的是, 使用新pubkey或唯一的地址在接收支付或创建零钱支出可以结合其它技术稍后再讨论，　如 CoinJoin或合并回避(merge avoidance), 将可以使从块链中追踪交易记录变得非常困难.
+
+避免密钥重复使用还可以提供安全性, 以防止可能会从pubkey或签名比较(signature comparisons)中重建privkey(假设)(现在可能在稍后讨论的某些情况下, 假设用一般的普通攻击)
+
+ * 唯一(非重复使用)的P2PKH和P2SH地址保护免受第一种类型攻击通过保持 ECDSA pubkey_hash 隐藏,直到首次发送 satoshis 到地址, 因此攻击实际上是无用的,除非他们可以重建 privkey 在不到二个小时内, 块链将对交易保护得很好.
+
+ * 唯一(非重复使用)的privkey保护免受第二种类型攻击通过每个privkey仅生成一个签名,因此攻击者永远不会得到随后的签名在基于比较(comparison-based)的攻击中使用. Existing comparison-based attacks are only practical today when insufficient entropy is used in signing or when the entropy used is exposed by some means, such as a side-channel attack.(TODO: ???entropy)
+	
+因此对于隐私和安全, 我们建议(encourage)你建立的你的app应避免pubkey的重复使用,并在可能的情况下,劝阻用户重复地址, 如果你的app需要一个固定的URI向其发送支付, 请参阅之后[bitcoin:URL](#bitcoin_URI)的部分
+ 
 #### Transaction Malleability
 
+(TODO: 这一节内容都感觉不对)
+
+没有任何比特币的签名哈希类型估护scriptSigs,保持门的打开为有限的拒绝式服务攻击称为交易韧性(transaction malleability). scriptSigs包含 secp256k1签名, 它不能给自已签名, 使得攻击者能够进行非功能性(non-functional)修正的交易. 例如: 攻击者可以将某些数据添加到scriptSigs在上一个scriptPubKey已处理之前它将被丢弃.(an attacker can add some data to the scriptSigs which will be dropped before the previous scriptPubKey is processed.)
+
+虽然修改非功能性(non-functional)--所以它们既不会修改交易的收入(inputs)也不会修改支出(outputs)--它们会更改交易计算出来的哈希. 由于每个交易链接到上一个交易使用哈希值作为 交易标识(txid), 一个修改后的交易将不会有创建者预期的txid.
+
+这不是一个问题因为比特币大多数交易被设计为立即添加到块链, 但是它确实会成为一个问题当支出所在的交易在花费前而这个交易却已经被添到块链.
+
+比特币开发人员一直在努力在标准交易类型中减少交易韧性, 但是一个完整的修正目前仍处于规划阶段, 在目前新的交易不应该依赖之前的交易,它们还没有添加到块链. 龙其是当大量的 satoshis 处于危险之中.
+
+交易韧性同样会影响支付跟踪, 比特币核心 RPC 接口允许你跟踪交易通过其 txid--但如果txid发生更改(因为交易已经被修改). 可能会出现交易已经从网络中消失.
+
+当前最好做法是 交易跟踪要求这个交易应该由交易支出(UTXOs)作为收入(inputs),因为他们不难修改不会导致无效的交易.
+
+最佳做法进一步规定如果一项交易似乎要从网络中消失和需要重新发布, 重新发布将使丢失的交易无效. 一种方法,将会不停的工作以确保重新发布的交易全都具有相同的支出.
 
 ### Contracts
 
