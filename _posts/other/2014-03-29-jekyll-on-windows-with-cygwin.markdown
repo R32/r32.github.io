@@ -27,6 +27,8 @@ categories: other
 
 	```bash
 	Ruby/ruby: Interperted object-oriented script......
+	Ruby/rubygems: Ruby module management system
+	Ruby/ruby-nokogiri: Ruby HTML/XML/SAX library	# 由于cygwin下无法通过编译这个库 1.6.6.2
 	Archive/zip: Info-ZIP compression utility.
 	Libs/crypt: Encryption/Decrypion utility and library
 	Python/python: Python language interpreter. 
@@ -38,7 +40,7 @@ categories: other
 	# 下边清单再加上 zip 包 就是 flash alchemy 所需的环境
 	Devel/make: The GNU version of the 'make' utility
 	Devel/gcc-g++: GNU  Compiler Collection(C++)
-	Perl/perl: Larry Wall's Practical Extracting and Report Language.
+	Perl/perl: Perl programming language interpreter
 	```
  
  4. 可选安装. 把`cygwin bash` 到添加右键菜单
@@ -51,10 +53,24 @@ categories: other
 	
 	4. `chere -u` 将移除右键菜单. 参看 `chere --help`
 
- 5. `gem install github-pages` 就可以完成安装.	
+ 5. `gem install github-pages` 就可以完成安装.
 
 	> 如运行 gem install 时弹出 UTF之类的错误, 可以把 dos 窗口编码改成 英文.
-	> 左上角图标 -> 默认值 -> 默认代码页, 然后重新打开 
+	> 左上角图标 -> 默认值 -> 默认代码页, 然后重新打开.
+
+	```bash
+	# 如果被墙, 添加淘宝镜像 gem sources, 请确保只有 ruby.taobao.org
+	$ gem sources --remove https://rubygems.org/
+	$ gem sources -a https://ruby.taobao.org/
+	$ gem gem sources -l
+	*** CURRENT SOURCES ***
+	https://ruby.taobao.org
+
+
+	# 如果在编译时缺少某些库, 如最近重装时提示错误:  cannot find -lgmp
+	# 那么运行 cygwin-setup.exe, 将相应的如 gmp-devel 选上,因为编译时需要 devel 后缀的库
+	```
+
 
  6. 测试
  
@@ -95,11 +111,12 @@ Generating... which: no python2 in (/usr/local/bin:/usr/bin:...
 ln -s /usr/bin/python /usr/local/bin/python2
 ```
 
-
 jekyll: command not found, 需要添加路径 `export PATH=$HOME/bin:$PATH`
 
 
-
-
-
 [Jekyll]:http://jekyllrb.com/
+
+
+#### 存在问题
+
+pass

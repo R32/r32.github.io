@@ -75,7 +75,14 @@ __delete__(o, f)	# delete
 
 __in__ (e,f) 		#
 
-__is__(e, t)		# 
+__is__(e, t)		#
+
+
+# 对于 flash 平台, 使用 __keys__ 遍历要比使用 Reflect.Fields 要更有效率
+var obj = Lib.current.stage.loaderInfo.parameters;
+for(k in untyped __keys__(obj)){
+	trace(k +": "+untyped obj[k]);
+}
 ```
 
 

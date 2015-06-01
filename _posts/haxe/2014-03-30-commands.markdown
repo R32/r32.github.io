@@ -746,6 +746,8 @@ vcproj                 : GenCPP internal
 
 @:noUsing            : Prevents a field from being used with 'using'
 
+@:nonVirtual         : Declares function to be non-virtual in cpp (cpp only)
+
 # 声明 abstract 类型不接受 null 值
 @:notNull            : Declares an abstract type as not accepting null values
 
@@ -834,7 +836,6 @@ vcproj                 : GenCPP internal
 @:void               : use Cpp native `void` return type(cpp only)
 
 @:volatile           : (for cs,java)
-
 ```
 
 

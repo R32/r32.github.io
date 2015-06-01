@@ -111,6 +111,8 @@ In order to [improve support for interacting](http://haxe.1354130.n2.nabble.com/
 # 编译的cpp代码中不包含有类似于 HX_STACK_LINE...这些调试用的代码, 只用于字段或方法(但是好像无法作用于构造函数),
 @:noStack				# 
 
+@:nonVirtual         	# Declares function to be non-virtual in cpp (cpp only)
+
 # @:sourceFile("path/file.cpp") - 用于 external class,路径以当前 hx 文件所在为当前目录,参考 hxcpp/test/native 目录
 @:sourceFile			# Source code filename for external class
 

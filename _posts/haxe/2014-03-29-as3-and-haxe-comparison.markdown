@@ -508,17 +508,15 @@ function set x (value:Number):void {
 public var x (get, set):Float;
 
 function get_x():Float {
-
-   return _x;
-
+	//return x;				// 如果返回 x,则需要给 var x 添加 @:isVar,
+							// 如果你只是想返回 x, 建议把 get 更改为 default
+	return Other;
 }
 
 function set_x(value:Float):Float {
-
-   return _x = value;
-
+	//return x = value;		// 重要: 如果是是这种形式, 则 var x需相加 @:isVar,		
+	return value;			// 对于 get 形式,实际上不需像上边一行给 x 赋值
 }
-// 重要: 这种形式在 haxe 很少见, 参见下边 Read-Only Properties 才是正确的做法
 {% endhighlight %}
 </div>
 </div>
@@ -550,7 +548,7 @@ public var x (default, null):Float;
 // never would restrict all access
 public var y(default, set):Float;
 function set_y(v:Float):Float{
-	return y = v; // 注意这个 y 没有下划线, 和声明的 y 变量一相同
+	return y = v; 		// 注意这个 y 没有下划线, 和声明的 y 变量一相同
 }
 {% endhighlight %}
 </div>
