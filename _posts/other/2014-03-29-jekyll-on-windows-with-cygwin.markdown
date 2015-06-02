@@ -62,7 +62,7 @@ categories: other
 	# 如果被墙, 添加淘宝镜像 gem sources, 请确保只有 ruby.taobao.org
 	$ gem sources --remove https://rubygems.org/
 	$ gem sources -a https://ruby.taobao.org/
-	$ gem gem sources -l
+	$ gem sources -l
 	*** CURRENT SOURCES ***
 	https://ruby.taobao.org
 
