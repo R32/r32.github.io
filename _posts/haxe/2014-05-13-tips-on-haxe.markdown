@@ -430,7 +430,7 @@ $type(json);	// Unknown<0>(即:Monomorphs)
     att.age = "26";
     //...
  	```
- * Implementing Dynamic
+ * [Implementing Dynamic](http://haxe.org/manual/types-dynamic-implemented.html)
 
  	```haxe
  	class C implements Dynamic<Int> {
@@ -750,6 +750,8 @@ class Foo {
 
 
 #### typedef
+
+实现 typedef 定义的方法或属性不能是 inline 类型的
 
  * typedef 用来定义一种数据结构,包含变量,及方法(没有方法体),也没有 `public` `private` 以及 `static` 这些访问控制
 

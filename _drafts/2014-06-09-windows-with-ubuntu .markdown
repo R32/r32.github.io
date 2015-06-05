@@ -11,6 +11,11 @@ categories: other
  
 <!-- more -->
 
+#### 引导系统
+
+http://superuser.com/questions/511582/how-to-use-bcdedit-to-dual-boot-windows-installations
+
+
 #### 硬盘安装
 
  * 最新版的 ubuntu.iso

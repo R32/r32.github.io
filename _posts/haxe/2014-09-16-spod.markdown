@@ -5,33 +5,26 @@ date:   2014-09-16 13:16:18
 categories: haxe
 ---
 
-全称为 Simple Persistent Object Database. 使用 SPOD 可以 映射 数据库表(db table)为 类(Class), 也就是通过简单地修改　类字段及调用类方法的方式来修改数据库表. 对于大多数标准的东西, 你只需要提供一些基础的声明, 而不需要编写单独的 SQL 语句, SPOD 是基于宏的, 也就是说 从 类 到 数据库表的转换是在编译时完成的,而不是运行时, 这样就不用担心性能的问题. 原文引用: http://old.haxe.org/manual/spod
+全称为 Simple Persistent Object Database. SPOD可以映射数据库表(db table)为类(Class). 即每个继承`sys.db.Object`的类都可以看成为一个数据库表.
+
+因此需要简单地修改类字段或调用类方法即可修改数据库表. 大多数情况下, 你只需要提供一些基础的声明, 而不需要编写单独的 SQL 语句, SPOD 是基于宏的, 也就是说类到数据库表的转换是在编译时完成的,而不是运行时, 这样就不用担心性能的问题. 
+
+原文引用: http://old.haxe.org/manual/spod
  
 <!-- more -->
 
-### 创建 SPOD
+### SPOD类
 
-通过继承 `sys.db.Object`, 
+下边说明中 SPOD 用于表示继承了`sys.db.Object`的类, 而小写的 spod 则为其实例(即一行数据).
 
-```haxe
-import sys.db.Types;
+#### 对应类型
 
-class User extends sys.db.Object {
-    public var id : SId;
-    public var name : SString<32>;
-    public var birthday : SDate;
-    public var phoneNumber : SNull<SText>;
-}
-```
-
-个人注: SPOD实例 就像是 SQL 表格中的一行数据, 通过 SPOD类的静态字段 manager 来处理每一行数据(SPOD 实例)
-
-`sys.db.Types.hx` 包含对应的 SQL 类型所对应的 Haxe 类型:
+`sys.db.Types.hx` 文件 中包含了对应的 SQL 类型所对应的 Haxe 类型:
 
 ```haxe
 package sys.db;							// 注释内容为对应的 SQL 数据类型
 
-/** int with auto increment **/
+/** int with auto increment, SId将会被声明为主键(primary key),在insert之后将自动赋值,并且动自增长 **/
 typedef SId = Null<Int>
 
 /** int unsigned with auto increment **/
@@ -40,9 +33,7 @@ typedef SUId = Null<Int>
 /** big int with auto increment **/
 typedef SBigId = Null<Float>
 
-
 typedef SInt = Null<Int>				// 经典 32 位有符号整形数字 SQL INT
-
 
 typedef SUInt = Null<Int>				// 无符号整形　SQL UNSIGNEDINT
 
@@ -131,26 +122,25 @@ typedef SFlags<T:EnumValue> = Null<haxe.EnumFlags<T>>
 typedef SSmallFlags<T:EnumValue> = SFlags<T>;
 
 /** allow to store any value in serialized form **/
-typedef SData<T> = Null<T>				// 允许存储　被 haxe 序列化(Serialize)的 任意值
-										// 因为 haxe 不仅仅是可以序列化字符串
+typedef SData<T> = Null<T>				// 允许存储能被haxe序列化(Serialize)的任意值
 
 /** allow to store an enum value that does not have parameters as a simple int **/
-typedef SEnum<E:EnumValue> = Null<E>	// 允许存储不具有参数将作为一个简单的int类型的 enum 值
+typedef SEnum<E:EnumValue> = Null<E>	// 允许存储不具有参数, 简单的int类型的 enum 值
 ```
 
-#### 专用元标记
+#### 元标记
 
 可以将 元标记(metadata) 添加到 SPOD 类上用于声明一些附加信息.
 
-用于 类字段:
+用于成员字段:
 
  * `@:skip`： 忽略此字段，表示这个字段不是数据库结构中的一部分
 
  * `@:relation`： 将此作为一种关系的字段声明 [(见下面的特定部分)](#关系)
 
-用于 类:
+用于SPOD类:
 
- * `@:table("myTableName")`： 更改表名称 （默认与类名相同）
+ * `@:table("myTableName")`： 表名在数据库中的名称（默认与类名相同）
 
  * `@:id(field1,field2,...)`： 指定表的主键字段。例如下面的类并没有一个唯一的 id 与自动递增，但两个字段组成 联合主键 
 
@@ -162,39 +152,136 @@ typedef SEnum<E:EnumValue> = Null<E>	// 允许存储不具有参数将作为一�
 	}
 	```
 
- * `@:index(field1,field2,...,[unique])`: 声明指定的字段为 索引(index)-并将按此顺序进行索引。如果最后一个字段是 unique 类型这意味着这是 唯一性索引(unique index) （每个字段值的组合可以只出现一次）
+ * `@:index(field1,field2,...,[unique])`: 声明指定的字段为索引(index)-并将按此顺序进行索引。如果最后一个字段是 unique 类型这意味着这是唯一性索引(unique index)（可以声明多个@:index, 每个字段值的组合可以只能出现一次）
 
-#### 初始化及缓存清理
+#### 构建表格
 
-有二个静态方法可用于 SPOD 的初使化及结束:
-
- * `sys.db.Manager.initialize()`: 将初始化创建管理, 请确保至少一次在使用 SPOD 之前调用它。
-
- * `sys.db.Manager.cleanup()`: 将清理临时对象缓存。 如果你使用的是服务器模块缓存来释放内存或回滚之后以确保我们不使用缓存的对象版本，这样可以做。
-
-	> (This can be done if you are using server module caching to free memory or after a rollback to make sure that we don't use the cached object version)
-
-
-#### 创建表格
-
-你可以从代码中直接创建表格, 无需写 SQL 语句, 对于 Mysql你需要的是通过 `sys.db.Mysql` 连接到数据库, 示例:
+通过继承 `sys.db.Object`, 后续将这个类称为SPOD类, 这个类对应为一个数据库表, 而类实例则为表中的一行数据,
 
 ```haxe
-var cnx = sys.db.Mysql.connect({
-   host : "localhost",
-   port : null,
-   user : "root",
-   pass : "",
-   database : "testBase",
-   socket : null,
-});
-sys.db.Manager.cnx = cnx;
-if ( !sys.db.TableCreate.exists(User.manager) ){
-    sys.db.TableCreate.create(User.manager);
+import sys.db.Types;
+
+class User extends sys.db.Object {
+    public var id : SId;
+    public var name : SString<32>;
+    public var birthday : SDate;
+    public var phoneNumber : SNull<SText>;
 }
 ```
 
-请注意当前的 TableCreate 将不会创建索引或初始化您的表的关系, TODO: 通过 sys.db.Manager.initialize() 方法业初使化 索引　和　关系吗?????
+#### 连接数据库
+
+连接数据库并初始化表格.
+
+```haxe
+var cnx : sys.db.Connection;
+if( !useMysql )	
+	cnx = sys.db.Sqlite.open("mydatabase_file.db");
+else {
+	cnx = sys.db.Mysql.connect({
+		host : "localhost",
+		port : 3306,
+		database : "MyDatabase",
+		user : "root",
+		pass : "",
+		socket : null
+	});
+}
+sys.db.Manager.initialize();		// 初使化
+
+sys.db.Manager.cnx = cnx;			// 将 cnx 赋值给静态字段 Manager.cnx
+
+// 在数库上建立表格,如果不存在
+if(!sys.db.TableCreate.exists(User.manager)){
+	sys.db.TableCreate.create(User.manager);
+}
+```
+有二个静态方法可用于spod的初使化及结束:
+
+ * `sys.db.Manager.initialize()`: 用于初始化SPOD类, 因此请确保至少一次在使用SPOD类之前调用它。
+
+ * `sys.db.Manager.cleanup()`: 将清理缓存.
+
+	> (will cleanup the temporary object cache. This can be done if you are using server module caching to free memory or after a rollback to make sure that we don't use the cached object version)
+
+注意区别: `SPOD::manager`用于SPOD(表格)操作, 而`sys.db.Manager`管理连接到数据库.
+
+sys.db.Connection 实例具有如下方法: 源码参见 各实现平台包如: neko/_std/sys/SQLite.hx
+
+ * `request(sql:String):sys.db.ResultSet`: 例: request("select * from User");
+
+ * `close():Void`: 关闭数据库连接 
+
+ * `escape(s:String):String`: 转义单引号
+
+ * `quote(s:String):String`: 转义单引号并用单引号括起来: `"'"+s.split("'").join("''")+"'"`
+
+	> 如果你使用 request(sql), **不要忘记** 使用这个方法,以防止一些SQL注入语句
+
+	> 例: `request("select * from User WHERE name LIKE " + quote(name))`
+
+ * `addValue(s:StringBuf, v:Dynamic ):Void;`: 
+
+ * `lastInsertId():Int`: 需要在insert之后才有效,和最后一个插入的自增id值一致
+
+ * `dbName():String`: 数据库类型名称, 如: SQLite
+
+ * `startTransaction():Void`: 启动事务, 之后便可以进行 commit/rollback 操作.
+
+ * `commit():Void` 确认,
+
+ * `rollback():Void`: 回滚,回滚到最后一次的commit() 
+
+#### 表格操作
+
+每个SPOD都具有一个静态字段manager,用于表格操作,例如在默认的情况下 User.manager 将有如下方法:
+
+ * `all(?lock:Bool):List<User>`: 参数带`?`表示可以为 Null 值,即`(lock:Null<Bool> = null)`
+
+ * `count(cond:Dynamic):Int`: 返回符合条件的数量, 如需
+
+  - 参数cond为查询条件, cond将由宏解析并支持多种格式, [参看后边的搜索查询](#搜索查询)
+
+ * `dbClass():Class<Dynamic>`: dbClass() == User
+
+ * `dbInfos():sys.db.RecordInfos`: 获得表格信息，如主键,索引,
+
+ * `delete(cond:Dynamic, ?options:{}):Void`: 根据条件(cond)删除行数据
+
+  - options 类型为{?orderBy:field, ?limit:[pos,len], ?forceIndex:[field]}, 对于forceIndex 似乎只支持 Mysql
+
+ * `dynamicSearch(x:{}, ?lock:Bool):List<User>`:
+
+ * `forceUpdate(o:User, field:String):Void`:
+
+ * `get(id:Int, ?lock:Bool):User`: 返回单个 spod(即一行数据)
+
+ * `search(cond:Dynamic, ?options:{}, ?lock:Bool):List<User>`: 
+
+ * `select(cond:Dynamic, ?options:{}, ?lock:Bool):User`: 
+
+ * `unsafeCount(sql:String):Int`:	sql 为 SQL语句,只是返回值不一致, 例: unsafeCount("select count(*) from User");
+
+ * `unsafeDelete(sql:String):Void`:
+
+ * `unsafeGet(id:Int, ?lock:Bool):User`:
+
+ * `unsafeGetId(o:User):Int`:
+
+ * `unsafeGetWithKeys(keys:{}, ?lock:Bool):User`:
+
+ * `unsafeObject(sql:String,lock:Bool):User`:
+
+ * `unsafeObjects(sql:String,lock:Bool):List<User>`:
+
+当你需要实现一些特殊的表格操作时,可以自定义一个 manager, 由于 Manager 类是基于宏的, 因此定义一个 manager 并没有那么简单
+
+```haxe
+class User extends sys.db.Object {
+	//......
+	public static var manager = MyManager<User>(User);
+}	
+```
 
 
 #### 插入
@@ -209,18 +296,6 @@ u.insert();
 ```
 
 在 .insert() 完成之后, 自动增量的唯一性 ID 将被设置为 NULL,
-
-
-#### 管理器
-
-每一个 SPOD 需要管理器(manager), 您可以通过将以下行添加创建管理器(manager) 到 SPOD 类之中.
-
-```haxe
-public static var manager = new sys.db.Manager<User>(User);
-```
-其实 SPOD 宏将会自动添加上边那行,也就是说你 **不必添加** 上边那行, 所以只补充一点只有当你想要创建自定义的管理器(需要继承 Manager)时可以手动添加上边那一行, 将 Manager 替换成 Manager 的子类.
-
-可以继承　Manager　然后自已写一些扩展, 比如删除表格之类的
 
 #### 获取
 　
@@ -342,7 +417,9 @@ function listName( ?name : String ) {
 
  * stringA.like(stringB) : 将使用 SQL LIKE 操作符来查找 如果 stringB 包含在 stringA
 
-	> 例: $name.like("J%"), TODO: 在源码中除了 like 还有 has, 但是没有 has 的文档
+	> 例: $name.like("J%") 或 "filedname".like("J%"), 
+	
+ * TODO: 在源码中除了 like 还有 has, 但是没有 has 的文档, has 看上去用于 SFlags(EnumFlags)字段
 
 
 #### SQL IN
@@ -403,7 +480,7 @@ class User extends sys.db.Object {
     // ....
 }
 class Group extends sys.db.Object {
-   public var id : SId;
+	public var id : SId;
    // ...
 }
 
@@ -414,12 +491,13 @@ class UserGroup extends sys.db.Object {
 }
 ```
 
-
 当第一次从 UserGroup实例 中读取 user 字段, SPOD 将获取 uid 所对应的User实例并将其缓存. 如果你更改了 user 字段,它将在同一时间修改 uid 值.(If you set the user field, it will modify the uid value as the same time.) 
+
+(个人注: 这是因为它们引用的是同一个值, 但是如果执行了 user.delete(), 是需要自已删除相关联的表格数据, 小心表格的级联处理)
 
 #### 锁定
 
-当使用　事务, 关系 默认为没有锁定, 你能进行 **行锁定** (SQL SELECT...FOR UPDATE)通过添加 lock 如下:
+当使用事务, 关系默认为没有锁定, 你能进行 **行锁定** (SQL SELECT...FOR UPDATE)通过添加 lock 如下:
 
 ```haxe
 @:relation(uid,lock) public var user : User;
@@ -427,18 +505,19 @@ class UserGroup extends sys.db.Object {
 
 #### 级联
 
-在 MySQL/InnoDB 关系数据库中通过使用 CONSTRAINT/FOREIGN KEY 强制执行. 当删除一个 User实例 时, 这种方式将删除相应的 UserGroup实例, 但是如果 关系字段可以为空, 那么值将设置为 NULL;
+在MySQL/InnoDB中通过使用`CONSTRAINT/FOREIGN KEY`关系可以被强制约束.这时当删除一个User实例时, 所有对应的UserGroup实例都将被删除, 但是如果关系字段(relation field)可为空(nullable), 那么对应的实例将设置为 NULL;
 
-如果你想要强制执行 级联为可以为空 的关系字段, 你可以如下添加 cascade:
+如果你想要可为空的强制约束类型的关系字段, 可以如下添加 cascade:
 
 ```haxe
 @:relation(uid,cascade) var user : Null<User>;
 ```
 
-#### 关系搜索
-You can search a given relation by using either the relation key or the relation property 
+(个人SQLite测试: 即使从 User 里删除了一行数据,但对应的 UserGroup 里相应的 user 值却还存在,而且不是为空,除非在delete之后调用 cleanup(), )
 
-可以搜索 relation key 或 relation property
+#### 关系搜索
+
+You can search a given relation by using either the relation key or the relation property 
 
 ```haxe
 var user = User.manager.get(1);
@@ -496,4 +575,3 @@ SDate 是二进制的 blob. 为了允许任何类型的序列化(文本或二进
 ### 自动插入,搜索,编辑生成
 
 [SpodAdmin](http://github.com/ncannasse/spodadmin) 项目提供了一个基于 HTML 的界面, 允许插入和搜索/编辑和删除 SPOD 对象根据已编译的 SPOD 信息, 它还允许数据库同步根据 SPOD 结构在编译时自动检测差异在编译时和当前 DB之间.  
-
