@@ -58,6 +58,39 @@ haxe 3.2 ,细节查看 CHANGES.txt
 		}
 	}
 	```
+ * haxe.Constraints 下的 Function 和 FlatEnum, 用来限制一些动态内型???
+
+  - Function 用于限制类型需要为 函数类型
+
+  - FlatEnum 用来限制 Enum 的类型.
+
+	```haxe
+	//....
+	var onclick : haxe.Constraints.Function;
+	
+	// 但是这个就不好理解了, 
+	abstract Event<T:Function>(String) from String to String {}
+	
+	enum Flat {
+		A;
+		B;
+	}
+
+	enum NotFlat {
+		F(s:String);
+	}
+
+	class Test {
+		static function main() {
+			test(A); // ok
+			test(F("foo")); // Constraint check failure for test.T
+		}
+
+		static function test<T:haxe.Constraints.FlatEnum>(t:T) { }
+	}
+	
+	```
+
 
 #### 未分类
 

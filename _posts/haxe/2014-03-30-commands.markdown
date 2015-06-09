@@ -740,6 +740,7 @@ vcproj                 : GenCPP internal
 
 # 如果找到其第一个类型, 跨目标允许模块可以被访问. 例:如果目标为 flash,　那么就不可以访问 cpp 包下的类, 
 # 另一个方法可以做同样的行为 如: --macro allowPackage("sys")
+# 但是调用 --macro 很容易引起冲突
 @:noPackageRestrict  : Allows a module to be accessed across all targets if found on its first type
 
 @:noStack            :  (cpp only)
@@ -763,6 +764,7 @@ vcproj                 : GenCPP internal
 # 函数重载, 用于 extern class, 允许同一个方法有不同参数.
 @:overload           : (Function specification (no expression))Allows the field to be called with different argument types
 
+# Example: var val = @:privateAccess instance.privateFiled
 @:privateAccess      : Allow private access to anything for the annotated expression
 
 @:property           : Marks a property field to be compiled as a native C# property (cs only)

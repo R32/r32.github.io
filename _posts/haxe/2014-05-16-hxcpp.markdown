@@ -48,6 +48,11 @@ hxcpp 会自动根据平台选择不同的 C++编译器. 任意平吧上编译�
 	inline private static function setInt(bytes:haxe.io.BytesData, addr:Int, x:Int){
 		untyped __cpp__("*((int *) ({0}->GetBase() + {1})) = {2}",bytes,addr,x);
 	}
+	
+	// 实现上可以直接使用 CPP 的变量, 可以是函数的参数变量, 但不可以是函数内部的局部变量, 细节见编译后的 cpp 源码
+	public function setFade(start_msec:Int){
+		untyped __cpp__("gme_set_fade(start_msec);");	// 	直接引用函数参数变量, 
+	}
 	```
 
  * `__global__` 参看 `\haxe\std\cpp\_std\Std.hx` 源码.
@@ -445,7 +450,7 @@ dir:			- ??? 和 dospath 一样, 只是多了检测
 
 实际上很多 xml 配置 hxcpp 已经写好了,只要简单的写个 `<files></files>` 和 `<target></target>` 就可以了.
 
-由于 XML 先后顺序的原因,你只能引用或覆盖 `finish-setup.xml` 和 `haxe-target.xml` 定义的变量和元素
+**重要** 由于 XML 先后顺序的原因,你只能引用或覆盖 `finish-setup.xml` 和 `haxe-target.xml` 定义的变量和元素
 
 ### CFFI
 
