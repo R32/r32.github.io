@@ -65,6 +65,7 @@ haxe LD32游戏示例 : https://github.com/skial/haxe.io/issues/118
 	
 	> 没有 flash 平台,没有了多余的类,专注于2D游戏引擎. windows 需要 vs 2013
 	
+ * [pixijs-haxe](https://github.com/pixijs/pixi-haxe)
 
 #### UI
 

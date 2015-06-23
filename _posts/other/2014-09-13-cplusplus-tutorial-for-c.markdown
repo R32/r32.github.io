@@ -1324,11 +1324,8 @@ int n = 1;
 if(*(char *)&n == 1) {...}
 
 // 注意那个是 字母 l 而不是数字 1,  检测时 if(ENDIANNESS == 'l')
-static union { char c[4]; unsigned long mylong; } endian_test = {{ 'l', '?', '?', 'b' } };
+static union { char c[4]; unsigned long mylong; } endian_test = {'l', '?', '?', 'b'};
 #define ENDIANNESS ((char)endian_test.mylong)
-
-
-//
 ```
 
 运行时检测: 因为编译的机器未必和运行它的机器相同. 因此 除非在一些操作方法强制要使用 little endian 或 big endian, 否则 readByte 将要快于 readInt32, 这解释了为什么有时候 byte to byte 要更快.
