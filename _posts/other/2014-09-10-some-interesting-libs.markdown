@@ -12,6 +12,8 @@ categories: other
 
 #### 工具
 
+ * [sokit](https://github.com/sinpolib/sokit/releases) socket 调试工具
+
  * [gifshot](https://github.com/yahoo/gifshot)
 
 	> JavaScript library that can create animated GIFs from media streams, videos, or images
@@ -20,6 +22,8 @@ http://yahoo.github.io/gifshot/
  * **[patorjk.com](http://www.patorjk.com/software/taag/#p=display&f=Graffiti&t=Type%20Something)**
 
 	> 一个在线工具用于将 文本转换为 Acsii art 的在工具,
+		
+ * [the-art-of-command-line](https://github.com/jlevy/the-art-of-command-line) 常用命令
 
 <!-- more -->
 
@@ -48,6 +52,9 @@ http://yahoo.github.io/gifshot/
 
 这个章节的大多数内容都是用于美化的 CSS 或 Javascript , 大多数似乎在 ie8 中都会报错.
 
+ * [图标下载](http://www.easyicon.net/)
+
+ * [dynamics.js](https://github.com/michaelvillar/dynamics.js) 动画库
 
  * [responsive-html-email-template](https://github.com/charlesmudy/responsive-html-email-template)  邮件模板,如果你想发广告的话.
 
@@ -65,7 +72,7 @@ http://yahoo.github.io/gifshot/
 
 	> http://fortawesome.github.io/Font-Awesome/examples/
 	
- * [angular.js](https://github.com/angular/angular.js) 用于经常需要修改及更新的数据
+ * [angular.js](https://github.com/angular/angular.js) 用于经常需要修改及更新的数据 [中文文档](http://www.apjs.net/)
 
  * [KaTeX](https://github.com/Khan/KaTeX) 用于在网页中展示数学公式.
 
@@ -100,7 +107,9 @@ http://usablica.github.com/intro.js/
 	> A jQuery plugin that switches between multiple header designs as you scroll, so you always have a header that looks great with the content below it. http://aerolab.github.io/midnight.js/ 用这个脚本做来 主页不错. 标记: IE8 中出错
 
 
+#### CLib
 
+ * [stb](https://github.com/nothings/stb) stb single-file public domain libraries for C/C++
 
 
 #### 收集

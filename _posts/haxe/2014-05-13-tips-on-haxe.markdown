@@ -253,6 +253,12 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下, 在各包(文件夹或�
 	
 	> 如果需要获得 CLI 程序的输出值(stdout|stderr) 则应该使用 sys.io.Process. 这二个都会等待 CLI程序**完全运行结束**（我只用 nodejs 的 setTimeout 测试过）.
 
+ * stdout 
+
+  - "\b"(ascii:08 BS) 为退格, "\b" 在 haxe 中会报错.
+
+  - "\r"(ascii:13 CR) 回车,windows上并不换行, 需要LF(10)才将换行.
+
  * **缓存编译** 绑定目录到指定端口,缓存编译, 这样编译时不必每次都解析所有 .hx 文件,而只会解析修改过的文件
 
 	> 注: 开启这种效果之后有时候会造成 找不到 宏编译成生的字段 的错误, 这时需要重启 flashdevelop,
@@ -697,12 +703,15 @@ class Main {
 
 ```haxe
 class Helo{	
-	// Class<Dynamic> 为最通常的作法
+	// Class<Dynamic> 
 	var t:Class<Dynamic>; //需要指定 Class 类型,比如 Class<Helo>
 	public function new(){
 		t = Helo;
 	}
 }
+
+// https://github.com/HaxeFoundation/haxe/issues/3098
+// 如果需要赋值 Class, 不要指定变量类型, 否则无法访问静态变量.
 ```
 
 
@@ -1164,6 +1173,7 @@ var xml = Xml.parse('<root>
 
 var fast = new Fast(xml.firstElement)
 ```
+
 
 #### FPHelper
 

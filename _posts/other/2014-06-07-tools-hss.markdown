@@ -7,11 +7,7 @@ categories: other
 
 ---
 
- [hss] 是一个类似于 less 或 sass 的 动态样式表语言.但是更加轻量及简单. 基于 neko 平台. 最新的 1.4 版本需要自已编译. 编译参考 Makefile 文件.
-
- [原 hss 文档]:(http://ncannasse.fr/projects/hss)
-
- [hss]:(https://github.com/ncannasse/hss)
+ [hss](https://github.com/ncannasse/hss) 是一个类似于 less 或 sass 的 动态样式表语言.但是更加轻量及简单. 基于 neko 平台. 最新的 1.4 版本需要自已编译. 编译参考 Makefile 文件. 
  
 <!-- more -->
 

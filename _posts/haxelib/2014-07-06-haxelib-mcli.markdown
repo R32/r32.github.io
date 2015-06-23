@@ -163,7 +163,7 @@ class Test extends mcli.CommandLine{
 			for(str in Sys.args().slice(ARGSLICE)){								
 				if(str != "-D" && StringTools.startsWith(str,"-D")){	// 将类似 -Dkey=value 变成 -D key=value 的形式
 					args.push("-D");
-					args.push(str.substr(2));
+					args.push(str.substr(3));
 				}else{
 					args.push(str);
 				}

@@ -43,6 +43,8 @@ categories: haxelib
 	
  * [HxScout](https://github.com/jcward/hxScout) A free cross-platform Scout alternative, written in Haxe/OpenFL
 
+ * [swhx](https://github.com/filt3rek/swhx) 
+
 #### 游戏引擎
 
 haxe LD32游戏示例 : https://github.com/skial/haxe.io/issues/118

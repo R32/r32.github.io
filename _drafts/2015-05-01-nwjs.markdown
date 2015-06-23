@@ -1,0 +1,73 @@
+---
+
+layout: post
+title:  nwjs
+date:   2015-02-01 09:15:12
+categories: other
+
+---
+
+https://github.com/nwjs/nw.js
+
+ * css3,webGL
+
+ * [nodejs APIS](http://nodejs.org/api/) 和 [所有第三方包](https://npmjs.org/)
+
+ * webkit和node运行于同一线程
+
+ * 简单打包和发布
+
+ * 跨平台. Linux, Mac OS X 和 Windows
+
+<!-- more -->
+
+### nodejs模块
+
+ * 内部模块(nodejs api 部分) 
+
+  - https://github.com/nwjs/nw.js/wiki/Changes-related-to-node
+
+ * 第三方 Javascript 代码
+
+ * 第三方 C/C++ 插件
+
+### 运行APP
+
+ * 目录, 指定目录就行了
+
+ * `.nw`文件(.zip重命名).
+
+都需要 `package.json`在根目录中 https://github.com/nwjs/nw.js/wiki/Manifest-Format
+
+```json
+{
+  "main": "index.html",
+  "name": "nw-demo",
+  "description": "demo app of node-webkit",
+  "version": "0.1.0",
+  "keywords": [ "demo", "node-webkit" ],
+  "window": {
+    "title": "node-webkit demo",
+    "icon": "link.png",
+    "toolbar": true,
+    "frame": false,
+    "width": 800,
+    "height": 500,
+    "position": "mouse",
+    "min_width": 400,
+    "min_height": 200,
+    "max_width": 800,
+    "max_height": 600
+  },
+  "webkit": {
+    "plugin": true
+  }
+}
+```
+
+### 如何打包
+
+
+
+
+
