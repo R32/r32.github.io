@@ -36,7 +36,13 @@ Liquid 模板语法参见  https://github.com/Shopify/liquid/wiki/Liquid-for-Des
 
 	> 发现 markdown 解析引擎 redcarpet, 会自动把所有英文字符转为小写
 
-	> 空格字符将会被替换成减号 `-` 
+	> 空格字符将会被替换成减号 `-`
+	
+	> `#### Desc(Note)` 这样的标题将变成为 `<h4 id="Desc-Note">Desc(Note)</h4>`
+	
+	> 但是 github 上的页面则为: `<h4><a id="user-content-DescNote" href="DescNote"></a>Desc(Note)</h4>`
+	
+	> 因此页面内部的
 
  * 2015-2-2 更简洁的结构,设计更改, 不需要所有页面都使用 default.layout 这样后期不好维护更改.特别是 主页需要独立出来
 

@@ -724,7 +724,7 @@ vcproj                 : GenCPP internal
 
 @:nativeProperty     : Use native properties which will execute even with dynamic usage (cpp only)
 
-# 作用是 代码编辑器(IDE) 将不会对这个字段产生智能提示.
+# 作用是 代码编辑器(IDE) 将不会对这个字段产生智能提示. 好像只能作于于字段
 @:noCompletion       : Prevents the compiler from suggesting completion on this field
 
 # 即使有加编译参数 -debug,也不生成 debug 信息到 swf文件,仅适用于 flash
@@ -733,7 +733,7 @@ vcproj                 : GenCPP internal
 # 防止被文档生成器添加
 @:noDoc              : Prevents a type from being included in documentation generation
 
-# 防止 被 * 符号导入, 例 import some.*;
+# 防止静态字段,被 * 符号导入, 例 import some.*;
 @:noImportGlobal     : Prevents a static field from being imported with import Class.*
 
 @:noPrivateAccess    : Disallow private access to anything for the annotated expression

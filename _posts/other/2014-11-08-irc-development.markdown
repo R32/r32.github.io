@@ -213,9 +213,10 @@ SETNAME <new real name>					# 允许客户端更改 真实姓名(real name), 当
 										# 非 RFC 标准, 但一些 IRC Daemons 支持. 通过 RPL_ISUPPORT 检测是否支持
 ```
 
+<br />
 
-
-### freenode
+freenode
+------
 
 [freenode](http://www.freenode.com/) 是大多数人使用的服务器,除了这个其它服务器都基本没人.
 
@@ -240,32 +241,12 @@ IRC 聊天不需要注册, 填写 呢称(nickname) 之后,就可以连接服务�
 /msg NickServ set HIDEMAIL ON
 ```
 
-[可选] 
-
+<br />
 
 机器人
 ------
 
 nodejs 源码参考: https://github.com/gf3/IRC-js
-
-需要有几个不同行为的 bot, 但是它们都继承于一个最基本的 socket irc 客户端.
-
- * 普通的字符处理, 命令以 `!` 开头, 支持 中英双语.
-
- * 后台连接可能, 允许通过例如 active 切换到自动,
-
- * 使用 工具配置 !命令,而不是在代码中写
-
- * 最后是难度最大的是 虚拟币钱包,
-
-  - roll 点比大小游戏.
-
-  - 撒 coin, 对活跃的人群.
-
-
-
-
-
 
 
 RFC 1459
@@ -283,225 +264,6 @@ RFC 1459
 
 IRC 协议是一个基于文本的协议，以及能够连接到服务器的最简单的 socket客户端.
 
-#### 内容
-
- 1. [前言(INTRODUCTION)](#前言(introduction))
-
-  1. [服务器(Servers)](#服务器(servers))
-
-  2. [客户端(Clients)](#客户端(clients))
-
-     1. [管理者(Operators)](#管理者(operators))
-
-  3. [频道(Channels)](#频道(channels))
-
-     1. [频道管理者(Channel Operators)](#频道管理者(channel-operators))
-	
- 2. IRC 规范(THE IRC SPECIFICATION)
-
-  1. 概览(Overview)
-
-  2. 字符代码(Character codes)
-
-  3. 消息(Message)
-
-     1. 消息格式(Message format in ’pseudo’ BNF)
-
-  4. 数字回复(Numeric replies)
-
- 3. IRC 概念(IRC Concepts)
-
-  1. 一对一交流(One to one communication)
-
-  2. 一对多(One-to-many)
-
-     1. 列表(To a list)
-	 
-	 2. 组(频道)(To a group (channel))
-	
-	 3. 主机/服务器(To a host/server mask)
-	
-  3. 一对所有(One to all)
-
-     1. 客户端对客户端(Client to Client)
-	
-	 2. 客户端对服务器(Clients to Server)
-	
-	 3. 服务器对服务器(Server to Server)
-
- 4. 消息细节(MESSAGE DETAILS)
-
-  1. 连接注册(Connection Registration)
-
-     1. 密码消息(Password message)
-
-     2. 呢称消息(Nickname message)
-
-     3. 用户消息(User message) 
-	
-	 4. 服务器消息(Server message)
-	
-	 5. 管理者消息(Operator message)
-	
-	 6. 退出消息(Quit message)
-	
-	 7. 服务器退出消息(Server Quit message)
-
-  2. 频道操作(Channel operations)
-
-     1. 加入消息(Join message)
-	
-	 2. 离开消息(Part message)
-	
-	 3. 模式消息(Mode message)
-	
-	     1. 频道模式
-	
-	     2. 用户模式
-		
-	 4. 主题消息(Topic message)
-	
-	 5. 名字消息(Names message)
-	
-	 6. 列表消息(List message)
-	
-	 7. 邀请消息(Invite message)
-	
-	 8. 踢人消息(Kick message)
-	
-  3. 服务器查询及命令(Server queries and commands)
-
-     1. 版本消息(Version message)
-	
-	 2. 状态消息(Stats message)
-	
-	 3. 链接消息(Links message)
-	
-	 4. 时间消息(Time message)
-	
-	 5. 连接消息(Connect message)
-	
-	 6. 调试消息(Trace message)
-	
-	 7. 管理员消息(Admin message)
-	
-	 8. 资讯消息(Info message)
-
-  4. 发送消息(Sending messages)
-
-     1. 私密消息(Private messages)
-	
-	 2. 通知消息(Notice messages)
-	
-  5. 使用者查询(User-based queries)
-
-     1. Who query
-	
-	 2. Whois query
-	
-	 3. Whowas message
-
-  6. 其它消息(Miscellaneous messages)
-
-     1. 结束消息(Kill message)
-	
-	 2. Ping message
-	
-	 3. Pong message
-	
-	 4. 错误消息(Error message)
-	
- 5. 可选消息
-
-  1. 暂离消息(Away message)
-
-  2. 重发命令(Rehash command)
-
-  3. 重启命令(Restart command)
-
-  4. 唤起消息(Summon message)
-
-  5. 使用者消息(Users message)
-
-  6. Operwall command
-
-  7. Userhost message
-
-  8. Ison message
-
- 6. 回复(REPLIES)
-
-  1. 错误回复(Error Replies)
-
-  2. 命令响应(Command responses)
-
-  3. 保留数字(Reserved numerics)
-
- 7. 客户端和服务器验证(Client and server authentication)
-
- 8. 当前实现细节(Current Implementations Details)
-
-  1. 网络协议: TCP(Network protocol: TCP)
-
-     1. Unix Sockets 支持(Support of Unix sockets)
-	
-  2. 命令解析(Command Parsing)
-
-  3. 消息传送(Message delivery)
-
-  4. 接通活跃度(Connection 'Liveness')
-
-  5. Establishing a server-client connection
-
-  6. Establishing a server-server connection
-
-     1. State information exchange when connecting
-	
-  7. Terminating server-client connections
-
-  8. Terminating server-server connections
-
-  9. 跟踪呢称改变(Tracking nickname changes)
-
-  10. 防洪客户端控制(Flood control of clients)
-
-  11. 非阻塞查找(Non-blocking lookups)
-
-     1. 主机名(DNS)查找(Hostname (DNS) lookups)
-	
-	 2. 用户名(标识)查找(Username (Ident) lookups)
-	
-  12. 配置文件(Configuration file)
-
-     1. 允许客户端连接(Allowing clients to connect)
-	
-	 2. 管理者(Operators)
-	
-	 3. 允许服务器连接(Allowing servers to connect)
-	
-	 4. 管理资讯(Administrivia)
-	
-  13. 频道成员资格(Channel membership)
-
- 9. 当前问题(Current problems)
-
-  1. 可扩展性(Scalability)
-
-  2. 标签(Labels)
-
-     1. 呢称(Nicknames)
-	
-	 2. 频道(Channels)
-	
-	 3. 服务器(Servers)
-	
-  3. 算法(Algorithms)
-
- 10. 支持及有效性(Support and availability)
-
- 11. 安全注意事项(Security Considerations)
-
- 12. 作者地址(Authors’ Addresse)
 
 ### 前言(INTRODUCTION)
 

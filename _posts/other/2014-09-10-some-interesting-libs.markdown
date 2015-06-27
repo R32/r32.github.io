@@ -52,6 +52,10 @@ http://yahoo.github.io/gifshot/
 
 这个章节的大多数内容都是用于美化的 CSS 或 Javascript , 大多数似乎在 ie8 中都会报错.
 
+ * [buzz](https://github.com/jaysalvat/buzz) html5 声音播放
+
+ * [impress](https://github.com/bartaz/impress.js/) 展示用 JS.
+
  * [图标下载](http://www.easyicon.net/)
 
  * [dynamics.js](https://github.com/michaelvillar/dynamics.js) 动画库
