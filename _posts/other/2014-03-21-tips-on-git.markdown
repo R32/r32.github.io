@@ -107,6 +107,22 @@ categories: other
 
   - `git merge upstream/master`
 
+ * github 语言统计, `.gitattributes`
+
+	```bash
+	# 将所有 JS 文件当成 统计为 Haxe
+	*.js linguist-language=Haxe
+	
+	
+	# Use the linguist-vendored attribute to vendor or un-vendor paths
+	special-vendored-path/* linguist-vendored
+	jquery.js linguist-vendored=false
+	
+	# Use the linguist-documentation attribute to mark or unmark paths as documentation.
+	project-docs/* linguist-documentation
+	docs/formatter.rb linguist-documentation=false
+	```
+
 
 #### submodule
 

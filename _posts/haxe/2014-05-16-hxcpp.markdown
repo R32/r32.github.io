@@ -67,7 +67,7 @@ hxcpp 会自动根据平台选择不同的 C++编译器. 任意平吧上编译�
 
 In order to [improve support for interacting](http://haxe.1354130.n2.nabble.com/hxcpp-native-access-td6968232.html) with CPP.
 
-注意: 当前文件路径 `./` 不能省略. 比如上层目录要写成 `./../`
+**注意**: 当前文件路径 `./` 不能省略. 比如上层目录要写成 `./../`
 
 ```bash
 # TODO
@@ -136,6 +136,8 @@ In order to [improve support for interacting](http://haxe.1354130.n2.nabble.com/
 
 #### extern class
 
+另一个调用外部 sdl 源码的示例: https://gist.github.com/nadako/c8aec20c2a7751348f91
+
 参看 `hxcpp\test\native`, 重要的是： 
 
  * 无法以 new 的方式来创建外部 cpp 类, 因为它返回的是一个指针, 只能用　静态方法创建
@@ -149,12 +151,11 @@ In order to [improve support for interacting](http://haxe.1354130.n2.nabble.com/
 
  * 如果 extern class 源码没有定义命名空间, 那么 这个 hx 类 也不应该有包名
 
-  - 可以使用 -cp 将 hx 类添加进编译路径
+  - (推荐)用 `@:native("ClassName")`　省略掉包名就行了.
 
-  - 或(推荐)用 `@:native("ClassName")`　省略掉包名就行了.
+  - 或可以使用 -cp 将 hx 类添加进编译路径
 
 
-总的来说 extern class 还是蛮复杂的, 不如创建一个 haxe 类, 然后混入 cpp 代码. 
 
 
 ### 混合编程
@@ -224,6 +225,7 @@ build.xml 用来配置 hxcpp 如何编译　haxe 源码。查看 `hxcpp/tools/hx
 
 
 ```haxe
+// 不需要理会这段代码
 var mDefines:StringMap<String>;			// 通过 "-D" 的定义和 "环境变量" 和 <set /><unset /> 设定的值
 var mCurrentIncludeFile:String;			// 
 var mIncludePath:Array<String>;			//

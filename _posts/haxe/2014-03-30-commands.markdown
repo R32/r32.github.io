@@ -352,6 +352,7 @@ absolute-path          : Print absolute file path in trace output
 # 添加 Scout (aka Monocle) 支持. Since SVN r5429
 advanced-telemetry     : Allow the SWF to be measured with Monocle tool
 
+# 代码优化器, 以精简代码
 analyzer               : Use static analyzer for optimization (experimental)
 
 as3                    : Defined when outputing flash9 as3 source code
@@ -560,6 +561,7 @@ vcproj                 : GenCPP internal
 # 允许声明的包访问当前包 类或字段
 @:allow              : (Target path)Allows private access from package, type or field
 
+# 优化配置? 文档 https://github.com/HaxeFoundation/haxe/blob/12a52b2fcdcecb4fafcc15288da3c8d2c0746aa5/analyzer.ml 第10行到20行为参数
 @:analyzer           : Used to configure the static analyzer
 
 @:annotation         : Annotation (@interface) definitions on -java-lib imports will be annotated with this metadata. Has no effect on types compiled by Haxe (java only)

@@ -96,11 +96,6 @@ class TheClass {
 
     // haxe 没有方法重载.
     
-    // 虽然有 @:overload 元标签.
-    // 但是 ·:overload 是为使用 extern 类的方法准备的
-    // @:overload 参看 haxe Tips and Tricks
-    // 最好忘记 @:overload 这个元标签
-    
     public static function main(){
         n:TheClass = new TheClass();
     }
