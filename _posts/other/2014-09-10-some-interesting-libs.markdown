@@ -12,6 +12,8 @@ categories: other
 
 #### 工具
 
+ * [haxe-watchify](https://github.com/lucamezzalira/haxe-watchify) 监视文件是否发生改动,nodejs 项目
+
  * [sokit](https://github.com/sinpolib/sokit/releases) socket 调试工具
 
  * [gifshot](https://github.com/yahoo/gifshot)

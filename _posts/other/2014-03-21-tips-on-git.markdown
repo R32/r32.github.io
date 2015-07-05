@@ -92,7 +92,7 @@ categories: other
 ### 其它
 
 
-* 恢复 **单个文件** 到某个历史版本
+ * 恢复 **单个文件** 到某个历史版本
 
 	```bash
 	# git checkout COMMIT_HASH -- path_to_file.ext
@@ -115,6 +115,7 @@ categories: other
 	
 	
 	# Use the linguist-vendored attribute to vendor or un-vendor paths
+	# 被标记为 linguist-vendored 是表示不统计, 而 = false 是添加到统计
 	special-vendored-path/* linguist-vendored
 	jquery.js linguist-vendored=false
 	
