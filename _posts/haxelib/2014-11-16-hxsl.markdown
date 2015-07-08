@@ -60,23 +60,23 @@ AGAL 限制：每个程序 200 个 opcode。
 
   - 仅用于 vertexProgram **`va<0~7>`**
 
- * **常量:** 处理 AS３传递到着色器参数. 由 Context3D::setProgramConstants() 设置
+ * **常量:** 处理 AS3 传递到着色器参数. 由 Context3D::setProgramConstants() 设置
 
-  - vertexProgram **`fc<0~127>`**
+  - **`fc<0~127>`** 用于 vertexProgram 
 
-  - fragmentProgram **`vc<0~27>`**
+  - **`vc<0~27>`** 用于 fragmentProgram
 
  * **临时:** 用于计算的临时寄存器, 无法从程序外部访问
 
-  - vertexProgram **`vt<0~7>`**
+  - **`vt<0~7>`** 用于 vertexProgram 
 
-  - fragmentProgram **`ft<0~7>`**
+  - **`ft<0~7>`** 用于 fragmentProgram
 
  * **输出:** 着色器输出,在 vertexProgram 中，输出为剪辑空间位置；在 fragmentProgram 中，输出为颜色
 
-  - vertexProgram **`op`**
+  - **`op`** 用于 vertexProgram 
 
-  - fragmentProgram **`oc`**
+  - **`oc`** 用于 fragmentProgram
 
  * **渐变:** 用于将数据从 vertexProgram 传递到 fragmentProgram。传递的数据由 GPU 恰当地插入，使 fragmentProgram 能够收到被处理的像素的正确值
 
@@ -84,7 +84,7 @@ AGAL 限制：每个程序 200 个 opcode。
 
  * **采样:** 片段着色器输入,读取自使用 Context3D.setTextureAt() 指定的纹理
 
-  - 仅用于 fragmentProgram **`fs<0~7>`**
+  - **`fs<0~7>`** 仅用于 fragmentProgram
 
 	```
 	# 语法为 fs<n> <flags>, 其中 <flags> 定义为:
@@ -179,7 +179,120 @@ class Shader extends hxsl.Shader {
 HXSL3
 -------
 
+这个比之前的更为复杂.
+
+#### 新着色器表达式(Shader expression)
 
 
+```haxe
+class ColorKey extends hxsl.Shader {
+
+	static var SRC = {
+		@param var colorKey : Vec4;
+		var textureColor : Vec4;
+
+		function fragment() {
+			var cdiff = textureColor - colorKey;
+			if( cdiff.dot(cdiff) < 0.00001 ) discard;
+		}
+	}
+
+	public function new( v = 0 ) {
+		super();
+		colorKey.setColor(v);
+	}
+
+}
+```
+
+**hxsl 自定义元标记**, 参看上边使用示例
+
+
+```haxe
+@local		... 局部变量?
+
+@global		... 对应 类hxsl.Globals, 像是类的 全局静态变量?
+
+@var		... 可变寄存器 ???(a varying variable, that is set in vertex shader and read in the fragment shader)
+
+@param		可以在类中被直接访问
+
+@input	 	...输入的变量来自顶点缓冲区(the input variables are the ones that come from the vertex buffer)
+
+@function	...
+
+@output		...
+
+@const		... 常量寄存器?
+
+// 二个带 : 的元标记
+@:import
+
+@:extends
+
+
+//对应的 enum
+enum VarKind {
+	Global;
+	Input;
+	Param;
+	Var;
+	Local;
+	Output;
+	Function;
+}
+
+enum VarQualifier {
+	Const( ?max : Int );
+	Private;
+	Nullable;
+	PerObject;
+	Name( n : String );
+	Shared;
+	Precision( p : Prec );
+}
+
+
+	function applyMeta( m : MetadataEntry, v : Ast.VarDecl ) {
+		switch( m.params ) {
+		case []:
+		case [ { expr : EConst(CString(n)), pos : pos } ] if( m.name == "var" || m.name == "global" || m.name == "input" ):
+			v.qualifiers.push(Name(n));
+		case [ { expr : EConst(CInt(n)), pos : pos } ] if( m.name == "const" ):
+			v.qualifiers.push(Const(Std.parseInt(n)));
+			return;
+		default:
+			error("Invalid meta parameter", m.pos);
+		}
+		switch( m.name ) {
+		case "var":
+			if( v.kind == null ) v.kind = Var else error("Duplicate type qualifier", m.pos);
+		case "global":
+			if( v.kind == null ) v.kind = Global else error("Duplicate type qualifier", m.pos);
+		case "param":
+			if( v.kind == null ) v.kind = Param else error("Duplicate type qualifier", m.pos);
+		case "input":
+			if( v.kind == null ) v.kind = Input else error("Duplicate type qualifier", m.pos);
+		case "const":
+			v.qualifiers.push(Const());
+		case "private":
+			v.qualifiers.push(Private);
+		case "nullable":
+			v.qualifiers.push(Nullable);
+		case "perObject":
+			v.qualifiers.push(PerObject);
+		case "shared":
+			v.qualifiers.push(Shared);
+		case "lowp":
+			v.qualifiers.push(Precision(Low));
+		case "mediump":
+			v.qualifiers.push(Precision(Medium));
+		case "highp":
+			v.qualifiers.push(Precision(High));
+		default:
+			error("Unsupported qualifier " + m.name, m.pos);
+		}
+	}
+```
 
 <br />

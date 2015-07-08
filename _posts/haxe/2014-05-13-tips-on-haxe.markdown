@@ -923,6 +923,8 @@ var tp = new haxe.Template("<xml>::foreach __current__:: <file name="::__current
 var str = tp.execute(["a.txt", "b.txt", "c.txt"]);
 ```
 
+dox 使用了更复杂的模板 https://github.com/Simn/hxtemplo/` 来制做 API 手册.
+
 #### for and while
 
 首先看下 javascript 中的闭包..

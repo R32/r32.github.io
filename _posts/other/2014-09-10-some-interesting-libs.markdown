@@ -10,11 +10,15 @@ categories: other
 记录 github 上一些有意思的库, 大多数是从 https://github.com/trending?since=weekly 上看到的.
 
 
-#### 工具
+#### Tools
+
+ * [regexr.com](http://regexr.com/) 正则表达式测试
+
+	> 项目源: https://github.com/gskinner/regexr/ 
 
  * [haxe-watchify](https://github.com/lucamezzalira/haxe-watchify) 监视文件是否发生改动,nodejs 项目
 
- * [sokit](https://github.com/sinpolib/sokit/releases) socket 调试工具
+ * [sokit](https://github.com/sinpolib/sokit/releases) socket connect test
 
  * [gifshot](https://github.com/yahoo/gifshot)
 
@@ -24,8 +28,6 @@ http://yahoo.github.io/gifshot/
  * **[patorjk.com](http://www.patorjk.com/software/taag/#p=display&f=Graffiti&t=Type%20Something)**
 
 	> 一个在线工具用于将 文本转换为 Acsii art 的在工具,
-		
- * [the-art-of-command-line](https://github.com/jlevy/the-art-of-command-line) 常用命令
 
 <!-- more -->
 
@@ -52,31 +54,29 @@ http://yahoo.github.io/gifshot/
 
 #### web
 
+[design-essentials](https://github.com/showcases/design-essentials)
+
 这个章节的大多数内容都是用于美化的 CSS 或 Javascript , 大多数似乎在 ie8 中都会报错.
 
  * **[awesome-d3](https://github.com/wbkd/awesome-d3)**  d3.js 的一些库,而D3.js是当前流行的数据可视化工具
 
+ * [braintree](https://github.com/braintree/braintree-web) 表单加密
+
  * [buzz](https://github.com/jaysalvat/buzz) html5 声音播放
 
- * [node-browserify](https://github.com/substack/node-browserify) 在浏览器上跑 nodejs程序
-
  * [impress](https://github.com/bartaz/impress.js/) 展示用 JS.
-
- * [图标下载](http://www.easyicon.net/)
 
  * [dynamics.js](https://github.com/michaelvillar/dynamics.js) 动画库
 
  * [responsive-html-email-template](https://github.com/charlesmudy/responsive-html-email-template)  邮件模板,如果你想发广告的话.
 
- * [Primer](https://github.com/primer/primer) Github 官方的 CSS 前端设计
+ * [google material-design-lite](https://github.com/google/material-design-lite) CSS 前端设计
+
+ * [Primer](https://github.com/primer/primer) Github 官方的 CSS 前端设计, 感觉 Component 很少, 
 
   - 几个颜色值 http://primercss.io/colors/
 
  * **[holder](https://github.com/imsky/holder)** 生成图像占位符
-
- * **[网页设计](https://github.com/showcases/design-essentials)** 这个是 github 自已整理的
-
- * **[Frontend stuff](https://github.com/moklick/frontend-stuff)** 前端资源
 
  * [Font-Awesome](https://github.com/FortAwesome/Font-Awesome/) 矢量图标字体
 
@@ -91,6 +91,10 @@ http://yahoo.github.io/gifshot/
  * [modernizr](https://github.com/Modernizr/Modernizr) 检测浏览器的 html5 和 css3 支持情况
 
  * [html5 boilerplate](https://github.com/h5bp/html5-boilerplate) 一套专业的前端模版,用以开发快速、健壮、适应性强的app或网站
+
+ * [zeroclipboard](https://github.com/zeroclipboard/zeroclipboard) 利用了 flash 来复制
+
+	> 不过 github 上的那个复制按扭好像没有用 flash 来实现,
 
  * **[intro.js](https://github.com/usablica/intro.js)**
 
@@ -117,6 +121,27 @@ http://usablica.github.com/intro.js/
 	> A jQuery plugin that switches between multiple header designs as you scroll, so you always have a header that looks great with the content below it. http://aerolab.github.io/midnight.js/ 用这个脚本做来 主页不错. 标记: IE8 中出错
 
 
+#### article
+
+ * [the-art-of-command-line](https://github.com/jlevy/the-art-of-command-line) 正确使用命令行
+
+ * [w3school html5](http://www.w3school.com.cn/html5/index.asp)
+
+#### resource
+
+[Frontend stuff](https://github.com/moklick/frontend-stuff)
+
+ * [图标下载](http://www.easyicon.net/)
+
+
+#### misc
+
+[awesome-nodejs](https://github.com/sindresorhus/awesome-nodejs)
+
+ * [pomelo](https://github.com/NetEase/pomelo) A fast,scalable,distributed game server framework for Node.js
+
+	> https://github.com/NetEase/pomelo/wiki/Home-in-Chinese
+
 #### CLib
 
  * [stb](https://github.com/nothings/stb) stb single-file public domain libraries for C/C++
@@ -126,14 +151,5 @@ http://usablica.github.com/intro.js/
  * (libevent)[http://libevent.org/]
 
  * (clibs)[https://github.com/clibs] 有各种库
-
-
-#### 收集
-
- * [awesome-nodejs](https://github.com/sindresorhus/awesome-nodejs) 收集了一些有趣的 nodejs库
-
- * [pomelo](https://github.com/NetEase/pomelo) A fast,scalable,distributed game server framework for Node.js
-
-	> https://github.com/NetEase/pomelo/wiki/Home-in-Chinese
 
 <br />

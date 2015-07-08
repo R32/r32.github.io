@@ -7,87 +7,84 @@ categories: haxe
 
 ---
 
-目前 haxe 官方抛弃了以前旧的文档生成器, 而转而使用了 [haxe dox](https://github.com/dpeek/dox) 来构建 API 文档.
-
-参考这个库的 Readme 你能直接获得最新Haxe API. 
+使用 [haxe dox](https://github.com/dpeek/dox) 来构建 API 文档. 参考这个库的 Readme 你能直接获得最新Haxe API. 
 
  * 参考 gen.hxml 如何从 hx源码中导出 xml 文件,
 
  * 参考 std.hxml 如何获得 API HTML
+
+ * dox 默认的模板使用的 CSS 框架为 bootstrap 2.3.2
+
 <!-- more -->
 
-由于库的改动, 下边内容很可能不再适用.
+### 注释规范
 
-#### 注释内容规范
+这些注释规范主要针对 haxelib dox解析
 
-```
-/**
-* 这种每一行 都有 星号(*) 的注释, dox 不能很好的隔开一行, 会将所有内容连接在一行上
-*
-* 这时 只能 使用 一些简单的 HTML 标签, 来做一些格式化,如: <p>,<br>,<ul>,<li> ...
-*
-* 并且这种注释, dox 也不能正确的认别 markdown
-*/
+ * 由于 dox 使用了 markdown 解析注释, 因此可以使用 markdown 语法
 
-
-/**
-	只有注释首尾才有 星号(*), dox 能正确解析, 包括 markdwon, 隔开一行,只要空一行就行了. 
-
-	但是问题是 flashdevelop 自动生成的 注释是上边那种形式的, 
-
-	对于较长内容的说明, 最好是采用这种形式, 以避免内容全连在一行.
-*/
-```
-
-
-#### 文档生成
-
-
- * 参考[openfl doc] ,其它 [all.hxml] , [ImportAll.hx] , [haxepunk doc]
-[openfl doc]:https://github.com/openfl/openfl/blob/master/documentation/build.hxml
-[haxepunk doc]:https://github.com/HaxePunk/HaxePunk/blob/dev/doc/doc.hxml
-[all.hxml]:https://github.com/HaxeFoundation/haxe/blob/development/extra/all.hxml
-[ImportAll.hx]:https://github.com/HaxeFoundation/haxe/blob/development/extra/ImportAll.hx
-
- * 这里是我用h3d做的一个样例: genxml.html
-
-	```bash
-	# 第一步, 使用导出 haxe -xml 导出 XML
-	--no-output
-	-cp ../
-	--macro include('h3d')
-	--macro include('h2d')
-	--macro include('hxd',true,['hxd.res.FileTree'])
-
-	-swf haxedoc.swf
-	-swf-version 11.8
-	-lib hxsl
-	-D resourcesPath=../samples/res
-	-D h3d
-	-xml pkgs.xml
-
-	# 第二步, 使用 dox 生成 API 文档, 
-	--next
-	-cmd haxelib run dox -i . -in h3d -in h2d -in hxd
 	```
- * 注意:  `-in` 参数, 选择所需要的类,否则 haxe 的标准库也会被添加进去.
+	# 表格, 好像只支持 左 或 右对齐
+	First Header  | Second Header
+	-----------:  | :------------
+	Content Cell  | Content Cell
+	Content Cell  | Content Cell
+	
+	# 一些基本的 HTML 标签
+	To <b>edit</b> settings, press `Ctrl + ,`
+	
+	# URL 引用 (TODO: 如何引用当前手册中的链接?)
+	[example](http://example.com)
+	```
 
+ * 元标记, 大多数情况下不需要写这些, 解析器能识别各参数或回值类型
 
+	```	
+	@since name 1.2.3 aplha		# 需要正确的版本号格式 n.n.n
+	@exception TypeName 描述		# 或 @throws
+	@param delay 写参数名就行了
+	@return 一些描述内容			# 或 @returns
+	@see TypeName				# 
+	@deprecated 弃用描述			# 不用理会这个的顺序
+	```
 
+### 导出XML
 
+简单的示例
 
+```bash
+haxe -xml doc.xml --macro include('my.package') -D doc-gen -dce no
+```
 
+大的项目时参考 dox 下的 gen/ImportAll.hx 生成, 以及一些构建示例
 
-#### dox 命令行
+#### 读取XML
+
+**不需要做这一步**, 但是如果你打算从 xml 读取一些内容时可以尝试
+
+```haxe
+class DocGen {
+    static function main() {
+        var data = sys.io.File.getContent("doc.xml");
+        var doc = Xml.parse(data).firstElement();
+        var parser = new haxe.rtti.XmlParser();
+        parser.process(doc,"js");	//附加的参数 "js", 表示为平台,
+									//process 可以被多次调用(每个平台调用一次)
+    }
+}
+```
+
+The extra parameter to the process method is the platform name (javascript in this example). It allows you to use several process calls (one per platform) in order to merge the different documentation as available for each platform. This way you'll be able to know which particular method is supported on which platform(s), such as the Http class shows.
+
+Once this parsing/merging is done, you can access the parser.root variable which contains the root package as a TypeRoot
+
+### dox 命令行
 
 你可以不必安装这个库, [下载](https://github.com/dpeek/dox) theme 文件夹 和 run.n 文件就可以了, 并用 `neko run.n` 来替换 `haxelib run dox`
 
  * 命令为: `neko run.n -i export.xml`
 
 	```bash
-	#haxe dox 没有 `--help` 这个参数,下边选项从源码中复制过来的
-	-r  --document-root
-
 	#Set the output path for generated pages
 	-o  --output-path
 		
@@ -100,66 +97,30 @@ categories: haxe
 	#Add a resource directory whose contents are copied to the output directory
 	-res  --resource-path
 
-	#重要: Add a path include filter 
+	#Add a path include filter, EReg String
 	-in  --include
 
-	#Add a path exclude filter
+	#Add a path exclude filter, EReg String. e.g: -ex ^js -ex flash
 	-ex  --exclude
 
 	#Set the page main title
 	--title
-
+	
+	#Set the package which serves as top-level
+	--toplevel-package
+	
 	#Set the theme name or path
 	-theme
 
 	#Defines key = value
 	-D  --defines
+	
+	# 其它
+	-D source-path 	#将定义源码URL
 	```
 
+### 模板修改
 
+由于引用了 Google 文件,而国内却无法访问.因此可以做一些改动。
 
-
-
-#### 其它
-
-由于 使用 -in 代替了 -ex , **不再需要**参考这个文件, 
-
-```makefile
-CC	:= neko gendoc.n
-
-# --> 修改 TARGET_DIR 为你要输出的目录,注意: haxe dox  不支持 cygwin环境下跨磁盘的的目录
-TARGET_DIR	:=	./api-h3d
-
-# --> 修改 FILES 为 你用 haxe -xml 生成的 xml 文件. 目录/文件名
-FILES	:= pkgs.xml
-
-
-TARGET	:=	$(TARGET_DIR)/index.html
-
-
-# 赋值空格
-EMPTY:=
-SPACE:= $(EMPTY) $(EMPTY)
-
-#排除这些不要的类
-EX := microsoft javax haxe flash format hxsl Array ArrayAccess Bool Class Dynamic EReg Enum EnumValue Float
-EX += IMap Int Iterable Iterator Lambda List Map Math Null Reflect Std String StringBuf
-EX += StringTools Type UInt ValueType Void Xml XmlType Date
-
-EXCLUDE := $(addprefix -ex$(SPACE),$(EX))
-
-all : $(TARGET)
-	
-$(TARGET):
-	$(CC) -i $(FILES) -o $(TARGET_DIR) $(EXCLUDE)
-
-clean:
-	@echo clean...
-	@rm -rf $(TARGET_DIR)
-
-```
-
-
- * 生成的结果
-
-	![结果](/assets/img/gen-haxe-doc-demo.png)
+<br />

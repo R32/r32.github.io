@@ -15,8 +15,6 @@ categories: haxelib
 
  * http://haxe.io 主要是一些 haxe 的新闻, 经常能看到一些惊异的东西.
 
- * http://www.w3school.com.cn/html5/index.asp
-
 #### 工具
 
 一些常见的工具如 format, hscript 将不在这里列出..
@@ -31,8 +29,6 @@ categories: haxelib
 
  * [unifill](https://github.com/mandel59/unifill) Shim your code to support Unicode across all platforms.
 
-	> 默认情况的 neko 以及 cpp 是无法检测中文字符串长度的.
-
  * **[dox](https://github.com/dpeek/dox)** API 文档生成	
 					
  * [TileCraft](https://github.com/yupswing/TileCraft) Haxe/OpenFL 2.5D Modeling Tool (WIP)
@@ -43,7 +39,7 @@ categories: haxelib
 	
  * [HxScout](https://github.com/jcward/hxScout) A free cross-platform Scout alternative, written in Haxe/OpenFL
 
- * [swhx](https://github.com/filt3rek/swhx) 
+ * [swhx](https://github.com/filt3rek/swhx) 将 swf 嵌入到 exe
 
 #### 游戏引擎
 
@@ -53,7 +49,7 @@ haxe LD32游戏示例 : https://github.com/skial/haxe.io/issues/118
 
  * [kha](https://github.com/KTXSoftware/Kha) Super portable software dev kit. 超级便携式软件开发包.
 
- * **[heaps(h3d)](https://github.com/ncannasse/heaps)** 使用 stage3D,webGl,openGl, 没有文档
+ * **[heaps](https://github.com/ncannasse/heaps)** 使用 stage3D,webGl,openGl, 没有文档
 
  * [haxeflixel](https://github.com/haxeflixel) 基于 openfl, 全位图游戏引擎, 文档非常完善
 
@@ -72,8 +68,6 @@ haxe LD32游戏示例 : https://github.com/skial/haxe.io/issues/118
  * [haxeui](https://github.com/ianharrigan/haxeui)
 
 	> 使 xml 配置布局, CSS 配置 skin. 但是 css 不小心出错不好查错.
-
-	> 加载和解析的时间比 stablexui 长.
 
  * **[stablexui](https://github.com/RealyUniqueName/StablexUI)**
 

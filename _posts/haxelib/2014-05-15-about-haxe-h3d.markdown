@@ -1,7 +1,7 @@
 ---
 
 layout: post
-title:  heaps 详细
+title:  heaps
 date:   2014-05-13 8:26:10
 categories: haxelib
 
@@ -9,19 +9,15 @@ categories: haxelib
 
 这里主要写 heaps 下一些类的一些细节. 
 
-注: 很多说明都我已经直接在个人的 fork 版本的源代码中已经给出注释. 这里只是提到一下而已
 
 <!-- more -->
 
 
-
 ### h3d
 
- * **System** 提供一些静态方法
+ * **System** 所有方法或属性都是静态类型.
 
   - 包含 enum Cursor, 用于定义 鼠标的不同形状, 允许自定义
-
-  - 所有方法或属性都是静态类型. 参考 API 或源码.
 
  * **Engine** 不同平台驱动(driver)方式, 内存(mem)管理
 
@@ -67,8 +63,6 @@ categories: haxelib
 	```
 
 
-
-
 ### hxd
 
 这里只记录部分类, 其它都写在 fork 版本的注释上了.
@@ -84,6 +78,7 @@ categories: haxelib
   4. 在 Res.initEmbed({fontsChars: "只支持直接常量字符"}) 或在 initEmbed 之前修改 Charset.DEFAULT_CHARS 
 
   5. 使用 Res 管理资源, 例: var font:h2d.Font = Res.adobe_fan_heiti_std_b_12.toFont();
+
 
 
 
@@ -124,23 +119,34 @@ pubic var bits(default,null):Int = 0;	必须声明 bits 变量,赋值为 0.
 参看 h3d.mat.Pass 如何使用它
 ```
 
-**如果想直接把一个很大的值直接赋值给 bits, 需要小心**,需要调用 getName 的静态方法,如上示例: this.lang = getLang(bits_num),
-把每个分配了 `@:bits` 的字段,依次通过 静态方法 getName 过滤就行了.
-
-本来给这个类添加一些代码,让支持 EnumFlags 的, 但是发现 setter 的参数返回值 和 字段类型冲突. 因此无法实现:
+如果想直接把一个很大的值直接赋值给 bits, 需要依次调用各属性的 getName 的静态方法, 示例:
 
 ```haxe
-case "haxe.EnumFlags":
-	switch(vt.toType()) {
-		case TAbstract(_, ae):
-			//et = ae[0].toComplexType(); 
-			bits = ae[0].getEnum().names.length;
-		case _: throw "Class instance expected";		
+@:build(hxd.impl.BitsBuilder.build())
+class Test{	
+	// Define a variable called bits
+	var bits:Int = 0;
+	@:bits(8) var b:Int;		// LOW
+	@:bits(8) var g:Int;
+	@:bits(8) var r:Int;
+	@:bits(8) var alpha:Int;	// High
+	
+	public function new() {
+		// init bits from value
+		var color = 0xF0D0B0A0; 		// argb;
+		this.alpha = getAlpha(color);	// static func
+		this.r = getR(color);
+		this.g = getG(color);
+		this.b = getB(color);
+		trace("0x" + StringTools.hex(bits));
+		// -------------------------
+		this.r = 0x60;
+		this.g = 0x50;
+		this.b = 0x30;
+		trace("0x" + StringTools.hex(bits));	
 	}
-	macro Type.enumIndex(v);
-``` 
-
-
+}	
+```
 
 
 #### res目录
@@ -174,256 +180,13 @@ case "haxe.EnumFlags":
 	```
 ### hxsl
 
-一些概念可以先参考 haxelib 中的 hxsl 文档 http://old.haxe.org/manual/hxsl
-
-一些 AGAL 的内容.http://www.adobe.com/cn/devnet/flashplayer/articles/what-is-agal.html
+[参看 hxsl 的单独记录]({% post_url  haxelib/2014-11-16-hxsl %}).
 
 
-#### 着色器表达式(Shader expression)
-
-```haxe
-class ColorKey extends hxsl.Shader {
-
-	static var SRC = {
-		@param var colorKey : Vec4;
-		var textureColor : Vec4;
-
-		function fragment() {
-			var cdiff = textureColor - colorKey;
-			if( cdiff.dot(cdiff) < 0.00001 ) discard;
-		}
-	}
-
-	public function new( v = 0 ) {
-		super();
-		colorKey.setColor(v);
-	}
-
-}
-```
-
-
-**hxsl 自定义元标记**, 参看上边使用示例
-
-
-```haxe
-@local		... 局部变量?
-
-@global		... 对应 类hxsl.Globals, 像是类的 全局静态变量?
-
-@var		... 可变寄存器 ???(a varying variable, that is set in vertex shader and read in the fragment shader)
-
-@param		使这个标记的变量能在 类 中访问.
-
-@input	 	...输入的变量来自顶点缓冲区(the input variables are the ones that come from the vertex buffer)
-
-@function	...
-
-@output		...
-
-@const		... 常量寄存器?
-
-// 二个带 : 的元标记
-@:import
-
-@:extends
-
-
-//对应的 enum
-enum VarKind {
-	Global;
-	Input;
-	Param;
-	Var;
-	Local;
-	Output;
-	Function;
-}
-
-enum VarQualifier {
-	Const( ?max : Int );
-	Private;
-	Nullable;
-	PerObject;
-	Name( n : String );
-	Shared;
-	Precision( p : Prec );
-}
-
-
-	function applyMeta( m : MetadataEntry, v : Ast.VarDecl ) {
-		switch( m.params ) {
-		case []:
-		case [ { expr : EConst(CString(n)), pos : pos } ] if( m.name == "var" || m.name == "global" || m.name == "input" ):
-			v.qualifiers.push(Name(n));
-		case [ { expr : EConst(CInt(n)), pos : pos } ] if( m.name == "const" ):
-			v.qualifiers.push(Const(Std.parseInt(n)));
-			return;
-		default:
-			error("Invalid meta parameter", m.pos);
-		}
-		switch( m.name ) {
-		case "var":
-			if( v.kind == null ) v.kind = Var else error("Duplicate type qualifier", m.pos);
-		case "global":
-			if( v.kind == null ) v.kind = Global else error("Duplicate type qualifier", m.pos);
-		case "param":
-			if( v.kind == null ) v.kind = Param else error("Duplicate type qualifier", m.pos);
-		case "input":
-			if( v.kind == null ) v.kind = Input else error("Duplicate type qualifier", m.pos);
-		case "const":
-			v.qualifiers.push(Const());
-		case "private":
-			v.qualifiers.push(Private);
-		case "nullable":
-			v.qualifiers.push(Nullable);
-		case "perObject":
-			v.qualifiers.push(PerObject);
-		case "shared":
-			v.qualifiers.push(Shared);
-		case "lowp":
-			v.qualifiers.push(Precision(Low));
-		case "mediump":
-			v.qualifiers.push(Precision(Medium));
-		case "highp":
-			v.qualifiers.push(Precision(High));
-		default:
-			error("Unsupported qualifier " + m.name, m.pos);
-		}
-	}
-```
-
-
-
-
-
-
-旧的内容
+legacy 
 ------
 
-**注意:** 下边是以前旧的内容,也就是 heaps的 h3d 分支内容. 这个分支使用的是 haxelib hxsl.
-
-
-### h3d/h2d
-
- h2d 似乎在设计上就是作为 UI, 因此一些动画,碰撞检测的方法都比较底层, 可以使用 XML(组件布局) 和 CSS(样式) 配置 UI.
-
- h2d 游戏源码示例:
-
- * [ld-25 You are the Villain](https://github.com/ncannasse/ld25)
-
- * [ld-27 10 seconds](https://github.com/ncannasse/ld27)
-
- * [ld-28 You only got one](https://github.com/ncannasse/ld28)
-
-### h3d/hxd
- 
- * **Res** 资源管理
-
-	> 定义`-D resourcesPath=dir` 之后,Res.hx 相关宏构建将描描资源文件夹,让 IDE 有智能提示
-
-	> 上行操作并不会嵌入文件,需要主动调用 Res.initEmbed() 将文件嵌入到 flash.
-
-	> 注意:Res类 initEmbed之后默认自动嵌入的字体只包含 Charset.DEFAULT_CHARS
-
-	```haxe
-	// hxd/res/FileTree.hx::handleFile() 可以看到资源被解析成的类型.
-	switch( ext.toLowerCase() ) {
-		case "jpg", "png":
-			return { e : macro loader.loadImage($epath), t : macro : hxd.res.Image };
-		case "fbx", "xbx", "xtra":
-			return { e : macro loader.loadFbxModel($epath), t : macro : hxd.res.FbxModel };
-		case "awd":
-			return { e : macro loader.loadAwdModel($epath), t : macro : hxd.res.AwdModel };
-		case "ttf":
-			return { e : macro loader.loadFont($epath), t : macro : hxd.res.Font };
-		case "fnt":
-			return { e : macro loader.loadBitmapFont($epath), t : macro : hxd.res.BitmapFont };
-		case "wav", "mp3":
-			return { e : macro loader.loadSound($epath), t : macro : hxd.res.Sound };
-		case "tmx":
-			return { e : macro loader.loadTiledMap($epath), t : macro : hxd.res.TiledMap };
-		default:
-			return { e : macro loader.loadData($epath), t : macro : hxd.res.Resource };
-	}
-
-	```
-
- * **App** 主应用
-
-	> 继承这个类,从而快速调用 h3d
-
- * **Tile** 
-
- 	> 为了避免 dispose, 应该尽量使用 sub 方法从主 Tile 上新建一个出来.
-
-	> scaleToSize(w, h) 是个不错的方法.例如: 当需要 32x32 的图,直接 scaleToSize(32,32) 就行了.
-
- * **Texture** 
-
-
-
- * Stage 对 flash.display.Stage 进行了包装.
-
-
- * **Event**  h2d.Interactive 事件参数类型.
-
- * res 文件夹
-
-  - 这个目录大多数都属于 Resource 的了类.
-
-  - **Image** 图片资源解析,只支持 jpg 和 png.
-
-		> 将图片转出为 hxd/res 下的各种格式。
-
-  - **Sound**
-
-		> 不知道,为什么不用 @:sound("file.wav|mp3") 的方式嵌入???
-		
-		> 这个类播放声音是以 Bytes 的方式加载音乐的.
-
-
-		
-  - **Loader**  建立在 各文件类 上的一个方法汇总
-
-  - **Any**  建立在 Loader 上的一个方法汇总
-
-
- * impl 文件夹
-
-  - **Memory**  管理 domainMemory
-
-		> 使用 flash.Memory 前先 select(bytes) ,完了后 调用 end().
-		
-  - **Tmp**  Bytes 缓存池
-
-		> getBytes(size) 		// 将优先从缓存池里返回Bytes
-		
-		> saveBytes(bytes)	// 将bytes 释放回缓存池内
-  
-  - **`FastIO<T>`**  像是一个抽像化的数组.优先会使用 Vector 替代 Array。
-
-  - **FastIntIO**  继承 `FastIO<Int>`, 多了一些针对 **位** 的操作方法.
-				
-  - **ArrayIterator**  继承这个类,方便 for 便历.
-
-		```haxe
-		// from h2d/Sprite.hx
-		public inline function iterator() : hxd.impl.ArrayIterator<Object>{
-			return new hxd.impl.ArrayIterator(childs);
-		}
-		```
- * poly2tri 文件夹  多边形 to 三角形???
-					 
-
-
 ### 源码简析
-
-
-
-
-
-
 
  * comp
 
