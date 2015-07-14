@@ -148,8 +148,11 @@ http://usablica.github.com/intro.js/
 
  * [s2n](https://github.com/awslabs/s2n) an implementation of the TLS/SSL protocols
 
- * (libevent)[http://libevent.org/]
+ * [libevent](http://libevent.org/)
 
- * (clibs)[https://github.com/clibs] 有各种库
+ * [clibs](https://github.com/clibs) 有各种库
+
+ * [libuv](https://github.com/libuv/libuv) Cross-platform asychronous I/O 
+http://libuv.org/
 
 <br />

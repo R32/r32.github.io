@@ -7,14 +7,6 @@ categories: haxe
 
 ---
 
-计划慢慢使用 haxe 来写 js, 内容包括二个部分 nodejs 和 browser-js, 大多数情况下它们都是通用的
- 
-<!-- more -->
-
-### 编译
-
-`haxe -main Test -js test.js` 将 Test.hx 编译成 test.js 
-
 
 ####　黑魔法
 
@@ -22,7 +14,13 @@ categories: haxe
 
 	```haxe
 	var s:String = untyped __js__("Navigator.plugin[\"Shockwave Flash\"]");
+	
+	// 由于 js 的 {} 并没有其独立作用域，因此 __js__ 内部可以随意写局部变量
+	var a = 1, b = 2;
+	 untyped __js__("var c = a+b");
 	```
+
+<!-- more -->
 
  * `__instanceof__(o,cl)`: 相当于JS的 o instanceof c1,
 
@@ -149,7 +147,11 @@ private static function __init__() : Void untyped {
 }
 ```
 
+**处理`func.call/apply`:** 当把一个函数作为变量传递为参数时, haxe 为了绑定 function 内部的 this 作用域,编译为 js 后 绑定将变成 `js.call($bind(func,context))`, 因此只要把 函数声明为 `var func:Void-Void` 这种变量形式就能避免这个问题. 
 
+ * 当一个 extern class 的 method 将要作为参数传递时,需要这样做.
+
+ * static 静态方法受此影响,
 
 ### nodejs
 
@@ -158,8 +160,8 @@ private static function __init__() : Void untyped {
 
 ### 浏览器
 
-这个段落的内容仅适用于 浏览器中的 javascript
+haxe 标准库中的 js.html 包的内容是针对 W3C 标准的, 因此如需操作 DOM 跨浏览器, 应该使用 jQuery 或其它相关库.
 
 #### HTML DOM
 
-haxe.js.html 下的对象类型挺吓人的. 所以应该使用 js.JQuery 来操作 DOM 对象.
+.....

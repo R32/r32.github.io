@@ -460,3 +460,18 @@ dir:			- ??? 和 dospath 一样, 只是多了检测
 
 一个工具能自动写一些模板 https://github.com/player-03/ExtensionBoilerplate
 
+### cppia
+
+这是最近的一个新特性, cppia 能快速编译为 c++ 代码运行速度比 neko 更快（需要先编译得到 cppia.exe(双击`hxcpp/project/compile-cppia.hxml` 就行了) ）
+
+```bash
+-cpp out.cppia	# 定义为一个文件名称,而不是目录
+-D cppia		# 
+-main Main
+-cp src
+-cmd haxelib run hxcpp out.cppia
+```
+
+但感觉好像 cppia 缺乏一些标准库里的东西,如: `haxe.Timer`
+
+<br />

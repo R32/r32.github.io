@@ -717,6 +717,7 @@ vcproj                 : GenCPP internal
 
 # 重写输出类或枚举的包名, 例: @:native("my.real.Cls"). 使它更容易绑定到 extern 类, 可能有不一样的名称.
 # 示例 @:native("global") extern class Node {}, 这样在 Haxe 这边调用 Node 而其实输出端调用的是 global
+# 但是这个在写字段用于成员字段时, @:native("a.b") 将变为 ["a.b"] 这种形式(只在JS中测试过)
 @:native             : (Output type path)Rewrites the path of a class or enum during generation
 
 @:nativeChildren     : Annotates that all children from a type should be
