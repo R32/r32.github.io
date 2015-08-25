@@ -23,6 +23,10 @@ categories: haxelib
 
 <!-- more -->
 
+ * [haxe-watchify](https://github.com/lucamezzalira/haxe-watchify) 命令行工具, 监测文件是否发生改动,而做相应处理
+
+  - 依赖 python2.7, 从 npm 安装,看上去像是用 haxe 写的 nodejs
+
  * **[hxparse](https://github.com/Simn/hxparse/)** haxe Lexer/Parser library 词法分析器
 
  * **[datetime](https://github.com/RealyUniqueName/DateTime)** [Haxe UTC时区处理]({% post_url haxelib/2015-03-17-haxelib-datetime %}#时区处理)
@@ -39,7 +43,7 @@ categories: haxelib
 	
  * [HxScout](https://github.com/jcward/hxScout) A free cross-platform Scout alternative, written in Haxe/OpenFL
 
- * [swhx](https://github.com/filt3rek/swhx) 将 swf 嵌入到 exe
+ * [swhx](https://github.com/filt3rek/swhx) 将 swf 嵌入到 exe,但是这个库已经太旧了,
 
 #### 游戏引擎
 
@@ -72,6 +76,12 @@ haxe LD32游戏示例 : https://github.com/skial/haxe.io/issues/118
  * **[stablexui](https://github.com/RealyUniqueName/StablexUI)**
 
 	> 基于 xml 配置布局和 skin, 简单,高效 移动UI首选
+	
+ * [jive](https://github.com/ngrebenshikov/jive) A crossplatform UI framework for Haxe
+
+  - [jive-chart](https://github.com/ngrebenshikov/jive-chart) A chart library for Jive UI
+
+	> 从 demo上看感觉加载慢,而且示例 xml 和相对应的 hx代码挺复杂的,
 
 #### 语言
 
@@ -84,6 +94,9 @@ haxe LD32游戏示例 : https://github.com/skial/haxe.io/issues/118
 
  	> haxe 相对于 nodejs 的 库好像不只这一个.
 
+#### 文章
+
+ * (C Style for loops)[http://yal.cc/haxe-some-cleaner-c-style-for-loops/] 使用宏实现 C 样式的循环.
 
 #### 未分类
 

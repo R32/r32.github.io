@@ -18,12 +18,9 @@ categories: other
 
  * [haxe-watchify](https://github.com/lucamezzalira/haxe-watchify) 监视文件是否发生改动,nodejs 项目
 
- * [sokit](https://github.com/sinpolib/sokit/releases) socket connect test
-
- * [gifshot](https://github.com/yahoo/gifshot)
+ * [gifshot](https://github.com/yahoo/gifshot) 将视频转换成 gif 图片
 
 	> JavaScript library that can create animated GIFs from media streams, videos, or images
-http://yahoo.github.io/gifshot/
 
  * **[patorjk.com](http://www.patorjk.com/software/taag/#p=display&f=Graffiti&t=Type%20Something)**
 
@@ -33,7 +30,7 @@ http://yahoo.github.io/gifshot/
 
  * [web-bundle](https://github.com/haxorplatform/web-bundle) Tool to pack binary files into a PNG image.
 
-	> 把多少文件打包成 png 图片形式, 然后可以解析这个图片获得文件, 用于在减少 http 请求的数据量.
+	> 把多少文件打包成 png 图片形式, 然后可以解析这个图片获得文件,图片不受跨域加载的影响,同时减少 http 请求的数据量.
 
  * [img2xls](https://github.com/Dobiasd/img2xls) Convert images to colored cells in an Excel table. -python
 
@@ -52,11 +49,31 @@ http://yahoo.github.io/gifshot/
     }
 	```
 
+ * Socket 调试工具
+
+  - tcpdump
+
+  - ngrep
+
+  - Microsoft Network Monitor
+
+  - Microsoft Research TCP Analyzer
+
+  - [sokit](https://github.com/sinpolib/sokit/releases) 模拟客户或服务器端,但是无法自定义连接协议而只能使用原始Socket
+
 #### web
 
 [design-essentials](https://github.com/showcases/design-essentials)
 
 这个章节的大多数内容都是用于美化的 CSS 或 Javascript , 大多数似乎在 ie8 中都会报错.
+
+ * [jsonform](https://github.com/joshfire/jsonform) Build forms from JSON Schema. Easily template-able. Compatible with Twitter Bootstrap out of the box.
+
+  - 使用 JSON 数据来生成表单控件, 已经3年未更新了, 使用的是 bootstrap v2,
+
+ * [underscore](https://github.com/jashkenas/underscore) 一个工具库,跨浏览器, [中文文档](http://javascript.ruanyifeng.com/library/underscore.html#)
+
+ * [spectrum](https://github.com/bgrins/spectrum) The No Hassle JavaScript Colorpicker, 颜色选择器,**兼容IE6+**
 
  * **[awesome-d3](https://github.com/wbkd/awesome-d3)**  d3.js 的一些库,而D3.js是当前流行的数据可视化工具
 
@@ -75,6 +92,8 @@ http://yahoo.github.io/gifshot/
  * [Primer](https://github.com/primer/primer) Github 官方的 CSS 前端设计, 感觉 Component 很少, 
 
   - 几个颜色值 http://primercss.io/colors/
+
+  - bootstrap 颜色值 http://www.runoob.com/bootstrap/bootstrap-v2-less.html
 
  * **[holder](https://github.com/imsky/holder)** 生成图像占位符
 
@@ -141,6 +160,10 @@ http://usablica.github.com/intro.js/
  * [pomelo](https://github.com/NetEase/pomelo) A fast,scalable,distributed game server framework for Node.js
 
 	> https://github.com/NetEase/pomelo/wiki/Home-in-Chinese
+	
+ * [minimatch](https://github.com/isaacs/minimatch) a glob matcher in javascript 正则表达式如像 dos下的 `*.txt` 通配符
+
+ * [phantomjs](https://github.com/ariya/phantomjs) 没有界面的浏览器,适用于做爬虫
 
 #### CLib
 
