@@ -98,6 +98,27 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下, 在各包(文件夹或�
 
 下边的一些内容也许并不适合于 haxe 的最新版
 
+ * 泛形, 返回类型或者Void, 参考 haxe.Time 的 measure 方法源码如下: 
+
+	```haxe
+	public static function measure<T>( f : Void -> T, ?pos : PosInfos ) : T {
+		var t0 = stamp();
+		var r = f();
+		Log.trace((stamp() - t0) + "s", pos);
+		return r;
+	}
+	
+	
+	$type(Timer.measure(function(){
+		// output: Warning: Void
+	}));
+	
+	$type(Timer.measure(function(){
+		return true;
+		// output: Warning: Bool
+	}));
+	```
+
  * 如果一属性(Property)为(get,set), 那么在 set 中不需要给这个属性赋值, 否则需要加上 `@:isVar`
 
 	```haxe
