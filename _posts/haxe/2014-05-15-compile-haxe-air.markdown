@@ -7,13 +7,13 @@ categories: haxe
 
 ---
 
-最简单的方法是用 `flashdevelop` 创建一个 `haxe/air` 的示例.
+之前以为打包成 `.air` 由于需要安装,因此很不方便. 后来发现其实 adobe 有工具打包成bundle的形式(window平台打包成exe文件).可以使用`flash.html.HTMLLoader` 加载普通的网页, 相比`nw.js`打包网页要小20M左右, 最简单的方法是用 `flashdevelop` 创建一个 `haxe/air` 的示例.
 
 <!-- more -->
 
 对于一些 AIR 属性的类, 你需要使用 haxe 的类库 air3,详情见: `haxelib info ari3`
 
-#### 创建 `air app.xml`
+### 创建 `air app.xml`
 
  [官网参考](http://help.adobe.com/en_US/air/build/WS144092a96ffef7cc4c0afd1212601c9a36f-8000.html) 示例: 
 
@@ -69,7 +69,7 @@ categories: haxe
 
 
 
-#### 创建 swf
+### 创建 swf
 
 先需要编绎成常见的 swf 格式. 细节参看: [编绎haxe](http://haxe.org/doc/compiler)
 
@@ -78,58 +78,182 @@ haxe -main Main -swf Main.swf
 ```
 
 
+### air应用
+
+做这一步之前需要先创建 swf 文件,
+
+#### 调式运行
+
+仅于快速测试, 不会生成 air 文件
+
+ ```bat
+ :: 命令很简单,不需要 certificate 文件
+ :: swfdir可以为空,则为当前目录
+ adl %APP_XML% %swfdir%
+ ```
+
+#### 打包成air
+
+需要通过调用 `adt.bat` 创建签名文件, 下边 `.bat` 提取来自 `flashdevelop` 的 `haxe/air` 示例.
+
+```bat
+:: 配置路径
+set FLEX_SDK=E:\flash_SDK\AIR40
+set PATH=%PATH%;%FLEX_SDK%\bin
 
 
-
-#### `AIR`
-
- * `Debug` 调式运行
-
-    ```bat
-    :: 命令很简单,不需要 certificate 文件
-    :: swfdir可以为空,则为当前目录
-    adl %APP_XML% %swfdir%
-    ```
- * 打包
-
-    下边 `.bat` 提取来自 `flashdevelop` 的 `haxe/air` 示例.
-
-    ```bat
-    :: 配置路径
-    set FLEX_SDK=E:\flash_SDK\AIR40
-    set PATH=%PATH%;%FLEX_SDK%\bin
+:: 配置 certificate 文件信息
+set CERT_NAME=air
+set CERT_PASS=fd
+set CERT_FILE=air.p12
 
 
-    :: 配置 certificate 文件信息
-    set CERT_NAME=air
-    set CERT_PASS=fd
-    set CERT_FILE=air.p12
+:: xml 文件
+set APP_XML=app.xml
+
+:: ========== 创建 certificate ==========
+
+if not exist %CERT_FILE% call adt -certificate -cn %CERT_NAME% 1024-RSA %CERT_FILE% %CERT_PASS%
+
+:: ========== 生成 AIR ==========
+:: AIR output
+
+::if not exist %AIR_PATH% md %AIR_PATH%
+
+set OUTPUT=app.air
+
+set APP_DIR=.\
 
 
-    :: xml 文件
-    set APP_XML=app.xml
+set OPTIONS=-tsa none
+set SIGNING_OPTIONS=-storetype pkcs12 -keystore %CERT_FILE% -storepass %CERT_PASS%
 
-    :: ========== 创建 certificate ==========
+adt -package %OPTIONS% %SIGNING_OPTIONS% %OUTPUT% %APP_XML% %APP_DIR%
+```
 
-    if not exist %CERT_FILE% call adt -certificate -cn %CERT_NAME% 1024-RSA %CERT_FILE% %CERT_PASS%
+#### 打包成bundle
 
-    :: ========== 生成 AIR ==========
-    :: AIR output
+由于秘成 air安装很麻烦, 因此对于桌面平台建议生成 `-target bundle`: 对于windows平台,这将会生成一个不需要安装的 exe 文件
 
-    ::if not exist %AIR_PATH% md %AIR_PATH%
+参考: http://help.adobe.com/zh_CN/air/build/WSfffb011ac560372f709e16db131e43659b9-8000.html
 
-    set OUTPUT=app.air
+```bash
+# 签名文件参考上小节的 
+adt -package 
+    -keystore ..\cert.p12 -storetype pkcs12 
+    -target bundle 
+    myApp 
+    myApp-app.xml 
+    myApp.swf icons resources
+```
 
-    set APP_DIR=.\
+### HTMLLoader
+
+[AIR 中不支持的 WebKit 功能](http://help.adobe.com/zh_CN/air/html/dev/WSb2ba3b1aad8a27b0-67c0013e126afbe6c4d-8000.html)
+
+http://help.adobe.com/zh_CN/air/html/dev/WS5b3ccc516d4fbf351e63e3d118666ade46-7eb3.html
+
+```haxe
+package;
+import flash.display.StageAlign;
+import flash.display.StageScaleMode;
+import flash.Lib;
+import flash.html.HTMLLoader;
+import flash.net.URLRequest;
 
 
-    set OPTIONS=-tsa none
-    set SIGNING_OPTIONS=-storetype pkcs12 -keystore %CERT_FILE% -storepass %CERT_PASS%
+class Main {
+	
+	static function main() {
+		var stage = Lib.current.stage;
+		stage.scaleMode = StageScaleMode.NO_SCALE;
+		stage.align = StageAlign.TOP_LEFT;
+		// entry point
+		var html = new HTMLLoader();
+        var urlReq = new URLRequest("http://html5test.com/");
+		html.width = stage.stageWidth;
+		html.height = stage.stageHeight;
+		html.load(urlReq); 
+		Lib.current.addChild(html);
+		
+		// 在js如何调用flash中的方法, 在 HTMLLoader 有一个 window 属性, 只要把方法附加上去就行了.
+		html.window.console = { log: haxe.Log.trace };
+		
+		// 反过来, 如果在 flash 中想要调用 js 的方法同样是通过 html.window 属性,但是注意加载的顺序. 参看一些事件.
+		haxe.Log.trace("from flash: " + html.window.navigator.userAgent);
+	}
+}
+```
 
-    adt -package %OPTIONS% %SIGNING_OPTIONS% %OUTPUT% %APP_XML% %APP_DIR%
-    ```
+index.html 中的相关代码. 如果需要从 js 中创建 flash 的数据类型,最好是添加 `AIR_SDK\frameworks\libs\air\AIRAliases.js`, 这个文件用起来方便.
 
+```js
+if(window.runtime){
+	console.log("after flash trace");	// 注意: air并不支持 console, 这个 console 是 上边的函数绑定.
+	
+	// 在 js 中直接创建 byteArray 对象,需要引入 AIRAliases.js,以方便调用.
+	var ba = new air.ByteArray();
+	ba.writeByte(60);
+		
+	ba.position = 0;
+	console.log(ba.readByte());
+}
+```
 
+`frameworks\libs\air\` 目录下的一些脚本
 
+ * `AIRAliases.js` 一些快速访问 flash 的端方法
 
+ * `AIRIntrospector.js` 控制台, 用于协助调试基于 HTML 的应用. 引入后,按下 F12 打开. 这个控制台不怎么好用, 比如没有智能提示
+
+#### 保护源码
+
+由于HTMLLoader环境中js代码在loaded事之后eval命令受限, 因此思路是以 loadString 的方法加载动态生成的页面, 并设 `placeLoadStringContentInApplicationSandbox` 属性为 true. 示例引用: https://forums.adobe.com/message/3510525#3510525
+
+下边示例的第二部分是获取 MAC 地址, 但其实 air 有 `NetworkInterface::hardwareAddress` 方法可以做到这个.
+
+```
+The method I use will allow you encrpyt most of your source code using a key that is unique to every computer.
+ 
+The initial download of my software is a simple air app that does not contain the actual program. It is more like a shell that first retreaves a list of the clients mac addresses and the user entered activation code that is created at time of purchase. This is sent to server and logged.  The activation code is saved to a file client side.  At the server the mac address and activation key are used to create the encryption key.  The bulk of the program code is then encrypted using that key, then divided into parts and sent back to the client.
+The client puts the parts back together and saves the encrypted file.
+At runtime the shell finds the mac address list and the activation key, then using same method as server gets the encryption key and decrypts the program file. Run simple check to make sure it loaded. For encyption i found an aes method that works in php and javascript.
+
+Next I use this code to load the program
+var loader = air.HTMLLoader.createRootWindow(true, options, true, windowBounds);
+loader.cacheResponse=false;
+loader.placeLoadStringContentInApplicationSandbox=true;
+loader.loadString(page);
+ 
+This method makes it very difficult to copy to another computer although since I wrote it i know there are some weeknesses in the security but to make it harder i obv. the shell code. It at least keeps most from pirating.
+ 
+However there are issues with this that I have found.
+First i was using networkInfo to get the list of mac address but this failed in a test windows XP computer.  When the wireless was off it did not return the MAC.  I was not able to recreate this in VISTA or 7.  Not sure if it could happen.  Was not tested on a mac computer.  To fix this (at least for windows).  I wrote a simple bat file that gets the MAC list, then converted it to an exe which is included.  This does force you to create native installers.  call the exe with this
+
+var nativeProcessStartupInfo = new air.NativeProcessStartupInfo();
+var file = air.File.applicationDirectory.resolvePath("findmac.exe");
+nativeProcessStartupInfo.executable = file;
+process = new air.NativeProcess();
+process.start(nativeProcessStartupInfo);
+process.addEventListener(air.ProgressEvent.STANDARD_OUTPUT_DATA, onOutputData);
+process.addEventListener(air.ProgressEvent.STANDARD_ERROR_DATA, onErrorData);
+process.addEventListener(air.NativeProcessExitEvent.EXIT, onExit);
+process.addEventListener(air.IOErrorEvent.STANDARD_OUTPUT_IO_ERROR, onIOError);
+process.addEventListener(air.IOErrorEvent.STANDARD_ERROR_IO_ERROR, onIOError);
+ 
+put the list  together in the onOutputData event using array.push
+and continue on the onExit event
+ 
+using the findmac.exe will return the same info every time (that i know of)
+beware thought that using the native install will break the standard application update process so you will have to write your own.  my updates are processed the same way as above.
+This is contents of the .bat file to get the mac list
+@Echo off
+SETLOCAL
+SET MAC=
+SET Media=Connected
+FOR /F "Tokens=1-2 Delims=:" %%a in ('ipconfig /all^| FIND "Physical Address"') do @echo %%b
+ENDLOCAL
+ 
+using this method makes it simple to implement at try before you by method.  at runtime if no activation code get try me version from server instead of full version.
+```
 
