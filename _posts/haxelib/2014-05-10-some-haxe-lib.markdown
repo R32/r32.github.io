@@ -43,7 +43,13 @@ categories: haxelib
 	
  * [HxScout](https://github.com/jcward/hxScout) A free cross-platform Scout alternative, written in Haxe/OpenFL
 
- * [swhx](https://github.com/filt3rek/swhx) 将 swf 嵌入到 exe,但是这个库已经太旧了,
+ * **[tora](https://github.com/HaxeFoundation/tora)** NekoVM Application Server
+
+	> 类似于 php, 用于处理网页动态内容, 我的一个 [nginx + tora:FastCGI](https://github.com/R32/HelloWorld/blob/Older/test/neko-nginx-tora/Nx.hx) 的 demo. 
+	
+ * [libnoise](https://github.com/memilian/libnoise) This is a haxe port of libnoise, the coherent noise library. The port is almost complete, only the gradient and noise2D utilities are missing.
+
+ * ~~[swhx](https://github.com/filt3rek/swhx)~~ 将 swf 嵌入到 exe,但是这个库已经太旧了, 不如使用 AIR
 
 #### 游戏引擎
 
@@ -64,7 +70,13 @@ haxe LD32游戏示例 : https://github.com/skial/haxe.io/issues/118
 	> for deploying games on Mac, Windows, Linux, Android, iOS and WebGL
 	
 	> 没有 flash 平台,没有了多余的类,专注于2D游戏引擎. windows 需要 vs 2013
-	
+
+#### extern
+
+这些外部库通常是 js
+
+ * [chrome.extension](https://github.com/tong/chrome.extension)
+
  * [pixijs-haxe](https://github.com/pixijs/pixi-haxe)
 
 #### UI
@@ -87,12 +99,7 @@ haxe LD32游戏示例 : https://github.com/skial/haxe.io/issues/118
 
  * [LuaXe](https://github.com/PeyTy/LuaXe) Lua target for Haxe language
 
- 	> hx-lua 是用于动态解析 lua 代码的, 只适用于 cpp/neko, 而这个库是将 haxe 转换为 lua 代码
-
-
- * [nodejs-std](https://github.com/dionjwa/nodejs-std) Some of the Haxe std library for Node.js
-
- 	> haxe 相对于 nodejs 的 库好像不只这一个.
+ 	> hx-lua 是用于动态解析 lua 代码的, 只适用于 cpp/neko, 而这个库是将 haxe 转换为 lua 代码, 但未
 
 #### 文章
 
@@ -100,11 +107,7 @@ haxe LD32游戏示例 : https://github.com/skial/haxe.io/issues/118
 
 #### 未分类
 
- * **[tora](https://github.com/HaxeFoundation/tora)** NekoVM Application Server
-
-	> 类似于 php, 用于处理网页动态内容, 我的一个 [nginx + tora:FastCGI](https://github.com/R32/HelloWorld/blob/Older/test/neko-nginx-tora/Nx.hx) 的 demo. 
-
- * **[promhx](https://github.com/jdonaldson/promhx)** A promise and functional reactive programming
+ * [promhx](https://github.com/jdonaldson/promhx) A promise and functional reactive programming
 
 	> 响应式编程,用于流程控制. 一个 promise|stream 需要一个或多个 deferred.resolve
 	
@@ -292,6 +295,8 @@ haxe LD32游戏示例 : https://github.com/skial/haxe.io/issues/118
  * [mloader](https://github.com/massiveinteractive/mloader)
 
 	> A cross platform Haxe library for loading resources with utilities for queueing and caching requests. Supports AVM2, JavaScript, Neko and C++
+	
+ * [structural](https://github.com/underscorediscovery/structural) An unencumbered, generic haxe data structures library. 
 
  * [thx.core](https://github.com/fponticelli/thx.core) 
 

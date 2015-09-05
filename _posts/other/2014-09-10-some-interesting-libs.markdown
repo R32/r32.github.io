@@ -67,6 +67,12 @@ categories: other
 
 这个章节的大多数内容都是用于美化的 CSS 或 Javascript , 大多数似乎在 ie8 中都会报错.
 
+ * [Google Fonts](https://github.com/google/fonts) Font files available from Google Fonts
+
+  - You can download all Google Fonts in a simple ZIP snapshot (over 250Mb)
+
+ * [Google icons](https://github.com/google/material-design-icons) Material Design icons by Google
+
  * [jsonform](https://github.com/joshfire/jsonform) Build forms from JSON Schema. Easily template-able. Compatible with Twitter Bootstrap out of the box.
 
   - 使用 JSON 数据来生成表单控件, 已经3年未更新了, 使用的是 bootstrap v2,
