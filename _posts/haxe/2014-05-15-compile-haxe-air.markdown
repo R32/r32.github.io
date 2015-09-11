@@ -15,7 +15,10 @@ categories: haxe
 
 ### 创建 `air app.xml`
 
- [官网参考](http://help.adobe.com/en_US/air/build/WS144092a96ffef7cc4c0afd1212601c9a36f-8000.html) 示例: 
+AIR 应用程序描述符元素: http://help.adobe.com/zh_CN/air/build/WSfffb011ac560372f2fea1812938a6e463-8000.html
+
+[官网参考](http://help.adobe.com/en_US/air/build/WS144092a96ffef7cc4c0afd1212601c9a36f-8000.html) 示例: 
+
 
 ```xml
 <?xml version="1.0" encoding="utf-8" ?> 
@@ -144,7 +147,54 @@ adt -package
     -target bundle 
     myApp 
     myApp-app.xml 
-    myApp.swf icons resources
+    myApp.swf icons resources	
+```
+
+### 命令行
+
+#### ADL(AIR Debug Launcher)
+
+http://help.adobe.com/zh_CN/air/build/WSfffb011ac560372f-6fa6d7e0128cca93d31-8000.html
+
+ADL 的完整语法是:
+
+```bash
+adl [-runtime runtime-directory]	# 指定运行库目录, 如果未指定,则使用ADL所在的SDK包.
+    [-pubid publisher-id]	# 从 AIR 1.5.3 开始,不需要也不应该使用此参数
+    [-nodebug]				# 关闭调试支持.(但是trace仍然输出到控制台(mm.cfg))
+    [-atlogin]				# 测试应用程序在用户登录时才可执行
+    
+	[-profile profileName]	# 指定的配置文件对应用程序进行调试, desktop || extendedDesktop || mobileDevice
+   
+	[-screensize value]		# 当设为 mobileDevice时, 模拟屏幕大小......
+    
+	[-extdir extension-directory]	# 运行时的本机扩展(ANE)目录......
+    
+	application.xml			# 应用描述符文件
+    
+	[root-directory]		# 应用根目录, 如果未指定，则使用 application.xml 的所在目录
+    
+	[-- arguments]			# 在 “--” 之后显示的任何字符串均作为命令行参数传递到应用
+```
+
+#### ADT(AIR Developer Tool)
+
+ADT 是一个 Java程序, 用于开发 AIR 应用程序的多用途命令行工具 http://help.adobe.com/zh_CN/air/build/WS5b3ccc516d4fbf351e63e3d118666ade46-7fd9.html
+
+ * 将 AIR 应用程序打包为 `.air` 安装文件
+
+ * 将 AIR 应用程序打包为本机安装程序。
+
+	> 例如：在 Windows 上打包为 .exe 安装程序文件，在 iOS 上打包为 .ipa，或者在 Android 上打包为 .apk
+	
+ * 将本机扩展打包为 AIR 本机扩展 (ANE) 文件
+
+ * 1)使用数字证书对 AIR 应用程序签名, 2)更改（迁移）用于应用程序更新的数字签名, 3)创建自签名的数字代码签名证书
+
+ * 1)确定连接到计算机的设备, 2)远程安装、启动和卸载移动设备上的应用程序, 3)远程安装和卸载移动设备上的 AIR 运行时
+
+```bash
+adt -command options
 ```
 
 ### HTMLLoader

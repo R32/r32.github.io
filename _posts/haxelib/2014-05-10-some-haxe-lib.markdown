@@ -55,9 +55,13 @@ categories: haxelib
 
 haxe LD32游戏示例 : https://github.com/skial/haxe.io/issues/118
 
+haxe LD33游戏示例: http://haxe.io/ld/33/
+
  * [flambe](https://github.com/aduros/flambe) flash stage3D + html5 2D 游戏引擎
 
  * [kha](https://github.com/KTXSoftware/Kha) Super portable software dev kit. 超级便携式软件开发包.
+
+  - 我很怀疑, kha 是否真的有这么好的性能 http://themozokteam.com/playground/frameworkstest/
 
  * **[heaps](https://github.com/ncannasse/heaps)** 使用 stage3D,webGl,openGl, 没有文档
 

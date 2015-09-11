@@ -12,38 +12,10 @@ categories: other
 [window 版本下载](http://git-scm.com/)
 
 <!-- more -->
-### 基本
 
-一些命令行参数说明, 1~14 都属于 commitish
+### 简单
 
-```bash
-----------------------------------------------------------------------
-|    Commit-ish/Tree-ish    |                Examples
-----------------------------------------------------------------------
-|  1. <sha1>                | dae86e1950b1277e545cee180551750029cfe735
-|  2. <describeOutput>      | v1.7.4.2-679-g3bee7fb
-|  3. <refname>             | master, heads/master, refs/heads/master
-|  4. <refname>@{<date>}    | master@{yesterday}, HEAD@{5 minutes ago}
-|  5. <refname>@{<n>}       | master@{1}
-|  6. @{<n>}                | @{1}
-|  7. @{-<n>}               | @{-1}
-|  8. <refname>@{upstream}  | master@{upstream}, @{u}
-|  9. <rev>^                | HEAD^, v1.5.1^0
-| 10. <rev>~<n>             | master~3
-| 11. <rev>^{<type>}        | v0.99.8^{commit}
-| 12. <rev>^{}              | v0.99.8^{}
-| 13. <rev>^{/<text>}       | HEAD^{/fix nasty bug}
-| 14. :/<text>              | :/fix nasty bug
-----------------------------------------------------------------------
-|       Tree-ish only       |                Examples
-----------------------------------------------------------------------
-| 15. <rev>:<path>          | HEAD:README.txt, master:sub-directory/
-----------------------------------------------------------------------
-|         Tree-ish?         |                Examples
-----------------------------------------------------------------------
-| 16. :<n>:<path>           | :0:README, :README
-----------------------------------------------------------------------
-```
+中文git描述(github项目): http://gitbook.liuhui998.com/index.html
 
 #### 克隆
 
@@ -53,7 +25,7 @@ categories: other
 
   - `git clone git@github.com:yss/restjs.git localdir`
 
-  - 如果不需要历史可以加参数 `--depth 1`
+  - **Tips:** 如果不需要历史可以加参数 `--depth 1`
 
 
 #### 更新
@@ -71,23 +43,43 @@ categories: other
   - git merge bob/master`
 
  * 可能需要手动调整合并冲突, 然后再缓存提交
- 
+
+	```bash
+	# 如有冲突,查看当前有哪些文件产生了冲突:
+	git diff
+	
+	# 解决掉冲突之后
+	git add file.txt
+	
+	# 如果你觉得你合并后的状态是一团乱麻，想把当前的修改都放弃
+	git reset --hard HEAD
+	
+	```
+
 	> GUI 这里需要自已单击已经修改了的冲突文件,而不是点击 缓存 按钮
 
- * **rebase**
+ * **rebase** 如果是 fork 别的人项目,这个命令比 merge 要好
 
-  - `git rebase bob/master` 这个命令比 merge 要好,如果 fork 别的人项目
+	```bash
+	# rebase合并
+	git rebase bob/master
 
-  - **重要:** 冲突解决后,添冲突的文件添加到缓存之后先不要提交,而是输入 `git rebase --continue`
+	# 如果有冲突(conflict), 则修改冲突后添加到缓存
+	# 查看冲突使用 git diff 命令
+	git add	path/to/conflict.file
 
+	# 不需要执行 git commit,而是:
+	git rebase --continue
+	
+	## 如果感觉有什么不对,可用于中断并恢复
+	git rebase --abort
+	```
 
 #### 上传
 
  * 本地提交后点 `上传` 就行了
 
   - `git push origin master`
-
-
 
 ### 其它
 
@@ -97,6 +89,9 @@ categories: other
 	```bash
 	# git checkout COMMIT_HASH -- path_to_file.ext
 	git checkout 45a0c601f32b1c245c988d00e364e27b9b90eff0 -- readme.md
+	
+	# 从 HEAD 中恢复
+	git checkout -- readme.md
 	```
 
  * upstream, 自动更新 fork 版本 repo
@@ -124,6 +119,62 @@ categories: other
 	docs/formatter.rb linguist-documentation=false
 	```
 
+ * stash 用于保存当前工作, http://gitbook.liuhui998.com/4_5.html
+
+	```bash
+	#
+	git stash "work in progress for foo feature"
+	
+	# 之后整个目录会回到最后一次提交时的状态
+	# 以便于临时修改一些Bug.
+	
+	# 做一些提交后,想回到工作目录
+	git stash apply
+	```
+	
+ * 没有共同祖先的分支, http://gitbook.liuhui998.com/5_1.html
+
+	```bash
+	git symbolic-ref HEAD refs/heads/newbranch 
+	rm .git/index 
+	git clean -fdx 
+	#<do work> 
+	git add your files 
+	git commit -m 'Initial commit'
+	```
+	
+ * 查找文件是每个部分是谁修改的
+
+	```bash
+	git blame path/to/file.ext
+	
+	# http://gitbook.liuhui998.com/5_5.html
+	```
+	
+ * 使用二分法查找问题出在哪? 最后把问题以 patch 的形式提交而不是修改历史
+
+	```bash
+	git bisect start
+	git bisect good v2.6.18
+	git bisect bad master
+	
+	# 通过不停的 git bisect bad, good 查找问题
+	
+	# 找到问题后,恢复到git bisect start,  
+	git bisect reset
+	
+	# 更多参考 http://gitbook.liuhui998.com/5_4.html
+	```
+	
+ * 将改动做成补丁
+
+	```bash
+	# 首先创建一个新分支如 patch-1,然后 checkout,
+	# 输入以下命令后将在在目录下生成一个 .patch 的文件:
+	git format-patch master
+	
+	# 项目中导入补丁
+	```
 
 #### submodule
 
@@ -174,6 +225,39 @@ bb383961a2d13e12d92be5f5e5d37491a90dee66        refs/original/refs/heads/master
 
 ```bash
 
+```
+
+#### 杂项
+
+一些命令行参数说明, 1~14 都属于 commitish
+
+```bash
+----------------------------------------------------------------------
+|    Commit-ish/Tree-ish    |                Examples
+----------------------------------------------------------------------
+|  1. <sha1>                | dae86e1950b1277e545cee180551750029cfe735
+|  2. <describeOutput>      | v1.7.4.2-679-g3bee7fb
+|  3. <refname>             | master, heads/master, refs/heads/master
+|  4. <refname>@{<date>}    | master@{yesterday}, HEAD@{5 minutes ago}
+|  5. <refname>@{<n>}       | master@{1}
+|  6. @{<n>}                | @{1}
+|  7. @{-<n>}               | @{-1}
+|  8. <refname>@{upstream}  | master@{upstream}, @{u}
+|  9. <rev>^                | HEAD^, v1.5.1^0
+| 10. <rev>~<n>             | master~3
+| 11. <rev>^{<type>}        | v0.99.8^{commit}
+| 12. <rev>^{}              | v0.99.8^{}
+| 13. <rev>^{/<text>}       | HEAD^{/fix nasty bug}
+| 14. :/<text>              | :/fix nasty bug
+----------------------------------------------------------------------
+|       Tree-ish only       |                Examples
+----------------------------------------------------------------------
+| 15. <rev>:<path>          | HEAD:README.txt, master:sub-directory/
+----------------------------------------------------------------------
+|         Tree-ish?         |                Examples
+----------------------------------------------------------------------
+| 16. :<n>:<path>           | :0:README, :README
+----------------------------------------------------------------------
 ```
 
 #### 多账号提交
