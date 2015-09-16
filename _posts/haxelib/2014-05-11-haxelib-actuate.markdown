@@ -1,7 +1,7 @@
 ---
 
 layout: post
-title:  actuate
+title:  actuate(动画补间)
 date:   2014-05-11 9:17:21
 categories: haxelib
 

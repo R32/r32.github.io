@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  HXSL
+title:  HXSL(着色器)
 date:   2014-11-16 13:16:18
 categories: haxelib
 ---

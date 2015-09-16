@@ -1,7 +1,7 @@
 ---
 
 layout: post
-title:  castle
+title:  castle(可视数据编辑)
 date:   2014-06-07 7:26:01
 categories: haxelib
 

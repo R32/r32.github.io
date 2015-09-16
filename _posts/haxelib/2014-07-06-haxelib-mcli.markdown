@@ -1,7 +1,7 @@
 ---
 
 layout: post
-title:  mcli
+title:  mcli(命令行工具)
 date:   2014-07-06 09:17:30
 categories: haxelib
 
