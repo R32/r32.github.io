@@ -6,7 +6,7 @@ categories: haxe
 ---
 
 
-Bresenham 是一种相当常见的算法, 几个月以前我发现一些非常有用的用途. [原文链接](http://deepnight.net/bresenham-magic-raycasting-line-of-sight-pathfinding/) 
+bresenham 是一种相当常见的算法, 几个月以前我发现一些非常有用的用途. [原文链接](http://deepnight.net/bresenham-magic-raycasting-line-of-sight-pathfinding/) 
 
 这种算法基本上用于基于网格空间在二点之间画一条线(ie:像素单位). 其结果是完美的像素线条, 但该算法还具有很多其它有趣的用法:
 
