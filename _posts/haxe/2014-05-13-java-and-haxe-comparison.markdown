@@ -6,7 +6,7 @@ categories: haxe
 notes: markdown中夹着 html 时解析时很怪异.
 ---
 
-#### 前言
+### 前言
 
 由于需要使用 `openfl.utils.JNI` 写 `android extendsion` 了解一些 `Java` 的语法还是有帮助的
 
@@ -15,7 +15,7 @@ notes: markdown中夹着 html 时解析时很怪异.
 
 <!-- more -->
 
-#### HelloWorld
+### HelloWorld
 
 <div class="row">
   <div class="col-md-6 as3">
@@ -56,7 +56,7 @@ class Helo {
 <hr />
 
 
-#### 构造函数和方法重载
+### 构造函数和方法重载
 
 <div class="row">
  <div class="col-md-6 as3">
@@ -107,7 +107,7 @@ class TheClass {
 
 <hr />
 
-#### 基础类型
+### 基础类型
 
 <div class="row">
   <div class="col-md-6 as3">
@@ -140,7 +140,7 @@ Void
 
 <hr />
 
-#### 初使化类之前
+### 初使化类
 
 <div class="row">
  <div class="col-md-6 as3">
@@ -217,7 +217,7 @@ class Test{
 
 <hr />
 
-#### 加载源生方法
+### 加载源生方法
 
 <div class="row">
  <div class="col-md-6 as3">
@@ -249,17 +249,14 @@ extern class Fs {
 	static function rename(oldPath:String, newPath:String, callback:Error->Void):Void;
 }
 
-// @:extern 元标记几乎没有什么人用. 只能用于标记 属性,不能标记方法, 但方法可以写成变量的形式,
+// 整个类为外部类, (或者通过 @:extern 指定某一字段为外部,但这好像很少用到)
 extern class Foo{
-	@:extern public var prototype:Dynamic;
-	@:extern public var hasOwnProperty:String->Bool;		// 方法写成变量的形式
 }
 
 // hxcpp 加载 外部 C 库 - CFFI
 // 首先使用 hxcpp 编译 c 源码. hxcpp 将根据不同平台选择不同 c/c++ 编译器
 // 同样使用 Lib.l
-class HelloCFFI{
-	
+class HelloCFFI{	
 	private static var stringFromCFFI = Lib.load("path/to/lib.ndll","funcName",0);
 }
 
@@ -270,7 +267,7 @@ class HelloCFFI{
 <hr />
 
 
-#### 空的
+### 空的
 
 <div class="row">
  <div class="col-md-6 as3">
@@ -294,7 +291,7 @@ class HelloCFFI{
 
 <hr />
 
-#### 空的
+### 空的
 
 <div class="row">
  <div class="col-md-6 as3">
@@ -318,13 +315,13 @@ class HelloCFFI{
 
 <hr />
 
-#### NDK
+### NDK
 
 留空以后再添加...
 
 
 
-#### 简单记些 Java
+### 简单记些 Java
 
 [15分钟　java 快速入门](https://github.com/jdonaldson/learnxinyminutes-docs/blob/master/java.html.markdown)
 

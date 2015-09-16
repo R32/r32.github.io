@@ -119,7 +119,7 @@ categories: other
 	docs/formatter.rb linguist-documentation=false
 	```
 
- * stash 用于保存当前工作, http://gitbook.liuhui998.com/4_5.html
+ * stash 用于保存当前工作
 
 	```bash
 	#
@@ -130,6 +130,8 @@ categories: other
 	
 	# 做一些提交后,想回到工作目录
 	git stash apply
+	
+	# 如果需要提交到 github 还是用新分支吧.做完再合并到主线上来.
 	```
 	
  * 没有共同祖先的分支, http://gitbook.liuhui998.com/5_1.html
@@ -173,7 +175,14 @@ categories: other
 	# 输入以下命令后将在在目录下生成一个 .patch 的文件:
 	git format-patch master
 	
-	# 项目中导入补丁
+	# hash之间的改动做成补丁
+	git format-patch <old_sha>...<new_sha> -o <patch_dir>
+	
+	# 应用patch(不完整),
+	git apply --start xxx.patch		# 检查 patch
+	git apply --check xxx.patch		# 是否能应用成功
+	
+	git am -s < xxx.patch			# 应用patch
 	```
 
 #### submodule

@@ -8,6 +8,8 @@ categories: other
 ---
 
  [hss](https://github.com/ncannasse/hss) 是一个类似于 less 或 sass 的 动态样式表语言.但是更加轻量及简单. 基于 neko 平台. 最新的 1.4 版本需要自已编译. 编译参考 Makefile 文件. 
+
+由于 flashdevelop 就支持 hss,不需要另外下载 hss 这个工具
  
 <!-- more -->
 
@@ -224,6 +226,7 @@ HSS 源文件的 Rules.nml 文件中列出的整个的 CSS 属性规则，用于
 }
 ```
 
+但是 `CSS("")`目前只用用于值,用在属性如 `CSS("*color"):#fff;` 将会报错..
 
 
 #### 运算符
@@ -238,7 +241,6 @@ var scale = 3;
     color : #FF0000 * 0.7;
 }
 ```
-
 
 
 #### hasks

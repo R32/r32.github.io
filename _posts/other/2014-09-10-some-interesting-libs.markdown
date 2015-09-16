@@ -10,6 +10,8 @@ categories: other
 记录 github 上一些有意思的库, 大多数是从 https://github.com/trending?since=weekly 上看到的.
 
 
+**[awesome-nodejs](https://github.com/sindresorhus/awesome-nodejs)** 一个收集nodejs项目列表.
+
 #### Tools
 
  * [regexr.com](http://regexr.com/) 正则表达式测试
@@ -160,8 +162,6 @@ http://usablica.github.com/intro.js/
 
 
 #### misc
-
-[awesome-nodejs](https://github.com/sindresorhus/awesome-nodejs)
 
  * [pomelo](https://github.com/NetEase/pomelo) A fast,scalable,distributed game server framework for Node.js
 

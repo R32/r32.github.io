@@ -27,7 +27,7 @@ categories: other
 
 再新建 android project 的最后一步时, 将 Create Activity 去掉, 做一个纯代码的 Hello World! 未来再使用 res.layout::xml 来自动构建这些. 下边是一些需要注意的细节:
 
- > 主类 需要在自确的 包目录下, android 应用要求有 3 层，主类必须建立在这个目录之下.这里你需要连续建 3 个空目录
+ > 主类 需要在正确的包目录下, android 应用要求有 3 层，主类必须建立在这个目录之下.这里你需要连续建 3 个空目录
 
  > 在 AndroidManifest 的 application标签下的指出这个主类, UI 设置能帮助完成这一步.
 
