@@ -1,0 +1,639 @@
+---
+layout: post
+title:  luxe
+date:	2015-03-09 09:12:18
+categories: haxelib
+---
+
+
+### 简介
+
+haxe 的一个跨平台( Mac,Windows,Linux, Android, iOS 和 WebGL)的游戏引擎. luxe新出来还没多久, 基本处于 alpha 版.
+
+ * luxe 文档 http://luxeengine.com/docs/
+
+ * 各种资源,示例,及教程等等: https://github.com/anissen/awesome-snowkit
+
+<!-- more -->
+
+### 安装
+
+原文: http://luxeengine.com/docs/setup.html
+
+ * 第一步: 安装 [haxe 3.2+](http://haxe.org/download/)
+
+ * 第二步: 确保 git bash可用，
+
+ * 第三步: 安装git版本 **luxe**, luxe依赖下边二个项目
+
+  - **flow**: 编译工具, 基于 nodejs 的项目,用于编译 luxe 的命令行工具
+
+  - **snow**: luxe 的跨平台底层, 包含各种 c/c++ 库.
+
+	```bash
+	haxelib git flow https://github.com/underscorediscovery/flow.git
+	
+	# 你需要使用 git submodule 来更新依赖的第三方子模块
+	haxelib git snow https://github.com/underscorediscovery/snow.git
+	
+	haxelib git luxe https://github.com/underscorediscovery/luxe.git
+	
+	# 如果手动 git clone 的话使用下边命令安装
+	haxelib dev <library> <path/to/library>
+	
+	# 测试安装的正确性
+	cd /path/to/luxe/tests/features/draw/
+	haxelib run flow run web
+	```
+
+ * 第四步: c++编译器,
+
+  - windows: [Visual C++ 2013](https://www.visualstudio.com/products/visual-studio-community-vs)
+
+  - Linux: GCC/G++
+
+  - Mac: [Xcode](https://developer.apple.com/xcode/downloads/)and command line tools)
+
+  - iOS: Xcode, [iOS SDK](https://developer.apple.com/ios/)(comes with xcode)
+
+  - Android: [Android SDK](http://developer.android.com/sdk/index.html), [Android NDK](https://developer.android.com/tools/sdk/ndk/index.html), [Android 设置](#Android设置)
+
+ * 第五步: 编辑器
+
+  - Flashdevelop, 
+
+   * [模板源码](https://github.com/Chman/Snowkit-FD) 
+
+   * [模板下载](https://github.com/Chman/Snowkit-FD/blob/master/SnowkitTemplate.fdz?raw=true)
+
+   * [模板安装指南](https://underscorediscovery.github.io/flow/guide/flashdevelop.html) 实际上你只要双击 fdz 文件即可.
+
+  - [Sublime text](https://underscorediscovery.github.io/flow/guide/sublimetext.html)
+
+  - Atom
+
+   * http://atom.io/packages/haxe
+
+   * http://atom.io/packages/flow
+
+### 参考
+
+http://luxeengine.com/docs/guide.html
+
+总的来说 luxe 的各依赖库有些多,
+
+### 其它
+
+
+#### Android设置
+
+原文: http://snowkit.org/2014/10/29/quick-setup-guides-and-help/#androidspecificsetup
+
+你需要告诉 flow(luxe的编译工具), android sdk 以及 ant build tools 的文件位置.而 android ndk 则交由 hxcpp 配置,通过储存为 `[user home directory]/.hxcpp_config.xml`.
+
+为 flow 提供各SDK路径:
+
+```json
+{
+	flow: {
+		build:{
+			andorid:{
+				sdk: "/path/to/andriod-sdk/",
+				ant_path: "/path/to/ant"
+			}
+		}
+	},
+	
+	project: {
+		//......
+	}
+}
+```
+
+模拟器, release/debug版本, 自行参考原文
+
+<br />
+
+
+
+flow
+------
+
+https://underscorediscovery.github.io/flow/
+
+flow 是一个项目构建工具,基于nodejs, flow的安装目录包含有一个nodejs. 通过解析一个 json 配置文件来布署应用.
+
+虽然 flow并非只作为 luxe的构建工具,但是我很怀疑它还能做别的什么, 而且使用源生JS所写
+
+顺便提下:
+
+ * 在 windows 平台 [cmder](http://cmder.net/) 是一个出色的 cmd 的替代品
+
+ * mac/linux [fish](http://fishshell.com/) 同样是一个很好的 shell
+
+### flow-命令行快捷
+
+由于 `haxelib run flow` 这个命令实在有些长,如果能直接输入 `flow`:
+
+window 平台, 将文件保存为 bat,然后存放于 path 目录.
+
+```bat
+@echo off
+haxelib run flow %*
+```
+
+Linux/Mac平台, 复制到文件保存到 /usr/local/bin 或 path 路径.
+
+```bash
+#!/bin/sh
+haxelib run flow "$@"
+```
+
+### flow-基础命令
+
+通过在命令行中输入 `flow usage` 来获取帮助信息. 可以详细到命令,如: `flow usage run` 这和打开项目源码,找到 cmd/run 目录下的 md 文件一样.
+
+ * `flow build <target> [--debug]`
+
+ * `flow run <target> [--debug]`
+
+ * `flow clean <target>`
+
+ * `flow package <target>`
+
+如果未指定 `<target>`, 则使用你的当前系统, 例如在 mac 中 `flow build` 表现为 `flow build mac --arch 64`
+
+### flow-编辑器支持
+
+我不太确定, 但前边的 **第五步** 实际上已经提供了同样的模板或其它
+
+### flow-特性
+
+ * icons - 嵌入和转换 icons 为所有目标(target)(除了 linux)
+
+ * package - 快速打包 builds 为 zip 或 tar
+
+ * hooks - 前,后钩子(运行nodejs脚本)
+
+ * clean - 删除build和单独的项目输出,或全部
+
+ * upx - 针对桌面平台, 最终二进制文件可以自动压缩
+
+ * files - 灵活的复制和模板系统
+
+ * build - 将haxe代码生成部署应用
+
+ * launch - 使用内部的web server,与文件同步(即修改了源码将立即反应)运行app, 以及更多
+
+### flow-格式
+
+https://underscorediscovery.github.io/flow/flow.html
+
+如前所述, flow 文件格式为JSON格式的文本字符串.以下使用如下约定:
+
+ * `node` 一个 json 对象,例如: `{}`
+
+ * `list` 数组,例:`[]`
+
+ * `key` 为一对key/value ,例: `name:'value'`
+
+
+
+#### Root nodes
+
+包含 3 个保留 nodes,分别为:
+
+ * flow, 根据需要配置 flow 命令行本身
+
+ * project, 项目的根节点, flow文件格式主要的部分
+
+ * if, 同 project, 但允许条件检测.
+
+**custom root nodes**
+
+除了以上3个node, 整个flow文件可随意定制, flow文件处于于项目依赖树中. flow文件将被简单地处理, 并把这些值传递到 hooks,文件模板等等.
+
+#### Project defines
+
+在 haxe 代码常见的 defines 条件检测:
+
+```haxe
+#if desktop
+  desktop_code();
+#else
+  other_code();
+#end
+```
+
+在flow文件中同样可以使用 defines 条件检测:
+
+```json
+if:{
+	desktop: {
+		files: { desktop_config:'config/desktop.json => config.json' }
+	}
+}
+```
+
+#### Build in defines
+
+内建的defines
+
+ * `dependency` 任何依赖将会成为 define,
+
+  - 参考 haxelib,只是引用define时,使用下滑线"_"代替减号"-"
+
+ * `desktop` 当编译为 mac,windows,或linux时
+
+ * `mobile`: 当编译为 andoird或ios
+
+ * `target`: 当前目标(target)将自动为 define
+
+  - web,android,ios,mac,linux,windows....
+
+ * `arch-`arch
+
+  - on web, 将使用 `arch-web`
+
+  - 如果 64位系统,则为 `arch-64`, 32位为 `arch-32`
+
+  - `arch-armv7`, `arch-i386` 等等
+
+ * `ios-sim` 当构建时指定了 `--sim`
+
+ * `debug`: 当开启 `--debug` 时.
+
+ * 通过 project.flow 文件定义的
+
+#### Conditional project nodes
+
+在根节点 if中, 目前可以使用下边节点:
+
+ * files
+
+ * build.fiels
+
+ * build.defines
+
+ * build.flags
+
+条件节点依赖于各种 defines
+
+**condition resolution**
+
+从 defines 中生成新的 define, 这样不必每次使用过长的条件表达式.
+
+```json
+if : {
+    "mac || windows || linux || android || ios" : {
+      build: {
+        defines : ['is_native']
+      }
+    },
+    "is_native && arch-32" : {
+        ...
+    }
+}
+```
+
+**conditional statements**
+
+条件节点支持如下操作符: 
+
+ * `!` not
+
+ * `||` or
+
+ * `&&` and
+
+但是注意: 使用条件操作符的表达式需要包括在引号内部(单或双引号)
+
+#### A flow file
+
+下边很多选项不是必须的使用默认值即可
+
+```js
+{
+  project : {
+	
+	/**
+	项目的显示名称, 对于 mobile 目标,将显示为菜单标题
+	
+	@type String
+	@required 表示为必须提供这个参数
+	*/
+    name : 'empty',
+    
+	/**
+	版本号, 和 haxelib 版本无关.使用 [semantic versioning](http://semver.org/lang/zh-CN/) 格式,即 "major.minor.patch"
+	
+	@type String
+	@required
+	*/
+	version : '1.0.0',
+    
+	/**
+	项目的作者/所属人/管理者, 可以为任意字母和数字的字符串
+	
+	@type String
+	*/
+	author : 'luxeengine',
+	
+	// {}
+    app : {
+		
+	  /**
+	  应用的二进制文件名称,不能包括特殊字符(需要符合系统文件名称规范)
+	  
+	  @type String
+	  @default "flow_app"
+	  */
+      name : 'flow_app',
+	  
+	  /**
+	  bundle/package/app的标识符, 不能包括特殊字符和空格. 你应该更改这个属性
+	
+	  @type String
+	  @default "org.snowkit.flow_app"
+	  */
+      package : 'org.snowkit.flow_app'
+	
+	  /**
+	  指定输出文件夹名称
+	
+	  @type String
+	  @default "bin"
+	  */
+      output : 'bin/'
+	
+	
+	  /**
+	  指定haxe的主类,不需要写 ".hx" 扩展名
+
+	  @type String
+	  @default "Main"
+	  */
+      main : 'Main',
+	
+	  /**
+	  指定源码所在目录, 等同于 haxe 的 `-cp` 参数所指定的目录
+	
+	  @type Array<String>
+	  @default "src"
+	  */
+	  codepaths: ['src'],
+	
+	  /**
+	  指定 icons 的文件位置. (TODO:文档描述的不明确,只参看了 luxe项目的 luxe.flow 文件)
+	
+	  当值仅为 path 时, 这时假定图标的名称为 "icon" , 相当于 path => icon
+	
+	  当值为 path => name时, 将使用指定的 name 作为图标名称,
+	
+	  path 将相对于 project.flow 的文件所在位置
+	
+	  文件目录示例参考: `flow/src/flow/cmd/icons/default`
+
+	  @type String
+	  @default 将使用flow内部的图标集,即上边示例
+	  */
+	  icon: 'path/to/ => icon',
+	
+	
+	  // node, 很明显这个节点用于 html5形式的 app.
+      web : {
+		
+		/**
+		这些名称将传递到模板中去.
+		
+		libname: 给定库名称
+		path: 相对于 output 指定的目录, 可以为绝对路径如 http://
+		@type node of keys {libname: 'path'}
+		*/
+		libs : {
+		  jquery: "js/jquery.js",
+		  index: "index.js"
+		}
+      },
+	  
+	  // node, 用于 mobile 目标
+      mobile : {
+          
+		  /**
+		  if device fullscreen is used.
+		
+		  @type Bool
+		  @default true
+		  */
+		  fullsceen: true,
+		
+		  /**
+		  横屏(landscape)竖屏(portrait)
+		
+		  可用值为: "landscape","landscape left","landscape both","portrait","portrait upside down","portrait both"
+		
+		  @type String
+		  @default "landscape"
+		  */
+		  orientation: "landscape",
+          
+		  //node
+		  ios : {
+			
+			/**
+			在 xcode 中指定设备类型
+			
+			有效值为: "Universal","iPhone","iPad"
+			@type String
+			@default "Universal"
+			*/
+			devices: "Universal",
+			
+			/**
+			指定 ios 的最低版本
+			
+			@type String
+			@default "6.0"
+			*/
+			deployment_target: "6.0",
+			
+			/**
+			xcode 工具包名用于cpp, 不需要更改,除非框架需求, 允许框架开发者定制 cpp 库,
+			
+			@type String
+			default "libc++"
+			*/
+			cpp: "libc++"
+		  },
+          
+		  //node
+		  android : {
+			/**
+			debug/store 编译标记,可用值为: "store","debug"
+			
+			@type String
+			@default "debug"
+			*/
+			build_type: "debug",
+			
+			/**
+			installLocation in android manifest: http://developer.android.com/guide/topics/manifest/manifest-element.html#install
+			
+			@type String
+			@default "preferExternal"
+			*/
+			install_location: "preferExternal",
+			
+			/**
+			sdk min in android manifest: http://developer.android.com/guide/topics/manifest/uses-sdk-element.html
+		
+			@type String
+			@default "10"
+			*/
+			sdk_min: "10",
+			
+			/**
+			sdk target in android manifest: http://developer.android.com/guide/topics/manifest/uses-sdk-element.html
+			
+			通常设置为可用的最高.
+			
+			@type String
+			@default "19"
+			*/
+			sdk_target: "19",
+			
+			/**
+			android manifest permissions: http://developer.android.com/reference/android/Manifest.permission.html
+			
+			@type Array<String>
+			@default []
+			*/
+			permissions: [
+			  'android.permission.READ_EXTERNAL_STORAGE',
+			  'android.permission.INTERNET'
+			]
+		  }
+      }
+    },
+
+    build : {
+	  /**
+	  haxe 编译标记, 将直接传递给 haxe.exe
+	
+	  @type Array<String>
+	  @default []
+	  */
+      flags : ['-v', '--macro keep(example)'],
+	
+	  
+	  /**
+	  自定义 haxe defines, 通过`-D define` 形式传递给 haxe.exe
+	
+	  @type Array<String>
+	  @default []
+	  */
+      defines : ['no_sfx', 'no_music'],
+	
+	
+	  /**
+	  key/value 形式的hash列表.
+	
+	  key 应该为 haxelib list 中列出的库, version 为 "*" 时表示为当前版本, 或者指定成 "1.0.0" 的形式.
+	
+	  @type {}, i.e. {depend: "version"}
+	  @default {}
+	  */
+      dependencies : {
+        hxnodejs : '*'
+      },
+	
+	  /**
+	  位于 project/build下的files,将复制文件到 output/target.build/ 下, 其它参考 project/files 的说明
+	
+	  i.e bin/web.build/
+	
+	  web.build目录和web目录的区别是: web.build 是存放haxe源码的,而web目录则为最终生成结果的目录
+	  */
+	  files:{	
+	  }
+    },
+
+
+	/**
+	位于project下的files,将复制文件到 output/target/下, i.e bin/web/
+	
+	基本格式为: {filereference: "path/source.ext => dest/path/dest.ext"}, 注意 "=>" 符号
+	
+	source: 文件路径必须相对关联(relative)到 project.flow.
+	
+	dest: 目标路径则以 output/target/ 为根目录.(位于 project/build/下的files 则以 output/target.build/为根目录)
+	
+	dest 将被创建, 包括目录, 可以被覆盖重写(后边描述如何禁止覆盖)
+	
+	dest 部分为可选, 这时将表现为 `name: "source => source"`
+	
+	@type {}
+	@default {}
+	*/
+    files : {
+	  
+	  data : 'data/ => assets/',
+	  
+	  
+	  /**
+	  如需通过模板生成, 则写成这种形式, 模板使用 [handlebars](http://handlebarsjs.com/)
+	  */
+      config : {
+		
+		  /**
+		  
+		  @type String
+		  */
+          path: 'config.template.json => config.json',
+		
+		  /**
+		  指定的值为 flow文件的根节点(除了if节点),这些节点和自定义节点可以作为模板参数传递
+		
+		  @type Array<String>|String
+		  */
+          template:['project']
+      },
+    }
+
+  },
+
+  if : {
+    ...
+  }
+
+}
+```
+
+### 如何将flow用于自已的项目
+
+
+
+<br />
+
+
+snow
+------
+
+https://underscorediscovery.github.io/snow/
+
+
+
+
+
+
+### snowkit
+
+
+### mint
+
+轻量UI库, http://snowkit.github.io/mint/ 
+
+
+
+
+<br />
