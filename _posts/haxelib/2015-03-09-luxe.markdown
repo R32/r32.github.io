@@ -60,21 +60,21 @@ haxe 的一个跨平台( Mac,Windows,Linux, Android, iOS 和 WebGL)的游戏引�
 
  * 第五步: 编辑器
 
-  - Flashdevelop, 
+ Flashdevelop, (注意:你需要在项目属性面版选择project.flow文件)
+	
+  * [模板源码](https://github.com/Chman/Snowkit-FD) 
+    
+  * [模板下载](https://github.com/Chman/Snowkit-FD/blob/master/SnowkitTemplate.fdz?raw=true)
 
-   * [模板源码](https://github.com/Chman/Snowkit-FD) 
+  * [模板安装指南](https://underscorediscovery.github.io/flow/guide/flashdevelop.html) 实际上你只要双击 fdz 文件即可.
 
-   * [模板下载](https://github.com/Chman/Snowkit-FD/blob/master/SnowkitTemplate.fdz?raw=true)
+ [Sublime text](https://underscorediscovery.github.io/flow/guide/sublimetext.html)
 
-   * [模板安装指南](https://underscorediscovery.github.io/flow/guide/flashdevelop.html) 实际上你只要双击 fdz 文件即可.
+ Atom
 
-  - [Sublime text](https://underscorediscovery.github.io/flow/guide/sublimetext.html)
+  * http://atom.io/packages/haxe
 
-  - Atom
-
-   * http://atom.io/packages/haxe
-
-   * http://atom.io/packages/flow
+  * http://atom.io/packages/flow
 
 ### 参考
 
@@ -88,7 +88,7 @@ flow
 
 原文: https://underscorediscovery.github.io/flow/
 
-当前Blog: {% post_url haxelib/2015-03-09-flow %}
+[flow 个人笔记]({% post_url haxelib/2015-03-09-flow %})
 
 snow
 ------
@@ -113,7 +113,7 @@ https://underscorediscovery.github.io/snow/
 
 为 flow 提供各SDK路径:
 
-```json
+```js
 {
 	flow: {
 		build:{
@@ -125,14 +125,10 @@ https://underscorediscovery.github.io/snow/
 	},
 	
 	project: {
-		//......
 	}
 }
 ```
 
 模拟器, release/debug版本, 自行参考原文
-
-<br />
-
 
 <br />

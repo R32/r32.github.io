@@ -31,8 +31,9 @@ hxcpp 会自动根据平台选择不同的 C++编译器. 任意平吧上编译�
 
 ### 编译
 
- * 实际上你可以在 neko 中快速开发及测试,因为 cpp 和 neko 的 API 基本一致,等到将要 release 时再以 hxcpp 编译
+ * 编译器配置,找到并修改 `user/.hxcpp_config.xml`, 比如 win7 中这个文件通常在 `C:\Users\MYNAME\` 下, 通常只在使用 andorid ndk 时才要配置这个.
 
+ * 实际上你可以在 neko 中快速开发及测试,因为 cpp 和 neko 的 API 基本一致,等到将要 release 时再以 hxcpp 编译
 
 #### 黑魔法
 
@@ -49,7 +50,7 @@ hxcpp 会自动根据平台选择不同的 C++编译器. 任意平吧上编译�
 		untyped __cpp__("*((int *) ({0}->GetBase() + {1})) = {2}",bytes,addr,x);
 	}
 	
-	// 实现上可以直接使用 CPP 的变量, 可以是函数的参数变量, 但不可以是函数内部的局部变量, 细节见编译后的 cpp 源码
+	// 实际上可以直接使用 CPP 的变量, 但只可以是函数的参数变量, 不可以为函数体内部的局部变量, 
 	public function setFade(start_msec:Int){
 		untyped __cpp__("gme_set_fade(start_msec);");	// 	直接引用函数参数变量, 
 	}
@@ -134,6 +135,15 @@ In order to [improve support for interacting](http://haxe.1354130.n2.nabble.com/
 @:depend 				# Add a dependency in the build.xml file.
 ```
 
+
+### 混合编程
+
+发现一些库并没有使用 CFFI 那种方式,如 hxsdl, 它是混合了 C++ 在 haxe 代码中.　这样的代码比 cffi 性能更好.因为尽量避免了 haxe 变量和 cpp 变量的数据转换.
+
+这个一个尝试使用 extern class 来处理 c++ 库的项目: https://github.com/snowkit/linc_empty
+
+参看 hxsdl 及 hxcpp/test 中的源码可以发现 混合编程即使用了 metas 来嵌入一些 cpp 源码, 只是有些是通过　宏自动实现的.多参考 `hxcpp/test` 下的示例
+
 #### extern class
 
 另一个调用外部 sdl 源码的示例: https://gist.github.com/nadako/c8aec20c2a7751348f91
@@ -154,15 +164,6 @@ In order to [improve support for interacting](http://haxe.1354130.n2.nabble.com/
   - (推荐)用 `@:native("ClassName")`　省略掉包名就行了.
 
   - 或可以使用 -cp 将 hx 类添加进编译路径
-
-
-
-
-### 混合编程
-
-发现一些库并没有使用 CFFI 那种方式,如 hxsdl, 它是混合了 C++ 在 haxe 代码中.　这样的代码比 cffi 性能更好.因为尽量避免了 haxe 变量和 cpp 变量的数据转换.
-
-参看 hxsdl 及 hxcpp/test 中的源码可以发现 混合编程即使用了 metas 来嵌入一些 cpp 源码, 只是有些是通过　宏自动实现的.多参考 `hxcpp/test` 下的示例
 
 
 #### 变量转换
@@ -456,7 +457,7 @@ dir:			- ??? 和 dospath 一样, 只是多了检测
 
 ### CFFI
 
-将外部的 C/C++ 库编译成 lib.ndll 用于在　haxe 代码中调用. hxcpp 源码的 test 中有一个 cffi 的示例.
+先将外部的 C/C++ 库编译成 lib.ndll 用于在　haxe 代码中调用. hxcpp包源码的 test 中有一个 cffi 的示例.
 
 一个工具能自动写一些模板 https://github.com/player-03/ExtensionBoilerplate
 
@@ -472,6 +473,5 @@ dir:			- ??? 和 dospath 一样, 只是多了检测
 -cmd haxelib run hxcpp out.cppia
 ```
 
-但感觉好像 cppia 缺乏一些标准库里的东西,如: `haxe.Timer`
 
 <br />

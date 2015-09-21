@@ -2,7 +2,7 @@
 layout: post
 title:  openfl
 date:   2014-05-10 16:03:10
-categories: haxe
+categories: haxelib
 ---
 
 openfl 是建立在 Haxe 上的一个跨平台类库, 提供一套　统一的 API(类似于 AS3 API)以实现同一套代码可以编译成多个平台.

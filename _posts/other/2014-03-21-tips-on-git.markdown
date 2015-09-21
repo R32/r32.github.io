@@ -122,9 +122,7 @@ categories: other
  * stash 用于保存当前工作
 
 	```bash
-	#
-	git stash "work in progress for foo feature"
-	
+	git stash
 	# 之后整个目录会回到最后一次提交时的状态
 	# 以便于临时修改一些Bug.
 	

@@ -1,16 +1,15 @@
 ---
 layout: post
-title:  flow
+title:  flow(项目构建工具)
 date:	2015-03-09 08:12:18
 categories: haxelib
 ---
 
-
 https://underscorediscovery.github.io/flow/
 
-flow 是一个项目构建工具,基于nodejs, flow的安装目录包含有一个nodejs. 通过解析一个 json 配置文件来布署应用.
+flow 是一个项目构建工具,基于nodejs, flow的源码包的 bin 目录下有各平台的 `node.exe`, 另 `src/flow/tools` 下包含一个nodejs源码的http服务器用于调试web应用(其实haxe也自带一个http服务器)
 
-虽然 flow并非只作为 luxe的构建工具,但是我很怀疑它还能做别的什么, 而且使用源生JS所写
+flow 通过解析一个 json 配置文件来布署应用. 通常这个 json 文件名为 `project.flow`
 
 顺便提下:
 
@@ -92,7 +91,9 @@ https://underscorediscovery.github.io/flow/flow.html
 
 包含 3 个保留 nodes,分别为:
 
- * flow, 根据需要配置 flow 命令行本身
+ * flow, 根据需要配置 flow 命令行本身. 配置细节参看 `src/flow/config.json`
+
+  - 例如: 覆盖 `build.android.sdk 或 build.android.ant_path` 的路径设置
 
  * project, 项目的根节点, flow文件格式主要的部分
 
@@ -504,5 +505,59 @@ if : {
 
 ### 如何将flow用于自已的项目
 
+
+flow源码结构
+
+```bash
+bin/ 			# 包括各平台的 node.exe
+
+setup/			# haxelib run flow 的快捷方式,
+     /Flow.hx		# run.n 的源码, 获得 args 参数然后传递调用 node flow.js
+	 /flow/			# 目录下所有代码基于 nodejs
+          
+		  /cmd/		# flow <command>,各命令, 这种方式真是简洁
+		  
+		  /node_modules/	# 不解释
+		  
+		  /project/		# flow.js 加载 project.js 由 project.js 加载这个目录下所有脚本
+		          /dependencies/
+				               /hxcpp.flow	# ?主要是移动hxcpp编译之后的库文件到 .build下
+				  /prepare/		# 
+				          /conditions.js	# 
+						  /defines.js		#
+						  /depends.js		#
+						  /files.js			#
+						  /flags.js			#
+				  /bake.js			#
+				  /prepare.js		#
+				  /project.js		#	将被初使化加载到 flow.project 属性下
+		  
+		  /tools/		# http 服务器用于 web 调试
+		  
+		  /utils/
+		        /er.js			# 打印一朵字符串拼凑的花,
+				/flagger.js		# 解析命令行参数到
+				/haxelib.js		# 方便从 haxelib 获取一些信息
+				/process.js		# 使用 child_process 运行 cmd,并从 stdout 获得结果
+				/util.js		# 一些 Array,Object 方法
+		
+		  flow.js		# 入口文件
+		
+		  config.json	# 用于配置flow,可在个人项目中如 project.flow 的 flow 节点中覆盖这个文件的设置
+						# 例如覆盖 android sdk 的正确路径
+		
+		  project.defaults.json		# project.flow 项目的默认配置, 被加载到 flow.project.default
+
+src/
+
+tests/		# 包含一个 flow.json 的配置样例
+```
+flow并非只作为 luxe的构建工具,但是...
+
+运行 `haxelib run flow run web` 的步骤:
+
+ * 获取 args 并传递给 nodejs的 flow.js
+
+ * flow.js 解析 project.flow 和 args
 
 <br />
