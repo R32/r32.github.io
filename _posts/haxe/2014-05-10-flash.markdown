@@ -9,9 +9,11 @@ categories: haxe
 
 ### 跨域安全沙箱错误
 
-`crossdomain.xml` 用于跨域加载数据.很可能需要添加 `-D network-sandbox`
+`crossdomain.xml` 中文参考: http://www.adobe.com/cn/devnet/adobe-media-server/articles/cross-domain-xml-for-streaming.html
 
-注意: 使用 `Workder` 时,子线程总是为 **只访问网络**.
+很可能需要添加编译参数 `-D network-sandbox` 使得 swf 只能访问网络.
+
+注意: 使用 `Workder` 时,子线程总是为 **只访问网络**.(关于这一点我不太确定,因为我测试时这样)
 
 ```xml
 <?xml version="1.0"?>
@@ -28,7 +30,20 @@ categories: haxe
 
 仅针对 flash 平台, 这个清单可能并不完整治, 详细通过 `haxe --help` 查询
 
-#### 命令行
+```bash
+# 将 hx 源码直接编译成 swf 文件
+haxe -swf out.swf -main Main
+
+# 将 hx 源码打包成 swc, 将输出文件名改为 swc, 并且不需要指定 -main 参数
+# 其它一些细节后边再述
+haxe -swf out.swc Main.hx
+
+
+# 将 hx 源码编译成 as3 文件, 通过 -as3 并指定 outdir 目录,注意: 生成的代码仅供参考
+haxe -as3 outdir -main Main
+```
+
+#### 相关命令行参数
 
 用于 haxe 命令行参数
 
@@ -48,41 +63,8 @@ categories: haxe
 # 
 -swf-lib-extern <file>	: use the SWF library for type checking
 
-# 实际上这是被弃用的, 见补充说明小节, 
+# (个人认为)实际上这是被弃用的, 见补充说明小节, 
 --gen-hx-classes		: generate hx headers for all input classes
-```
-
-#### 黑魔法
-
-可以直接在 haxe 中直接写 AS3 代码. 参看 http://old.haxe.org/doc/advanced/magic
-
-由于太多这里就不全部列出了. 因为你很少有机会用到这些.
-
-```
-# __global__ 调用 as3 的全局成员
-untyped __global__["undefined"]; 
-untyped __global__["uint"]; //basic type
-untyped __global__["flash.display.DisplayObject"];
-
-# 创建 as3 源生类
-__new__(className, arg1, arg2 ...)
-
-
-#这个在遍历 Object 对象时会比 Reflect 更好
-__keys__(obj)		# 将构建一个数组包含 obj　的 keys. 例: for(k in __key__(obj))
-
-__delete__(o, f)	# delete 
-
-__in__ (e,f) 		#
-
-__is__(e, t)		#
-
-
-# 对于 flash 平台, 使用 __keys__ 遍历要比使用 Reflect.Fields 要更有效率
-var obj = Lib.current.stage.loaderInfo.parameters;
-for(k in untyped __keys__(obj)){
-	trace(k +": "+untyped obj[k]);
-}
 ```
 
 
@@ -167,27 +149,60 @@ swf-protected          : Compile Haxe private as protected in the SWF instead of
 			  例: @:bitmap("path/logo.png|jgp|gif") class MyBitmapData extends flash.display.BitmapData{}			
 ```
 
+#### 黑魔法
+
+用于直接在 haxe 中直接写 AS3 代码. 参看 http://old.haxe.org/doc/advanced/magic 由于太多这里就不全部列出了.
+
+```
+# __global__ 调用 as3 的全局成员
+untyped __global__["undefined"]; 
+untyped __global__["uint"]; //basic type
+untyped __global__["flash.display.DisplayObject"];
+
+# 创建 as3 源生类
+__new__(className, arg1, arg2 ...)
+
+
+__keys__(obj)		# 将构建一个数组包含 obj　的 keys. 例: for(k in __key__(obj))
+
+__delete__(o, f)	# delete o.f
+
+__in__ (e,f) 		# e in f
+
+__is__(e, t)		# e is t
+
+
+# 对于 flash 平台, 使用 __keys__ 遍历要比使用 Reflect.Fields 要更有效率
+var obj = Lib.current.stage.loaderInfo.parameters;
+for(k in untyped __keys__(obj)){
+	trace(k +": "+untyped obj[k]);
+}
+```
+
 #### extern class
 
 haxe 能直接引用并解析 AS3 的 swc 库, 因此没特别的地方(参看　patch files)根本不需要写 extern class;
 
 ### swc 
 
-一些外链参考 https://github.com/jcward/HaxeSWCExample 和 http://old.haxe.org/manual/swc?lang=cn
+
 
 #### 导出
 
-示例: 
+一些参考 https://github.com/jcward/HaxeSWCExample 和 http://old.haxe.org/manual/swc?lang=cn , 示例: 
 
 ```bash
-# 导出整个文件夹
-haxe -cp src --macro "include('com.hxlib')" -swf bin/hxlib.swc
+# 单个文件或多个文件, 每个 hx 文件不要带有扩展名, 因为会与包名混淆
+# A, B C 分别代表 A.hx B.hx com/some/C.hx....
+haxe -swf bin/hxlib.swc A B com.some.C
 
-# 单个文件
-haxe -swf bin/hxlib.swc Pipe.hx
+
+# 导出整个文件夹, 这种方法仅用于导出带有 **包名** 的整个目录. 
+# 参考 haxe.macro.Compiler.include 方法
+haxe -swf bin/hxlib.swc --macro "include('com.some')" 
 ```
 
-在 AS3 中使用 haxe 导出的 swc 库.需要初使化 `haxe.initSwc(root_sprite)`
+**NOTE**: 在 AS3 中使用 haxe 导出的 swc 库.需要初使化 `haxe.initSwc(root_sprite)`
 
 #### 引用
 

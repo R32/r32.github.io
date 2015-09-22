@@ -1140,61 +1140,6 @@ input或output 默认都是阻塞类型的,
 其实使用 vm.net.ThreadServer 就好了...
 
 
-#### XML
-
-XML http://old.haxe.org/doc/cross/xml
-
-xml nodeType, 参见 Xml下静态属性
-
- * Document 9: 文档类型, 通常为 Xml.parse 返回的对象
-
- * Element 1: 元素类型
-
- * DocType 10: DTD DOCTYPE 文档类型,例: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">`
-
- * CData 4:  `<![CDATA[ ]]>`
-
- * Comment 8:  `<!-- -->`
-
- * PCData　3：　即文本(Text)节点
-
- * ProcessingInstruction 7: 例 `<?xml version="1.0" encoding="utf-8" ?>` 
-
-firstChild() 和 firstElement() 的区别是 child 不仅仅只有 Element,
-
-FAST http://old.haxe.org/doc/advanced/xml_fast
-
- * `.name` 返回当前元素名字（和 Xml.nodeName 一样）
-
- * `.x` 返回当前相应的 Xml 实例(注:Fast 和 Xml 是二个不同类)
-
- * `.att.<name>` 访问给定的属性, 如果不存在将抛出异常
-
- * `.has.<name>` 检测是否存在属性
-
- * `.elements` 返回所有　元素(Xml.Element)　清单
-
- * `.node.<name>` 返回指定名称的第一个子节点,如果不存在将抛出异常
-
- * `.nodes.<name>` 返回指定名称的所有子节点
-
- * `.hasNode.<name>` 检测是否存在指定子节点
-
- * `.innerData` 返回内部 文本节点内容或 CData, 注: 如果没有符合条件的子节点(不包含孙节点)将导致异常
-
- * `.innerHTML` innerHTML String
-
-```haxe
-var xml = Xml.parse('<root>
-	<data id="one">1</data>
-	<data id="two">2</data>
-	<data id="three">3</data>
-</root>');
-
-var fast = new Fast(xml.firstElement)
-```
-
-
 #### FPHelper
 
 最新特性

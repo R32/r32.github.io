@@ -8,6 +8,7 @@ categories: haxe
 ---
 
 
+
 ####　黑魔法
 
  * `__js__` 用于直接嵌入 js 代码
@@ -17,7 +18,7 @@ categories: haxe
 	
 	// 由于 js 的 {} 并没有其独立作用域，因此 __js__ 内部可以随意写局部变量
 	var a = 1, b = 2;
-	 untyped __js__("var c = a+b");
+	untyped __js__("var c = a+b");
 	```
 
 <!-- more -->
@@ -151,7 +152,7 @@ private static function __init__() : Void untyped {
 
  * 当一个 extern class 的 method 将要作为参数传递时,需要这样做.
 
- * static 静态方法受此影响,
+ * static 静态方法不受此影响,
 
 ### nodejs
 
@@ -160,8 +161,10 @@ private static function __init__() : Void untyped {
 
 ### 浏览器
 
-haxe 标准库中的 js.html 包的内容是针对 W3C 标准的, 因此如需操作 DOM 跨浏览器, 应该使用 jQuery 或其它相关库.
+haxe 的 HTML 相基于 Mozilla 的 WebIDL 自动生成 https://github.com/HaxeFoundation/html-externs , 因此在兼容性方面还是推荐使用 JQuery.
 
 #### HTML DOM
 
-.....
+......
+
+<br />

@@ -1,7 +1,7 @@
 ---
 
 layout: post
-title:  命令行及参数
+title:  各种命令及参数(包含库管理)
 date:   2014-03-30 21:10:10
 categories: haxe
 
