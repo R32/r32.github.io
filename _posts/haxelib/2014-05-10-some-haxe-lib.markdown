@@ -51,6 +51,10 @@ categories: haxelib
 
  * ~~[swhx](https://github.com/filt3rek/swhx)~~ 将 swf 嵌入到 exe,但是这个库已经太旧了, 不如使用 AIR
 
+ * [mtwin](http://lib.haxe.org/p/mtwin/)  基于neko的各种用于 Web 的工具库, 
+
+  - 文档在这: http://old.haxe.org/com/libs/mtwin
+
 #### 游戏引擎
 
 haxe LD32游戏示例 : https://github.com/skial/haxe.io/issues/118

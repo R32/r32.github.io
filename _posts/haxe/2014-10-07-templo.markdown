@@ -1,0 +1,578 @@
+---
+layout: post
+title:  templo(模板)
+date:	2014-10-07 13:50:41
+categories: haxelib
+---
+
+
+### std
+
+haxe 标准库带有一个轻量级模板类 `haxe.Template`, 这里所说的"模板"是指一个包含占位符的字符串或文本文件. 下边是一个简单模板应用示例：
+
+```haxe
+class Main {
+  static function main() {
+    var sample = "My name is <strong>::name::</strong>, <em>::age::</em> years old";
+    var user = {name:"Mark", age:30};
+    var template = new haxe.Template(sample);
+    var output = template.execute(user);
+    trace(output);
+  }
+}
+```
+
+<!-- more -->
+
+trace 将输出: `My name is Mark, 30 years old`。原文: http://haxe.org/manual/std-template.html
+
+#### 表达式
+
+haxe.Template 使用双冒号 `::` 作为替换分隔符, 因此表达式放置于二对 `::` 中间, 表达式可以为下边形式
+
+ * `::name::` : 变量 name 的值
+
+ * `::expr.field::` : 字段访问
+
+ * `::(expr)::` : 计算 expr 之后的值
+
+ * `::(e1 OP e2)::` 运算符 OP 作用于 e1 和 e2
+
+ * `::(135)::` : 整数常量, 注意: 不允许 Float 类型
+
+运算符语法有一些苛刻, 由于它不能处理运算符的优先级, 因此需要为每个表达式加上小括号.  
+
+目前支持的 运算符(OP)有 `+`,`-`,`*`,`/`,`>`,`<`,`>=`,`<=`,`==`,`!=`,`&&` 和 `||`.
+
+例: `::((1 + 3) == (2 + 2))::` 其结果将为 true.
+
+#### 条件
+
+可以在模板中使用 if,else
+
+```html
+<!-- 使用变量 -->
+::if isValid:: OK! ::else:: No!! ::end::
+
+<!-- 整形常量 -->
+::if (points == 10):: Great! ::end::
+
+<!-- 字符串 -->
+::if (name == "Mark"):: Hi Mark ::end::
+```
+
+#### 循环
+
+使用 `::foreach::` 迭代, 结束时需要加上 `::end::`.
+
+```html
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Age</th>
+    </tr>
+    ::foreach users::
+        <tr>
+            <td>::name::</td>
+            <td>::age::</td>
+        </tr>
+    ::end::
+</table>
+```
+
+在 foreach 循环体中可以使用特殊变量 `__current__`, 这可以用于多层迭代
+
+```html
+::foreach rows::
+    ::foreach __current__::		
+		::__current__::
+    ::end::
+::end::
+
+<!-- 考虑将如下数据用于上边模板 -->
+var data = {
+	rows: [
+		["one", "two"],
+		["ok", "no"]
+	]
+}
+```
+
+#### 子模板
+
+可以将一个模板计算返回的结果作为参数传递到另一个模板的 execute 方法, 
+
+```haxe
+var users = [{name:"Mark", age:30}, {name:"John", age:45}];
+
+var userTemplate = new haxe.Template("::foreach users:: ::name::(::age::) ::end::");
+
+var userOutput = userTemplate.execute({users: users});
+
+var template = new haxe.Template("The users are ::users::");
+var output = template.execute({users: userOutput});
+trace(output);
+```
+
+最后的 trace 将输出: `The users are Mark(30) John(45)`. (个人注:这并没什么好奇怪的, 因为返回的值为字符串, 这个值当然可以作为参数)
+
+#### 模板宏
+
+就是使用函数来代替变量值，至于为什么要叫 macro,我也不太清楚.
+
+```haxe
+class Main {
+  static function main() {
+    new Main();
+  }
+
+  public function new() {
+    var user = {name:"Mark", distance:3500};
+	
+	// 模板使用二个 $ 符号作为方法前缀, 并且注意其参数的使用.
+    var sample = "The results: $$display(::user::,::time::)";
+	
+    var template = new haxe.Template(sample);
+    var output = template.execute({user:user, time: 15}, this);
+    trace(output);
+  }
+  
+  // 注意这个函数第一个参数的类型
+  function display(resolve:String->Dynamic, user:User, time:Int) {
+    return user.name + " ran " + (user.distance/1000) + " kilometers in " + time + " minutes";
+  }
+}
+typedef User = {name:String, distance:Int}
+```
+trace 将输出: `Mark ran 3.5 kilometers in 15 minutes.` 另一个示例: http://old.haxe.org/doc/cross/template#macros
+
+#### Globals
+
+静态变量 haxe.Template.globals 可以全来存储全局的值, 当 execute 所需的变量不存在时,将会在这个属性下查找.如果 globals 下也不存在则返回 null.
+
+
+haxelib
+------
+
+从 github 搜集到的一些库模板, 这里只是列出其中的几个, 
+
+### templo
+
+[templo](https://github.com/ncannasse/templo) 可以是一个命令行工具. [hxtemplo](https://github.com/Simn/hxtemplo) 是它的 haxe 移植版, 因为 templo 是用一种 nml 的语言所写(nml从语法上看更像是ocaml,像是haxe的前前身), dox 使用了 hxtemplo 来制做 haxe API 手册.
+
+templo 从其功能上来说,更适合配合服务器用来做网站后台
+
+```bash
+> temploc2 --help
+Temploc v3.0.0 - (c)2008-2013 Nicolas Cannasse
+Usage : temploc [options] <files>
+ Options :
+  -cp <dir> : add file search path
+  -output <dir> : specify output directory
+  -macros <file> : add macro definition file
+  -php : use php output
+  -debug : use debug mode
+  -xml : don't use XHTML checks
+  -compare <file1@file2> : compare two files or directories structurally
+  -compare-xml <config> : compare also XML files
+  --compare-both : display both files position in comparisons
+  --compact : compact html spaces
+```
+
+安装:
+
+ * makefile 编译得到 temploc.exe 文件,并将这个文件放置于环境变量的路径文件夹
+
+ * 在 haxe 项目中调用 templo 目录下的 `Loader.hx`(这个文件通过Process执行temploc.exe)
+
+	```haxe	
+	// 注意默认情况下以 haxe 的输出文件夹为目录顶层,通常为 bin
+	// 所有目录名必须以 / 结尾, 目录必须自行建立,如果不存在则出错
+	
+	Loader.BASE_DIR = "some/"		// mtt模板文件所在目录, 默认为 "",
+	
+	Loader.TMP_DIR = "mtt/"			// 存放临时文件, 默认为 "/tmp/",因此非 unix-like 系统必须设置
+									
+	Loader.MACROS = null;			// macro文件, 默认为 "macros.mtt" 没有则设为 null
+	
+	var t = new templo.Loader("some.mtt");	// 这个是以系统文件的形式加载的
+	t.execute({ values : [1,2,3,4] });		// 
+	```
+
+(注:或者也可以使用 mtwin 库的 templo.Template 像 haxe.Template 一样, 或者使用 hxtemplo 这个haxe 的移植库)
+
+为什么要使用 `.exe` 来处理模板文件? 估计是因为可以用工具将模板转换成 `.n` 文件, 后续这个 n文件可以由 neko 解析并且传入数据再生成相应的 html.
+
+#### templo 语法
+
+语法和 haxe.Template 很像, 参考 http://old.haxe.org/com/libs/mtwin/templo
+
+ * 正常情况下 data 中的数据的 `< > & "` 将转义成 `&lt; &gt; &amp; &quot;`
+
+ * raw, 表示不进行转义
+
+	```js
+	context.myMessage = "<p>Hello haxe</p>";		// in haxe
+	
+	before: ::myMessage::
+	after : ::raw myMessage::
+	
+	// 将转换为
+	before : &lt;p&gt;Hello haxe&lt;/p&gt;
+	after : <p>Hello haxe</p>
+	```
+
+ * if,elseif,else,end,  这几个和 haxe.Template 一样
+
+ * cond, 属于 if 的另一种改善形式. 如下示例, 当条件为 false 时, 将不会输出 `<ul></ul>` 整个元素.
+
+	```html
+	<ul id="userMenu" ::cond user.isLogged::>
+		<li><a href="/logout">Log out</a></li>
+		<li><a href="/account">My account</li>
+	</ul>
+	```
+
+ * switch, 如果你包含有下边 enum, 注: EnumValue 的值不能为 null,则表报错,你可传 **非** EnumValue对应的数字值,如 -1 或任意字符串.
+
+	```haxe
+	enum QuestItem{
+		ITEM(id:Int);
+		MONEY(amount:Int);
+		XP(amount:Int);
+	}
+	```
+	
+	你可以这样使用 switch, **注意:** 要和 QuestItem 中先后顺序一至. 
+	
+	```html
+	::switch myEnum::DEFAULT VALUE(默认值,如果省略则为空值)
+	::case:: Item ::args[0]::
+	::case:: ::args[0]:: gold
+	::case:: ::args[0]:: XP
+	::end::
+	
+	<!-- switch 2, case 0 带表第一个 EnumValue值 -->
+	::switch myEnum::
+	::case 0:: ITEM
+	::case 2:: XP
+	::end::
+	```	
+
+ * foreach, 这里和标准库 haxe.Template 有点差异, 标准库没有自定义的 value 变量,而是使用 `__current__`
+
+	```html
+	::foreach value iterable::
+		You can use ::value:: there
+	::end::
+	
+	<!-- 如 listOfNumbers = [0, 2, 5, 6],  -->
+	::foreach n listOfNumbers::
+		Number = ::n::
+	::end::	
+	```
+
+ * repeat, 相当于 foreach 与 cond 的混合体, 只在当条件为 true, 才会迭代输出
+
+	```html
+	<ul>
+		<li ::repeat user listOfConnectedUsers::>
+			<a href="/user/::user.id::">::user.name::</a>
+		</li>
+	</ul>
+	```
+	
+ * repeat 配合 foreach. `repeat.<itemName>.*` 这种 repeat 表式达可以有更多检测
+
+  - `repeat.<item>.index` 整形值,范围从 0 到 length-1
+
+  - `repeat.<item>.number` 整形值, 范围从 1 到 length
+
+  - `repeat.<item>.odd` true, 如果 index 值为 单(odd), 否则为 false
+
+  - `repeat.<item>.even` true, 如果 index 值为 偶(even), 否则为 false
+
+  - `repeat.<item>.first` true, 如果当前元素为第一个, 否则为 false
+
+  - `repeat.<item>.last` true, 如果当前元素为第后一个, 否则为 false
+
+  - `repeat.<item>.size` length(当有效时)
+
+	```html
+	<table>
+	    <tbody>
+	        ::foreach user listOfConnectedUsers::
+	        <tr class="odd::repeat.user.odd::">
+	            <td>::repeat.user.number::</td>
+	            <td>::user.name::</td>
+	        </tr>
+	        ::end::
+	    </tbody>
+	</table>
+	```
+
+ * set, 这个操作符允许在模板中创建变量, 注意其中的一个 eval 操作符(没文档,估计是用于再次赋值计算时)
+
+	```html
+	::set myVar = myValue::
+	
+	::set isLogged = (user != null) && (user.id != null)::
+	
+	::set sum = 0::
+	::foreach i listOfNumbers::
+	    number = ::i::
+	    ::eval sum = sum + i::
+	::end::
+	Sum = ::sum::	
+	```
+
+ * fill, 形为像 set, 但是允许捕获一些 html 字符串, 并将其值作为一个变量.
+
+	```html
+	::fill navigation::			<!-- 捕获开始 -->	
+	<div>
+	    <a href="/previous">Previous</a> |
+	    ::foreach page resultPages::
+	    <a href="/page/::page::">::page::</a> |
+	    ::end::
+	    <a href="/next">Next</a>
+	</div>
+	::end::						<!-- 捕获结束 -->
+	
+	<!-- we use the filled variable -->
+	::raw navigation::
+	
+	<table>
+	    <thead>
+	        <tr>
+	            <th>#</th>
+	            <th>name</th>
+	        </tr>
+	    </thead>
+	    <tbody>
+	        ::foreach name listOfNames::
+	        <tr>
+	            <th>::startIndex + repeat.name.index::</th>
+	            <th>::name::</th>
+	        </tr>
+	    </tbody>
+	</table>
+	
+	
+	<!-- we reuse the filled variable to avoid executing the loop twice -->
+	::raw navigation::	
+	```
+
+ * use, 用于在当前模板引用其它的模板文件,二个模板将共享它们的变量, 共享的变量请注意先后顺序
+
+	```html
+	<!-- userMenu.mtt: -->
+	<div id="userMenu">
+	    <div>Logged as ::user.login::</div>
+	    <ul>
+	        <li><a href="/logout">Log out</a></li>
+	        <li><a href="/account">My account</a></li>
+	    </ul>
+	</div>
+
+	<!-- myPage.mtt : -->	
+	<html>
+	    <head>
+	        ...
+	    </head>
+	    <body>
+	        ...
+	        <!-- 显示 menu 二次, 这里需要用 ::end:: 作结尾 (稍后再解释) -->
+	        ::use 'userMenu.mtt'::::end::
+	        ::use 'userMenu.mtt'::::end::
+	        ...
+	    </body>
+	</html>	
+	```
+	
+	另一个实例: 注意在 use 和 end 中间,给变量 content 进行了填充
+	
+	```html
+	<!-- design.mtt :-->	
+	<html>
+	    <head>
+	        <title>My title</title>
+	    </head>
+	    <body>
+	        <h1>My title</h1>
+	
+	        <!-- 假设另一个模板将会引用这个模板,并且给 content 变量填充值 -->
+	        ::raw content::
+	    </body>
+	</html>
+	
+	
+	<!-- mypage.mtt : -->
+	::use 'design.mtt'::	
+	    ::fill content::
+	        <h2>My page</h2>
+	        some data here
+	    ::end::	
+	::end::	
+	```
+	
+	由于上述 use,fill 的语法非常麻烦, 因此在 use 和 end 中间的字符串将自动填充为 **`__content__`**
+	
+	因此下边更为简洁:
+	
+	```html
+	<!-- mypage.mtt : -->
+	::use 'design.mtt'::
+    	<h2>The content to write in design.mtt</h2>
+	::end::
+	
+	<!-- design.mtt :-->
+	::raw __content__::
+	```
+
+	在上边的示例中使用了 `::use 'design.mtt'::` 用引号引用模板, 实际上,可以更灵活像这样:
+	
+	```html
+	::use theme+'.mtt'::
+	...
+	::end::
+	```
+	
+	这样的话, theme 可以被当成一个变量, 当设变量 theme='design' 时,那么则对应为 'design.mtt',其它当 theme = 'blueDesign' 时则将对应 'blueDesign.mtt'
+	
+ * attr 一个添加attribute语法糖, 注意常量字符串要用引号括起来,否则会被当成变量处理
+
+	```html
+	<ul>
+	::foreach link links::
+	    <li><a ::attr title link.title; href link.href::>::link.title::</a></li>
+	::end::
+	</ul>
+	
+	<!-- 上边的那行 li 其实就等于 -->
+		<li><a href="::link.href::" title="::link.title::">::link.title::</a></li>
+	```
+	
+	将产生:
+	
+	```html
+	<ul>
+	    <li><a href="http://www.google.com" title="google search">google search</a></li>
+	    <li><a href="http://www.haxe.org" title="Haxe">Haxe</a></li>
+	</ul>	
+	```
+	
+	看上去非常适合用在表单的 input,select/option 这些元素上:
+	
+	```html
+	<!-- 只有当 someCondition 的值为 true 时,才会添加 checked="checked" -->
+	<input type="checkbox" value="some value" ::attr checked someCondition::/>	
+	
+	<select>
+	    ::foreach opt availableOptions::
+	    <option value="::opt.value::" ::attr selected (opt.value == currentValue)::>::opt.name::</option>
+	    ::end::
+	</select>	
+	```
+	
+
+ * attr 和条件检测,常量字符串用引号包围。 当条件表达为 **非true** 值时, 没有任何属性会被添加
+
+	```html
+	::attr attributeName if( someCondition ) "A" else "B"::
+	
+	or
+	
+	::attr attributeName if( someCondition ) "A"::
+	``` 
+
+#### templo macros
+
+macros 储存于为一个文件,默认的名称为 "macros.mtt"（修改Loader类的静态属性）
+
+其实和 haxe.Template 的模板宏类似, 只是这里使用 文件来保存 macros.文件内容看起来像:
+
+```html
+<macros>
+
+  <!-- shows a user -->
+  <macro name="userView(user)">
+    <div id="user">
+      <div class="name">::user.name::</div>
+      <div class="lastLog">::user.lastLogDate::</div>
+    </div>
+  </macro>
+
+  <!-- presents a date without hours -->
+  <macro name="date(d)">::d.toString().substr(0,10)::</macro>
+
+</macros>
+```
+
+在模板中像这样使用 macros: 使用 `$$` 符号引用方法,如果参数为变量需要用 `::variable::` 语法
+
+```html
+::foreach u userList::
+$$userView(::u::)
+::end::
+
+<div>Last modification date : $$date(::lastModDate::)</div>
+```
+
+macros 并不是作为函数处理, 它们通过预处理写入到模板的内部(只是作字符串替换,因此叫 macros), 如上示例在经过预处理后为:
+
+```html
+::foreach u userList::
+  <div id="user">
+    <div class="name">::u.name::</div>
+    <div class="lastLog">::u.lastLogDate::</div>
+  </div>
+::end::
+
+<div>Last modification date : ::lastModDate.toString().substr(0,10)::</div>
+```
+macro 也可直接在模板文件内:
+
+```html
+BEFORE
+
+<macro name="f(x)"> Hello ::x::! </macro>
+
+$$f(haXe)
+
+MIDDLE
+
+<macro name="at()" title="title"/>
+
+AFTER
+
+<a href="#" $$at()>$$f(Neko)</a>
+
+<a href="#" $$at()>$$f(::name::)</a>
+```
+
+ * templo 3.0 不可以在标签内部调用宏,即 `<p $$some(xxxx)></p>` 将会报错, 你应该把尝试直接标签写到 macros 里去.
+
+#### 优化模式
+
+在网站开发期间, 当需要时为了模板的修改和自动重编译你会想要使 templo 检测文件. 但大多数时候, 当你的网站已经布署于生产环境, 你的模板不会更改并使服务器检测每个文件的修改时间也不是必须
+
+templo 提供优化模式(或叫生产模式)即假译所有的模板已经编译完成. 使得服务器忽略模板源码然后直接跳至 neko 模块. 这个特性有一些好处:
+
+ * 快速(没有文件修改时间检测)
+
+ * 安全(编译所有的模块在布署之前, 因此任何一个模块有错误你都会先知道)
+
+ * 你不需要布署源码,仅上传已经编译好的模块就行了
+
+通常在开发期间你不要设置 `Loader.OPTIMIZED` 为 true
+
+<br />
+
+### HHP
+
+这个库还是蛮简单 PHP-like templating system for Haxe: https://github.com/RealyUniqueName/HHP 
+
+
+
+<br />
