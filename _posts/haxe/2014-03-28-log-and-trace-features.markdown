@@ -40,7 +40,10 @@ class MyTrace {
 }
 ```
 
-第一个参数 v 为要输出的值, 第二个参数 inf 的类型如下, PosInfos 是一个特殊魔法类, 当用这个类型作参数时,编译器会自动帮你填充,不需要你自已构建.
+第一个参数 v 为要输出的值, 
+
+第二个参数 inf 的类型如下, **PosInfos** 是一个特殊魔法类, 当用这个类型作参数时,编译器会自动帮你填充.
+
 ```haxe
 typedef PosInfos = {
     var fileName : String;
@@ -54,14 +57,14 @@ typedef PosInfos = {
 inf 这个参数由编译器提供. 并且会把多出来的参数传递给 customParams:
 
 ```haxe
-# 当你输出多个值时:
+//当你输出多个值时:
 class Test{
 	function foo(){
 		trace("hello", "warning", 123);
 	}
 }
 
-# 这时编译器将自动填充 inf 参数像下边:
+//这时编译器将自动填充 inf 参数像下边:
 haxe.Log.trace("hello",{
 	className: "Test",
 	methodName: "foo",
@@ -77,8 +80,8 @@ haxe.Log.trace("hello",{
 
 ### 更多
 
-把 PosInfos 类型作参数时, 
 
 
 
+<br />
 <br />

@@ -1,19 +1,21 @@
 ---
 layout: post
-title:  SPOD
+title:  SPOD(简单对象数据库)
 date:   2014-09-16 13:16:18
 categories: haxe
 ---
 
-全称为 Simple Persistent Object Database. SPOD可以映射数据库表(db table)为类(Class). 即每个继承`sys.db.Object`的类都可以看成为一个数据库表.
+SPOD 建立在 SQLite 或 Mysql 上. 全称为 Simple Persistent Object Database. SPOD可以映射数据库表(db table)为类(Class). 即每个继承`sys.db.Object`的类都可以看成为一个数据库表.
 
 因此需要简单地修改类字段或调用类方法即可修改数据库表. 大多数情况下, 你只需要提供一些基础的声明, 而不需要编写单独的 SQL 语句, SPOD 是基于宏的, 也就是说类到数据库表的转换是在编译时完成的,而不是运行时, 这样就不用担心性能的问题. 
-
-原文引用: http://old.haxe.org/manual/spod
  
 <!-- more -->
 
+原文引用: http://old.haxe.org/manual/spod
+
 ### SPOD类
+
+
 
 下边说明中 SPOD 用于表示继承了`sys.db.Object`的类, 而小写的 spod 则为其实例(即一行数据).
 
@@ -156,7 +158,7 @@ typedef SEnum<E:EnumValue> = Null<E>	// 允许存储不具有参数, 简单的in
 
 #### 构建表格
 
-通过继承 `sys.db.Object`, 后续将这个类称为SPOD类, 这个类对应为一个数据库表, 而类实例则为表中的一行数据,
+通过继承 `sys.db.Object`, 后续将这个类称为SPOD类, **这个类对应为一个数据库表, 而类实例则为表中的一行数据**,
 
 ```haxe
 import sys.db.Types;
@@ -236,11 +238,11 @@ sys.db.Connection 实例具有如下方法: 源码参见 各实现平台包如: 
 
 每个SPOD都具有一个静态字段manager,用于表格操作,例如在默认的情况下 User.manager 将有如下方法:
 
+参数 cond 为查询条件, cond将由宏解析并支持多种格式, [参看后边的搜索查询](#搜索查询)
+
  * `all(?lock:Bool):List<User>`: 参数带`?`表示可以为 Null 值,即`(lock:Null<Bool> = null)`
 
  * `count(cond:Dynamic):Int`: 返回符合条件的数量, 如需
-
-  - 参数cond为查询条件, cond将由宏解析并支持多种格式, [参看后边的搜索查询](#搜索查询)
 
  * `dbClass():Class<Dynamic>`: dbClass() == User
 

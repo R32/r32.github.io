@@ -147,6 +147,7 @@ http://usablica.github.com/intro.js/
 
 	> A jQuery plugin that switches between multiple header designs as you scroll, so you always have a header that looks great with the content below it. http://aerolab.github.io/midnight.js/ 用这个脚本做来 主页不错. 标记: IE8 中出错
 
+ * [swiper](http://www.swiper.com.cn/) 滑动库,Carousel,主要针对移动端
 
 #### article
 

@@ -201,8 +201,6 @@ Usage : temploc [options] <files>
 
 (注:或者也可以使用 mtwin 库的 templo.Template 像 haxe.Template 一样, 或者使用 hxtemplo 这个haxe 的移植库)
 
-为什么要使用 `.exe` 来处理模板文件? 估计是因为可以用工具将模板转换成 `.n` 文件, 后续这个 n文件可以由 neko 解析并且传入数据再生成相应的 html.
-
 #### templo 语法
 
 语法和 haxe.Template 很像, 参考 http://old.haxe.org/com/libs/mtwin/templo
@@ -476,7 +474,7 @@ Usage : temploc [options] <files>
 	```
 	
 
- * attr 和条件检测,常量字符串用引号包围。 当条件表达为 **非true** 值时, 没有任何属性会被添加
+ * attr 和条件检测,常量字符串用引号包围。 当条件表达为 **非true** 值时, 则不会添加任何属性
 
 	```html
 	::attr attributeName if( someCondition ) "A" else "B"::
