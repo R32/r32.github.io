@@ -146,9 +146,9 @@ haxe 宏分为三种类型:
 
 **Tips:** haxe 标准库中有很多 工具类能更好地构建, 如: macro.TypeTools, macro.ExprTools, 以及其它以 Tools 结尾的类, 通常是使用 using 关键字添加这些工具类.
 
-**注意:** 通常应该把宏函数和其它函数分开放在不同文件,否则代码中的很多地方要加上**`#if macro`** 这样的条件编译才能通过编译.
+通常应该把宏函数和其它函数分开放在不同文件,否则代码中的很多地方要加上**`#if macro`** 这样的条件编译才能通过编译.
 
-**注意:** 给宏函数传参数时,**参数应该是常量**, 如果传变量只能获得 变量名 不能获得 变量值(因为宏编译时赋值还没发生).
+给宏函数传参数时,**参数应该是常量**, 如果传变量只能获得 变量名 不能获得 变量值(因为宏编译时赋值还没发生).
 
  * 最简单, `macro 常量`
 
@@ -324,7 +324,7 @@ class Um{
 
 上边是一个将变量传递给 宏方法的示例(haxe 3.2 推荐使用 Context.getLocalTVars 来获得本地变量,一，而不是通过宏传递)
 
-**注意**: 宏方法 assign 和 noChange 只有返回值不一样, 充分说明了 宏返回值 将替换所 宏调用. 这一概念很重要.
+**注意**: 宏方法 assign 和 noChange 只有返回值不一样, 充分说明了 宏返回值 将替换宏调用. 这一概念很重要.
 
 
  * haxe.macro.ExprTools 类中的 toString 和 getValue 都是常用方法
@@ -423,6 +423,88 @@ The syntax for reification is `macro expr`, where `expr` is any valid Haxe expre
     }
  	```
 
+#### 宏构建
+
+通过宏的方式动态构建 `class` 或 `enum`. **注意: @:build 或@:autoBuild 调用的方法没有添加 macro**
+
+需要理解 AST,以前了解 haxe.macro 包中的所有类. [新参考](http://haxe.org/manual/macro-type-building.html) [参考](http://old.haxe.org/manual/macros/build) 
+
+build宏函数 与 普通的宏函数不一样的地方:
+
+ * 返回的类型不是 `Expr` ,而是 `Array<Field>`. (`haxe/macro/Expr.hx` 文件中定义了 `Field`)
+
+ * build 宏函数内部的 macro.Context **没有** getLocalMethid 和 getLocalVars. 
+
+ * build 宏函数内部的 macro.Context **有** getBuildFields()
+
+ * 不是直接调用,而是将元标记 `@:build` 或 `@:autoBuild` 放在一个 `class` 或 `enum` 定义中.
+
+[build 一个示例]({% post_url haxe/2014-05-13-tips-on-haxe %}#自定义元标记-metadata), 其实 haxelib heaps 库中 hxd 目录下有很多很好的宏构建示例
+
+
+
+**在宏构建方法中, 使用 macro 关键字能省很多麻烦的事情**, 比如宏动态创建字段时: 注意 kind 字段
+
+```haxe
+// 创建一个 MIN 的静态常量值.
+public static function buildMIN(){
+	var fields = Context.getBuildFields();
+	var pos = Context.currentPos();
+	fields.push({
+		name : "MIN",
+		access : [APublic,AStatic,AInline],	 
+		
+		//下行的第一个参数也可以用 FVar(TPath({name:"Int" ,pack:[]})
+		//kind : FVar(TPath({name:"StdTypes", pack:[], params:[], sub:"Int" }), {expr: EConst(CInt("200")), pos: pos }), 
+		//kind : FVar(Context.toComplexType(Context.getType("Int")), Context.makeExpr(200,pos))	// Context类有一些方法
+		kind: FVar(macro :Int, macro 200),	// 使用 macro 让一切变得简单
+		pos : pos
+	});
+	return fields;
+}
+```
+
+```haxe
+#if (haxe_ver >= 3.2)
+macro : Void;
+#else
+Context.getType("Void");
+#end
+```
+
+#### 成员宏方法
+
+上边示例的都是都过 static 的方式调用 宏方法, 当宏方法为成员方法时, 第一个参数将由编译器自动填充为 `this`
+
+ * 限制: haxe 3.2 注意当宏方法为成员方法(非static)时, 不能在同一个相同文件中调用这个宏方法。
+
+ * 在以链式的方法调用它时, 注意它能会返回 null 值,
+
+```haxe
+
+class Main{
+	public static function main(){
+		var f = new Foo();
+		f.test();
+	}
+}
+
+// Foo.hx
+#if macro
+	import haxe.macro.Expr;
+	import haxe.macro.Context;
+	import haxe.PosInfos;
+	import sys.io.File;
+#end
+class Foo{
+	pubic function new(){}
+	// 你不能在 Foo.hx 中调用这个 test
+	macro public function test(thiz){
+		var callerType	= Context.typeExpr(thiz);
+		return macro null;
+	}
+}
+```
 
 
 #### Compiler
@@ -665,7 +747,7 @@ registerModuleReuseCall(modulePath:String, macroCall:String):Void
 // 对于 windows 平台会将 /path/to/file 这种 unix 斜线路径转成 windows 系统能识别的反斜线.
 resolvePath(file:String):String
 
-// 返回 MD5 值, 但我总觉得这个方法返回的 MD5 值不对.
+// 
 signature(v:Dynamic):String
 
 // 根据指定类型创建复杂类型 , 参看 makeExpr
@@ -684,56 +766,6 @@ unify(t1:Type, t2:Type):Bool
 
 // Displays a compilation warning msg at the given Position pos
 warning(msg:String, pos:Position):Void
-```
-
-
-#### 宏构建
-
-通过宏的方式动态构建 `class` 或 `enum`. **注意: @:build 或@:autoBuild 调用的方法没有添加 macro**
-
-需要理解 AST,以前了解 haxe.macro 包中的所有类. [新参考](http://haxe.org/manual/macro-type-building.html) [参考](http://old.haxe.org/manual/macros/build) 
-
-build宏函数 与 普通的宏函数不一样的地方:
-
- * 返回的类型不是 `Expr` ,而是 `Array<Field>`. (`haxe/macro/Expr.hx` 文件中定义了 `Field`)
-
- * build 宏函数内部的 macro.Context **没有** getLocalMethid 和 getLocalVars. 
-
- * build 宏函数内部的 macro.Context **有** getBuildFields()
-
- * 不是直接调用,而是将元标记 `@:build` 或 `@:autoBuild` 放在一个 `class` 或 `enum` 定义中.
-
-[build 一个示例]({% post_url haxe/2014-05-13-tips-on-haxe %}#自定义元标记-metadata), 其实 haxelib heaps 库中 hxd 目录下有很多很好的宏构建示例
-
-
-
-**在宏构建方法中, 使用 macro 关键字能省很多麻烦的事情**, 比如宏动态创建字段时: 注意 kind 字段
-
-```haxe
-// 创建一个 MIN 的静态常量值.
-public static function buildMIN(){
-	var fields = Context.getBuildFields();
-	var pos = Context.currentPos();
-	fields.push({
-		name : "MIN",
-		access : [APublic,AStatic,AInline],	 
-		
-		//下行的第一个参数也可以用 FVar(TPath({name:"Int" ,pack:[]})
-		//kind : FVar(TPath({name:"StdTypes", pack:[], params:[], sub:"Int" }), {expr: EConst(CInt("200")), pos: pos }), 
-		//kind : FVar(Context.toComplexType(Context.getType("Int")), Context.makeExpr(200,pos))	// Context类有一些方法
-		kind: FVar(macro :Int, macro 200),	// 使用 macro 让一切变得简单
-		pos : pos
-	});
-	return fields;
-}
-```
-
-```haxe
-#if (haxe_ver >= 3.2)
-macro : Void;
-#else
-Context.getType("Void");
-#end
 ```
 
 
@@ -781,7 +813,6 @@ Context.getType("Void");
 
 unify 参考 http://haxe.org/manual/type-system-unification.html
 
-
 ```haxe
 using haxe.macro.TypeTools;
 //....
@@ -791,3 +822,8 @@ Context.unify(t, ts);
 trace(t); // TMono(<mono>)
 trace(t.follow()); //TInst(String,[])
 ```
+
+将常量作为类型传递, http://haxe.org/manual/macro-generic-build.html#const-type-parameter
+
+<br />
+<br />
