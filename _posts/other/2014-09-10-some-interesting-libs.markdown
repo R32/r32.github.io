@@ -14,6 +14,8 @@ categories: other
 
 #### Tools
 
+ * [fontello](https://github.com/fontello/fontello) This tool lets you combine icon webfonts for your own project.
+
  * [regexr.com](http://regexr.com/) 正则表达式测试
 
 	> 项目源: https://github.com/gskinner/regexr/ 
@@ -68,6 +70,8 @@ categories: other
 [design-essentials](https://github.com/showcases/design-essentials)
 
 这个章节的大多数内容都是用于美化的 CSS 或 Javascript , 大多数似乎在 ie8 中都会报错.
+
+ * [SVG graphics](https://github.com/adobe-webplatform/Snap.svg) A JavaScript SVG library for the modern web
 
  * [Google Fonts](https://github.com/google/fonts) Font files available from Google Fonts
 

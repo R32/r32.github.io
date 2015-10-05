@@ -33,7 +33,9 @@ hxcpp 会自动根据平台选择不同的 C++编译器. 任意平吧上编译�
 
  * 编译器配置,找到并修改 `user/.hxcpp_config.xml`, 比如 win7 中这个文件通常在 `C:\Users\MYNAME\` 下, 通常只在使用 andorid ndk 时才要配置这个.
 
- * 实际上你可以在 neko 中快速开发及测试,因为 cpp 和 neko 的 API 基本一致,等到将要 release 时再以 hxcpp 编译
+ * ~~实际上你可以在 neko 中快速开发及测试,因为 cpp 和 neko 的 API 基本一致,等到将要 release 时再以 hxcpp 编译~~
+
+  - 目前可以用 `-D cppia` 来调试
 
 #### 黑魔法
 
@@ -463,7 +465,9 @@ dir:			- ??? 和 dospath 一样, 只是多了检测
 
 ### cppia
 
-这是最近的一个新特性, cppia 能快速编译为 c++ 代码运行速度比 neko 更快（需要先编译得到 cppia.exe(双击`hxcpp/project/compile-cppia.hxml` 就行了) ）
+这是最近的一个新特性, cppia 能快速编译为 c++ 代码运行速度比 neko 更快（需要先编译得到 cppia.exe(双击`hxcpp/project/compile-cppia.hxml` 就行了)
+
+ * 编译 cppia 后,其实得到一个 `Host.exe` 的文件就可以用于运行 cppia 脚本.
 
 ```bash
 -cpp out.cppia	# 定义为一个文件名称,而不是目录
@@ -473,5 +477,7 @@ dir:			- ??? 和 dospath 一样, 只是多了检测
 -cmd haxelib run hxcpp out.cppia
 ```
 
+这样可以快速地调试 cpp 代码, 这种脚本的性能好像不怎么样.
 
+<br />
 <br />

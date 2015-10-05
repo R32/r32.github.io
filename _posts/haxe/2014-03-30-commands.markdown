@@ -30,6 +30,8 @@ haxelib 用于管理 haxe库,  `haxelib run libname` 可以调用指定库下边
 
  > 而以 neko run.n 调用的命令 内部的 Sys.getCwd() 将则指向当前路径.
 
+ > 那么问题是如何区分应用是以 haxelib run %libname% 运行的还是以 neko %APP% 运行的??? 似乎没有办法
+
 
  * 当一个 haxelib 有 ndll 目录时, haxelib path libname 会有一个 -L 的定义指向这个 ndll 目录.
 

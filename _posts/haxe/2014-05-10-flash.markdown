@@ -7,6 +7,25 @@ categories: haxe
 
 可以说 haxe 的目标平台最稳定的就是 flash 平台了.
 
+ * flash.Lib 提供几个方法,也许会很有用, 如:
+
+	```as
+	// 如在 as3 中经常用到的 
+	event.currentTarget as SomeClass
+	
+	// 在 haxe 应该写为
+	Lib.as(event.currentTarget, SomeClass);
+	
+	// 在浏览器中将 trace 输出到浏览器的 console
+	Lib.redirectTraces()
+	
+	// 调用 as3 自带的 trace 而非 haxe 提供的.
+	Lib.trace(arg:Dynamic)
+	```
+
+<!-- more -->
+
+
 ### 跨域安全沙箱错误
 
 `crossdomain.xml` 中文参考: http://www.adobe.com/cn/devnet/adobe-media-server/articles/cross-domain-xml-for-streaming.html
@@ -24,7 +43,7 @@ categories: haxe
     <allow-http-request-headers-from domain="*" headers="*"/>
 </cross-domain-policy>
 ```
-<!-- more -->
+
 
 ### 编译
 

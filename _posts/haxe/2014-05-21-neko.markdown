@@ -86,7 +86,7 @@ Sys.sleep(3);
 
 作为 thread 的局部变量, 为解决多线程程序的并发问题提供了一种新的思路,  示例见 `std/haxe/io/FPHelper.hx`
 
-声明静态绑定线程的本地对象和变量时必须遵守下列原则：但是不知道 haxe 是否需要遵守这些 原文见 https://msdn.microsoft.com/zh-cn/library/6yh4a9k1.aspx
+声明静态绑定线程的本地对象和变量时必须遵守下列原则：原文见 https://msdn.microsoft.com/zh-cn/library/6yh4a9k1.aspx
 
  * 只能应用于 数据声明和定义, 不能用于函数声明或定义
 
@@ -99,10 +99,24 @@ http://old.haxe.org/api/neko/net/poll
 
 轮询多个非阻塞 socket 为一个线程.
 
+#### vm.Loader
+
+Loader 可以用于动态(运行时)地从 NDLL 库中加载 primitives(调用代码的胶水函数).
+
+Loader 可以用于动态地加载其它 neko 模块(`.n`文件)，模块通过names引用。
+为了查找对应的字节码文件，默认的 Loader 首先在其 cache 中查找, 
+最终
+
+Loader 可用于沙箱安全。当模块已经加载到指定的 loader， 
+这个 loader可以管理被加载的模块安全通过过滤哪些 primitives 可以被加载
 
 #### vm.Module
 
-#### vm.Loader
+
+### std.ndll
+
+通过 `neko.Lib.load("std",@name,@args)` 加载的方法, 源码在: https://github.com/HaxeFoundation/neko/tree/master/libs/std ,
+
 
 <br />
 <br />

@@ -64,11 +64,12 @@ categories: haxe
 	}	// 导出的JS代码为:	var Barr = require("http").Server;
 	```
 	
- * **`@:expose(?Name=Class path)`** Makes the class available on the window object (js only)
+ * **`@:expose(?Name=Class path)`** 将类或静态方法接到 window 对象下(js only)，注意和 `@:native` 相区别
 
 	> 如果没有定义默认不会导出, 这个元标记将类导出到 window对象 下, 如果 window 未定义,则导出到 exports对象(nodejs) 下
+	
 
- * `@:initPackage` 用来初使化 包及路径 (仅限于 javascript)
+ * `@:initPackage` 用来初使化 包及路径 (仅限于 javascript) 注:在 haxe 3.2 中好像已经没作用了.似乎被移除.
 
 	> 因为 haxe 并不会为 extern class 创建相应包对象, 例: 在 extern class 中当源码声明为 `package js;` 时, 添加 这个元标记将会创建 `js = {}`
 	
