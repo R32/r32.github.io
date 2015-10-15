@@ -1,0 +1,52 @@
+---
+layout: post
+title:  未分类
+date:   2015-05-01 16:55:12
+categories: other
+---
+
+
+未分类
+
+<!-- more -->
+
+
+一些中文文档 http://chajian.baidu.com/developer/extensions/getstarted.html
+
+
+### chrome app
+
+示例 https://github.com/GoogleChrome/chrome-app-samples
+
+chrome app 的简单用法 http://ju.outofmemory.cn/entry/61944
+，注意不要在 html 标签里写 js,应该使用 script src 的方式引入。
+
+ * web app 其实就是用json描述了一个url地址
+
+	```json
+	{
+	  "name": "WebApp",
+	  "version": "0.1",
+	  "app": {
+		"urls": [ "http://www.domain.com/chrome/" ],
+		"launch": {
+		  "web_url": "http://www.domain.com/chrome/index.html"
+		}
+	  },
+	  "permissions": ["background", "notifications"],
+	  "manifest_version": 2
+	}
+	```
+
+ * packaged app 最接近普通桌面程序, 
+
+### chrome extension
+
+示例:
+
+ * https://github.com/Asana/Chrome-Extension-Example
+
+<br />
+<br />
+
+

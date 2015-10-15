@@ -11,6 +11,8 @@ categories: other
 
 [window 版本下载](http://git-scm.com/)
 
+[github 上传大型文件](https://git-lfs.github.com/)
+
 <!-- more -->
 
 ### 简单
@@ -128,6 +130,13 @@ categories: other
 	
 	# 做一些提交后,想回到工作目录
 	git stash apply
+	
+	# 处理冲突如果有
+	git add <filename>
+	git reset HEAD <filename> 
+	# 或 git reset HEAD 	# 注意执行这个命令时需要确认文件已经被添加,因为未添加到缓存的所有文件将被重置
+
+	git stash clear
 	
 	# 如果需要提交到 github 还是用新分支吧.做完再合并到主线上来.
 	```

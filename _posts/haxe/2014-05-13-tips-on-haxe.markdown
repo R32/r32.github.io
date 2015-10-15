@@ -94,7 +94,9 @@ haxe 3.2 ,细节查看 CHANGES.txt
 	
 	```
 	
-typedef 对性能的影响: https://github.com/HaxeFoundation/haxe/tree/development/tests/benchs/mandelbrot
+#### typedef 对性能的影响 
+
+https://github.com/HaxeFoundation/haxe/tree/development/tests/benchs/mandelbrot
 
 ```bash
 # haxe 3.2 标准, 运行三次取中间值
@@ -124,6 +126,8 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
 ### 未分类
 
 下边的一些内容也许并不适合于 haxe 的最新版
+
+ * 当在 `build.hxml` 文件中使用 `--each` 时, 需要注意 `haxe {前} build.hxml {后}` 前后的位置是否有受到 `--each` 的影响
 
  * 泛形, 返回类型或者Void, 参考 haxe.Time 的 measure 方法源码如下: 
 
@@ -345,6 +349,18 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
 	```
 
  * `haxe.PosInfos` 这个类是一个魔法类, 因为编译器将自动填充它. 你只需要定义就行了, 参看 [Log and Trace Features]({% post_url haxe/2014-03-28-log-and-trace-features %})
+
+
+#### Flashdevelop
+
+关于 fd 的一些类似于 `$(CompilerPath)` 的变量, 可以在 `项目属性 -> 编译（选项卡） -> 鼠标点开 (编译...)` 就能看到很多值
+
+ * `项目属性 -> 输出(选项卡) -> 平台[下拉菜单]` 选择 hxml, 可用 hxml 来编译
+
+  - 但是这样将不会使用编译缓存, 可以找到 命令行预编译 在 `${output}` 的前边加上 `--connect 6000`
+
+ * 这是一个 fd 的模板源码 https://github.com/Chman/Snowkit-FD
+
 
 ### 遇见的一些错误
 
@@ -935,5 +951,4 @@ input或output 默认都是阻塞类型的,
 #### FPHelper
 
 最新特性
-
 

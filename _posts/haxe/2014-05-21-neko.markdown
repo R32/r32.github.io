@@ -117,6 +117,7 @@ Loader 可用于沙箱安全。当模块已经加载到指定的 loader，
 
 通过 `neko.Lib.load("std",@name,@args)` 加载的方法, 源码在: https://github.com/HaxeFoundation/neko/tree/master/libs/std ,
 
+ * `print_redirect(print:Dynamic->Void):Void`
 
 <br />
 <br />

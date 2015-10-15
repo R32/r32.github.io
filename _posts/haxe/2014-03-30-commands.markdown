@@ -124,6 +124,8 @@ haxelib 用于管理 haxe库,  `haxelib run libname` 可以调用指定库下边
 
  * 开发并上传库 见:[haxe.org/com/haxelib](http://haxe.org/com/haxelib)
 
+一些库通过 haxelib.json 文件的 dependencies 可能指定了依赖库版本,这使得 dev 版本会被认为是旧的版本,因此对于 git 库可能需要以 haxe git 的方式安装.
+
 ### hxml
 
 hxml 就是将命令行下输入的 haxe 命令的文件形式, 需要注意的是 有一个特殊的叫 `extraParams.hxml` 的文件, 这个文件一般在一些 haxelib 中可以见到(和 haxelib.json 位于同级目录), 用于当使用 -lib libname 编译时附加一些编译参数. 如果是基于 openfl 的项目库,那么这个特殊文件将是 `include.xml`

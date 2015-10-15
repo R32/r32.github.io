@@ -9,8 +9,7 @@ categories: other
 
 记录 github 上一些有意思的库, 大多数是从 https://github.com/trending?since=weekly 上看到的.
 
-
-**[awesome-nodejs](https://github.com/sindresorhus/awesome-nodejs)** 一个收集nodejs项目列表.
+https://github.com/sindresorhus/awesome
 
 #### Tools
 

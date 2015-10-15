@@ -86,6 +86,13 @@ haxe -as3 outdir -main Main
 --gen-hx-classes		: generate hx headers for all input classes
 ```
 
+关于 flash 版本的问题, haxe 的 -swf-header 使用第一行的样式, 其实可以查看 flashdevelop 的 flash生成项目属性可以看得能够生成哪些版本
+
+```csv
+f: 9.0	10.0  10.1  10.2  10.3	11.0  11.1 ~ 11.9  12.0  13.0  14.0  15.0  16.0  17.0
+i:  9    10    10    11    12    13    14  ~  22    23    24    25    26    27    28
+```
+
 
 #### Defines
 
@@ -346,3 +353,51 @@ class LEByteArray extends ByteArray{
 ```bash
 haxe -swf nothing.swf --no-output -swf-lib lib.swc --gen-hx-classes
 ```
+
+
+SWF文件结构
+------
+
+`SWF = HEADER + TAGS`, 数据结构描述:
+
+ * swf使用 twips 表示 Rect 数据，1 twips=1/20 pixel
+
+ * 无特别说明，使用 litle endian 结构,后边用 LE 表示
+
+ * 定点数， (8-8),(16-16) 二种 使用 litle endian.
+
+ * 浮点数， 16(半精度) ,32(单精度) ,64(双精度)
+
+ * 变长数，通常为低于32位, 使用 符号位扩展成 Int 类型. signExtend1, signExtend8, signExtend16
+
+ * 字符串，字符串是以全0结束的byte序列，采用utf-8编码
+
+通过参考 format 库中的 swf 目录:
+
+```bash
+# ----- SWF HEADER -----
+#偏移(字节)	大小		描述
+00~02		 3		 # CWS(deflate算法)已压缩, 而 FWS 则未压缩, ZWS 表示为 lzma压缩
+03			 1		 # flash 版本号
+04~07		 4		 # LE小头 Int 类型，解压后, 整个 swf 的大小
+
+# 1. 获得后边的二进制数据, 如果压缩则解压(这里没有考虑到 lzma 算法生成的压缩), 
+# 2. 然后使用 bitsInput(位) 的方式读取一个 Rect 数据： 参考 format/tools/bitsIntput
+#偏移(位)		大小		描述
+b0~b04		 5		 # 获得 left ,right ,top ,bottom 所占用的位数 SB(符号位扩展), 5个二进制最多表示 31 位
+b05+SB		SB		 # left, 单位为 twip, 1 twip等于1/20象素	
++= SB 		SB 		 # right
++= SB		SB		 # top
++= SB		SB		 # bottom
+
+# 切换回 字节模式
+#偏移(字节)	大小		描述
+00~01		 2		# 定点数8-8, 帧率
+02~03		 2		# 定点数8-8, 总帧数
+
+# ----- SWF TAGS -----
+
+```
+
+<br />
+<br />

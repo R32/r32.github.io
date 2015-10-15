@@ -585,7 +585,7 @@ patchTypes(file:String):Void
 // 移除指定字段
 removeField(className:String, field:String, isStatic:Bool = null):Void
 
-// 自定义 js 输出, bing 上自行搜索教程.
+// 自定义 js 输出, e.g: --macro haxe.macro.ExampleJSGenerator.use()
 setCustomJSGenerator(callb:JSGenApi -> Void):Void
 
 // 设置字段类型

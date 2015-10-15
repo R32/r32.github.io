@@ -1,0 +1,14 @@
+---
+
+layout: post
+title:  nginx
+date:   2015-06-17 08:02:52
+categories: other
+
+---
+
+
+
+<!-- more -->
+
+#### 头文件引用

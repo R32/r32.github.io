@@ -4,7 +4,6 @@ title:  查看英文文档小技巧
 date:   2014-03-29 13:50:10
 categories: other
 ---
-#### 前言
 
   1. 虽然 Chrome 自带了翻译,但是对于计算机方面的文档翻译质量不如 微软 Bing.
 
@@ -12,7 +11,7 @@ categories: other
 
 <!-- more -->
  
-#### 方法
+### 方法
 
  * 1.用浏览器打开微软的 http://labs.microsofttranslator.com/bookmarklet/ 网页:
  
@@ -33,8 +32,25 @@ categories: other
  * 注意:因为安全问题不能翻译链接以 **https://** 开头的网页.
 
 
-#### 其它
+```js
+javascript:(function(){var s = document.createElement('script'); s.type = 'text/javascript'; s.src = 'http://labs.microsofttranslator.com/bookmarklet/default.aspx?f=js&to=zh-chs'; document.body.insertBefore(s, document.body.firstChild);})()
+```
+
+### 其它
 
 必应词典个人觉得很好用,查询方便，语音速度快,
 
  * chrome 中安装取词插件,在安装文件夹中查找 `*.crx` 的文件然后拖动扩展中即可
+
+
+#### 翻译窗口小部件
+
+http://www.bing.com/widget/translator
+
+```html
+<div id='MicrosoftTranslatorWidget' class='Dark' style='color:white;background-color:#555555'></div><script type='text/javascript'>setTimeout(function(){{var s=document.createElement('script');s.type='text/javascript';s.charset='UTF-8';s.src=((location && location.href && location.href.indexOf('https') == 0)?'https://ssl.microsofttranslator.com':'http://www.microsofttranslator.com')+'/ajax/v3/WidgetV3.ashx?siteData=ueOIGRSKkd965FeEGM5JtQ**&ctf=True&ui=true&settings=Manual&from=';var p=document.getElementsByTagName('head')[0]||document.documentElement;p.insertBefore(s,p.firstChild); }},0);</script>
+```
+
+
+<br />
+<br />
