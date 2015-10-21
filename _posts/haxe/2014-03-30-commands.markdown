@@ -554,7 +554,6 @@ use-nekoc              : Use nekoc compiler instead of internal one
 use-rtti-doc           : Allows access to documentation during compilation
 
 vcproj                 : GenCPP internal
-
 ```
 
 #### metas
@@ -677,6 +676,7 @@ vcproj                 : GenCPP internal
 
 # http://haxe.org/manual/macro-generic-build.html
 # 和 haxe.macro.MacroType 一样,参看 https://github.com/HaxeFoundation/haxe/commit/b7d9572cde3cab4629f4854103bcd56f3603d515
+# 注意: 宏函数所返回的类型没有智能提示,你应该构建其它的类型,而不是修改带有 meta 的类.
 @:genericBuild       : Builds instances of a type using the specified macro
 
 # 参看 @:setter

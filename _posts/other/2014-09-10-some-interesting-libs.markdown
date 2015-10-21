@@ -70,6 +70,8 @@ https://github.com/sindresorhus/awesome
 
 这个章节的大多数内容都是用于美化的 CSS 或 Javascript , 大多数似乎在 ie8 中都会报错.
 
+ * [glfx](https://github.com/evanw/glfx.js) An image effects library for JavaScript using WebGL
+
  * [SVG graphics](https://github.com/adobe-webplatform/Snap.svg) A JavaScript SVG library for the modern web
 
  * [Google Fonts](https://github.com/google/fonts) Font files available from Google Fonts

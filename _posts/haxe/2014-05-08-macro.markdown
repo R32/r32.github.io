@@ -379,7 +379,7 @@ The syntax for reification is `macro expr`, where `expr` is any valid Haxe expre
 
  	> `$b{}` : `Array<Expr> -> Expr`
 
- 	> `$i{}` : `String -> Expr` 注: 这里的 String 变量名字符串.
+ 	> `$i{}` : `String -> Expr` 注: 这里的 String 变量名字符串. 表示为: EConst(CIdent())
 
  	```haxe
 	function main(){
@@ -741,6 +741,8 @@ parseInlineString(expr:String, pos:Position):Expr
 registerModuleDependency(modulePath:String, externFile:String):Void
 
 // Add a macro call to perform in case the module is reused by the compilation cache.
+// you can add a specific macro action to be made in case a given cached module is reused in later compilations by using Context.registerModuleReuseCall 
+// please note that the macro call is a string that can only contain constant data (it is executed in a similar way as --macro command line parameter)
 registerModuleReuseCall(modulePath:String, macroCall:String):Void
 
 // 从 classPaths 是否存在指定文件名, 并返回 绝对路径全名. 参考 getClassPath 将会返回哪些类路径
@@ -811,19 +813,42 @@ warning(msg:String, pos:Position):Void
 
 #### 其它
 
-unify 参考 http://haxe.org/manual/type-system-unification.html
+ * unify 参考 http://haxe.org/manual/type-system-unification.html
 
-```haxe
-using haxe.macro.TypeTools;
-//....
-var t = Context.typeof(macro null); // TMono(<mono>)    
-var ts = Context.typeof(macro "foo"); //TInst(String,[])
-Context.unify(t, ts);
-trace(t); // TMono(<mono>)
-trace(t.follow()); //TInst(String,[])
-```
+	```haxe
+	using haxe.macro.TypeTools;
+	//....
+	var t = Context.typeof(macro null); // TMono(<mono>)    
+	var ts = Context.typeof(macro "foo"); //TInst(String,[])
+	Context.unify(t, ts);
+	trace(t); // TMono(<mono>)
+	trace(t.follow()); //TInst(String,[])
+	```
 
-将常量作为类型传递, http://haxe.org/manual/macro-generic-build.html#const-type-parameter
+ * 将常量作为类型传递, http://haxe.org/manual/macro-generic-build.html#const-type-parameter
+
+ * 在函数构建函数中的值对比, getLocalClass
+
+	```haxe
+	// file:/// a/b/Test.hx
+	package a.b;
+	
+	class Test{}
+	// getLocalModule() => a.b.Test
+	// getLocalClass().toString() => a.b.Test
+	// getLocalClass().get().name => Test
+	// getLocalClass().get().module => a.b.Test
+	// getLocalClass().get().pack => [a,b]
+	
+	// Foo 类同样在 Test.hx 文件中
+	calss Foo{}
+	// getLocalModule() => a.b.Test
+	// getLocalClass().toString() => a.b.Foo
+	// getLocalClass().get().name => Foo
+	// getLocalClass().get().module => a.b.Test
+	// getLocalClass().get().pack => [a,b] 
+	```
+
 
 <br />
 <br />

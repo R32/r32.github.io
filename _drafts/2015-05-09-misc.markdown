@@ -6,13 +6,13 @@ categories: other
 ---
 
 
-未分类
+chrome 相关
+
+ - [一些中文文档](http://chajian.baidu.com/developer/extensions/getstarted.html)
+
+ - [chrome 的一些技巧](http://www.codeceo.com/article/15-chrome-develop-skills.html)
 
 <!-- more -->
-
-
-一些中文文档 http://chajian.baidu.com/developer/extensions/getstarted.html
-
 
 ### chrome app
 
@@ -48,5 +48,3 @@ chrome app 的简单用法 http://ju.outofmemory.cn/entry/61944
 
 <br />
 <br />
-
-

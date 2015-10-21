@@ -908,7 +908,42 @@ abstract 用于抽象化数据结构,用于包装底层类型, 其行为更像�
 分隔线
 ------
 
-#### List
+### haxe.remoting
+
+http://old.haxe.org/doc/remoting
+
+ * Proxy 魔法类,自动包装 Api类的public属性方法, http://old.haxe.org/doc/remoting/proxy
+
+ ```js
+ class MyApi extends Proxy<Api>{}
+ // 而 Api 类则为另一个端的类, MyApi 将被包装成和 Api 具有一样公共方法的类.
+ new MyApi(connection);
+ ```
+
+ * Connection
+
+#### Context
+
+"被调用者"将方法绑定在这个类上
+
+ * `addObject( name: String, obj: {}, ?recursive: Bool): Void`
+
+  - name 指定 obj_name
+
+  - obj 任意对象,
+
+  - recursive 是否归递, 默认为 false
+
+ * `call( path: Array<String>, params: Array<Dynamic>): Dynamic`
+
+  - path [obj_name, method], 当数组长度大长 2 时，所对应的 obj recursive 必须为 true, 则 [obj_name, sub_obj, method]
+
+  - params 传递给调用方法的参数.
+
+其实, 应该使用 **ContextAll** 替换这个类.
+
+
+### List
 
 链表形式, Haxe 中的List 是由包含二个元素的各个数组链接而成,文档称 适用于经常删除和添加元素,而避免复制.从源码上感觉这个List 的实现不太好, 感觉 List 没什么用.不如直接用 Vector 或 Array.
 
@@ -922,7 +957,7 @@ h = [0, [1, [2, [3, [4, null]]]]]
 q = [4,null]
 ```
 
-#### sys.io.Socket
+### sys.io.Socket
 
 input或output 默认都是阻塞类型的,
 
@@ -948,7 +983,9 @@ input或output 默认都是阻塞类型的,
 其实使用 vm.net.ThreadServer 就好了...
 
 
-#### FPHelper
+
+
+### FPHelper
 
 最新特性
 
