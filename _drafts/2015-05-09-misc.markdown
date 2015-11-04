@@ -18,6 +18,8 @@ chrome 相关
 
 示例 https://github.com/GoogleChrome/chrome-app-samples
 
+http://www.ituring.com.cn/minibook/950
+
 chrome app 的简单用法 http://ju.outofmemory.cn/entry/61944
 ，注意不要在 html 标签里写 js,应该使用 script src 的方式引入。
 
@@ -42,9 +44,6 @@ chrome app 的简单用法 http://ju.outofmemory.cn/entry/61944
 
 ### chrome extension
 
-示例:
-
- * https://github.com/Asana/Chrome-Extension-Example
 
 <br />
 <br />

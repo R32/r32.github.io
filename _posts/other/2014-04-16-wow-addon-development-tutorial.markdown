@@ -27,7 +27,7 @@ http://www.wowwiki.com/Making_a_macro 基础宏
 
  * 可视化布局IDE - 
 
- * LUA 编辑器 - ??
+ * LUA 编辑器 - ?? 也许应该用 nodepad++ 
 
  * BLP图片处理 - 
 
@@ -214,6 +214,8 @@ Bob.lua
 wow api, 内容有些多 http://wowprogramming.com/docs
 
 **lua 语法15分钟快速入门** - https://github.com/adambard/learnxinyminutes-docs/blob/master/zh-cn/lua-cn.html.markdown 
+
+http://www.lua.org/manual/5.1/
 
 
 <hr />

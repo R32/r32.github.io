@@ -23,6 +23,8 @@ categories: haxelib
 
 <!-- more -->
 
+ * [MarkovNameGenerator](https://github.com/Tw1ddle/MarkovNameGenerator) 随机名字生成器
+
  * [haxe-watchify](https://github.com/lucamezzalira/haxe-watchify) 命令行工具, 监测文件是否发生改动,而做相应处理
 
   - 依赖 python2.7, 从 npm 安装,看上去像是用 haxe 写的 nodejs

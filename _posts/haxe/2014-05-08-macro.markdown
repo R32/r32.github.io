@@ -71,19 +71,14 @@ trace("haxe version > 3.1");
 
  * String, Int, Float 常量值可以直接使用, 0值 以及 空字符串 用于表示 false
 
- * 逻辑运算符 `&&(与), ||(或), !(非)`
+ * 逻辑运算符 `&&(与), ||(或), !(非)`, 注意使用 () 将表达式括起来
 
- * 条件运算符 `==, !=, >, >=, <=`
+ * 条件运算符 `==, !=, >, >=, <=`, 注意使用 () 将表达式括起来
 
  * 圆括号`()`, 用于组合多个表达式
 
- * 一些个人收集清单
 
-	```
-	flash|neko|cpp|js|php|java  : 这种平台相关无需多解释,但是从上边示例可以发现, 还可以指定版本
-	```
-
-**同样可以把条件标识符放置在 `@:require` 之后**
+同样可以把条件标识符放置在 `@:require` 之后
 
 `@:require(Compiler Flag [,"custom error message" ])`
 
@@ -99,9 +94,6 @@ class Foo{
 	}
 }
 ```
-
- 
-
 
 其它:
 
@@ -129,8 +121,6 @@ class Foo{
 	#end
 	```
 
-
-
 宏
 ------
 
@@ -142,7 +132,7 @@ haxe 宏分为三种类型:
 
  * 初使化宏. 主要是通过 编译参数 --macro 来执行, 运行顺序在解析 main 之前, 所以通常用来配置编译器行为
 
-#### 宏方法
+### 宏方法
 
 **Tips:** haxe 标准库中有很多 工具类能更好地构建, 如: macro.TypeTools, macro.ExprTools, 以及其它以 Tools 结尾的类, 通常是使用 using 关键字添加这些工具类.
 
@@ -284,146 +274,58 @@ haxe 宏分为三种类型:
 	}
 	```
 
-#### 小抄
+### Reification Escaping
+
+macro 关键字后可以接任意 haxe 表达式 http://haxe.org/manual/macro-reification-expression.html
+
+ * `${}` 或 `$e{}`: `Expr -> Expr`
+
+ * `$a{}` : `Expr -> Array<Expr>` 用于把数量未确定的参数传递给 作参数的函数, 示例见 Promhx 库的 Promise.when
+
+ * `$b{}` : `Array<Expr> -> Expr`
+
+ * `$i{}` : `String -> Expr` 注: 这里的 String 变量名字符串. 表示为: EConst(CIdent())
+
+ * `$p{}` : `Array<String> -> Expr` 同上. String 指的是变量名.
+
+ * `$v{}` : `Dynamic -> Expr` 这个经常会用到. e.g: `return macro $v{"hello world"}`
+
+```haxe
+var complexType = macro :hxd.res.Loader;
+	
+var method = macro {
+	return flash.Lib.current.stage;
+}
+```
+ 
+haxe 3.1+
+
+ * 字段名 {$name : 1} 
+
+ * 函数名 function $name(){}
+
+ * `try/catch` try{e()}catch($name:Dynamic){}
 
 ```haxe
 class Main {
-	
-	static function main() {
-		var i = 1;
-		var j = 2;
-		var a = [1, 2];
-		
-		Um.callMethed(a);
-		Um.assign(i);
-		Um.noChange(j);
-		
-		trace(a); // 输出: [1, 2, 77]
-		trace(i); // 输出: 88
-		trace(j); // 输出: 2 
+	macro static function generateClass(funcName:String) {
+		var c = macro class MyClass {
+			public function new() { }
+			public function $funcName() { //函数名
+				trace({ $funcName : "was called" }); //字段名
+			}
+		}
+		haxe.macro.Context.defineType(c); // 动态定义的类需要通过定义,外边才可以引用.
+		return macro new MyClass();
 	}
-	
-}
-
-class Um{
-
-	macro static public function callMethed(a) {
-		return macro $i { haxe.macro.ExprTools.toString(a) }.push(77);
-	}
-	
-	macro static public function assign(i) {
-		return macro $i { haxe.macro.ExprTools.toString(i) } = 88;
-	}
-	
-	macro static public function noChange(i) {
-		macro $i { haxe.macro.ExprTools.toString(i) } = 99;
-		return macro null;
+	public static function main() {
+		var c = generateClass("myFunc");
+		c.myFunc();
 	}
 }
 ```
 
-上边是一个将变量传递给 宏方法的示例(haxe 3.2 推荐使用 Context.getLocalTVars 来获得本地变量,一，而不是通过宏传递)
-
-**注意**: 宏方法 assign 和 noChange 只有返回值不一样, 充分说明了 宏返回值 将替换宏调用. 这一概念很重要.
-
-
- * haxe.macro.ExprTools 类中的 toString 和 getValue 都是常用方法
-
- * 如何从宏方法返回一个 bytes
-
-	```haxe
-	// 源文件 h3d/hxd/res/Embed.hx
-	// 先字符串序列化 bytes ,然后 反序列化就行了
- 	public static macro function getResource( file : String ) {
-		var path = Context.resolvePath(file);
-		var m = Context.getLocalClass().get().module;
-		Context.registerModuleDependency(m, path);	// 参考 Haxe 命令行, haxe -wait
-		var str = haxe.Serializer.run(sys.io.File.getBytes(path));
-		return macro hxd.res.Any.fromBytes($v{file},haxe.Unserializer.run($v{str}));
-	}
-	```
- * macro.MacroType<Const>
-
-	```haxe
-	// 在 CastleDB 的 一个示例中, Data.hx 如下:
-	package dat;
-	
-	private typedef Init = haxe.macro.MacroType < [cdb.Module.build("test.cdb")] > ;
-	```
-
- * macro 关键字后可以接任意 haxe 代码. [AST](http://haxe.org/manual/macro.html)	
-
-	```haxe
-	// 轻松获得一个类型. 对于宏构建(@:build) 非常有帮助.
-	var loaderType = macro : hxd.res.Loader;
-	
-	
-	var method = macro {
-		return flash.Lib.current.stage;
-	}
-	```
-
-#### Reification Escaping
-
-The Haxe Compiler allows reification of expressions, types and classes to simplify working with macros. 
-
-The syntax for reification is `macro expr`, where `expr` is any valid Haxe expression.
-
-宏方法小节使用的就是这类语法, 不详写了,[参考](http://haxe.org/manual/macro-reification-expression.html) 相关小节
-
- * 所有下列 **$引用** 需要必须在 macro 语句后边
-
- 	> `${}` 或 `$e{}`: `Expr -> Expr`
-
- 	> `$a{}` : `Expr -> Array<Expr>` 用于把数量未确定的参数传递给 作参数的函数, 示例见 Promhx 库的 Promise.when
-
- 	> `$b{}` : `Array<Expr> -> Expr`
-
- 	> `$i{}` : `String -> Expr` 注: 这里的 String 变量名字符串. 表示为: EConst(CIdent())
-
- 	```haxe
-	function main(){
-		var abc = 100;
-		trace( getIdent() ); // 宏替后将为 trace(abc);
-	}
- 	macro static function getIdent(i:Expr){
- 		return macro $i{"abc"};
- 	}
- 	```
-
- 	> `$p{}` : `Array<String> -> Expr` 同上. String 指的是变量名.
-
- 	> `$v{}` : `Dynamic -> Expr` 这个应该是使用频率最多的标记.
- 
- * haxe 3.1
-
- 	> 字段名 {$name : 1} 
-
- 	> 函数名 function $name(){}
-
- 	> `try/catch` try{e()}catch($name:Dynamic){}
-
- 	```haxe
-	class Main {
-		macro static function generateClass(funcName:String) {
-			var c = macro class MyClass {
-				public function new() { }
-				public function $funcName() { //函数名
-					trace({ $funcName : "was called" }); //字段名
-				}
-			}
-			haxe.macro.Context.defineType(c); // 动态定义的类需要通过定义,外边才可以引用.
-    		return macro new MyClass();
-    	}
-
-    	public static function main() {
-    		var c = generateClass("myFunc");
-    		c.myFunc();
-    	}
-    }
- 	```
-
-#### 宏构建
+### 宏构建
 
 通过宏的方式动态构建 `class` 或 `enum`. **注意: @:build 或@:autoBuild 调用的方法没有添加 macro**
 
@@ -472,11 +374,46 @@ Context.getType("Void");
 #end
 ```
 
-#### 成员宏方法
+#### genericBuild
+
+泛型构建. 主要是用理处理泛型, 比如你可以读取一个文本文件而构建一个相应的类(先定义,然后返回类型)
+
+ * 当泛形类使用 **Const**作参数时,例如:`class Some<Const>{}` [使用常量作为泛形参数](http://haxe.org/manual/macro-generic-build.html#const-type-parameter)
+
+	> 这个特性被用于 SPOD 中的数据类型,比如限制字符串的长度： `typedef SString<Const> = String`;
+
+和 `:build` 的区别:
+
+ * 返回类型为 `ComplexType`, 而不是 `Array<Field>`, 返回值将
+	
+	```haxe
+	// Main.hx
+	class Main{
+		static pubic function main(){
+			var s:Some = "Hello world";
+			s.substr(1,5);	// haxe 会自动帮你导出 substr 方法是如何实现的, 是不是很神奇很复杂??但却不实用
+			// 因此 genericBuild 函数中你应该先构建一个类型通过 Context.defineType,然后返回它,这才是正确的做法.
+			// 或者 通过 defineModule 构建一个模块,最后返回 null 值. 这样的话 Some 相当于一个空类
+		}
+	}
+	
+	
+	// Some.hx
+	@:genericBuild(Some.gen())
+	class Some{
+		static function gen():ComplexType{
+			return macro :String;	// 把 Some 实例(instance)当成 String 类型
+		}
+	}
+	```
+
+### 成员宏方法
 
 上边示例的都是都过 static 的方式调用 宏方法, 当宏方法为成员方法时, 第一个参数将由编译器自动填充为 `this`
 
- * 限制: haxe 3.2 注意当宏方法为成员方法(非static)时, 不能在同一个相同文件中调用这个宏方法。
+ * 限制: haxe 3.2 注意当宏方法为成员方法(非static)时, 
+
+ * 限制: 不能在同一个相同文件中调用这个宏方法。 如: 在 Foo.hx 定义的成员宏方法，不可以在 Foo.hx 中调用.
 
  * 在以链式的方法调用它时, 注意它能会返回 null 值,
 
@@ -498,7 +435,7 @@ class Main{
 #end
 class Foo{
 	pubic function new(){}
-	// 你不能在 Foo.hx 中调用这个 test
+	// 你不能在 Foo.hx 中调用 test 方法
 	macro public function test(thiz){
 		var callerType	= Context.typeExpr(thiz);
 		return macro null;
@@ -506,8 +443,9 @@ class Foo{
 }
 ```
 
+感觉没什么机会能用到这个特性, 感觉用 inline 似乎能做同样的事情.
 
-#### Compiler
+### Compiler
 
 haxe.macro.Compiler 的一些方法, 这个类的方法运行在编译时, 当编译参数 `--macro` 后调用方法时,默认为这个包下的方法.
 
@@ -598,7 +536,7 @@ setOutput(fileOrDir:String):Void
 
 
 
-#### Context
+### Context
 
 haxe.macro.Context 上下文,就是调用这个类方法的环境, 也就是说如果在 Test.hx 代码的 第 6 行调用了一个自定义的宏方法例如: Um.some(), 那么这第 6 行就是 宏的上下文环境. Um.some 方法体内的 currentPos() 也只是返回第 6 行, getLocalModule 也只是返回 第 6 行处所在的 类模块.
 
@@ -721,10 +659,10 @@ makePosition(inf:{min:Int, max:Int, file:String}):Position
 //
 onAfterGenerate(callback:Void -> Void):Void
 
-//
+// 当准备生成输出代码时,你可以获得所有类型, 甚至可以将这些类型生成你想要的目标语言如果你有精力做这个的话.
 onGenerate(callback:Array<Type> -> Void):Void
 
-//
+//配合 registerModuleReuseCall 一起使用
 onMacroContextReused(callb:Void -> Bool):Void
 
 // 
@@ -743,6 +681,7 @@ registerModuleDependency(modulePath:String, externFile:String):Void
 // Add a macro call to perform in case the module is reused by the compilation cache.
 // you can add a specific macro action to be made in case a given cached module is reused in later compilations by using Context.registerModuleReuseCall 
 // please note that the macro call is a string that can only contain constant data (it is executed in a similar way as --macro command line parameter)
+// `std/sys/db/RecordMacros.hx` 有个示例, 感觉就像是帮你写了一个 `--macro Cls.build()` 的编译参数， 但奇怪的要如何执行第一次宏调用了???
 registerModuleReuseCall(modulePath:String, macroCall:String):Void
 
 // 从 classPaths 是否存在指定文件名, 并返回 绝对路径全名. 参考 getClassPath 将会返回哪些类路径
@@ -771,7 +710,7 @@ warning(msg:String, pos:Position):Void
 ```
 
 
-#### 宏高级特性
+### 宏高级特性
 
 [参考](http://old.haxe.org/manual/macros/advanced)
 
@@ -810,8 +749,7 @@ warning(msg:String, pos:Position):Void
  * 基准测试 / 优化 (Benchmarking / Optimization)
 
 
-
-#### 其它
+### 其它
 
  * unify 参考 http://haxe.org/manual/type-system-unification.html
 
@@ -824,8 +762,6 @@ warning(msg:String, pos:Position):Void
 	trace(t); // TMono(<mono>)
 	trace(t.follow()); //TInst(String,[])
 	```
-
- * 将常量作为类型传递, http://haxe.org/manual/macro-generic-build.html#const-type-parameter
 
  * 在函数构建函数中的值对比, getLocalClass
 
