@@ -305,6 +305,9 @@ http://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b0
 https://github.com/search?utf8=%E2%9C%93&q=git+%E5%91%BD%E4%BB%A4&type=Repositories&ref=searchresults
 <br />
 
+#### travis-ci
+
+ * 跳过构建: 在提交消息中的任意位置添加 `[ci skip]`, 比如当你只是更新 README 文件时.
 
 
 GIT Server

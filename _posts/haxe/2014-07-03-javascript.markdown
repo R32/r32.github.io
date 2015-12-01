@@ -8,8 +8,11 @@ categories: haxe
 ---
 
 
+### Tips
 
-####　黑魔法
+ * 当将一个方法作为参时,比如 `addEventListener(onSome)` 如果可以的话尽量将这个方法定义为静态方法避免 haxe 做多余的上下文(this)绑定. 这样输出的代码更整洁
+
+###　黑魔法
 
  * `__js__` 用于直接嵌入 js 代码
 
@@ -30,9 +33,13 @@ categories: haxe
  * `__strict_eq__(a,b)` 和 `__strict_neq__(a,b)`: 相当于JS的 a===b, a!==b
 
 
-#### Defines
+### Defines
 
 通过 `-D` 或相关宏定义的值
+
+ * `js-es5` 如果你确定代码只在符合这个标准的环境中运行(如node.js或 chrome 扩展),强烈推荐添加这个标记。 
+
+	对于一些方法（如 `Array::indexOf`）,haxe使用了兼容各种浏览的实现, 如果定义这个标记,将不会构建这些多余的兼容性代码
 
  * `js-flatten` [deprecated]平坦模式.  由于 haxe 3.2 中这将是默认行为,应此被移除
 
@@ -44,7 +51,7 @@ categories: haxe
 
 	> 目前只有 `jQuery 1.6.4` 和 `swfObject 1.5` 这二个 since 3.0
 
-#### Metas
+### Metas
 
  * `@:jsRequire(moduleName,?subModName)` 需要 haxe 3.2+
 	
@@ -106,7 +113,7 @@ categories: haxe
 	})();
 	```
                      
-#### extern class
+### extern class
 
 由于 Javascript **上下文** 的随意性, 并没有好的工具能自动创建 extern class, 所以需要自已手动为这些外部 JS 文件写 extern class 声明. 
 

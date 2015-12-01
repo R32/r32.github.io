@@ -13,6 +13,10 @@ https://github.com/sindresorhus/awesome
 
 #### Tools
 
+ * [lantern](https://github.com/getlantern/lantern) 可以方Qiang
+
+ * [daff](https://github.com/paulfitz/daff) align and compare tables 比较二个表格文件（csv）差异
+
  * [fontello](https://github.com/fontello/fontello) This tool lets you combine icon webfonts for your own project.
 
  * [regexr.com](http://regexr.com/) 正则表达式测试
@@ -31,9 +35,9 @@ https://github.com/sindresorhus/awesome
 
 <!-- more -->
 
- * [web-bundle](https://github.com/haxorplatform/web-bundle) Tool to pack binary files into a PNG image.
+ * **[web-bundle](https://github.com/haxorplatform/web-bundle)** Tool to pack binary files into a PNG image.
 
-	> 把多少文件打包成 png 图片形式, 然后可以解析这个图片获得文件,图片不受跨域加载的影响,同时减少 http 请求的数据量.
+	> 把多个文件打包成 png 图片形式, 然后可以解析这个图片获得文件,图片不受跨域加载的影响,同时减少 http 请求的数据量.
 
  * [img2xls](https://github.com/Dobiasd/img2xls) Convert images to colored cells in an Excel table. -python
 
@@ -70,6 +74,10 @@ https://github.com/sindresorhus/awesome
 
 这个章节的大多数内容都是用于美化的 CSS 或 Javascript , 大多数似乎在 ie8 中都会报错.
 
+ * [clipboard](https://github.com/zenorocha/clipboard.js) 网页,依赖 falsh 和其它任何库.chrome 42,firefox 41, ie9,opera29,
+
+ * [animate.css](https://github.com/daneden/animate.css) css 动画库
+
  * [glfx](https://github.com/evanw/glfx.js) An image effects library for JavaScript using WebGL
 
  * [SVG graphics](https://github.com/adobe-webplatform/Snap.svg) A JavaScript SVG library for the modern web
@@ -79,6 +87,8 @@ https://github.com/sindresorhus/awesome
   - You can download all Google Fonts in a simple ZIP snapshot (over 250Mb)
 
  * [Google icons](https://github.com/google/material-design-icons) Material Design icons by Google
+
+ * [angular-schema-form](https://github.com/Textalk/angular-schema-form) JSON 生成表单HTML元素
 
  * [jsonform](https://github.com/joshfire/jsonform) Build forms from JSON Schema. Easily template-able. Compatible with Twitter Bootstrap out of the box.
 
@@ -143,6 +153,8 @@ http://usablica.github.com/intro.js/
  * [metro-bootstrap](https://github.com/TalksLab/metro-bootstrap)
 
 	> Simple bootstrap from Twitter with Metro style. http://talkslab.github.io/metro-bootstrap
+
+ * [Semantic-UI](https://github.com/Semantic-Org/Semantic-UI) CSS 框架,IE10, 不支持低版本浏览器, 因此适合做 app 类
 
  * [sweetalert](https://github.com/t4t5/sweetalert)
 

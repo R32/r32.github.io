@@ -42,6 +42,14 @@ chrome app 的简单用法 http://ju.outofmemory.cn/entry/61944
 
  * packaged app 最接近普通桌面程序, 
 
+	```json	
+	"app":{
+		"background": {
+			"scripts": ["js/background.js"]
+		} 
+	}
+	```
+
 ### chrome extension
 
 
