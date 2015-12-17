@@ -37,7 +37,7 @@ https://github.com/cmangos/issues 这里有一些仿的源码.
 
  * LUA 编辑器 - 似乎 Notepad++ 是个不错的选择, 装上 XML 查错工具
 
- * BLP图片处理 - 
+ * BLP图片处理 - http://www.xnview.com/en/nconvert/
 
  * [mpq 解压工具 C#](https://github.com/WoW-Tools/MpqTool), 用于导出 FrameXML, 针对旧的 WOW版本没有 `exportInterfaceFiles` 命令
 
@@ -398,7 +398,8 @@ http://wowprogramming.com/docs/api_types#hyperlink
 
  * [itemLink](http://wowwiki.wikia.com/wiki/ItemLink),物品链接,注意区别 itemString,(因为一些方法喜欢用变量名 link 来表示 itemString) itemLink的内部包含了itemString
 	
-	格式示例:
+	格式示例: 
+	
 	```bash
 	|cff9d9d9d|Hitem:7073:0:0:0:0:0:0:0:80:0:0:0:0|h[Broken Fang]|h|r
 	
@@ -414,7 +415,8 @@ http://wowprogramming.com/docs/api_types#hyperlink
 
 	[itemString](http://wowwiki.wikia.com/wiki/ItemString): 经常作为 UI 的文本内容,由"item" 与 13 个 ":" 分隔符组成.
 	
-	示例, 注意种版本格式可能会有差异, 可以检索wiki网页的历史版本,如比较旧的[itemString](http://wowwiki.wikia.com/wiki/ItemString?oldid=76418)
+	示例, 注意种版本格式可能会有差异, 可以检索wiki网页的历史版本,如比较旧的[itemString](http://wowwiki.wikia.com/wiki/ItemString?oldid=76418)	
+	
 	```bash
 	item:7073:0:0:0:0:0:0:0:80:0:0:0:0
 	
@@ -431,7 +433,7 @@ http://wowprogramming.com/docs/api_types#hyperlink
 	0		# (12)unknown1 未知估计是作为保留值
 	0		# (13)unknown2
 	
-	# 你可以使用如下LUA代码来获得各部分值
+	# 你可以使用如下LUA代码来获得各部分值, 注意旧版本不支持 strsplit
 	local _, itemId, enchantId, jewelId1, jewelId2, jewelId3, jewelId4, suffixId, uniqueId,
 	linkLevel, specializationID, reforgeId, unknown1, unknown2 = strsplit(":", itemString)
 	```
@@ -461,7 +463,7 @@ http://wowprogramming.com/docs/api_types#hyperlink
 	/script DEFAULT_CHAT_FRAME:AddMessage("Shift-click this link to put into chat: \124cffffff00\124Hquest:99:15\124h[Arugal's Folly]\124h\124r");
 	```
 	
-	更多示例:
+	更多示例: 
 	```lua
 	local function findLast(haystack, needle)
 		local i=string.gfind(haystack, ".*"..needle.."()")()
