@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  tora(Comnet多线程服务器)
+title:  tora(Comet多线程服务器)
 date:	2014-11-23 07:50:18
 categories: haxe
 ---
@@ -177,7 +177,7 @@ tora目录中的文件是给项目引用使用的,而src目录是 tora.n 的源�
 
  * 输出到客户端(浏览器)用 Sys.print 或依赖于这个函数的其它方法
 
- * 在 tora 服务器端输出 log 时用 Sys.stderr() 或 Sys.stdout()
+ * 在 tora 服务器端输出 log 时用 Sys.stderr() 或 Sys.stdout() 或者 Web.logMessage
 
  * Protocol + Queue 用于实现实时消息推送（comet）
 
@@ -241,7 +241,7 @@ Api.hx 中的全部为静态方法及静态属性:
 示例: 
 
 ```bash
-> neko tora.n -unsafe localhost -config vh.conf
+> neko tora.n -unsafe localhost:6667 -config vh.conf
 [DATE] Opening unsafe port on localhost:6667
 [DATE] Starting Tora server on 127.0.0.1:6666 with 32 threads
 ```
@@ -255,29 +255,30 @@ vh.conf, 配置是提供给 tora的, 因为 flash 将直接连接 tora, 而不�
 </VirtualHost>
 ```
 
-flash
+flash 示例:
 
 ```haxe
-class Main extends tora.Protocol{
+class Main{
 	static function main() {
 		var h = "http://localhost:6667";
 		trace("connect to:" + h);
-		var m = new Main(h);
-		m.addHeader("headerKey", "headerValue");
-		m.addParameter("paramKey", "paramValue");
-		m.connect();
-	}
-
-	override public function onData(data:String) {
-		trace("data: " + data);
-	}
-
-	override public function onError(msg:String) {
-		trace("error: " + msg);
-	}
-
-	override public function onDisconnect() {
-		trace("disconnect");
+		var p = new tora.Protocol(h);
+		
+		p.onData = function(data:String){
+			trace("data: " + data);
+		};
+		
+		p.onError = function(msg:String){
+			trace("error: " + msg);
+		};
+		
+		p.onDisconnect = function(){
+			trace("disconnect");
+		};
+		
+		p.addHeader("headerKey", "headerValue");
+		p.addParameter("paramKey", "paramValue");
+		p.connect();
 	}
 }
 ```
@@ -306,6 +307,130 @@ class Queue<T> {
     function count(): Int;
     function stop(): Void;
 	static function get<T>(name: String): Queue<T>;
+}
+```
+
+ * A-client 通过 addHandler 监听服务器消息推送（Socket 长连接）, 
+
+	```haxe
+	// (实验性)交互, 由于服务器端只能获得 params 或 headers,因此对于已经连接的 Protocol
+	p.reset();	// 重置所有请求参数, 但是要注意当出现 disconnect 后重新连接的参数
+	m.addHeader("Key1", "Value1"); 
+	p.call(url);
+	```
+
+ * 另一个 B-client 则直接调用名字相同的 notify, 这时所有调用了 addHandler 将收到消息 `onData(msg)` 
+
+示例修改版:
+
+```haxe
+#if neko
+typedef Msg = { n : Int, cl : Int };
+class TestHandler extends tora.Handler<Msg> {
+	
+	var cl(default,null):Int;
+
+	public function new(n:Int){
+		super();
+		cl = n;
+	}
+
+	override function onNotify( v : Msg ) {
+		switch(v.n){
+			case 0: tora.Queue.get("test").stop();
+			case -1: Sys.println("STOPED#"+v.cl);
+			default:
+				Sys.println(v.n+"#"+v.cl);
+		}
+	}
+	
+	override function onStop() {
+		tora.Queue.get(NAME).notify({n:-1, cl: cl});
+		neko.Web.logMessage("CLIENT: " + cl + " WAS STOPED");
+	}
+
+	public static inline var NAME="test";
+}
+#end
+
+class Test {
+
+	static var persist = new Array();
+
+	static function main() {
+	#if flash
+		var connected:Bool = false;
+		var from = 0, message = 0;
+		
+		var client = Std.random(0x1000000);
+		client += Std.random(0x1000000);
+		client += Std.random(0x1000000);
+
+		var start = null;
+		var t = new haxe.Timer(2000);
+
+		var url = "http://localhost";
+		var p = new tora.Protocol(url);
+		p.addParameter("wait","1");
+		p.addParameter("client", Std.string(client));
+		p.onDisconnect = function() {
+			connected = false;
+			trace("DISCONNECTED");
+			//p.reset(); p.addParameter("wait","1"); p.connect();
+		};
+		p.onError = function(msg) {
+			trace("ERROR "+msg);
+			//p.reset(); p.addParameter("wait","1"); p.connect();
+		};
+		p.onData = function(msg) {
+			var type = msg.substr(0, 4);
+			switch(type){
+				case "WAIT": 
+					if (connected == false) connected = true;
+					t.run = function() {
+						trace("CLIENT: " + client + " LastFROM: " + from + " LastMsg:" + message);
+					};
+				case "SEND":
+				case "STOP":			
+				default:
+					from = Std.parseInt(msg.split("#")[1]);
+					message = Std.parseInt(msg.split("#")[0]);
+			}
+			trace(msg);
+		};
+		p.connect();
+
+		start = function() {
+			p.reset();
+			p.addParameter("client", Std.string(client));
+			p.call(url);	
+		};
+
+		flash.Lib.current.stage.addEventListener(flash.events.MouseEvent.CLICK, function(_) {
+			if(connected){
+				trace("start");
+				start();
+			}else{
+				trace("wait for connected");
+			}
+		});
+	#else
+		var params = neko.Web.getParams();
+		var cl = Std.parseInt(params.get("client"));
+		var q : tora.Queue<{ n : Int, cl : Int }> = tora.Queue.get(TestHandler.NAME);
+		if(cl != null){
+			if( params.exists("wait")) {
+				Sys.println("WAIT");
+				q.addHandler(new TestHandler(cl));
+			} else{
+				var k = Std.random(1000);
+				Sys.sleep(0.1); // 50ms pause (network latency simul)
+				q.notify({ n : k, cl : cl });
+				Sys.println("SEND "+k+" TO "+q.count()+" FROM #"+cl);
+			}
+		}
+	#end
+	}
 }
 ```
 
