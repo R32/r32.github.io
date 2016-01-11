@@ -1,8 +1,8 @@
 ---
 layout: post
-title:  tora
+title:  tora(Comnet多线程服务器)
 date:	2014-11-23 07:50:18
-categories: haxelib
+categories: haxe
 ---
 
 
