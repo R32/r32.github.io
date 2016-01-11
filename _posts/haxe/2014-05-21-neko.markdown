@@ -13,9 +13,9 @@ categories: haxe
 
  * [使用 threadserver](http://old.haxe.org/doc/neko/threadserver)
 
+ * 可能需要参考 http://nekovm.org/doc 的文档获得一些细节, 比如源码: `__dollar__print`
 
 <!-- more -->
-
 
 
 ### package neko
@@ -101,16 +101,51 @@ http://old.haxe.org/api/neko/net/poll
 
 #### vm.Loader
 
-Loader 可以用于动态(运行时)地从 NDLL 库中加载 primitives(调用代码的胶水函数).
+Loader(加载器) 可以用于动态(运行时)地从 NDLL 库中加载 primitives(调用代码的胶水函数).
 
-Loader 可以用于动态地加载其它 neko 模块(`.n`文件)，模块通过names引用。
-为了查找对应的字节码文件，默认的 Loader 首先在其 cache 中查找, 
-最终
+Loader 可以用于动态地加载其它 neko 模块(`.n`文件)，
+默认的 Loader 首先在其 cache(inst.getCache) 中查找, 
+然后在路径(inst.getPath)和当前路径查找指定的名称,从路径中查找的模块会被立刻执行
 
 Loader 可用于沙箱安全。当模块已经加载到指定的 loader， 
 这个 loader可以管理被加载的模块安全通过过滤哪些 primitives 可以被加载
 
+ > 通常通过 `Loader.local()` 获得当前 neko Loader(加载器), 然后 `loader.getCache()` 取得这个 loader 下的所有模块, 例如: `app.n => [Module Object]`
+
+ > loader.loadModule, 如果 cache 中不在,则将在路径中搜索指定模块并在成功加载之后立刻执行.
+
+ > loader.primitive 是用来加载 C 代码端生成的胶水函数的, 而非 haxe 生成的.
+
+
 #### vm.Module
+
+Neko 虚拟机的可执行文件, 一个 Module 对应一个 `.n` 文件
+
+静态方法:
+
+ * `static local():Module`: 返回当前Module实例
+
+ * `static read(i:Input, l:Loader):Module`: 从 Input 中读取 Module 到指定的 Loader, Module 将被初使化但还没有执行
+
+ * `static readBytes(i:Byte, l:Loader):Module`: 同上,初使化的模块还没有执行
+
+ * `static readPath(name:String, path:Array<String>, l:Loder):Module`: 在指定的路径(path)中加载指定模块(name),初使化的模块还没有执行。
+
+ * `static readGlobalsNames(i:Input):Array<String>`: 
+
+一些成员方法: 这些方法不需要过多的关注,
+
+ * `execute():Dynamic`: 一个模块可以被执行多次, 每次都会初使化。 注意: 这个方法 **并非** 返回 Sys.exit(i) 的值, 因为被加载的模块如果调用了 Sys.exit 则所有的模块将退出, 即不会再执行后边的任何代码. 
+
+ * `getExports():Map<String,Dynamic> `, `exportsTable():Dynamic` 二个方法, 前者通过 Reflect 将后者的返回用 Map 进行了包装。除了`__module`字段, 其它所有字段需要在 **执行后** 才有值
+
+  - `__module`: TODOS(未知的抽像类型)
+
+  - `__classes`: 包含所有haxe类,可以直接引用这些值或调用这些函数， 通过这个字段调用其中的方法,比如 main, 除非再次运行 `execute()`, 否则值将被保留，d而不会初使化
+
+  - `__unserialize` ??? 对应为一个函数,似乎不用理会
+
+ * `globalsCount():Int, setGlobal(n:Int, v:Dynamic):Void, getGlobal(n:Int):Dynamic`: int 值分别对应组成neko Module的每个元素(字符串, 函数......等等)
 
 
 ### std.ndll

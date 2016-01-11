@@ -635,7 +635,7 @@ vcproj                 : GenCPP internal
 
 @:depend             :  (cpp only)
 
-# 如果一个字段或类, 被添加这个标记, 编译器将在编译时输出警告信息
+# 如果一个字段或类, 被添加这个标记, 编译器将在编译时输出警告信息（注:目前仅适用于hxjava,未来可能会扩展到所有平台）
 @:deprecated         : Automatically added by -java-lib on class fields annotated with @Deprecated annotation. Has no effect on types compiled by Haxe.(java only)
 
 @:event              : Automatically added by -net-lib on events. Has no effect on types compiled by Haxe. (cs only)

@@ -23,6 +23,12 @@ categories: haxelib
 
 <!-- more -->
 
+ * [hxinflate](https://github.com/proletariatgames/hxinflate) 相对于Haxe自带的序列化库增加了更多的特性
+
+  - Doc: http://proletariat.com/news/2015/07/01/hxinflate-new-open-source-haxe-serialization-library/
+
+ * [shirotools](https://github.com/agram/shirotools) 一些工具很可能已经过时, 如果有更新的就好了
+
  * [MarkovNameGenerator](https://github.com/Tw1ddle/MarkovNameGenerator) 随机名字生成器
 
  * [haxe-watchify](https://github.com/lucamezzalira/haxe-watchify) 命令行工具, 监测文件是否发生改动,而做相应处理

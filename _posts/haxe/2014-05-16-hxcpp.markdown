@@ -7,7 +7,7 @@ categories: haxe
 
 ---
 
-这里主要记录一些和 hxcpp 相关的东西, 由于我没有找到 hxcpp 的相关文档, 因此不证内容的正确性.
+这里主要记录一些和 hxcpp 相关的东西, 由于我没有找到 hxcpp 的相关文档, 因此不保证内容的正确性.
 
 需要安装 [haxelib hxcpp](https://github.com/HaxeFoundation/hxcpp)。　
 
@@ -24,16 +24,18 @@ class Main{
 }
 ```
 
-hxcpp 会自动根据平台选择不同的 C++编译器. 任意平吧上编译命令为: `haxe -main Main -cpp cpp`
+hxcpp 会自动根据平台选择不同的 C++编译器. 任意平吧上编译命令为: `haxe -main Main -cpp cpp`, 或者强制通过例如 `-D android` 来选择相应的编译器
 
 <!-- more -->
 
 
 ### 编译
 
- * 编译器配置,找到并修改 `user/.hxcpp_config.xml`, 比如 win7 中这个文件通常在 `C:\Users\MYNAME\` 下, 通常只在使用 andorid ndk 时才要配置这个.
+ * 编译器配置,找到并修改 `user/.hxcpp_config.xml`, 比如 win7 中这个文件通常在 `C:\Users\MYNAME\` 下, 通常只在使用 andorid 或一些指定平台时才要配置这个.
 
- * ~~实际上你可以在 neko 中快速开发及测试,因为 cpp 和 neko 的 API 基本一致,等到将要 release 时再以 hxcpp 编译~~
+	> 如果这个文件缺失, hxcpp 将会从 toolchain 目录下自动复制 example.hxcpp_config 
+
+ * ~~ 实际上你可以在 neko 中快速开发及测试,因为 cpp 和 neko 的 API 基本一致,等到将要 release 时再以 hxcpp 编译 ~~
 
   - 目前可以用 `-D cppia` 来调试
 

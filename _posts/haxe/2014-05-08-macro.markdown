@@ -583,6 +583,9 @@ definedValue(key:String):String
 // 抛出编译错误, 并中断当前宏调用
 error(msg:String, pos:Position):Dynamic
 
+// 3.3 Dev版 https://github.com/HaxeFoundation/haxe/issues/2278
+eval(e:Expr):Dynamic
+
 // 抛出编译错误, 并中断当前编译
 fatalError(msg:String, pos:Position):Dynamic
 
@@ -607,6 +610,9 @@ getExpectedType():Null<Type>
 
 // 得到上下文所在 类名
 getLocalClass():Null<Ref<ClassType>>
+
+// 3.3 Dev版, 仅获得数据, 修改获得的数据不会对编译器有任何影响
+getLocalImports():Array<ImportExpr>
 
 // 得到上下文所在 方法名
 getLocalMethod():Null<String>

@@ -104,6 +104,8 @@ https://github.com/sindresorhus/awesome
 
  * [buzz](https://github.com/jaysalvat/buzz) html5 声音播放
 
+ * [waud](https://github.com/adireddy/waud) html5 声音播放, hx 源码支持各种格式
+
  * [impress](https://github.com/bartaz/impress.js/) 展示用 JS.
 
  * [dynamics.js](https://github.com/michaelvillar/dynamics.js) 动画库
