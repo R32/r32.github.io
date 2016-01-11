@@ -98,7 +98,7 @@ nginx -s quit
 
 [conf 的配置中文](http://www.cszhi.com/20120513/nginx_nginx-conf.html), 将下边代码加入到相应的位置
 
-```conf
+```bash
 # 1. 复制 nginx.conf 的副本并改名为其它如 tora.conf
 # 2. 将下列代码添加到相应位置
 
@@ -125,7 +125,7 @@ location ~ \.n$ {
 
 上边这种配置仅用于测试, 个人感觉 tora 不太适合处理太多不同名字的 `.n` 模块, 最好固定它们如: `app.n`, `templo.n`:
 
-```conf
+```bash
 location /app {
   fastcgi_param SCRIPT_FILENAME $document_root/app.n;
 
@@ -145,7 +145,7 @@ location /templo {
 
  * 选择 httpd.apache 2.2 版本(担心与2.4不太兼容), 这里选的是 [windows 平台](http://httpd.apache.org/docs/current/platform/windows.html#down), 然后根据 readme 文件安装
 
-	```conf
+	```bash
 	# 可以在 haxe 安装目录找到这些文件, mod_neko2.ndll 适用于 apache 2.x, 而 mod_neko.ndll 仅用于 apache 1.3
 	# 下边二行可以在 apache 服务器中运行普通的 .n 程序, 被注释掉是因为后边使用了 tora 作代替
 	# LoadModule neko_module "C:/HaxeToolkit/neko/mod_neko2.ndll"
@@ -248,7 +248,7 @@ Api.hx 中的全部为静态方法及静态属性:
 
 vh.conf, 配置是提供给 tora的, 因为 flash 将直接连接 tora, 而不通过 apache
 
-```conf
+```xml
 <VirtualHost>
     DocumentRoot D:/Apache22/htdocs
     ServerName localhost
