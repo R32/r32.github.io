@@ -15,6 +15,8 @@ https://github.com/sindresorhus/awesome
 
  * [lantern](https://github.com/getlantern/lantern) 可以方Qiang
 
+ * **[wink](http://www.debugmode.com/wink/)** 录屏软件, 录制为flash, 能在某些点自动暂停
+
  * [daff](https://github.com/paulfitz/daff) align and compare tables 比较二个表格文件（csv）差异
 
  * [fontello](https://github.com/fontello/fontello) This tool lets you combine icon webfonts for your own project.

@@ -337,6 +337,8 @@ class HelloCFFI{
 	obj[0] = new Object();
 	```
 
+ * `java.lang` 这个包不需要导入就可以直接使用.
+
  * `java.lang.Object`
  
 	> 除了Java的基础类型,所有类型都是继承于 Object,包括 String. 很多数据类型必须为 Object.

@@ -15,15 +15,19 @@ categories: haxe
 
  * 可能需要参考 http://nekovm.org/doc 的文档获得一些细节, 比如源码: `__dollar__print`
 
+  - http://nekovm.org/doc/libs
+
 <!-- more -->
 
+### 黑魔法
+
+http://old.haxe.org/doc/advanced/magic#neko-magic
 
 ### package neko
 
 这里只是描述几个类, 在 cpp 包中都有相对应的类(只少数几个没有)
 
- * `vm.Ui` 线程同步运行某一函数
-
+ * `vm.Ui` UI线程同步队列, 似乎没什么作用???
 
 #### vm.Thread
 
@@ -46,7 +50,7 @@ categories: haxe
 
 #### vm.Deque 
 
-**重要:** `pop(block)` 当 block 为 true, 将为阻塞模式, 也就是说调用 pop(true) 时, 当没有元素可用于pop( *类似于调用空数组的pop方法* ), 将阻塞当前进程直至至有元素可以弹出. 用于多线程编程.
+**重要:** `pop(block)` 当 block 为 true, 将为阻塞模式, 也就是说调用 pop(true) 时, 当没有元素可用于pop( *类似于调用空数组的pop方法* ), 将阻塞当前进程直至有元素可以弹出. 用于多线程编程.
 
 ```haxe
 var dq = new Deque<Int>();
@@ -95,9 +99,44 @@ Sys.sleep(3);
 
 #### net.Poll
 
-http://old.haxe.org/api/neko/net/poll
+在单个线程中轮询多个非阻塞 socket, http://old.haxe.org/api/neko/net/poll
 
-轮询多个非阻塞 socket 为一个线程.
+
+
+```haxe
+class Poll {
+	var readIndexes: ArrayAccess<Int>;	// 如果指定的索引不存在则会返回 -1
+	var writeIndexes: ArrayAccess<Int>;
+	
+	function new( n : Int );
+	function events( ?t: Float ):Void;
+
+	// 轮询指定的socket数组并返回其中有效的, 这个类似于 Socket.select, 但没有 Socket.select 那样的连接数量限制
+	function poll( a: Array<Socket>, ?t: Float ): Array<Socket>;
+	
+	// 预置socket数组用于轮询，
+	function prepare( read: Array<Socket>, write: Array<Socket> ):Void;
+}
+
+// example: copy from tora/Tora.hx
+var changed = false;
+var poll = new neko.net.Poll(4096);
+while(true){
+	....
+	if( changed ) {
+		poll.prepare(socks,[]);
+		changed = false;
+	}
+	// check if some clients sent a message or have been disconnected
+	poll.events(0.05);
+	while(true){
+		var idx = poll.readIndexes[i++];
+		if( idx == -1 ) break;
+		socks[idx].....
+	}
+}
+
+```
 
 #### vm.Loader
 
@@ -152,7 +191,142 @@ Neko 虚拟机的可执行文件, 一个 Module 对应一个 `.n` 文件
 
 通过 `neko.Lib.load("std",@name,@args)` 加载的方法, 源码在: https://github.com/HaxeFoundation/neko/tree/master/libs/std ,
 
- * `print_redirect(print:Dynamic->Void):Void`
+ * `print_redirect(print:Dynamic->Void):Void`: 重定向 print 的输出
 
+ * `set_trusted : bool -> void` : 优化一些操作,
+
+<br />
+
+nekovm
+------
+
+从这里开始的内容并非是 haxe 代码。http://nekovm.org/doc
+
+nekoc.exe:
+
+```bash
+Neko Compiler v2.0.0 - (c)2005-2012 Motion-Twin
+ Usage : neko [options] files...
+ Options :
+  -d <file> : dump bytecode
+  -z <file> : make bytecode release
+  -p <file> : parse and print neko source
+  -doc <file> : make documentation
+  -o <dir> : set output directory
+  -console : run the console
+  -link <file> : link bytecodes files
+  -v : verbose mode
+  -version : set the bytecode version
+```
+
+### neko 语言规范
+
+
+#### 语法
+
+neko 语言的语法被设计成易于解析与生成，并不适用于直接编程,而是要从更高层的语言生成。
+例如, php-to-neko 或 java-to-neko 。 这里有一个 nekoml 的编译器, 但 ml 的语法实在是不友好。
+
+随记:
+
+ * `_` 表示一个空的表达式
+
+ * 在 `while` 循环外, 不允许有 `continue` 和 `break`
+
+ * 算术运算有下列优先级(从下到上)
+  - 赋值
+  - `++=` 与 `--=`
+  - `&&` 与 `||`
+  - 比较运算符
+  - `+` 与 `-`
+  - `*` 与 `/`
+  - `|`,`&`,`^`
+  - `<<`,`>>`,`>>>` 与 `%`
+
+#### 值
+
+neko 中的值可以是下列之一:
+
+ - Null: 特殊值 `null` 用于未初使化的变量
+ - 整数, 常见的十进制形式(123或-12)或十六进制形式(0x1A2B)
+ - 浮点数, 
+ - 布尔值: 由二个小写的 `true` 与 `false`
+ - 字符串: 双引号包车的字符串(例: "foo", "hello,\nworld!")。neko 字符串是可变的,意味着可以修改它们。
+ - 数组: 索引从 0 开始的整数索引表。
+ - Object: 一个表，将标识符或字符串与值相关联。 例如: `{i1 => v1, i2 => v2}`
+ - 函数: 在 neko 中函数也是值，
+ - Abstract： 不能从 neko 访问的 C 数据
+
+一些注意事项:
+
+ * 由于虚拟机性能方面的原因整数为31位，An API for full 32-bit integers is available through a standard library.
+
+ * 浮点数为64位双精度
+
+ * 字符串为8位的字节序列，可以包含 `\0`字符。 字符串的长度必须明确而不是 `\0` 前的字符串长。
+
+#### 流程
+
+ * if 与 while 的条件表达式只接受布尔值, 因此会经常用到 `$istrue`
+
+  - `$istrue(null)` 为 false, `$istrue(0)` 也为 false, 其它都为 true。
+
+  - `$not` 是 `$istrue` 的反函数。 `$not(0)` 将返回 true.
+
+ * 需要注意的是 while 中的 break 语句, 由于任何表达式都是值, 因此 break value,可以作为 while 的返回值。
+
+ * var 声明的局部变量与未加 var 声明的全局变量被局部引用时有不一样的结果.
+
+ * 二个整数相除将返回浮点数, 可以使用 `$idiv` 作整数除法运算
+
+ * 和 JS 类似, `&&` 与 `||` 可以被短路. 这意味着如果 第一个操作数为 true, 那么不会计算第二个表达式. 例: `"hello" && "world"` 将只返回 "hello"
+
+ * $nargs 返回一个函数的参数个数, 如果 -1,则表示为可变参数
+
+ * $call 类似于 JS中的 apply, 例: `$call(func, context, $array(3,4))`
+
+ * `$closure`, 有点类似于 haxe 中的 function.bind, 但是又绑定了上下文
+
+	```js
+	var add = function(x,y) { return x + y };
+	var plus5 = $closure(add,null,5); // null context and 5 as first argument
+	$print( plus5(2) ); // 7
+	
+	// 处理 this
+	var f = function() { $print(this) };
+	f = $closure(f,55);
+	f(); // prints 55	
+	```
+
+ * `$apply`, 可以直接调用函数， 如果函数需要额外的参数将推迟到获得更多参数.
+
+	```js
+	var f = function(x,y) { return x + y };
+	f(1,2);
+	$apply(f,1)(2); // equivalent
+	$apply(f,1,2); // equivalent	
+	```
+.....
+
+### Neko Libraries
+
+http://nekovm.org/doc/libs
+
+对于 Builtins 中的方法可以直接调用, 而 Std 中的库需要导出如:
+
+```
+var date_now = $loader.loadprim("std@date_now",0);
+$print(date_now())
+```
+
+对于其它库如 regexp.ndll 则:
+
+```
+var regexp_new = $loader.loadprim("regexp@regexp_new",1);
+```
+
+### CFFI
+
+空
 <br />
 <br />

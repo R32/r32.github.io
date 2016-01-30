@@ -19,8 +19,12 @@ categories: haxe
 
 ### 最新改动
 
-haxe 3.2 ,细节查看 CHANGES.txt
+ * `import.hx`: 注意区别于其它类, 只能允许 import 和 using 语句, 作为项目中默认导入的包, 但是目前 IDE 支持的不好.
 
+	> https://github.com/HaxeFoundation/haxe/issues/1138
+	
+	> 这样引用默认的包大概是为了可以先将 import.hx 中的包先编译成中间文件??? 不过haxe目前并没有编译成中间文件的东西,所以先不理会这个
+	
  * Compiler.keep 的行为发生了改变 https://github.com/HaxeFoundation/haxe/issues/4111
 
  * haxe.ds.Either 二个类型, 这样可以让一个函数返回二种类型
@@ -316,7 +320,7 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
 	> 注: 开启这种效果之后有时候会造成 找不到 宏编译成生的字段 的错误, 这时需要重启 flashdevelop,
 	> 或者 ` Ctrl+C` 中断命令行绑定, 然后重新绑定.
 	
-  - 命令行
+  - 命令行 http://haxe.org/manual/cr-completion-server.html
 
 		> 用一个窗口 绑定当前目录到指定端口:  `haxe --wait 6000`
 	

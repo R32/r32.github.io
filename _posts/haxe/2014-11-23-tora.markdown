@@ -14,15 +14,15 @@ Tora 是一个基于 neko 的单进程多线程服务器应用程序，用来作
 
  * tora.n 处理之后并返送回处理结果给 Apache/nginx.
 
-由于依赖于 apache/nginx, 因此也只适用于作为 HTTP 服务, 其它的例如 WebSocket 的实时交互还是得另外写后台。
-
 <!-- more -->
+
+ * **Tips**: 需要使用 `Web.cacheModule` 才能在请求阻塞时另开线程启动同一个模块, 但这种情形下将会开启多个实例, 多实例的情形静态变量的值...参看下边提到的 issue
 
 ### 安装
 
 这个链接是 apache 的 https://github.com/jasononeil/tora-installation-helper
 
-**建议使用 apache** 作为服务器, 因此 nginx 的 fcgi 模式是其它人提供的 patch, 稳定性未知, 一些功能感觉有却失, 虽然我一开始使用的是 nginx 但最终更改回 apache
+**建议使用 apache** 作为服务器, 因此 nginx 的 fcgi 模式是其它人提供的 patch, 稳定性未知
 
 #### tora
 
@@ -47,8 +47,8 @@ tora.n 命令行参数:
 
 -debugport <port>	# 指定调试端口, 默认: 无. TODO: 未知
 
-# 下边二个选项目前仅支持 apache 服务器
--unsafe <host:port>	# 打开一个端口，允许直接连接到 Tora 服务器. 而不是通过 apache 代理
+# 下边二个选项需要同时使用
+-unsafe <host:port>	# 打开一个端口，允许直接连接到 Tora 服务器. 而不是通过 apache/nginx 代理
 					# 用于 flash 客户端与 tora 连接, 注意使用正确的 server_name + index.n(参看-config)
 					
 -config	<fiel>		# 解析一个 conf 配置文件，寻找 VirtualHosts， 用来配合 -unsafe 参数
@@ -123,7 +123,7 @@ location ~ \.n$ {
 # $fastcgi_script_name 注意: 这个变量名前不要加 / 斜线
 ```
 
-上边这种配置仅用于测试, 个人感觉 tora 不太适合处理太多不同名字的 `.n` 模块, 最好固定它们如: `app.n`, `templo.n`:
+或者固定它们如: `app.n`, `templo.n`:
 
 ```bash
 location /app {
@@ -143,7 +143,7 @@ location /templo {
 
 推荐使用这个代替 nginx 获得更好的稳定性.
 
- * 选择 httpd.apache 2.2 版本(担心与2.4不太兼容), 这里选的是 [windows 平台](http://httpd.apache.org/docs/current/platform/windows.html#down), 然后根据 readme 文件安装
+ * 选择 httpd.apache 2.2 版本(2.4会在未来的neko版本中兼容), 这里选的是 [windows 平台](http://httpd.apache.org/docs/current/platform/windows.html#down), 然后根据 readme 文件安装
 
 	```bash
 	# 可以在 haxe 安装目录找到这些文件, mod_neko2.ndll 适用于 apache 2.x, 而 mod_neko.ndll 仅用于 apache 1.3
@@ -179,7 +179,8 @@ tora目录中的文件是给项目引用使用的,而src目录是 tora.n 的源�
 
  * 在 tora 服务器端输出 log 时用 Sys.stderr() 或 Sys.stdout() 或者 Web.logMessage
 
- * Protocol + Queue 用于实现实时消息推送（comet）
+ * Protocol + Queue 用于实现实时消息推送（comet）,遗憾的是不支持 WebSocket 协议,不过可以自已添加这个协议。
+
 
 #### API
 
@@ -229,10 +230,8 @@ Api.hx 中的全部为静态方法及静态属性:
  * 因此 Protocol 仅仅是让 flash 从 tora服务器像http协议那样获得数据, 并不能交互。
 
 	> issue: 如果阻塞 index.n 使之保持长连接会怎样了?  这种情况下如果另一个flash连接进来, 这时 tora 将开启新线程再加载一个新的 index.n???
-	
-	> 实际测试, 当tora有了二个阻塞的index.n线程后, 不会再新建线程并且会使 tora 被阻塞, 直至前边二个index.n线程释放。
-	
-	> **更新**:, Queue 的 AddHandler 可以防止socket连接中断而保持长连接,但又会阻塞index.n.
+		
+	> **更新**:, Queue 的 AddHandler 可以防止socket连接中断而保持长连接,但又不会阻塞index.n.
 
  * 实际上除了 flash, Protocol还可以在 neko 客户端中使用并获得 index.n 的数据(使用 neko 作为客户端记得在 connect 之后调用 `Protocol::wait()`)
 
@@ -241,12 +240,12 @@ Api.hx 中的全部为静态方法及静态属性:
 示例: 
 
 ```bash
-> neko tora.n -unsafe localhost:6667 -config vh.conf
+> tora.exe -unsafe localhost:6667 -config vh.conf
 [DATE] Opening unsafe port on localhost:6667
 [DATE] Starting Tora server on 127.0.0.1:6666 with 32 threads
 ```
 
-vh.conf, 配置是提供给 tora的, 因为 flash 将直接连接 tora, 而不通过 apache
+vh.conf, 配置是提供给 tora的, 因为 flash 将直接连接 tora, 而不通过 apache/nginx
 
 ```xml
 <VirtualHost>
@@ -288,6 +287,12 @@ class Main{
 ```haxe
 class Main{
 	static public function main(){
+		neko.Web.logMessage("new instance");
+		neko.Web.cacheModule(run);
+        run();
+	}
+	
+	static function run(){
 		Sys.println("ClientHeaders: " + neko.Web.getClientHeaders());
 		Sys.println("ClientParams" + neko.Web.getParams());
 		Sys.print("hello world!");
@@ -376,11 +381,10 @@ class Test {
 		p.onDisconnect = function() {
 			connected = false;
 			trace("DISCONNECTED");
-			//p.reset(); p.addParameter("wait","1"); p.connect();
 		};
 		p.onError = function(msg) {
+			connected = false;
 			trace("ERROR "+msg);
-			//p.reset(); p.addParameter("wait","1"); p.connect();
 		};
 		p.onData = function(msg) {
 			var type = msg.substr(0, 4);
@@ -415,6 +419,13 @@ class Test {
 			}
 		});
 	#else
+		neko.Web.logMessage("new instance");
+		neko.Web.cacheModule(run);
+        run();
+	#end
+	}
+	
+	static function run(){
 		var params = neko.Web.getParams();
 		var cl = Std.parseInt(params.get("client"));
 		var q : tora.Queue<{ n : Int, cl : Int }> = tora.Queue.get(TestHandler.NAME);
@@ -429,14 +440,15 @@ class Test {
 				Sys.println("SEND "+k+" TO "+q.count()+" FROM #"+cl);
 			}
 		}
-	#end
 	}
 }
 ```
 
 #### Share
 
-在不同的模块(.n文件)中共享永久数据(直至重启tora.exe). 比用数据库共享更为高效和便捷 http://old.haxe.org/doc/neko/tora_share,
+**在不同的模块(.n文件)中** 共享永久数据(直至重启tora.exe). 比用数据库共享更为高效和便捷 http://old.haxe.org/doc/neko/tora_share,
+
+ > 这说明可以在多进程多实例中共享变量, 由于在 tora 中 Web.cacheModule 会有多个同模块实例,导致普通的静态不再适用, 因此 Share 变得非常有必要。
 
  * `new(name:String, make:Void->T)` name 为共享数据的标识符, 如果没有相应的数据,则会调用 make 来新建一个.
 
@@ -455,13 +467,50 @@ class Test {
 
 对于 neko 目标,还有个 Web.cacheModule 的方法可以用于缓存数据, 但是这个方法不适用 tora 环境 https://github.com/HaxeFoundation/tora/issues/6 , 因为当一个模块很忙时, tora 会另开一个线程来处理， 这样将会导致多个cache存在。
 
+ * 也许可以用 Web.cacheModule 缓存已经打开的数据库连接, 这样即使多个数据库连接存在也没关系
+
+example: 
+
+```haxe
+@:rtti
+class MyClass {
+      public var content : Array<Int>;
+      public function new() {
+            this.content = [1,2,3];
+       }
+}
+```
+
+App
+
+```haxe
+class App {
+   
+    static var share    = new tora.Share<MyClass>( "test", function() {
+        return new MyClass();
+    }, MyClass);
+   
+    static function main() {
+        var a:MyClass    = share.get( true );
+        a.content.push(5);
+        Sys.println("App "+a.content);
+        share.set(a); //have to set if persist is enabled, otherwise the change will be lost.
+        share.commit();       
+    }
+}
+```
+
 ### issue
 
  * 感觉 nginx + fcgi 好像有问题(未知)
 
- * 如何实现高效的 session, 感觉使用 Share 模块并不太好，因为感觉 Share 的数据不适合高频率的访问
+ * 如何实现高效的 session, 感觉使用 Share 模块并不太好
 
- * tora 是如何实现将 haxe 生成的 neko 代码被另一个 neko 模块用 Lib.load 来调用???
+ * tora 是如何实现将 haxe 生成的 neko 代码被另一个 neko 模块用 Lib.load 来调用??? neko.vm.Loader.make
+
+ * 在 Protocol上实现 WebSocket,由于 unsafe 是直连的,因此只要修改 tora 端的代码就好了, 但
+
+  - 问题是如何同时兼容 Socket 与 WebSocket了? 修改还是继承 Client.hx 了?
 
 <br />
 <br />

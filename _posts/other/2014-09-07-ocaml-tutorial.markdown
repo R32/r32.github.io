@@ -7,13 +7,38 @@ categories: other
 
 ---
 
-想理解下 haxe 的源码, 所以尝试接触下这类函数式语言,我选译了经常用到的 `cygwin-setup.exe`, 在 ui 界面里选择 `ocaml: The OCaml compiler and runtime(install helper)` 就自动完成安装了. 目前版本为 `4.01.0`, opam 库未安装, 暂时使用 subline text 作为编译器. 
+尝试接触下函数式语言, 这有个安装配置视频视频 http://www.algo-prog.info/ocaide/tutorials/4-installingOnWindows/installingOnWindows.htm
 
-[官方文档](http://ocaml.org/learn/tutorials/index.zh.html), 但网页引用了 google api, 你需要一个特殊的浏览器才能快速打开这个页面.
+ * cygwin， 这里安装 ocaml 蛮简单不需要像视频里那样下载源码编译.
+
+  - 双击运行 cygwin-setup.exe, 在界面里选择 `ocaml: The OCaml compiler and runtime(install helper)` 就完成了. 
+
+ * eclipse + OcaIDE, 在插件安装里输入 `http://www.algo-prog.info/ocaide/`
+
+	> 安装时需要可以访问 Google(用Lantern), 需要 Java 1.7 版本(如果打开eclipse出错可以修改ini文件调小Xms和Xmx的值).
+	
+ * 配置, 在 "窗口" - "首选项" 中找到 OcaIDE,进行一些配置,如 path 等等
+
+  - `Ocaml Binaries Directory`: 点击 Browse 定位目录(关联于cygwin的根目录, 如果不在 `cygwin/bin` 就在 `cygwin/usr/local/bin` 找找), 选好目录后按下 "Apply"
 
 <!-- more -->
 
-#### Hello Wrold
+  - "make" 通常在 `cygwin/bin` 下
+
+  - "ocaml lib path": 通过命令 `ocamlc -where`, 如果通过界面安装的 ocaml 通常在 `cygwin/lib/ocaml`
+
+  - 重启eclipse, 你将会在控制台窗口处的"ocaml toplevel"看到 "OCaml version 4.01.0" 这样的字符.
+
+ * TIPS: 如果 `which ocaml` 显示 `usr/lib/bin` 其实真实路径为 `PATH/TO/cygwin/bin`, 同样 `ocamlc -where` 显示 `usr/lib/ocaml` 其实路径在 `PATH/TO/cygwin/lib/ocaml`
+
+  - 如果需要用 eclipse 来直接编译 ocaml 需要将 cygwin/bin 添加到路径
+
+  - 由于 `Ctrl+space` 与输入法冲突建议改成其它按键如 `Ctrl+,`
+
+[官方文档](http://ocaml.org/learn/tutorials/index.zh.html), 但网页引用了 google api, 你需要一个特殊的浏览器才能快速打开这个页面.
+
+
+### Hello Wrold
 
 将下列代码保存为 Hello.ml 文件,
 
@@ -31,13 +56,26 @@ ocamlc -o hello Hello.ml
 Hello world!
 ```
 
+eclipse 项目常用: 视频 http://www.algo-prog.info/ocaide/tutorials/3-projects/projects.htm
+
+ * 要求:需要将 cygwin/bin 添加到系统路径。 eclipse 似乎不能在启动时添加一个临时的系统变量.
+
+ * `文件 -> 新建 -> "Ocaml Project ocamlbuild"`
+
+ * 进入到项目后, `右键 -> 新建 -> Module` 选择路径然后输入 Hello 即可
+
+ * 在项目上右键选择 "属性", 配置一下 "Project" 的 "Target" 行, 舅 hello.ml 则输入 hello.byte
+
+ * 运行, 在 _build 目录内找到 .byte 文件, `右键 -> 运行方式 -> Ocaml Compiler Output`
+
+  - 如果简单的文件像这个 helloworld, 在源码上右键然后选择 "Load in TopLevel" 即可
 
 
 基础知识
 -----
 
 
-#### 注释
+### 注释
 
 OCaml 注释像这样:
 
@@ -55,7 +93,7 @@ comment
 
 
 
-#### 调用函数
+### 调用函数
 
 假设你编写了一个函数,叫 `repeated`, 实现了 重复一个字符串 n 次, ocaml 和其它通过括号调用函数不同: **注意: 没有小括号,各参数之间没逗号**
 
@@ -76,7 +114,7 @@ f (g 3 4)            (* f 有 1 个参数, g 有 2 个参数 *)
 
 
 
-#### 函数定义
+### 函数定义
 
 示例: 计算二个 Float 数的平均值, 在 命令行中键入 `ocaml` (cwgwin bash), 然后输入下列值:
 
@@ -104,7 +142,7 @@ let average a b =
 let hello () =
 	print_endline "Hello"
 	
-(* 调用, 比像是其它语言的函数调用 *)	
+(* 调用, 像是其它语言的函数调用 *)	
 hello()
 
 (* 或者这样调用 *)
@@ -125,7 +163,7 @@ List.map (fun i -> i*2) [1;2;3];;
 
 
 
-#### 基本类型
+### 基本类型
 
 ```bash
 int         31-bit signed int (roughly +/- 1 billion) on 32-bit
@@ -152,7 +190,7 @@ unit        Written as (),写成空括号(), 将会被解析成 unit, 有点像 
 
 
 
-#### 显式转换
+### 显式转换
 
 在 C 语言中,如果你写 `1 + 2.5`, 结果将会隐式自动转换成浮点数. 这相于你写了 `((double) 1) + 2.5`.
 
@@ -186,7 +224,7 @@ float i +. f
 
 
 
-#### 普通函数和递归函数
+### 普通函数和递归函数
 
 ocaml 递归函数 需要用 `let rec` 声明.示例:
 
@@ -217,7 +255,7 @@ let positive_sum a b =
 
 
 
-#### 函数类型
+### 函数类型
 
 与 haxe 语法一致, 函数 f 以参数 arg1, arg2,.... argn 和返回类型 rettype, 编译器打印为:
 
@@ -241,7 +279,7 @@ output_char : out_channel -> char -> unit
 let give_me_a_three x = 3;;
 
 (**  
- 此函数的类型是什么? 在 ocaml 中使用一个特殊的占位符, 意思是 "任意类型的幻想",
+ 此函数的参数类型是什么? 在 ocaml 中使用一个特殊的占位符, 意思是 "任意类型的幻想",
  表现形式为: 单引号字符后跟一个字符( 字符从 a 开始,那么第二个不同参数将为 b......),  
 
  give_me_a_three : 'a -> int = <fun>
@@ -250,7 +288,7 @@ let give_me_a_three x = 3;;
 *)
 ```
 
-#### 类型推导
+### 类型推导
 
 参看 [函数定义](#函数定义) 那一小节, ocaml 不需要声明函数或变量的类型
 
@@ -263,7 +301,7 @@ Ocaml程序的结构
 
 观察一些 ocaml 程序, 下边内容为: 局部和全局定义, 何时使用 `;;`, 何进使用`;`, 模块, 嵌套函数, 以及引用. 还会见到很多现在还不理解的意义以及目前还未接触过的概念. 不要担心这里细节, 只要专注于程序的整体及提到的特性
 
-#### 局部变量
+### 局部变量
 
 即局部表达式, 先看下 C 语言中的 average 函数,并增加一个局部变量:
 
@@ -302,19 +340,19 @@ let f a b =
 
 
 
-#### 全局变量
+### 全局变量
 
 即全局表达式, 我们也可以在 top level 中像上边定义局部变量那样定义全局变量, 但实际上那些都不是真正的变量, 只是缩写别名.
 
 
 
-#### let
+### let
 
 任何 let ..., 无论是在 top level (全局) 还是在函数内部, 称为 let-绑定
 
 
 
-#### 引用
+### 引用
 
 这才是真正的变量,下边示例说明在 ocaml 中怎么创建一个 init 引用:
 
@@ -349,9 +387,9 @@ my_ref := 100;;				*my_ptr = 100;
 
 
 
-#### 嵌套函数
+### 嵌套函数
 
-C 中实际上没有嵌套函数的概念. GCC对C支持嵌套函数但是我发现几乎没有程序用到这个扩展。不管怎样，下面是GCC的info页给出的关于嵌套函数的说明：
+C 中实际上没有嵌套函数的概念. GCC对C支持嵌套函数但是我发现几乎没有程序用到这个特性。不管怎样，下面是GCC的info页给出的关于嵌套函数的说明：
 
 **“嵌套函数"" 是在另一个函数内部定义的函数。** （GNU C＋＋ 不支持嵌套函数）嵌套函数的名字域是它被定义的那个程序块。例如：下面我们定义一个名为‘square‘的嵌套函数，然后调用它两次：
 
@@ -388,23 +426,26 @@ let read_whole_channel chan =
 
 
 
-#### 模块和open
+### 模块和open
 
 OCaml带有很多有趣的模块（含有用代码的库）。例如标准模块中有画图、与GUI小部件（widget）交互、处理大数、数据结构、POSIX系统调用等模块。这些库位于/usr/lib/ocaml/VERSION/ （当然是指在Unix系统下的情况）。
 
 .mli 文件, 这是一个可读的 text 文件, 注意文件名大小写, **OCaml通常将文件名的第一个字母大写作为模块名**. 
 
-例如如果想用Graphics中的函数，存在两种方法。一是在程序开头声明open Graphics;;。二是在所有函数调用前加上前缀，比如Graphics.open_graph。`open` 有点象Java中的 `import` 语句，不过更象Perl中的 use语句。
+例如如果想用Graphics中的函数，存在两种方法:
+
+ * 一是在程序开头声明open Graphics;;。`open` 有点象Java中的 `import` 语句，不过更象Perl中的 use语句。
+
+ * 二是在所有函数调用前加上前缀，比如Graphics.open_graph。
 
 
-
-#### Pervasives模块
+### Pervasives模块
 
 有一个模块我们无需使用"open"。这就是Pervasives模块. (我的cygwin 在 `/lib/ocaml` 目录下)
 
 
 
-#### 重命名模块
+### 重命名模块
 
 如果你想用Graphics模块中的符号，但是不想全部引入它们而又觉得每次使用前缀Graphics太麻烦，那怎么办呢？ 你可以象下面这样重命名它们:
 
@@ -420,7 +461,7 @@ read_line ();;
 
 
 
-#### 使用;;或;或两者都不用
+### 使用;;或;或两者都不用
 
 什么时候你应该使用;;，什么时候你应该使用;，什么时候你都不用。这是一个很有意思的窍门，除非你能真正掌握这点。而且往往也会花费初学者很长的时间来掌握。
 
@@ -512,7 +553,7 @@ let sum_list = List.fold_left ( + ) 0
 数据类型和匹配
 ------
 
-#### 链表(List)
+### 链表(List)
 
 和 Perl 一样, ocaml 也对链表的支持直接内建在语言中了, ocaml 链表中所有元素的类型必须一致,但类型可以是多态的. 如: `'a list`, 像其它语言的泛型 `List<T>`. 链表使用下边格式: (注意是 分号; 不是逗号), `[]` 表示为空链表.
 
@@ -534,7 +575,7 @@ let sum_list = List.fold_left ( + ) 0
 cons 运算符在使用 **模式匹配** 的时是相当有用的.下边会详细说明.
 
 
-#### 结构体
+### 结构体
 
 考虑下边简单 C 结构:
 
@@ -544,10 +585,10 @@ struct pari_of_ints{
 };
 ```
 
-ocaml 中最简单的对应形式是 组元( **tuple** ), 和链表不同, 组元的元素可以是不同类型. 例如: `(3, "hello", 'x')` 的类型是 `int * string * char`. 不能在 tuple 中命名元素, 而是要记住它们出现的顺序. tuple 表现形式为: 小括号中用逗号分隔数据. tuple 常常用作于 Variants 的参数列表.
+ocaml 中最简单的对应形式是组元( **tuple** ), 和链表不同, 元组的元素可以是不同类型. 例如: `(3, "hello", 'x')` 的类型是 `int * string * char`. 不能在 tuple 中命名元素, 而是要记住它们出现的顺序. tuple 表现形式为: 小括号中用逗号分隔数据. tuple 常常用作于 Variants 的参数列表.
 
 
-另外一种稍显复杂的方法, 就是使用 记录( **record** ), 可以像 C 语言的结构一样在 record 中为元素命名. 一个和之前 C 语言结构等价的 record: 
+另外一种稍显复杂的方法, 就是使用记录( **record** ), 可以像 C 语言的结构一样在 record 中为元素命名. 一个和之前 C 语言结构等价的 record: 
 
 ```ocaml
 type pair_of_int = {a:int; b;int};;
@@ -566,24 +607,9 @@ type pair_of_ints = { a : int; b : int };;
 (* Error: Some record fields are undefined: b *)
 ```
 
-#### Variants(联合体和枚举的混合体 qualified unions and enums)
+### Variants(变体)
 
-(注: 暂时找不到 Variants 对应的中文词, 它像是一个 unions 和 enums 的混合体, 如果了解 haxe语言,那它就是haxe 中的 enum).
-
- C 语言中用 联合体(union), 检测 Big Endian 示例:
-
-```c
-int check(){
-	union{
-		int a;
-		char b;
-	}c;
-	c.a = 1;
-	return (c.b == 1);
-}
-```
-
-在 ocaml 中:
+感觉就是 haxe 中的 enum, 在 ocaml 中:
 
 ```ocaml
 type foo =
@@ -605,9 +631,6 @@ String "Hello"
 
 这些表达式都具有类型 foo, 例如: 如果一个函数接受 foo 类型的参数, 则上边不同类型的值都可用.
 
-Note that you use `of` when writing the type definition, but NOT when writing elements of the type. (这句没看明白是什么意思.) 
-
-
 一个简单的 C 语言 enum 定义为:
 
 ```c
@@ -620,7 +643,7 @@ enum sign{positive, zero, negative };
 type sign = Positive | Zero | Negative
 ```
 
-##### Variants 递归
+#### 递归变体
 
 Variants 可以是递归的对此的一个常见用途是定义树状结构:
 
@@ -646,11 +669,9 @@ enum Tree{
     Leaf(v:Int);
     Node(l:Tree, r:Tree);
 }
-
-
 ```
 
-##### Variants 多态 
+#### 参数化变体
 
 上一节的二叉树中的 Leaf 使用的是 int 类型, 但最后也许 Leaf 并非只使用 int 类型.
 
@@ -670,7 +691,7 @@ enum Tree<T> {
 }
 ```
 
-#### 摘要(链表, 结构体, Variants)
+### 摘要(链表,结构体,变体)
 
 ```
 OCaml name     Example type definition        Example usage
@@ -681,6 +702,9 @@ tuple          int * string                   (3, "hello")
 
 record         type pair =                    { a = 3; b = "hello" }
                  { a: int; b: string }
+
+mutable        type pair =                    let p = { a = 3; b = "hello" }
+record           { mutable a: int; b: string} p.a <- 6   # 更改值
 
 variant        type foo =
                  | Int of int                 Int 3
@@ -696,9 +720,9 @@ variant          | Empty                      Cons (1, Cons (2, Empty))
                  | Cons of 'a * 'a my_list
 ```
 
-#### 模式匹配
+### 模式匹配
 
-模式匹配(Pattern matching)是函数式语言一个很酷的特性, 例: 我们想要呈现简单的数学表达式 `n *(x + y)` 并表现为 `n*x + n*y`. 让我们定义这个 Variants:
+模式匹配(Pattern matching)是函数式语言一个很酷的特性, 例: 我们想要呈现简单的数学表达式 `n *(x + y)` 并表现为 `n*x + n*y`. 让我们定义这个变体:
 
 ```ocaml
 type expr =
@@ -865,7 +889,7 @@ val to_string : expr -> string = <fun>
 *)
 ``` 
 
-但有时候并不需要匹配所有 constructor ,所以表达式 `| e -> e` 将代替所有剩余的模式, 相当于其它语言中 `switch` 中的 `default:` (注: 在 haxe 中,如果 switch 中检测 enum 时值也是如此.)
+但有时候并不需要匹配所有 constructor ,所以表达式 `| e -> e`(这个变量名不必与 match 后边的变量名一致) 将代替所有剩余的模式, 相当于其它语言中 `switch` 中的 `default:` (注: 在 haxe 中,如果 switch 中检测 enum 时值也是如此.)
 
 
 
@@ -873,7 +897,7 @@ val to_string : expr -> string = <fun>
 空指针,断言和警告
 ------
 
-#### null
+### null
 
 ocaml 具有优雅的方案来解决 null 值. 简单地使用 Variants 定义:
 
@@ -895,12 +919,12 @@ Some [1; 2; 3];;
 (* - : int list option = Some [1; 2; 3] *)
 ```
 
-#### 断言 警告和致命错误
+### 断言,警告和致命错误
 
 首先 assert 以表达式作为参数, 并引发异常. 如果你没有捕获到这个异常, 这将会使程序停止并打印出发生错误的位置. 例如: 可以调用 `assert false` 停止你的程序,
 
 ```ocaml
-assert (Sys.os_type = "Win32");; (* 等号除了 == 也可以使用 =, 这有点怪异 *)
+assert (Sys.os_type = "Win32");; (* 等号使用 =, 这有点怪异 *)
 (* Exception: Assert_failure ("", 1, 0). *)
 ```
 
@@ -915,10 +939,10 @@ match Sys.os_type with
 ;;
 ```
 
-一个特别的说明是和 haxe 一样, `_` 匹配任意值. 请注意区别 当 match expr with 后的 `expr->expr`
+一个特别的说明是和 haxe 一样, `_` 匹配任意值. 请注意区别 当 match expression with 后的 `| expr->expr`(变量名随意.)
 
 
-如果你想调试程序, 比如像我, 用 aversion 调试而不是 gdb, 可能需要在程序中间打印一些警告信息.
+如果你想调试程序,可能需要在程序中间打印一些警告信息.
 
 ```ocaml
 prerr_endline("some tips message");;
@@ -927,8 +951,6 @@ prerr_endline("some tips message");;
 open Printf
 eprintf("message")
 ```
-
-
 
 
 函数式编程
@@ -974,7 +996,7 @@ function multiply(n, list){
 multiply(2, [1, 2, 3] ); // output: [2, 4, 6]
 ```
 
-#### 部分函数应用和currying
+### 部分函数应用和currying
 
 定义一个加法函数:
 
@@ -1077,17 +1099,27 @@ plus 2 3;;
 (* - : int = 6 *)
 ```
 
-##### function
+#### function
 
-在一些模块源码中经常能见到这个关键字, 看上去也很复杂. 通过一些示例来了解它们:
+https://ocaml.org/learn/tutorials/functional_programming.zh.html
+
+注意虽然在一些地方 fun 和 function 可以一样,但是它们是有区别的:
+
+ * function 后可以接匹配模式, 因此只能有一个参数; 而 fun 只能定义普通的函数,但参数数量随意
 
 ```ocaml
-(* 简单的和 fun 形为一到, 但只能有一个参数 *)
+(* 简单的和 function 形为一到, 但只能有一个参数 *)
 let double = function n -> n * 2
+(* 和 let double n = n * 2 有什么区别了? 前者带有匹配模式的样子,竟然是匹配模式那 function 后就可以接值或者变量 *)
+let foo = function
+	0 -> "zero"
+	| 1 -> "one"
+	| _ -> "other"
+;;
+(*val foo : int -> string = <fun> *)
 
-
-(* 虽然 function 只接受一个参数,但是可以用这种方式增加参数, 实际上 function 换成 fun 结果也是一样 *)
-let max x = function y -> if x > y then x else y
+(* 可以用这种方式增加参数, 如果 fun 后边没有参数则不能有 fun 关键字 *)
+let max x = fun y -> if x > y then x else y
 
 (* 这看上去有点像 match expr with.... *)
 let foo = function
@@ -1123,7 +1155,62 @@ let bar = function
 bar Zh;; (* - : int = 1 *)
 ```
 
+currying(科里化):
 
+```ocaml
+let plus a b = a + b;;
+   
+let f = plus 2;;	(* 像是 haxe 中的 var f = plus.bind(2) *)
+
+f 10;;
+(* val f : int -> int = <fun> *)
+(* - : int = 12 *)
+
+(* 如果你想把 2 放到后边，则*)
+let f a = plus a 2;;
+```
+
+函数部分: (个人感觉这个虽然简洁, 但却造成了理解的复杂度, 不过放在 callback 的地方还是蛮简明直了的)
+
+```ocaml
+let multiply n list =
+    let f x =
+      n * x in
+    List.map f list;;
+(* val multiply : int -> int list -> int list = <fun> *)
+
+(* 其实可以像下行这样, 不使用 f *)	
+let multiply n = List.map (( * ) n);;
+
+
+let plus = (+);;
+plus 2 3;;
+(* - : int = 5 *)
+
+( ^ ) (* string -> string -> string = <fun>;; 字符串连接 *)
+( ** ) (* float -> float -> float = <fun>;; 求幂 *)
+```
+
+(( * ) n)是一个(乘)函数的部分应用。 注意这里额外的空格，它使得OCaml不会认为是注释。
+
+非懒惰和懒惰, OCaml是缺省非懒惰， 但是在需要的时候支持懒惰的风格。
+
+ * 对于一个非懒惰的语言，参数和函数总是在使用前被求值，然后再传入到函数中
+
+ * 在懒惰语言中，一些奇怪的事情会发生。函数的参数只有在被使用的时候才会被求值
+
+```ocaml
+let give_me_a_three _ = 3;;
+(* val give_me_a_three : 'a -> int = <fun> *)
+give_me_a_three (1/0);;
+(* Exception: Division_by_zero. *)
+
+let lazy_expr = lazy (1/0);;
+(* val lazy_expr : int lazy_t = <lazy> *)
+
+give_me_a_three lazy_expr;;
+(* - : int = 3 *)
+```
 
 模块
 ------
@@ -1183,7 +1270,7 @@ val my_data : string list = ["a"; "beautiful"; "day"]
 *)
 ```
 
-#### 接口和签名
+### 接口和签名
 
 接口就像是 c/c++ 语言的 头文件. ocaml 的接口文件后缀名为 `.mli`. 如果没有 .mli 文件,则 ml 中定义的所有"类型定义"都可以从外部访问, mli 文件就是用于控制这些访问, 使哪些 "类型定义" 这 public, 哪些为 private. 重写刚才 amodule.ml 文件:
 
@@ -1218,7 +1305,7 @@ ocamlopt -c amodule.ml
 
 
 
-#### 抽像类型
+### 抽像类型
 
 什么是"类型定义"了? 我们看到的值例如像函数可以被导出放到 .mli 文件, 示例:
 
@@ -1259,7 +1346,7 @@ val years : date -> float
 只有 create 和 sub 才能用来创建 date record, 因此访问这个模块的用户不可能创建不合规范的 record 值. 
 
 
-#### 子模块
+### 子模块
 
 我们看到 example.ml 文件自动表示为 Example 模块, 模块签名是自动得到的, 或者写一个 .mli 文件来约束一些访问.
 
@@ -1285,7 +1372,7 @@ let () =
   Example.goodbye ()
 ```
 
-#### 子模块接口
+### 子模块接口
 
 同样可以约束一个子模块的访问, 这叫做 模块类型. 我们在example.ml文件中做一下:
 
@@ -1322,7 +1409,7 @@ end
 
 虽然子模块在一些情况下可能有用，但是它们和函子一起用的时候效果比较明显。这个下一部分讲
 
-#### 函子
+### 函子
 
 函子(Functors) 可能是OCaml中最复杂的特性之一，但是你想成为一个成功的OCaml程序员不需要大量地使用函子。实际上，你可能从来不用自己定义一个函子，不过你确实会在标准库中遇到它们。函子是使用 Set 和 Map 模块的唯一途径，不过使用它们并不困难。
 
@@ -1332,7 +1419,7 @@ end
 
 结束语：函子是用来帮助程序员写出正确的程序的，而不是用来提高性能的，甚至会有运行时的损耗，除非使用像 ocamldefun 这样的解函器，ocamldefun 需要访问函子的源代码。
 
-#### 模块实际操作
+### 模块实际操作
 
 在ocaml的 toplevel 中，下面的技巧可以让一个现存的模块的内容可视化，比如List：
 
@@ -1342,7 +1429,7 @@ module M = List;;
 (* 省略.... *)
 ```
 
-#### 模块包含
+### 模块包含
 
 如果我们觉得在标准的List模块中缺少一个函数，但是如果里面有我们确实需要它。在文件extensions.ml中，我们可以用include指令来实现这个效果。
 
@@ -1374,7 +1461,7 @@ List.optmap ...
 
 所有的这些都是表达式
 
-#### 条件语句
+### 条件语句
 
 ocaml 有一个 if 语句,其含义很明显:
 
@@ -1456,7 +1543,7 @@ let string_of_float f =
   else s ^ "."
 ```
 
-#### Using begin ... end
+### Using begin ... end
 
 这是一些来自 lablgtk 的源码:
 
@@ -1496,7 +1583,7 @@ Exception: Failure "else clause".
 ```
 
 
-#### for loop and while loop
+### for loop and while loop
 
 ocaml 对循环支持有限,因为更多的是使用递归
 
@@ -1546,7 +1633,7 @@ while not !quit_loop do
 done;;
 ```
 
-##### 遍历链表
+#### 遍历链表
 
 如果你想遍历链表, 不要用 for 或 while 循环, 因为 ocaml 有更好更快的方法. 这些方法位于 List 模块中(List 使用递归来遍历链表). 首先定义一个测试用的链表:
 
@@ -1607,14 +1694,14 @@ product my_list;; (* - : int = 3628800  *)
 let fact n = product (range 1 n);;
 ```
 
-#### 遍历字符串
+### 遍历字符串
 
 String 模块提供很多字符串处理的相关功能.其中一些波及遍历整个字符串. String.iter
 
 String.fill 和 String.blit 分别是 C 语言 memset 和 strcpy, String.copy 复制一个字符串, 像 strdup. 
 
 
-#### 递归
+### 递归
 
 叫 归递 也行.在函数式编程中, 递归得到最好的支持, 而循环(for or while)则是二等公民.
 
@@ -1705,7 +1792,7 @@ String.fill 和 String.blit 分别是 C 语言 memset 和 strcpy, String.copy �
 扩展
 ------
 
-#### 数组
+### 数组
 
 数组的表达式形式为: `[| el; e2; e3; .... |]`, 和链表很像, 只是中括号二边多了 '|' 符号.一个展示 for 循环的示例:
 
@@ -1722,7 +1809,7 @@ add_vect [| 1.0; 2.0 |] [| 3.0; 4.0 |];;
 (* - : float array = [|4.; 6.|] *)
 ```
 
-#### 异常
+### 异常
 
 ```ocaml
 exception Empty_list;;
@@ -1743,7 +1830,7 @@ exception SomeLog of string;;
 raise (SomeLog "hello");;
 ```
 
-#### 独立程序
+### 独立程序
 
 使用 `ocamlc` 和 `ocamlopt` 编译 ml 文件,	打印斐波那契数字:
 

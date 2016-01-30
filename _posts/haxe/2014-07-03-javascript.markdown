@@ -37,6 +37,10 @@ categories: haxe
 
 通过 `-D` 或相关宏定义的值
 
+ * `js-classic`: 不使用闭包和 "strict mode" 包装代码输出.
+
+ * `jquery-ver`: The jQuery version supported by js.jquery.*. The version is encoded as an interger. e.g. 1.11.3 is encoded as 11103
+
  * `js-es5` 如果你确定代码只在符合这个标准的环境中运行(如node.js或 chrome 扩展),强烈推荐添加这个标记。 
 
 	对于一些方法（如 `Array::indexOf`）,haxe使用了兼容各种浏览的实现, 如果定义这个标记,将不会构建这些多余的兼容性代码
