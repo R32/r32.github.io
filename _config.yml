@@ -2,8 +2,14 @@ name: lwm
 
 
 ### 但是如果 backticks 混在 html 标签中,还是得用 {% highlight %}
-markdown: redcarpet
+markdown: kramdown
 
+# http://kramdown.gettalong.org/options.html
+kramdown:
+  input: GFM
+  hard_wrap: false
+
+# deprecated
 redcarpet:
   extensions: ["no_intra_emphasis", "fenced_code_blocks", "autolink", "tables", "with_toc_data"]
 

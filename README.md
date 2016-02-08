@@ -1,11 +1,18 @@
 [blog](http://r32.github.io)
 ----
 
-Liquid 模板语法参见  https://github.com/Shopify/liquid/wiki/Liquid-for-Designers
+
+#### 参考
+
+ * Liquid 模板语法参见  https://github.com/Shopify/liquid/wiki/Liquid-for-Designers
 
  * [github pages jekyll 版本对比](https://pages.github.com/versions/)
+
+ * [引用仓库的一些元数据](https://help.github.com/articles/repository-metadata-on-github-pages/)
  
  
+#### 更新
+
  * 2014-10-4 12:24 : 将 _post目录中的各文件放置到相关目录中去
 
 	> 这个改动,引起了一项错误. 就 Liquid 提示 以前对应的 post_url 指向了不正确. 因此修正如下:
@@ -59,7 +66,15 @@ Liquid 模板语法参见  https://github.com/Shopify/liquid/wiki/Liquid-for-Des
 
 		> 注: 但是 bootstrap.css 照旧,因为 ie8 在处理 html5shiv 或 respond 时 无法处理 cdn 上的文件
 
+ * 2016-2-8 由于 github-pages 在 5月时将只支持 `kramdown`, 因此估计要做大量的迁移改动
 
+  - 为了支持 "fenced code blocks" 需要添加: 但是有一点限制是"反引号" 前不能有空格字符(包括Tab)
+
+	```yml
+	kramdown:
+	  input: GFM
+	```
+  - auto_ids: 1)字母将转换为小写 2)空格将转换成"-" 3)...
 
 #### 需要做的
 
