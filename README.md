@@ -125,3 +125,9 @@ Liquid 模板语法参见  https://github.com/Shopify/liquid/wiki/Liquid-for-Des
 	# 通过这个命令将所有文件权限,避免本地测试时
 	chmod -R 755 ./
 	```
+#### TODOS:
+
+ * 由于 github-pages 将在 5月份不再支持 `redcarpet` 而使用 `kramdown` 来处理 markdown 文件,这个估计要改动很多页面
+
+  - https://help.github.com/articles/updating-your-markdown-processor-to-kramdown/
+
