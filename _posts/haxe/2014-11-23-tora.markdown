@@ -145,16 +145,16 @@ location /templo {
 
  * 选择 httpd.apache 2.2 版本(2.4会在未来的neko版本中兼容), 这里选的是 [windows 平台](http://httpd.apache.org/docs/current/platform/windows.html#down), 然后根据 readme 文件安装
 
-	```bash
-	# 可以在 haxe 安装目录找到这些文件, mod_neko2.ndll 适用于 apache 2.x, 而 mod_neko.ndll 仅用于 apache 1.3
-	# 下边二行可以在 apache 服务器中运行普通的 .n 程序, 被注释掉是因为后边使用了 tora 作代替
-	# LoadModule neko_module "C:/HaxeToolkit/neko/mod_neko2.ndll"
-	# AddHandler neko-handler .n
-	
-	# 使用 tora, mod_tora2.ndll 和 mod_tora.ndll 的差别参见上边
-	LoadModule tora_module "C:/HaxeToolkit/neko/mod_tora2.ndll"
-	AddHandler tora-handler .n
-	```
+```bash
+# 可以在 haxe 安装目录找到这些文件, mod_neko2.ndll 适用于 apache 2.x, 而 mod_neko.ndll 仅用于 apache 1.3
+# 下边二行可以在 apache 服务器中运行普通的 .n 程序, 被注释掉是因为后边使用了 tora 作代替
+# LoadModule neko_module "C:/HaxeToolkit/neko/mod_neko2.ndll"
+# AddHandler neko-handler .n
+
+# 使用 tora, mod_tora2.ndll 和 mod_tora.ndll 的差别参见上边
+LoadModule tora_module "C:/HaxeToolkit/neko/mod_tora2.ndll"
+AddHandler tora-handler .n
+```
 
 	对于 htdocs 目录或虚拟目录的修改, 自行参考 apache 文档
 
@@ -190,18 +190,18 @@ Api.hx 中的全部为静态方法及静态属性:
 
  * `getInfos():Infos;` 获得一些信息, 其实差不多就是打开 tora_admin.n 时所看到的内容
 
- * `command(cmd:String, ?param:String):Dynamic`; 控制 tora.exe 的一些行为, 我不太确定是否为 `Tora.hx::command()` 
+ * `command(cmd:String, ?param:String):Dynamic`; 控制 tora.exe 的一些行为 
 
-	```bash
-	# 所有命令如果有输出, 都是直接以 Sys.print 的方式输出, 并不返回任何值
-	stop		# 停止 tora
-	gc			# 执行 neko.vm.Gc.run(true)
-	clean		# 清除所有缓存了的 files, 而 files 包含了所有缓存了的 .n 文件
-	hosts		# hosts 保存了使用 -config 加载的所有 VirtualHost, 直接输出 host_name => path/to/file
-	share				# 输出 Share 对象的名称及占用大小
-	thread(n:Int)		# 输出指定线程信息,如果存在. e.g: `Api.command("thread", "0");`
-	memory(file:String)	# 解析一个 neko 文件并打印其所有 names 占用的内存大小
-	```
+```bash
+# 所有命令如果有输出, 都是直接以 Sys.print 的方式输出, 并不返回任何值
+stop		# 停止 tora
+gc			# 执行 neko.vm.Gc.run(true)
+clean		# 清除所有缓存了的 files, 而 files 包含了所有缓存了的 .n 文件
+hosts		# hosts 保存了使用 -config 加载的所有 VirtualHost, 直接输出 host_name => path/to/file
+share				# 输出 Share 对象的名称及占用大小
+thread(n:Int)		# 输出指定线程信息,如果存在. e.g: `Api.command("thread", "0");`
+memory(file:String)	# 解析一个 neko 文件并打印其所有 names 占用的内存大小
+```
 
  * `setCron(uri:String, delay:Float ):Void` ??? 服务器端无限重复执行 **当前.n文件**(后边的setCorn将覆盖前边的,因此不会导致多个混乱,注意在这个方法后的代码不要调用 `command("clean")`)
 
@@ -317,12 +317,12 @@ class Queue<T> {
 
  * A-client 通过 addHandler 监听服务器消息推送（Socket 长连接）, 
 
-	```haxe
-	// (实验性)交互, 由于服务器端只能获得 params 或 headers,因此对于已经连接的 Protocol
-	p.reset();	// 重置所有请求参数, 但是要注意当出现 disconnect 后重新连接的参数
-	m.addHeader("Key1", "Value1"); 
-	p.call(url);
-	```
+```haxe
+// (实验性)交互, 由于服务器端只能获得 params 或 headers,因此对于已经连接的 Protocol
+p.reset();	// 重置所有请求参数, 但是要注意当出现 disconnect 后重新连接的参数
+m.addHeader("Key1", "Value1"); 
+p.call(url);
+```
 
  * 另一个 B-client 则直接调用名字相同的 notify, 这时所有调用了 addHandler 将收到消息 `onData(msg)` 
 

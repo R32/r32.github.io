@@ -27,30 +27,30 @@ categories: haxe
 
  * 由于 dox 使用了 markdown 解析注释, 因此可以使用 markdown 语法
 
-	```
-	# 表格, 好像只支持 左 或 右对齐
-	First Header  | Second Header
-	-----------:  | :------------
-	Content Cell  | Content Cell
-	Content Cell  | Content Cell
-	
-	# 一些基本的 HTML 标签
-	To <b>edit</b> settings, press `Ctrl + ,`
-	
-	# URL 引用 (TODO: 如何引用当前手册中的链接?)
-	[example](http://example.com)
-	```
+```
+# 表格, 好像只支持 左 或 右对齐
+First Header  | Second Header
+-----------:  | :------------
+Content Cell  | Content Cell
+Content Cell  | Content Cell
+
+# 一些基本的 HTML 标签
+To <b>edit</b> settings, press `Ctrl + ,`
+
+# URL 引用 (TODO: 如何引用当前手册中的链接?)
+[example](http://example.com)
+```
 
  * 元标记, 大多数情况下不需要写这些, 解析器能识别各参数或回值类型
 
-	```	
-	@since name 1.2.3 aplha		# 需要正确的版本号格式 n.n.n
-	@exception TypeName 描述		# 或 @throws
-	@param delay 写参数名就行了
-	@return 一些描述内容			# 或 @returns
-	@see TypeName				# 
-	@deprecated 弃用描述			# 不用理会这个的顺序
-	```
+```	
+@since name 1.2.3 aplha		# 需要正确的版本号格式 n.n.n
+@exception TypeName 描述		# 或 @throws
+@param delay 写参数名就行了
+@return 一些描述内容			# 或 @returns
+@see TypeName				# 
+@deprecated 弃用描述			# 不用理会这个的顺序
+```
 
 ### 导出XML
 
@@ -88,40 +88,40 @@ Once this parsing/merging is done, you can access the parser.root variable which
 
  * 命令为: `neko run.n -i export.xml`
 
-	```bash
-	# 设置最终设置输出文件 e.g: -o bin/api-laster.zip 或者为目录 -o bin/docs
-	[-o |  --output-path] <path>
-		
-	# XML 所在目录。 e.g： -i bin/xmls
-	[-i | --input-path] <path>
-
-	#Add template directory
-	[-t | --template-path] <path>
-
-	#Add a resource directory whose contents are copied to the output directory
-	[-res | --resource-path] <dir>
-
-	#Add a path include filter, EReg String
-	[-in | --include] <path>
-
-	#Add a path exclude filter, EReg String. e.g: -ex ^js -ex flash
-	[-ex | --exclude] <path>
-
-	#Set the page main title
-	--title <name>
+```bash
+# 设置最终设置输出文件 e.g: -o bin/api-laster.zip 或者为目录 -o bin/docs
+[-o |  --output-path] <path>
 	
-	#Set the package which serves as top-level
-	--toplevel-package <dotPath>
-	
-	#Set the theme name or path, 设置模板
-	-theme <name>
+# XML 所在目录。 e.g： -i bin/xmls
+[-i | --input-path] <path>
 
-	#Defines key = value
-	[-D  | --defines] <key> <value>
-	
-	# 其它
-	-D source-path 	#将定义源码URL
-	```
+#Add template directory
+[-t | --template-path] <path>
+
+#Add a resource directory whose contents are copied to the output directory
+[-res | --resource-path] <dir>
+
+#Add a path include filter, EReg String
+[-in | --include] <path>
+
+#Add a path exclude filter, EReg String. e.g: -ex ^js -ex flash
+[-ex | --exclude] <path>
+
+#Set the page main title
+--title <name>
+
+#Set the package which serves as top-level
+--toplevel-package <dotPath>
+
+#Set the theme name or path, 设置模板
+-theme <name>
+
+#Defines key = value
+[-D  | --defines] <key> <value>
+
+# 其它
+-D source-path 	#将定义源码URL
+```
 
 #### 模板修改
 

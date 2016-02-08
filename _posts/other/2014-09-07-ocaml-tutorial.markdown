@@ -467,17 +467,17 @@ read_line ();;
 
  * 规则 #1: 必须使用 ;; 在代码的最顶端来分隔不同的语句,并且绝对不要在函数定义中或者其他的语句中使用。
 
-	```ocaml
-	Random.self_init ();;
-	Graphics.open_graph " 640x480";;
+```ocaml
+Random.self_init ();;
+Graphics.open_graph " 640x480";;
 
-	let rec iterate r x_init i =
-		if i = 1 then 
-			x_init
-		else
-			let x = iterate r x_init (i-1) in
-			r *. x *. (1.0 -. x);;	
-	```
+let rec iterate r x_init i =
+	if i = 1 then 
+		x_init
+	else
+		let x = iterate r x_init (i-1) in
+		r *. x *. (1.0 -. x);;	
+```
 	
  * 规则 #2: 可省略的 ;;
 
@@ -1709,80 +1709,80 @@ String.fill 和 String.blit 分别是 C 语言 memset 和 strcpy, String.copy �
 
  * 方法一:  获得文件的长度(length), 然后使用 really_input方法读入. 这是最简单的方法但很可能不能用于 通道(channel)(通道并不是真正的文件例如从键盘输入)
 
-	```ocaml
-	open Printf
-	
-	let read_whole_chan chan = 
-	  let len = in_channel_length chan in
-	  let result = string.create len in
-	  really_input chan result 0 len;
-	  result
-	
-	let read_whole_file filename =
-	  let chan = open_in filename in
-	  read_whole_chan chan
-  
-	let () =
-	  let filename = Sys.argv.(1) in
-	  let str = read_whole_file filename in
-	  printf "I read %d characters from %s\n" (String.length str) filename 
-	
-	(* 不是很理想, 因为 read_whole_chan 不会像 键盘输入或套接字之类的非文件流 *)
-	```
+```ocaml
+open Printf
+
+let read_whole_chan chan = 
+  let len = in_channel_length chan in
+  let result = string.create len in
+  really_input chan result 0 len;
+  result
+
+let read_whole_file filename =
+  let chan = open_in filename in
+  read_whole_chan chan
+
+let () =
+  let filename = Sys.argv.(1) in
+  let str = read_whole_file filename in
+  printf "I read %d characters from %s\n" (String.length str) filename 
+
+(* 不是很理想, 因为 read_whole_chan 不会像 键盘输入或套接字之类的非文件流 *)
+```
 
  * 方法二: 使用 while 循环,以 抛出异常(exception)的方式从循环中退出
 
-	```ocaml
-	open Printf
-	let read_whole_chan chan =
-	  let buf = Buffer.create 4096 in
-	  try
-	    while true do
-	      let line = input_line chan in
-	      Buffer.add_string buf line;
-	      Buffer.add_char buf '\n'
-	    done;
-	    assert false (* This is never executed
-                    (always raise Assert_failure). *)
-	  with
-	    End_of_file -> Buffer.contents buf
-  
-	let read_whole_file filename =
-	  let chan = open_in filename in
-	  read_whole_chan chan
-  
-	let () =
-	  let filename = Sys.argv.(1) in
-	  let str = read_whole_file filename in
-	  printf "I read %d characters from %s\n" (String.length str) filename
-	```
+```ocaml
+open Printf
+let read_whole_chan chan =
+  let buf = Buffer.create 4096 in
+  try
+    while true do
+      let line = input_line chan in
+      Buffer.add_string buf line;
+      Buffer.add_char buf '\n'
+    done;
+    assert false (* This is never executed
+            (always raise Assert_failure). *)
+  with
+    End_of_file -> Buffer.contents buf
+
+let read_whole_file filename =
+  let chan = open_in filename in
+  read_whole_chan chan
+
+let () =
+  let filename = Sys.argv.(1) in
+  let str = read_whole_file filename in
+  printf "I read %d characters from %s\n" (String.length str) filename
+```
 
  * 方法三: 递归, 以 抛出异常(exception)的方式结束递归. 它不太容易理解
 
-	```ocaml
-	open Printf
-		  
-	let read_whole_chan chan =
-	  let buf = Buffer.create 4096 in
-	  let rec loop () =
-	    let line = input_line chan in
-	    Buffer.add_string buf line;
-	    Buffer.add_char buf '\n';
-	    loop () in
-	  try
-	    loop ()
-	  with
-	    End_of_file -> Buffer.contents buf
+```ocaml
+open Printf
 	  
-	let read_whole_file filename =
-	  let chan = open_in filename in
-	  read_whole_chan chan
-	  
-	let () =
-	  let filename = Sys.argv.(1) in
-	  let str = read_whole_file filename in
-	  printf "I read %d characters from %s\n" (String.length str) filename
-	```	
+let read_whole_chan chan =
+  let buf = Buffer.create 4096 in
+  let rec loop () =
+    let line = input_line chan in
+    Buffer.add_string buf line;
+    Buffer.add_char buf '\n';
+    loop () in
+  try
+    loop ()
+  with
+    End_of_file -> Buffer.contents buf
+  
+let read_whole_file filename =
+  let chan = open_in filename in
+  read_whole_chan chan
+  
+let () =
+  let filename = Sys.argv.(1) in
+  let str = read_whole_file filename in
+  printf "I read %d characters from %s\n" (String.length str) filename
+```	
 
 (注: 通道(channel) 应该就是所谓的 **文件流** 吧,类似于 stderr,stdio,stdin 之类的)
 

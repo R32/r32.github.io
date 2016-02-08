@@ -493,13 +493,13 @@ NOTES:
 
  * 示例:
 
-	```bash
-	MODE WiZ -w		;
-	
-	MODE Angle +i	; 
-	
-	Mode WiZ -o		; 移除 WiZ 的管理员
-	```
+```bash
+MODE WiZ -w		;
+
+MODE Angle +i	; 
+
+Mode WiZ -o		; 移除 WiZ 的管理员
+```
 
 
 ##### Service message

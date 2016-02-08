@@ -43,10 +43,10 @@ http://jekyllcn.com/
  * [`jekyll-sitemap`](https://github.com/jekyll/jekyll-sitemap) 用于生成 `sitemap.xml` 以优化 SEO
 
 	> 只在要 `_config.yml` 中添加下行就可以了
-	```yml
-	gems:
-	  - jekyll-sitemap
-	```
+```yml
+gems:
+  - jekyll-sitemap
+```
 
 
  * ['jekyll-redirect-from'](https://github.com/jekyll/jekyll-redirect-from) 一个类似于 `URL rewrite`, 简单的重定向 

@@ -46,36 +46,36 @@ categories: other
 
  * 可能需要手动调整合并冲突, 然后再缓存提交
 
-	```bash
-	# 如有冲突,查看当前有哪些文件产生了冲突:
-	git diff
-	
-	# 解决掉冲突之后
-	git add file.txt
-	
-	# 如果你觉得你合并后的状态是一团乱麻，想把当前的修改都放弃
-	git reset --hard HEAD
-	
-	```
+```bash
+# 如有冲突,查看当前有哪些文件产生了冲突:
+git diff
+
+# 解决掉冲突之后
+git add file.txt
+
+# 如果你觉得你合并后的状态是一团乱麻，想把当前的修改都放弃
+git reset --hard HEAD
+
+```
 
 	> GUI 这里需要自已单击已经修改了的冲突文件,而不是点击 缓存 按钮
 
  * **rebase** 如果是 fork 别的人项目,这个命令比 merge 要好
 
-	```bash
-	# rebase合并
-	git rebase bob/master
+```bash
+# rebase合并
+git rebase bob/master
 
-	# 如果有冲突(conflict), 则修改冲突后添加到缓存
-	# 查看冲突使用 git diff 命令
-	git add	path/to/conflict.file
+# 如果有冲突(conflict), 则修改冲突后添加到缓存
+# 查看冲突使用 git diff 命令
+git add	path/to/conflict.file
 
-	# 不需要执行 git commit,而是:
-	git rebase --continue
-	
-	## 如果感觉有什么不对,可用于中断并恢复
-	git rebase --abort
-	```
+# 不需要执行 git commit,而是:
+git rebase --continue
+
+## 如果感觉有什么不对,可用于中断并恢复
+git rebase --abort
+```
 
 #### 上传
 
@@ -88,13 +88,13 @@ categories: other
 
  * 恢复 **单个文件** 到某个历史版本
 
-	```bash
-	# git checkout COMMIT_HASH -- path_to_file.ext
-	git checkout 45a0c601f32b1c245c988d00e364e27b9b90eff0 -- readme.md
-	
-	# 从 HEAD 中恢复
-	git checkout -- readme.md
-	```
+```bash
+# git checkout COMMIT_HASH -- path_to_file.ext
+git checkout 45a0c601f32b1c245c988d00e364e27b9b90eff0 -- readme.md
+
+# 从 HEAD 中恢复
+git checkout -- readme.md
+```
 
  * upstream, 自动更新 fork 版本 repo
 
@@ -106,91 +106,91 @@ categories: other
 
  * github 语言统计, `.gitattributes`
 
-	```bash
-	# 将所有 JS 文件当成 统计为 Haxe
-	*.js linguist-language=Haxe
-	
-	
-	# Use the linguist-vendored attribute to vendor or un-vendor paths
-	# 被标记为 linguist-vendored 是表示不统计, 而 = false 是添加到统计
-	special-vendored-path/* linguist-vendored
-	jquery.js linguist-vendored=false
-	
-	# Use the linguist-documentation attribute to mark or unmark paths as documentation.
-	project-docs/* linguist-documentation
-	docs/formatter.rb linguist-documentation=false
-	```
+```bash
+# 将所有 JS 文件当成 统计为 Haxe
+*.js linguist-language=Haxe
+
+
+# Use the linguist-vendored attribute to vendor or un-vendor paths
+# 被标记为 linguist-vendored 是表示不统计, 而 = false 是添加到统计
+special-vendored-path/* linguist-vendored
+jquery.js linguist-vendored=false
+
+# Use the linguist-documentation attribute to mark or unmark paths as documentation.
+project-docs/* linguist-documentation
+docs/formatter.rb linguist-documentation=false
+```
 
  * stash 用于保存当前工作
 
-	```bash
-	git stash
-	# 之后整个目录会回到最后一次提交时的状态
-	# 以便于临时修改一些Bug.
-	
-	# 做一些提交后,想回到工作目录
-	git stash apply
-	
-	# 处理冲突如果有
-	git add <filename>
-	git reset HEAD <filename> 
-	# 或 git reset HEAD 	# 注意执行这个命令时需要确认文件已经被添加,因为未添加到缓存的所有文件将被重置
+```bash
+git stash
+# 之后整个目录会回到最后一次提交时的状态
+# 以便于临时修改一些Bug.
 
-	git stash clear
-	
-	# 如果需要提交到 github 还是用新分支吧.做完再合并到主线上来.
-	```
+# 做一些提交后,想回到工作目录
+git stash apply
+
+# 处理冲突如果有
+git add <filename>
+git reset HEAD <filename> 
+# 或 git reset HEAD 	# 注意执行这个命令时需要确认文件已经被添加,因为未添加到缓存的所有文件将被重置
+
+git stash clear
+
+# 如果需要提交到 github 还是用新分支吧.做完再合并到主线上来.
+```
 	
  * 没有共同祖先的分支, http://gitbook.liuhui998.com/5_1.html
 
-	```bash
-	git symbolic-ref HEAD refs/heads/newbranch 
-	rm .git/index 
-	git clean -fdx 
-	#<do work> 
-	git add your files 
-	git commit -m 'Initial commit'
-	```
+```bash
+git symbolic-ref HEAD refs/heads/newbranch 
+rm .git/index 
+git clean -fdx 
+#<do work> 
+git add your files 
+git commit -m 'Initial commit'
+```
 	
  * 查找文件是每个部分是谁修改的
 
-	```bash
-	git blame path/to/file.ext
-	
-	# http://gitbook.liuhui998.com/5_5.html
-	```
+```bash
+git blame path/to/file.ext
+
+# http://gitbook.liuhui998.com/5_5.html
+```
 	
  * 使用二分法查找问题出在哪? 最后把问题以 patch 的形式提交而不是修改历史
 
-	```bash
-	git bisect start
-	git bisect good v2.6.18
-	git bisect bad master
-	
-	# 通过不停的 git bisect bad, good 查找问题
-	
-	# 找到问题后,恢复到git bisect start,  
-	git bisect reset
-	
-	# 更多参考 http://gitbook.liuhui998.com/5_4.html
-	```
+```bash
+git bisect start
+git bisect good v2.6.18
+git bisect bad master
+
+# 通过不停的 git bisect bad, good 查找问题
+
+# 找到问题后,恢复到git bisect start,  
+git bisect reset
+
+# 更多参考 http://gitbook.liuhui998.com/5_4.html
+```
 	
  * 将改动做成补丁
 
-	```bash
-	# 首先创建一个新分支如 patch-1,然后 checkout,
-	# 输入以下命令后将在在目录下生成一个 .patch 的文件:
-	git format-patch master
-	
-	# hash之间的改动做成补丁
-	git format-patch <old_sha>...<new_sha> -o <patch_dir>
-	
-	# 应用patch(不完整),
-	git apply --start xxx.patch		# 检查 patch
-	git apply --check xxx.patch		# 是否能应用成功
-	
-	git am -s < xxx.patch			# 应用patch
-	```
+```bash
+# 首先创建一个新分支如 patch-1,然后 checkout,
+# 输入以下命令后将在在目录下生成一个 .patch 的文件:
+git format-patch master
+
+# hash之间的改动做成补丁
+git format-patch <old_sha>...<new_sha> -o <patch_dir>
+
+# 应用patch(不完整),
+git apply --start xxx.patch		# 检查 patch
+git apply --check xxx.patch		# 是否能应用成功
+
+git am -s < xxx.patch			# 应用patch
+```
 
 #### submodule
 

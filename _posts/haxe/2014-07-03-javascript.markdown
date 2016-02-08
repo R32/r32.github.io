@@ -16,13 +16,13 @@ categories: haxe
 
  * `__js__` 用于直接嵌入 js 代码
 
-	```haxe
-	var s:String = untyped __js__("Navigator.plugin[\"Shockwave Flash\"]");
-	
-	// 由于 js 的 {} 并没有其独立作用域，因此 __js__ 内部可以随意写局部变量
-	var a = 1, b = 2;
-	untyped __js__("var c = a+b");
-	```
+```haxe
+var s:String = untyped __js__("Navigator.plugin[\"Shockwave Flash\"]");
+
+// 由于 js 的 {} 并没有其独立作用域，因此 __js__ 内部可以随意写局部变量
+var a = 1, b = 2;
+untyped __js__("var c = a+b");
+```
 
 <!-- more -->
 
@@ -62,18 +62,18 @@ categories: haxe
 	> 在 haxe 3.13 时 使用诸如 `@:native("(require('fs'))") extern class Fs{}` 这样很不美观.
 	> 因此 haxe 3.2+ 添加了这个新的元标记,
 	
-	```haxe
-	@:jsRequire("fs")
-	extern class Fooo {
-		
-	}	// 那么这个类导出的 JS 代码则为 var Fooo = require("fs");
-
+```haxe
+@:jsRequire("fs")
+extern class Fooo {
 	
-	@:jsRequire("http", "Server")
-	extern class Barr{
-		
-	}	// 导出的JS代码为:	var Barr = require("http").Server;
-	```
+}	// 那么这个类导出的 JS 代码则为 var Fooo = require("fs");
+
+
+@:jsRequire("http", "Server")
+extern class Barr{
+	
+}	// 导出的JS代码为:	var Barr = require("http").Server;
+```
 	
  * **`@:expose(?Name=Class path)`** 将类或静态方法接到 window 对象下(js only)，注意和 `@:native` 相区别
 
@@ -88,34 +88,34 @@ categories: haxe
 
  * **`@:selfCall`** 调用自身, 由于 javascript 没有构造函数, 在写 extern class 时会遇到一些问题
 	
-	```haxe
-	@:jsRequire("myapp")
-	extern class MyApp {
-	    @:selfCall function new();
-	    @:selfCall function run():Void;
-	}
+```haxe
+@:jsRequire("myapp")
+extern class MyApp {
+    @:selfCall function new();
+    @:selfCall function run():Void;
+}
+
+class Main {
+    static function main() {
+        var app = new MyApp();
+        app.run();
+    }
+}	
+```
 	
-	class Main {
-	    static function main() {
-	        var app = new MyApp();
-	        app.run();
-	    }
-	}	
-	```
-		
-	> 将构建成为:
-	
-	```js
-	(function () { "use strict";
-		var MyApp = require("myapp");
-		var Main = function() { };
-		Main.main = function() {
-		    var app = MyApp();
-		    app();
-		};
-		Main.main();
-	})();
-	```
+将构建成为:
+
+```js
+(function () { "use strict";
+	var MyApp = require("myapp");
+	var Main = function() { };
+	Main.main = function() {
+	    var app = MyApp();
+	    app();
+	};
+	Main.main();
+})();
+```
                      
 ### extern class
 

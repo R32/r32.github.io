@@ -185,19 +185,19 @@ Usage : temploc [options] <files>
 
  * 在 haxe 项目中调用 templo 目录下的 `Loader.hx`(这个文件通过Process执行temploc.exe)
 
-	```haxe	
-	// 注意默认情况下以 haxe 的输出文件夹为目录顶层,通常为 bin
-	// 所有目录名必须以 / 结尾, 目录必须自行建立,如果不存在则出错
-	
-	Loader.BASE_DIR = "some/"		// mtt模板文件所在目录, 默认为 "",
-	
-	Loader.TMP_DIR = "mtt/"			// 存放临时文件, 默认为 "/tmp/",因此非 unix-like 系统必须设置
-									
-	Loader.MACROS = null;			// macro文件, 默认为 "macros.mtt" 没有则设为 null
-	
-	var t = new templo.Loader("some.mtt");	// 这个是以系统文件的形式加载的
-	t.execute({ values : [1,2,3,4] });		// 
-	```
+```haxe	
+// 注意默认情况下以 haxe 的输出文件夹为目录顶层,通常为 bin
+// 所有目录名必须以 / 结尾, 目录必须自行建立,如果不存在则出错
+
+Loader.BASE_DIR = "some/"		// mtt模板文件所在目录, 默认为 "",
+
+Loader.TMP_DIR = "mtt/"			// 存放临时文件, 默认为 "/tmp/",因此非 unix-like 系统必须设置
+								
+Loader.MACROS = null;			// macro文件, 默认为 "macros.mtt" 没有则设为 null
+
+var t = new templo.Loader("some.mtt");	// 这个是以系统文件的形式加载的
+t.execute({ values : [1,2,3,4] });		// 
+```
 
 (注:或者也可以使用 mtwin 库的 templo.Template 像 haxe.Template 一样, 或者使用 hxtemplo 这个haxe 的移植库)
 
@@ -209,76 +209,76 @@ Usage : temploc [options] <files>
 
  * raw, 表示不进行转义
 
-	```js
-	context.myMessage = "<p>Hello haxe</p>";		// in haxe
-	
-	before: ::myMessage::
-	after : ::raw myMessage::
-	
-	// 将转换为
-	before : &lt;p&gt;Hello haxe&lt;/p&gt;
-	after : <p>Hello haxe</p>
-	```
+```js
+context.myMessage = "<p>Hello haxe</p>";		// in haxe
+
+before: ::myMessage::
+after : ::raw myMessage::
+
+// 将转换为
+before : &lt;p&gt;Hello haxe&lt;/p&gt;
+after : <p>Hello haxe</p>
+```
 
  * if,elseif,else,end,  这几个和 haxe.Template 一样
 
  * cond, 属于 if 的另一种改善形式. 如下示例, 当条件为 false 时, 将不会输出 `<ul></ul>` 整个元素.
 
-	```html
-	<ul id="userMenu" ::cond user.isLogged::>
-		<li><a href="/logout">Log out</a></li>
-		<li><a href="/account">My account</li>
-	</ul>
-	```
+```html
+<ul id="userMenu" ::cond user.isLogged::>
+	<li><a href="/logout">Log out</a></li>
+	<li><a href="/account">My account</li>
+</ul>
+```
 
  * switch, 如果你包含有下边 enum, 注: EnumValue 的值不能为 null,则表报错,你可传 **非** EnumValue对应的数字值,如 -1 或任意字符串.
 
-	```haxe
-	enum QuestItem{
-		ITEM(id:Int);
-		MONEY(amount:Int);
-		XP(amount:Int);
-	}
-	```
-	
+```haxe
+enum QuestItem{
+	ITEM(id:Int);
+	MONEY(amount:Int);
+	XP(amount:Int);
+}
+```
+
 	你可以这样使用 switch, **注意:** 要和 QuestItem 中先后顺序一至. 
-	
-	```html
-	::switch myEnum::DEFAULT VALUE(默认值,如果省略则为空值)
-	::case:: Item ::args[0]::
-	::case:: ::args[0]:: gold
-	::case:: ::args[0]:: XP
-	::end::
-	
-	<!-- switch 2, case 0 带表第一个 EnumValue值 -->
-	::switch myEnum::
-	::case 0:: ITEM
-	::case 2:: XP
-	::end::
-	```	
+
+```html
+::switch myEnum::DEFAULT VALUE(默认值,如果省略则为空值)
+::case:: Item ::args[0]::
+::case:: ::args[0]:: gold
+::case:: ::args[0]:: XP
+::end::
+
+<!-- switch 2, case 0 带表第一个 EnumValue值 -->
+::switch myEnum::
+::case 0:: ITEM
+::case 2:: XP
+::end::
+```	
 
  * foreach, 这里和标准库 haxe.Template 有点差异, 标准库没有自定义的 value 变量,而是使用 `__current__`
 
-	```html
-	::foreach value iterable::
-		You can use ::value:: there
-	::end::
-	
-	<!-- 如 listOfNumbers = [0, 2, 5, 6],  -->
-	::foreach n listOfNumbers::
-		Number = ::n::
-	::end::	
-	```
+```html
+::foreach value iterable::
+	You can use ::value:: there
+::end::
+
+<!-- 如 listOfNumbers = [0, 2, 5, 6],  -->
+::foreach n listOfNumbers::
+	Number = ::n::
+::end::	
+```
 
  * repeat, 相当于 foreach 与 cond 的混合体, 只在当条件为 true, 才会迭代输出
 
-	```html
-	<ul>
-		<li ::repeat user listOfConnectedUsers::>
-			<a href="/user/::user.id::">::user.name::</a>
-		</li>
-	</ul>
-	```
+```html
+<ul>
+	<li ::repeat user listOfConnectedUsers::>
+		<a href="/user/::user.id::">::user.name::</a>
+	</li>
+</ul>
+```
 	
  * repeat 配合 foreach. `repeat.<itemName>.*` 这种 repeat 表式达可以有更多检测
 
@@ -296,193 +296,193 @@ Usage : temploc [options] <files>
 
   - `repeat.<item>.size` length(当有效时)
 
-	```html
-	<table>
-	    <tbody>
-	        ::foreach user listOfConnectedUsers::
-	        <tr class="odd::repeat.user.odd::">
-	            <td>::repeat.user.number::</td>
-	            <td>::user.name::</td>
-	        </tr>
-	        ::end::
-	    </tbody>
-	</table>
-	```
+```html
+<table>
+    <tbody>
+        ::foreach user listOfConnectedUsers::
+        <tr class="odd::repeat.user.odd::">
+            <td>::repeat.user.number::</td>
+            <td>::user.name::</td>
+        </tr>
+        ::end::
+    </tbody>
+</table>
+```
 
  * set, 这个操作符允许在模板中创建变量, 注意其中的一个 eval 操作符(没文档,估计是用于再次赋值计算时)
 
-	```html
-	::set myVar = myValue::
-	
-	::set isLogged = (user != null) && (user.id != null)::
-	
-	::set sum = 0::
-	::foreach i listOfNumbers::
-	    number = ::i::
-	    ::eval sum = sum + i::
-	::end::
-	Sum = ::sum::	
-	```
+```html
+::set myVar = myValue::
+
+::set isLogged = (user != null) && (user.id != null)::
+
+::set sum = 0::
+::foreach i listOfNumbers::
+    number = ::i::
+    ::eval sum = sum + i::
+::end::
+Sum = ::sum::	
+```
 
  * fill, 形为像 set, 但是允许捕获一些 html 字符串, 并将其值作为一个变量.
 
-	```html
-	::fill navigation::			<!-- 捕获开始 -->	
-	<div>
-	    <a href="/previous">Previous</a> |
-	    ::foreach page resultPages::
-	    <a href="/page/::page::">::page::</a> |
-	    ::end::
-	    <a href="/next">Next</a>
-	</div>
-	::end::						<!-- 捕获结束 -->
-	
-	<!-- we use the filled variable -->
-	::raw navigation::
-	
-	<table>
-	    <thead>
-	        <tr>
-	            <th>#</th>
-	            <th>name</th>
-	        </tr>
-	    </thead>
-	    <tbody>
-	        ::foreach name listOfNames::
-	        <tr>
-	            <th>::startIndex + repeat.name.index::</th>
-	            <th>::name::</th>
-	        </tr>
-	    </tbody>
-	</table>
-	
-	
-	<!-- we reuse the filled variable to avoid executing the loop twice -->
-	::raw navigation::	
-	```
+```html
+::fill navigation::			<!-- 捕获开始 -->	
+<div>
+    <a href="/previous">Previous</a> |
+    ::foreach page resultPages::
+    <a href="/page/::page::">::page::</a> |
+    ::end::
+    <a href="/next">Next</a>
+</div>
+::end::						<!-- 捕获结束 -->
+
+<!-- we use the filled variable -->
+::raw navigation::
+
+<table>
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>name</th>
+        </tr>
+    </thead>
+    <tbody>
+        ::foreach name listOfNames::
+        <tr>
+            <th>::startIndex + repeat.name.index::</th>
+            <th>::name::</th>
+        </tr>
+    </tbody>
+</table>
+
+
+<!-- we reuse the filled variable to avoid executing the loop twice -->
+::raw navigation::	
+```
 
  * use, 用于在当前模板引用其它的模板文件,二个模板将共享它们的变量, 共享的变量请注意先后顺序
 
-	```html
-	<!-- userMenu.mtt: -->
-	<div id="userMenu">
-	    <div>Logged as ::user.login::</div>
-	    <ul>
-	        <li><a href="/logout">Log out</a></li>
-	        <li><a href="/account">My account</a></li>
-	    </ul>
-	</div>
+```html
+<!-- userMenu.mtt: -->
+<div id="userMenu">
+    <div>Logged as ::user.login::</div>
+    <ul>
+        <li><a href="/logout">Log out</a></li>
+        <li><a href="/account">My account</a></li>
+    </ul>
+</div>
 
-	<!-- myPage.mtt : -->	
-	<html>
-	    <head>
-	        ...
-	    </head>
-	    <body>
-	        ...
-	        <!-- 显示 menu 二次, 这里需要用 ::end:: 作结尾 (稍后再解释) -->
-	        ::use 'userMenu.mtt'::::end::
-	        ::use 'userMenu.mtt'::::end::
-	        ...
-	    </body>
-	</html>	
-	```
+<!-- myPage.mtt : -->	
+<html>
+    <head>
+        ...
+    </head>
+    <body>
+        ...
+        <!-- 显示 menu 二次, 这里需要用 ::end:: 作结尾 (稍后再解释) -->
+        ::use 'userMenu.mtt'::::end::
+        ::use 'userMenu.mtt'::::end::
+        ...
+    </body>
+</html>	
+```
 	
 	另一个实例: 注意在 use 和 end 中间,给变量 content 进行了填充
 	
-	```html
-	<!-- design.mtt :-->	
-	<html>
-	    <head>
-	        <title>My title</title>
-	    </head>
-	    <body>
-	        <h1>My title</h1>
-	
-	        <!-- 假设另一个模板将会引用这个模板,并且给 content 变量填充值 -->
-	        ::raw content::
-	    </body>
-	</html>
-	
-	
-	<!-- mypage.mtt : -->
-	::use 'design.mtt'::	
-	    ::fill content::
-	        <h2>My page</h2>
-	        some data here
-	    ::end::	
-	::end::	
-	```
+```html
+<!-- design.mtt :-->	
+<html>
+    <head>
+        <title>My title</title>
+    </head>
+    <body>
+        <h1>My title</h1>
+
+        <!-- 假设另一个模板将会引用这个模板,并且给 content 变量填充值 -->
+        ::raw content::
+    </body>
+</html>
+
+
+<!-- mypage.mtt : -->
+::use 'design.mtt'::	
+    ::fill content::
+        <h2>My page</h2>
+        some data here
+    ::end::	
+::end::	
+```
 	
 	由于上述 use,fill 的语法非常麻烦, 因此在 use 和 end 中间的字符串将自动填充为 **`__content__`**
 	
 	因此下边更为简洁:
 	
-	```html
-	<!-- mypage.mtt : -->
-	::use 'design.mtt'::
-    	<h2>The content to write in design.mtt</h2>
-	::end::
-	
-	<!-- design.mtt :-->
-	::raw __content__::
-	```
+```html
+<!-- mypage.mtt : -->
+::use 'design.mtt'::
+<h2>The content to write in design.mtt</h2>
+::end::
 
-	在上边的示例中使用了 `::use 'design.mtt'::` 用引号引用模板, 实际上,可以更灵活像这样:
-	
-	```html
-	::use theme+'.mtt'::
-	...
-	::end::
-	```
+<!-- design.mtt :-->
+::raw __content__::
+```
+
+在上边的示例中使用了 `::use 'design.mtt'::` 用引号引用模板, 实际上,可以更灵活像这样:
+
+```html
+::use theme+'.mtt'::
+...
+::end::
+```
 	
 	这样的话, theme 可以被当成一个变量, 当设变量 theme='design' 时,那么则对应为 'design.mtt',其它当 theme = 'blueDesign' 时则将对应 'blueDesign.mtt'
 	
  * attr 一个添加attribute语法糖, 注意常量字符串要用引号括起来,否则会被当成变量处理
 
-	```html
-	<ul>
-	::foreach link links::
-	    <li><a ::attr title link.title; href link.href::>::link.title::</a></li>
-	::end::
-	</ul>
-	
-	<!-- 上边的那行 li 其实就等于 -->
-		<li><a href="::link.href::" title="::link.title::">::link.title::</a></li>
-	```
+```html
+<ul>
+::foreach link links::
+    <li><a ::attr title link.title; href link.href::>::link.title::</a></li>
+::end::
+</ul>
+
+<!-- 上边的那行 li 其实就等于 -->
+	<li><a href="::link.href::" title="::link.title::">::link.title::</a></li>
+```
 	
 	将产生:
 	
-	```html
-	<ul>
-	    <li><a href="http://www.google.com" title="google search">google search</a></li>
-	    <li><a href="http://www.haxe.org" title="Haxe">Haxe</a></li>
-	</ul>	
-	```
+```html
+<ul>
+    <li><a href="http://www.google.com" title="google search">google search</a></li>
+    <li><a href="http://www.haxe.org" title="Haxe">Haxe</a></li>
+</ul>	
+```
 	
 	看上去非常适合用在表单的 input,select/option 这些元素上:
 	
-	```html
-	<!-- 只有当 someCondition 的值为 true 时,才会添加 checked="checked" -->
-	<input type="checkbox" value="some value" ::attr checked someCondition::/>	
-	
-	<select>
-	    ::foreach opt availableOptions::
-	    <option value="::opt.value::" ::attr selected (opt.value == currentValue)::>::opt.name::</option>
-	    ::end::
-	</select>	
-	```
+```html
+<!-- 只有当 someCondition 的值为 true 时,才会添加 checked="checked" -->
+<input type="checkbox" value="some value" ::attr checked someCondition::/>	
+
+<select>
+    ::foreach opt availableOptions::
+    <option value="::opt.value::" ::attr selected (opt.value == currentValue)::>::opt.name::</option>
+    ::end::
+</select>	
+```
 	
 
  * attr 和条件检测,常量字符串用引号包围。 当条件表达为 **非true** 值时, 则不会添加任何属性
 
-	```html
-	::attr attributeName if( someCondition ) "A" else "B"::
-	
-	or
-	
-	::attr attributeName if( someCondition ) "A"::
-	``` 
+```html
+::attr attributeName if( someCondition ) "A" else "B"::
+
+or
+
+::attr attributeName if( someCondition ) "A"::
+``` 
 
 #### templo macros
 

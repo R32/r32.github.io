@@ -36,17 +36,17 @@ openfl 是建立在 Haxe 上的一个跨平台类库, 提供一套　统一的 A
 
  * 命令行创建,原链接为:[create certificate]
 
-	```bash
-	#Requires keytool part of the Java JDK (For me found in C:\Development\Java JDK\bin):
-	keytool -genkey -v -keystore "my_name.keystore" -alias my_name -keyalg RSA -keysize 2048 -validity 10000
-	```	
+```bash
+#Requires keytool part of the Java JDK (For me found in C:\Development\Java JDK\bin):
+keytool -genkey -v -keystore "my_name.keystore" -alias my_name -keyalg RSA -keysize 2048 -validity 10000
+```	
 
  * 然后`openfl` `xml` 配置文件
 
-	```xml
-	<!-- 除了if = android,每个属性属性都必须 -->
-	<certificate path="my_name.keystore" password="1234" alias="my_name" alias-password="1234" if="android" />
-	```
+```xml
+<!-- 除了if = android,每个属性属性都必须 -->
+<certificate path="my_name.keystore" password="1234" alias="my_name" alias-password="1234" if="android" />
+```
 
 [create certificate]:http://www.openfl.org/archive/community/general-discussion/openfl-android-singing-guide/
 
@@ -108,28 +108,29 @@ openfl 是建立在 Haxe 上的一个跨平台类库, 提供一套　统一的 A
  
  * 使用 `openfl.utils.JNI` 能很容易创建 从 Haxe 调用 `android`以及回调.
  
-	```as
-	// 详细实例参看下边  `textFiled`中文输入.
-	class SampleClassName{
-		 static var _sampleFunction1 = openfl.utils.JNI.createStaticMethod("com/SampleClassName", "sampleFunction1", "(Ljava/lang/String;Lorg/haxe/lime/HaxeObject;)V", true);
-		 
-		 static public function sampleFunction1(text:String,obj:Dynamic):Void{
-		 	var a = new Array<Dynamic>();
-			a.push(text);
-			a.push(obj);
-			_sampleFunction1(a);
-		 }
+```as
+// 详细实例参看下边  `textFiled`中文输入.
+class SampleClassName{
+	 static var _sampleFunction1 = openfl.utils.JNI.createStaticMethod("com/SampleClassName", "sampleFunction1", "(Ljava/lang/String;Lorg/haxe/lime/HaxeObject;)V", true);
+	 
+	 static public function sampleFunction1(text:String,obj:Dynamic):Void{
+	 	var a = new Array<Dynamic>();
+		a.push(text);
+		a.push(obj);
+		_sampleFunction1(a);
 	 }
-	```
+ }
+```
+
  * [更简单的方法](https://github.com/player-03/haxeutils#jniclassbuilderhx)
 
-	```haxe
-	// 这个 haxe类 所在的包　要和 java类所在的包一致
-	#if !macro @:build(com.player03.haxeutils.JNIClassBuilder.build()) #end
-	class SampleClassName {
-	    @jni public static function sampleFunction1(var1:String, var2:Dynamic):Void;
-	}
-	```
+```haxe
+// 这个 haxe类 所在的包　要和 java类所在的包一致
+#if !macro @:build(com.player03.haxeutils.JNIClassBuilder.build()) #end
+class SampleClassName {
+    @jni public static function sampleFunction1(var1:String, var2:Dynamic):Void;
+}
+```
 
  * `NDK` 原生扩展
 
@@ -146,20 +147,20 @@ openfl 是建立在 Haxe 上的一个跨平台类库, 提供一套　统一的 A
 
  * 显示中文标题名
 
-	```js
-	// 在浏览器控制台上粘贴下边代码,并替换'测试' 字符,
-	// 将返回的字符串用于xml的 meta 标签.例如: <meta title="\u6d4b\u8bd5" />
-	 (function(text){
-		var i = 0,len = text.length,ret = [];
-		
-		len && ret.push('');
+```js
+// 在浏览器控制台上粘贴下边代码,并替换'测试' 字符,
+// 将返回的字符串用于xml的 meta 标签.例如: <meta title="\u6d4b\u8bd5" />
+ (function(text){
+	var i = 0,len = text.length,ret = [];
+	
+	len && ret.push('');
 
-		for(; i<len; i+= 1){
-			ret.push(String.prototype.charCodeAt.call(text,i).toString(16))	
-		}
-		return ret.join('\\u');
-	})('测试')
-	```
+	for(; i<len; i+= 1){
+		ret.push(String.prototype.charCodeAt.call(text,i).toString(16))	
+	}
+	return ret.join('\\u');
+})('测试')
+```
 
  * 显示中文字符,需要设置相关字体为`system/fonts/DroidSansFallback.ttf`
 
@@ -175,51 +176,52 @@ openfl 是建立在 Haxe 上的一个跨平台类库, 提供一套　统一的 A
 
  * 一些 `xml` 文件配置
 
-	```xml
-	<!-- 指定版本 -->
-	<android minimum-sdk-version="9" target-sdk-version="16" />
+```xml
+<!-- 指定版本 -->
+<android minimum-sdk-version="9" target-sdk-version="16" />
 
-	<!-- 指定为竖屏,其它平台也适用 orientation="landscape" 为横屏 -->
-	<window orientation="portrait" />
-	```
+<!-- 指定为竖屏,其它平台也适用 orientation="landscape" 为横屏 -->
+<window orientation="portrait" />
+```
 
  * 当丢失焦点时:
 
-	```as
+```as
+Lib.current.stage.addEventListener(Event.DEACTIVATE, doSomething);
+
+private function doSomething (e:Event) {
+	trace('Bye');
+	//you could turn off the music
+	//pause game
+	//or reduce fps to 1: Lib.current.stage.frameRate = 1;
+	//or save anything
+	Lib.current.stage.removeEventListener(Event.DEACTIVATE, doSomething);
+	Lib.current.stage.addEventListener(Event.ACTIVATE, doAnotherThing);
+}
+
+private function doAnotherThing (e:Event) {
+	trace('Hello');
+	//you could turn on the music
+	//unpause game
+	//or reput fps to regular;
+	Lib.current.stage.removeEventListener(Event.ACTIVATE, doAnotherThing);
 	Lib.current.stage.addEventListener(Event.DEACTIVATE, doSomething);
-
-	private function doSomething (e:Event) {
-		trace('Bye');
-		//you could turn off the music
-		//pause game
-		//or reduce fps to 1: Lib.current.stage.frameRate = 1;
-		//or save anything
-		Lib.current.stage.removeEventListener(Event.DEACTIVATE, doSomething);
-		Lib.current.stage.addEventListener(Event.ACTIVATE, doAnotherThing);
-	}
-
-	private function doAnotherThing (e:Event) {
-		trace('Hello');
-		//you could turn on the music
-		//unpause game
-		//or reput fps to regular;
-		Lib.current.stage.removeEventListener(Event.ACTIVATE, doAnotherThing);
-		Lib.current.stage.addEventListener(Event.DEACTIVATE, doSomething);
-	}
-	```
+}
+```
 
  * 调试 `android Log` 
 
-	```bash
-	# 这样只输出 trace 的信息
-	adb logcat -s "trace"
+```bash
+# 这样只输出 trace 的信息
+adb logcat -s "trace"
 
-	# 指定多个 -s
-	adb logcat -s "trace" -s "MyActivity"
+# 指定多个 -s
+adb logcat -s "trace" -s "MyActivity"
 
-	# android-sdk/tools/ 创建 虚拟SD卡文件
-	mksdcard 512M D:/abc.img
-	```  	
+# android-sdk/tools/ 创建 虚拟SD卡文件
+mksdcard 512M D:/abc.img
+```
+
  * 当设置 `<window fullscreen="false" />` 时.
 
 	> `android` 平台的 `stage.stageHeight` 仍然和全屏时相等. 没有减去顶栏的高度
@@ -228,9 +230,9 @@ openfl 是建立在 Haxe 上的一个跨平台类库, 提供一套　统一的 A
 
  * 写文件
 
- 	```haxe
- 	File.write(SystemPath.applicationStorageDirectory + '/yourpath/filename',true);
- 	```
+```haxe
+File.write(SystemPath.applicationStorageDirectory + '/yourpath/filename',true);
+```
 
  * 其它的以后再添加....
 

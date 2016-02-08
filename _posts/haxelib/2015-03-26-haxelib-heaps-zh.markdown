@@ -202,11 +202,11 @@ H2D中, 可以访问 Anim 的下边属性和方法:
 
  * onAnimEnd: 可设置的 dynamic 方法,当 Anim 结速时将调用
 
-	```
-	anim.onAnimEnd = function(){
-		trace("END!");
-	}
-	```
+```js
+anim.onAnimEnd = function(){
+	trace("END!");
+}
+```
 
 详细可参考 h2d.Anim API.
 
@@ -234,7 +234,7 @@ H2D中, 可以访问 Anim 的下边属性和方法:
 
 将 Bitmapfont 的二个文件复制到 资源文件夹 中: customFont.png 和 customFont.fnt,然后像这样:
 
-```
+```haxe
 // 通过 Res　类加载资源
 var font = hxd.Res.customFont.toFont();
 ```
@@ -281,7 +281,7 @@ h2d.Text 是一个文本字段,可以轻松的更改其属性和文本内容
 
 然后, 一个显示文本的示例:
 
-```
+```haxe
 // 加载 bitmapFont
 var font = hxd.Res.customFont.toFont();
 

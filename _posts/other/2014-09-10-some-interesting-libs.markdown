@@ -45,18 +45,18 @@ https://github.com/sindresorhus/awesome
 
  * [webify](https://github.com/ananthakumaran/webify) 转换 ttf 到 woff, eot 和 svg
 
-	```css
-	@font-face {
-        font-family: 'my-font-family';
-        src: url('my-font-filename.eot');
-        src: url('my-font-filename.eot?#iefix') format('embedded-opentype'),
-        url('my-font-filename.svg#my-font-family') format('svg'),
-        url('my-font-filename.woff') format('woff'),
-        url('my-font-filename.ttf') format('truetype');
-        font-weight: normal;
-        font-style: normal;
-    }
-	```
+```css
+@font-face {
+font-family: 'my-font-family';
+src: url('my-font-filename.eot');
+src: url('my-font-filename.eot?#iefix') format('embedded-opentype'),
+url('my-font-filename.svg#my-font-family') format('svg'),
+url('my-font-filename.woff') format('woff'),
+url('my-font-filename.ttf') format('truetype');
+font-weight: normal;
+font-style: normal;
+}
+```
 
  * Socket 调试工具
 

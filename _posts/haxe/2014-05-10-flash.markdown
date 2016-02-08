@@ -9,19 +9,19 @@ categories: haxe
 
  * flash.Lib 提供几个方法,也许会很有用, 如:
 
-	```as
-	// 如在 as3 中经常用到的 
-	event.currentTarget as SomeClass
-	
-	// 在 haxe 应该写为
-	Lib.as(event.currentTarget, SomeClass);
-	
-	// 在浏览器中将 trace 输出到浏览器的 console
-	Lib.redirectTraces()
-	
-	// 调用 as3 自带的 trace 而非 haxe 提供的.
-	Lib.trace(arg:Dynamic)
-	```
+```as
+// 如在 as3 中经常用到的 
+event.currentTarget as SomeClass
+
+// 在 haxe 应该写为
+Lib.as(event.currentTarget, SomeClass);
+
+// 在浏览器中将 trace 输出到浏览器的 console
+Lib.redirectTraces()
+
+// 调用 as3 自带的 trace 而非 haxe 提供的.
+Lib.trace(arg:Dynamic)
+```
 
 <!-- more -->
 
@@ -308,11 +308,11 @@ You can use a patch file with --macro patchTypes('patchFile')
 
  * openfl 项目, `haxepunk` 库源码有一个很好的示例.
 
-	```xml
-	<app preloader="MyPreloader" />
-	<!-- 源码中必须能查找得到MyPreloader这个类,也可以指定包名如: -->
-	<app preloader="com.myname.Preloader" />
-	```
+```xml
+<app preloader="MyPreloader" />
+<!-- 源码中必须能查找得到MyPreloader这个类,也可以指定包名如: -->
+<app preloader="com.myname.Preloader" />
+```
 
 ### 补充
 

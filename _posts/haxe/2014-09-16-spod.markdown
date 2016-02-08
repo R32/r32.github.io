@@ -146,13 +146,13 @@ typedef SEnum<E:EnumValue> = Null<E>	// 允许存储不具有参数, 简单的in
 
  * `@:id(field1,field2,...)`： 指定表的主键字段。例如下面的类并没有一个唯一的 id 与自动递增，但两个字段组成 联合主键 
 
-	```haxe
-	@:id(uid,gid)
-	class UserGroup extends sys.db.Object {
-		public var uid : SInt;
-		public var gid : SInt;
-	}
-	```
+```haxe
+@:id(uid,gid)
+class UserGroup extends sys.db.Object {
+	public var uid : SInt;
+	public var gid : SInt;
+}
+```
 
  * `@:index(field1,field2,...,[unique])`: 声明指定的字段为索引(index)-并将按此顺序进行索引。如果最后一个字段是 unique 类型这意味着这是唯一性索引(unique index)（可以声明多个@:index, 每个字段值的组合可以只能出现一次）
 

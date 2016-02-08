@@ -89,11 +89,11 @@ haxe -main Main -swf Main.swf
 
 仅于快速测试, 不会生成 air 文件
 
- ```bat
- :: 命令很简单,不需要 certificate 文件
- :: swfdir可以为空,则为当前目录
- adl %APP_XML% %swfdir%
- ```
+```bat
+:: 命令很简单,不需要 certificate 文件
+:: swfdir可以为空,则为当前目录
+adl %APP_XML% %swfdir%
+```
 
 #### 打包成air
 

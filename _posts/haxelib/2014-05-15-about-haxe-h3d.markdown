@@ -37,15 +37,15 @@ categories: haxelib
 	
  * **Interactive** 用于交互.
 
-	```haxe
-	// 如何给 h2d.Bitmap 添加事件.
-	var bmp = new h2d.Bitmap(Res.some_png.toTile(), s2d );
+```haxe
+// 如何给 h2d.Bitmap 添加事件.
+var bmp = new h2d.Bitmap(Res.some_png.toTile(), s2d );
 
-	var it = new Interactive(s2d.width, s2d.height, bmp);
-	it.onClick = function(e : hxd.Event){
-		trace(e); // ERelease[e.relX,e.relY]
-	}
-	```	
+var it = new Interactive(s2d.width, s2d.height, bmp);
+it.onClick = function(e : hxd.Event){
+	trace(e); // ERelease[e.relX,e.relY]
+}
+```	
 
 #### comp
 
@@ -53,14 +53,14 @@ categories: haxelib
 
  * **Context**
 
-	```haxe
-	// 在初使化 h3d 之前可以修改组件默认的 css fileString
-	public static var DEFAULT_CSS = hxd.res.Embed.getFileContent("h2d/css/default.css");
-	// 优先返回缓存 字体
-	public static function getFont( name : String, size : Int ):hxd.Font{}
-	// 优先返回缓存 Tile
-	public static function makeTileIcon( pixels : hxd.Pixels ) : h2d.Tile {} 
-	```
+```haxe
+// 在初使化 h3d 之前可以修改组件默认的 css fileString
+public static var DEFAULT_CSS = hxd.res.Embed.getFileContent("h2d/css/default.css");
+// 优先返回缓存 字体
+public static function getFont( name : String, size : Int ):hxd.Font{}
+// 优先返回缓存 Tile
+public static function makeTileIcon( pixels : hxd.Pixels ) : h2d.Tile {} 
+```
 
 
 ### hxd
@@ -173,11 +173,12 @@ class Test{
 
 	> 当中文字符太长(3750个字符),在嵌入时将会发生 IO 错误. 所以还是使用外部 bitmap font 工具来生成吧.
 
-	```haxe
-	// CN_STR 为常用中文字符(3750).
-	// 实际上 FontBuilder 是将字符一个一个地 draw 到 bitmapData 中
-	var font = FontBuilder.getFont("simfang", 16, { chars: MRes.CN_STR,antiAliasing : false} );
-	```
+```haxe
+// CN_STR 为常用中文字符(3750).
+// 实际上 FontBuilder 是将字符一个一个地 draw 到 bitmapData 中
+var font = FontBuilder.getFont("simfang", 16, { chars: MRes.CN_STR,antiAliasing : false} );
+```
+
 ### hxsl
 
 [参看 hxsl 的单独记录]({% post_url 2014-11-16-hxsl %}).
@@ -230,17 +231,17 @@ legacy
 
 	> `air` 粒子生成器. 因为要保存文件,需要在 AIR 中运行.
 	
-	```haxe
-	// %flex_sdk%\bin\adl parts.app
-	import h3d.parts.Data;
-	// extends hxd.App
-	// default.p 为粒子生成器保存的文件.
-	var state:State = Unserializer.run(Embed.getFileContent("res/default.p"));
-	// 可以更换 texture
-	state.frames = [State.defPart.toTile()];
-	
-	var emit = new Emitter(state, s3d);	
-	```
+```haxe
+// %flex_sdk%\bin\adl parts.app
+import h3d.parts.Data;
+// extends hxd.App
+// default.p 为粒子生成器保存的文件.
+var state:State = Unserializer.run(Embed.getFileContent("res/default.p"));
+// 可以更换 texture
+state.frames = [State.defPart.toTile()];
+
+var emit = new Emitter(state, s3d);	
+```
 
  * `perlin`
 

@@ -44,21 +44,21 @@ hxcpp 会自动根据平台选择不同的 C++编译器. 任意平吧上编译�
  * `__cpp__` 直接在 haxe 代码中嵌入 cpp 源码.　https://github.com/HaxeFoundation/haxe/pull/2875
 
 
-	```haxe
-	// __cpp__ 后边的 字符串不支持　字符串连接变量, 只是直接常量字符串
-	untyped __cpp__('printf("hello world!")');
-	
-	// 使用下边方法传递变量到 __cpp__
-	// 但是如果使用了传参数,很容易就出错在多行时.
-	inline private static function setInt(bytes:haxe.io.BytesData, addr:Int, x:Int){
-		untyped __cpp__("*((int *) ({0}->GetBase() + {1})) = {2}",bytes,addr,x);
-	}
-	
-	// 实际上可以直接使用 CPP 的变量, 但只可以是函数的参数变量, 不可以为函数体内部的局部变量, 
-	public function setFade(start_msec:Int){
-		untyped __cpp__("gme_set_fade(start_msec);");	// 	直接引用函数参数变量, 
-	}
-	```
+```haxe
+// __cpp__ 后边的 字符串不支持　字符串连接变量, 只是直接常量字符串
+untyped __cpp__('printf("hello world!")');
+
+// 使用下边方法传递变量到 __cpp__
+// 但是如果使用了传参数,很容易就出错在多行时.
+inline private static function setInt(bytes:haxe.io.BytesData, addr:Int, x:Int){
+	untyped __cpp__("*((int *) ({0}->GetBase() + {1})) = {2}",bytes,addr,x);
+}
+
+// 实际上可以直接使用 CPP 的变量, 但只可以是函数的参数变量, 不可以为函数体内部的局部变量, 
+public function setFade(start_msec:Int){
+	untyped __cpp__("gme_set_fade(start_msec);");	// 	直接引用函数参数变量, 
+}
+```
 
  * `__global__` 参看 `\haxe\std\cpp\_std\Std.hx` 源码.
 
@@ -156,10 +156,10 @@ In order to [improve support for interacting](http://haxe.1354130.n2.nabble.com/
 
  * 无法以 new 的方式来创建外部 cpp 类, 因为它返回的是一个指针, 只能用　静态方法创建
 
-	```haxe
-	@:native("new RGB")
-	public static function create(r:Int, g:Int, b:Int):Pointer<RGB>;
-	```
+```haxe
+@:native("new RGB")
+public static function create(r:Int, g:Int, b:Int):Pointer<RGB>;
+```
 
  * 在 extern class 上加上 @:structAccess,
 
@@ -201,28 +201,28 @@ cpp.Float64    double
 
   - hxarray.(`__unsafe_get, __unsafe_set, __get, __set`) 带 unsafe 的方法没有做边界检测.
 
-	```haxe
-	// Pointer<T>, T 的类型和 数组类型一致
-	var pa:cpp.Pointer<Int> = cpp.Pointer.arrayElem([1,2,3], 0 )
-	var pa2:cpp.Pointer<Float> = cpp.NativeArray.address([1.0, 2.0, 3.0], 0);
-	```
+```haxe
+// Pointer<T>, T 的类型和 数组类型一致
+var pa:cpp.Pointer<Int> = cpp.Pointer.arrayElem([1,2,3], 0 )
+var pa2:cpp.Pointer<Float> = cpp.NativeArray.address([1.0, 2.0, 3.0], 0);
+```
 
  * **cpp.NativeString**, 转换成 `char*` 也可以调用 `var cstr:ConstPointer<Char> = untyped hxstr.__s`
 
-	```haxe
-	using cpp.NativeString;
+```haxe
+using cpp.NativeString;
+
+//......
+var str:String = "haxeString2CString";
+
+// 编译为 ::cpp::Pointer< ::cpp::Char > cstr = ::cpp::Pointer< ::cpp::Char >(::cpp::Pointer_obj::fromPointer(str.__s));
+var cstr:ConstPointer<Char> = str.c_str();
+
+str = cstr.fromPointer();
 	
-	//......
-	var str:String = "haxeString2CString";
-	
-	// 编译为 ::cpp::Pointer< ::cpp::Char > cstr = ::cpp::Pointer< ::cpp::Char >(::cpp::Pointer_obj::fromPointer(str.__s));
-	var cstr:ConstPointer<Char> = str.c_str();
-	
-	str = cstr.fromPointer();
-		
-	// .__s 这个成员变量在　neko 平台也适用.
-	var cstr2:ConstPointer<Char> = untyped str.__s;
-	```
+// .__s 这个成员变量在　neko 平台也适用.
+var cstr2:ConstPointer<Char> = untyped str.__s;
+```
 
 ### buildXml
 

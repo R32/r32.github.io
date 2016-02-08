@@ -28,10 +28,10 @@ https://github.com/cmangos/issues 这里有一些仿的源码.
  * 开发环境 - ?? 只能使用 `/dump` 来调试各种 API 
 
 	一些常用SLASH调试命令:
-	```bash
-	/dump EXPRESSION	# 相当于JS的在浏览器上输入 console.log(...)
-	/run ReLoadUI()		# 重载插件
-	```
+```bash
+/dump EXPRESSION	# 相当于JS的在浏览器上输入 console.log(...)
+/run ReLoadUI()		# 重载插件
+```
 
  * 可视化布局IDE - 
 
@@ -49,19 +49,19 @@ https://github.com/cmangos/issues 这里有一些仿的源码.
 
  1. 首先在命令行下带 `-console` 参数加载游戏
 
-	```bash
-	wow.exe -console
-	```
+```bash
+wow.exe -console
+```
 
  2. 接下来的会进入到游戏登录界面, 这时 按下 `~` 键(数字1左边的键), 将进入到 控制台窗口
 
 
  3. 获得FrameXML, 在控制台窗口输入下边命令: 
 
-	```bash
-	exportInterfaceFiles code	
-	exportInterfaceFiles art		# 这个命令将导致使卡住一些分钟,因为导出的数据量有 1.3G 左右
-	```
+```bash
+exportInterfaceFiles code	
+exportInterfaceFiles art		# 这个命令将导致使卡住一些分钟,因为导出的数据量有 1.3G 左右
+```
 	一些比较旧的客户端(如: 1.121)可能并不支持这个命令, 因此需要自已解压 interface.MPQ
 	
  4. 最后在目录中可以找到对应的 BlizzardInterfaceArt 及 BlizzardInterfaceCode 目录
@@ -261,16 +261,16 @@ http://www.cnblogs.com/apexaddon/articles/1507772.html
 
   - frameStrata(string) 标识此元素所在的层
 
-		```bash
-		BACKGROUND 	# 通常用于放置不与鼠标事件发生反应的对象。所有位于此框架层中的对象均不会对鼠标事件发生反应，除非其框架级别大于1
-		LOW		# 被默认用户界面用于增益效果框架、物品耐久度框架、团队界面及宠物框架
-		MEDIUM	# UIParent框架所在的框架层，也是其所有子框架默认所在的框架层
-		HIGH	# higher-priority UI 元素的默认层, 如 Calendar(日历) 和 Loot frames(拾取窗口)
-		DIALOG	# 用于任何弹出并试图与用户交互的对话框类框架
-		FULLSCREEN	# 全屏层,例如世界地图, 打开时将遮盖住所有界面
-		FULLSCREEN_DIALOG	# 全屏层上的对话框层
-		TOOLTIP		# 提示窗口层.
-		```
+```bash
+BACKGROUND 	# 通常用于放置不与鼠标事件发生反应的对象。所有位于此框架层中的对象均不会对鼠标事件发生反应，除非其框架级别大于1
+LOW		# 被默认用户界面用于增益效果框架、物品耐久度框架、团队界面及宠物框架
+MEDIUM	# UIParent框架所在的框架层，也是其所有子框架默认所在的框架层
+HIGH	# higher-priority UI 元素的默认层, 如 Calendar(日历) 和 Loot frames(拾取窗口)
+DIALOG	# 用于任何弹出并试图与用户交互的对话框类框架
+FULLSCREEN	# 全屏层,例如世界地图, 打开时将遮盖住所有界面
+FULLSCREEN_DIALOG	# 全屏层上的对话框层
+TOOLTIP		# 提示窗口层.
+```
 		
   - enableKeyboard(boolean) 元素是否接收键盘输入
 
@@ -400,114 +400,114 @@ http://wowprogramming.com/docs/api_types#hyperlink
 	
 	格式示例: 
 	
-	```bash
-	|cff9d9d9d|Hitem:7073:0:0:0:0:0:0:0:80:0:0:0:0|h[Broken Fang]|h|r
-	
-	# 各部分析	
-	|cff9d9d9d		# 自定义的颜色值,开始
-	|H	# hyperlink 开始
-	item:7073:0:0:0:0:0:0:0:80:0:0:0:0	# linkdata, 这里表现为 itemString
-	|h	# linkdata 结束
-	[Broken Fang]	# 文本描述字符
-	|h	# hyperlink 结束
-	|r	# 恢复到通常状态的颜色 
-	```
+```bash
+|cff9d9d9d|Hitem:7073:0:0:0:0:0:0:0:80:0:0:0:0|h[Broken Fang]|h|r
+
+# 各部分析	
+|cff9d9d9d		# 自定义的颜色值,开始
+|H	# hyperlink 开始
+item:7073:0:0:0:0:0:0:0:80:0:0:0:0	# linkdata, 这里表现为 itemString
+|h	# linkdata 结束
+[Broken Fang]	# 文本描述字符
+|h	# hyperlink 结束
+|r	# 恢复到通常状态的颜色 
+```
 
 	[itemString](http://wowwiki.wikia.com/wiki/ItemString): 经常作为 UI 的文本内容,由"item" 与 13 个 ":" 分隔符组成.
 	
 	示例, 注意种版本格式可能会有差异, 可以检索wiki网页的历史版本,如比较旧的[itemString](http://wowwiki.wikia.com/wiki/ItemString?oldid=76418)	
 	
-	```bash
-	item:7073:0:0:0:0:0:0:0:80:0:0:0:0
-	
-	# 各部分以 : 作为分隔符
-	item	# (0)itemString 的识别符总是为"item"
-	7073	# (1)itemID, 物品ID值, 经常作为 GetItemInfo() 的参数。
-	0		# (2)enchantId, 附魔
-	0,0,0,0	# (3~6)jewelId1~4个, 作为物品的宝石插孔,因此其值为 EnchantID, 在 Patch 2.0 时期添加
-	0		# (7)suffixId, 物品随机属性(比如一些制造类装备会随机的给属性), 参见 SuffixIds.
-	0		# (8)uniqueId, ???一些特定的信息或者属于特定的场景(如风暴要塞的橙器), 或一些任务中的道具常常具有这个属性
-	80		# (9)linkLevel, 提供的角色等级, 用于计算传家宝物品的弹性属性, 添加于 Patch 3.0 
-	0		# (10)specializationID, ???专精(TODOS: 同一件装备在专精下属性将不一样), 添加于 Patch 6.2.0
-	0		# (11)reforgeld 添加于 Patch 4.0.2
-	0		# (12)unknown1 未知估计是作为保留值
-	0		# (13)unknown2
-	
-	# 你可以使用如下LUA代码来获得各部分值, 注意旧版本不支持 strsplit
-	local _, itemId, enchantId, jewelId1, jewelId2, jewelId3, jewelId4, suffixId, uniqueId,
-	linkLevel, specializationID, reforgeId, unknown1, unknown2 = strsplit(":", itemString)
-	```
+```bash
+item:7073:0:0:0:0:0:0:0:80:0:0:0:0
+
+# 各部分以 : 作为分隔符
+item	# (0)itemString 的识别符总是为"item"
+7073	# (1)itemID, 物品ID值, 经常作为 GetItemInfo() 的参数。
+0		# (2)enchantId, 附魔
+0,0,0,0	# (3~6)jewelId1~4个, 作为物品的宝石插孔,因此其值为 EnchantID, 在 Patch 2.0 时期添加
+0		# (7)suffixId, 物品随机属性(比如一些制造类装备会随机的给属性), 参见 SuffixIds.
+0		# (8)uniqueId, ???一些特定的信息或者属于特定的场景(如风暴要塞的橙器), 或一些任务中的道具常常具有这个属性
+80		# (9)linkLevel, 提供的角色等级, 用于计算传家宝物品的弹性属性, 添加于 Patch 3.0 
+0		# (10)specializationID, ???专精(TODOS: 同一件装备在专精下属性将不一样), 添加于 Patch 6.2.0
+0		# (11)reforgeld 添加于 Patch 4.0.2
+0		# (12)unknown1 未知估计是作为保留值
+0		# (13)unknown2
+
+# 你可以使用如下LUA代码来获得各部分值, 注意旧版本不支持 strsplit
+local _, itemId, enchantId, jewelId1, jewelId2, jewelId3, jewelId4, suffixId, uniqueId,
+linkLevel, specializationID, reforgeId, unknown1, unknown2 = strsplit(":", itemString)
+```
 
 	几个相关的方法全都返回 hyperlink
-	```
-	GetAuctionItemLink(TYPE, index) -- 拍卖行,TYPE: "list","bidder","owner"
-	GetContainerItemLink(bagID, slotID) -- 背包
-	GetInventoryItemLink("unit",slot) -- 装备面板栏
-	```
+```
+GetAuctionItemLink(TYPE, index) -- 拍卖行,TYPE: "list","bidder","owner"
+GetContainerItemLink(bagID, slotID) -- 背包
+GetInventoryItemLink("unit",slot) -- 装备面板栏
+```
 
  * [questLink](http://wowwiki.wikia.com/wiki/QuestLink) 任务链接,点击后将显示一些任务描述
 	
 	格式示例: 
 	
-	```bash
-	|cff808080|Hquest:99:15|h[Arugal's Folly]|h|r
-	|cffffff00|Hquest:982:17|h[Deep Ocean, Vast Sea]|h|r
-	
-	# 一些部分参考 itemLink 中的描述, 这里主要描述 questString
-	# http://wowprogramming.com/docs/api_types#hyperlink
-	quest	#(0) 识别符,总是为 "quest"
-	99		#(1) questId, 任务唯一标识符, 但是并没有任何可用的API使用它(防止被人为的解析任务链?), 只存于任务数据库中.
-	15		#(2) questLevel, 角色尝试这个任务所需要的等级,(如果值为 -1, 则表示没有等级限制,比如一些节日任务)
-	
-	# \124 为字符 "|"
-	/script SendChatMessage("\124cffffff00\124Hquest:99:15\124h[Arugal's Folly]\124h\124r", "SAY", "Common");
-	/script DEFAULT_CHAT_FRAME:AddMessage("Shift-click this link to put into chat: \124cffffff00\124Hquest:99:15\124h[Arugal's Folly]\124h\124r");
-	```
+```bash
+|cff808080|Hquest:99:15|h[Arugal's Folly]|h|r
+|cffffff00|Hquest:982:17|h[Deep Ocean, Vast Sea]|h|r
+
+# 一些部分参考 itemLink 中的描述, 这里主要描述 questString
+# http://wowprogramming.com/docs/api_types#hyperlink
+quest	#(0) 识别符,总是为 "quest"
+99		#(1) questId, 任务唯一标识符, 但是并没有任何可用的API使用它(防止被人为的解析任务链?), 只存于任务数据库中.
+15		#(2) questLevel, 角色尝试这个任务所需要的等级,(如果值为 -1, 则表示没有等级限制,比如一些节日任务)
+
+# \124 为字符 "|"
+/script SendChatMessage("\124cffffff00\124Hquest:99:15\124h[Arugal's Folly]\124h\124r", "SAY", "Common");
+/script DEFAULT_CHAT_FRAME:AddMessage("Shift-click this link to put into chat: \124cffffff00\124Hquest:99:15\124h[Arugal's Folly]\124h\124r");
+```
 	
 	更多示例: 
 	
-	```lua
-	local function findLast(haystack, needle)
-		local i=string.gfind(haystack, ".*"..needle.."()")()
-		if i==nil then return nil else return i-1 end
-	end
-	
-	local indx = findLast(desc, ":");
-	local questId = string.sub(desc, 1, indx-1);
-	local questLevel = string.sub(desc, indx+2);
-	```
+```lua
+local function findLast(haystack, needle)
+	local i=string.gfind(haystack, ".*"..needle.."()")()
+	if i==nil then return nil else return i-1 end
+end
+
+local indx = findLast(desc, ":");
+local questId = string.sub(desc, 1, indx-1);
+local questLevel = string.sub(desc, indx+2);
+```
 
  * spell:
 	
-	```
-	|cffffd000|Henchant:59387|h[Certificate of Ownership]|h|r
-	```
+```
+|cffffd000|Henchant:59387|h[Certificate of Ownership]|h|r
+```
 
  * channel: `|Hchannel:Guild|h[公会]|h` 没有文档.
 
 
  * player: 点击 playerLink 默认情况下左键点击将产生"密语"的文本输入框, 右键则将弹出一个上下文菜单(有如邀请入队或加入黑名单之类的选项),Shift+左键 将查询(/who NAME)这个玩家的一些信息. 
 
-	```bash
-	|Hplayer:Aerdrig:1:WHISPER:AERDRIG|h[Aerdrig]|h
-	
-	# 
-	player	#(0) 标识符
-	Aerdrig	#(1) name,玩家名, 当跨服时(比如在战场)名字表现为(name-server,跨服邮寄小号也是这种形式)
-	1		#(2) ChatID, 聊天窗口
-	WHISPER	#(3) ???
-	AERDRIG	#(4) ???
-	```
+```bash
+|Hplayer:Aerdrig:1:WHISPER:AERDRIG|h[Aerdrig]|h
+
+# 
+player	#(0) 标识符
+Aerdrig	#(1) name,玩家名, 当跨服时(比如在战场)名字表现为(name-server,跨服邮寄小号也是这种形式)
+1		#(2) ChatID, 聊天窗口
+WHISPER	#(3) ???
+AERDRIG	#(4) ???
+```
 	注意 playerLink 仅能由客户端实现, 将playerLink像物品一样发送到聊天窗口将不会起作用.
 
  * playerGM: 和 "player" 类似, 但用于和 GM 聊天.
 
-	```bash
-	|HplayerGM:Eyonix|h[Eyonix]|h
-	```
+```bash
+|HplayerGM:Eyonix|h[Eyonix]|h
+```
 	
  * glyph: 雕文
 
-	```bash
-	|cff66bbff|Hglyph:23:460|h[Glyph of Fortitude]|h|r
-	```
+```bash
+|cff66bbff|Hglyph:23:460|h[Glyph of Fortitude]|h|r
+```

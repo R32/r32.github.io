@@ -45,31 +45,31 @@ categories: haxelib
 
 	> 如需在 haxe 中调用,　可以 haxelib dev 的方式添加到本地库.
 	
-	```bash
-	# castle-master 为　解压后所在文件夹
-	haxelib dev castle castle-master
-	```
+```bash
+# castle-master 为　解压后所在文件夹
+haxelib dev castle castle-master
+```
 	
  - 当位于 castle 的目录中内时, 在命令行下输入: `nw.exe bin` 就行了. bin 为目录名
 
-	```bat
-	@echo off
-	
-	:: 设置 nw.exe 所在路径及文件名
-	set NODE_WEBKIT="E:\Program Files\nw\nw.exe"
-	
-	:: (旧的)设置 castle.zip 所在路径及文件名
-	::set APP_CASTLE="E:\Program Files\CastleDB\bin\castle.zip"
+```bat
+@echo off
 
-	:: 设置 bin 路径, 注意不要有反斜号
-	set APP_CASTLE="E:\Program Files\CastleDB\bin"
+:: 设置 nw.exe 所在路径及文件名
+set NODE_WEBKIT="E:\Program Files\nw\nw.exe"
+
+:: (旧的)设置 castle.zip 所在路径及文件名
+::set APP_CASTLE="E:\Program Files\CastleDB\bin\castle.zip"
+
+:: 设置 bin 路径, 注意不要有反斜号
+set APP_CASTLE="E:\Program Files\CastleDB\bin"
 
 
-	:: start 命令以二个 双引号开始,以正确处理带有空格的目录
-	start "" %NODE_WEBKIT% %APP_CASTLE%
-	
-	exit
-	```
+:: start 命令以二个 双引号开始,以正确处理带有空格的目录
+start "" %NODE_WEBKIT% %APP_CASTLE%
+
+exit
+```
 
  - **帮助文档** 在解压包的 www 目录中
 
@@ -144,37 +144,37 @@ castleDB 保存为一个扩展名为 `.cdb` 的文件, 其实它是一个 JSON �
 	
 	Custom Type 的 enum 是带有 构造方法的. 示例如下: 
 
-	```haxe
-	enum Super2 {
-		A;
-		B;
-		C( x : Int );
-	}
+```haxe
+enum Super2 {
+	A;
+	B;
+	C( x : Int );
+}
 
-	enum Effect2 {
-		// 构造参数可以添加前缀 `?`, 这意味着参数为可选参数可省略
-		Poison( time : Float, ?power : Float );
-		Check( a : Super2 );
-		Monster( m : monsters );
-	}
-	
-	// custom 类型的构造参数使用下列类型:
-	// Int: 
-	// Bool:
-	// Float:
-	// String:
-	// CustomType: 自身
-	// SheetName: 任意 sheet name
-	```
+enum Effect2 {
+	// 构造参数可以添加前缀 `?`, 这意味着参数为可选参数可省略
+	Poison( time : Float, ?power : Float );
+	Check( a : Super2 );
+	Monster( m : monsters );
+}
+
+// custom 类型的构造参数使用下列类型:
+// Int: 
+// Bool:
+// Float:
+// String:
+// CustomType: 自身
+// SheetName: 任意 sheet name
+```
 	custom 类型的储存原型为混合数组类型(`Array<Dynamic>`), 数组的第一个元素为索引:
 	
-	```
-	Value example				Stored value
-	Fixed						[0]
-	Random(0.5)					[1,0.5]
-	Monster(MyMonsterId)		[2,"MyMonsterId"]
-	Or(Random(0.5),Fixed)		[3,[1,0.5],[0]]
-	```
+```
+Value example				Stored value
+Fixed						[0]
+Random(0.5)					[1,0.5]
+Monster(MyMonsterId)		[2,"MyMonsterId"]
+Or(Random(0.5),Fixed)		[3,[1,0.5],[0]]
+```
 	编辑器将严格验证 Custom 类型 的输入
 	
  * **Dynamic** 可以输入任意 JSON 数据, 不过手工输入这个字段的数据类型有些麻烦.

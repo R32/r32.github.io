@@ -30,21 +30,21 @@ haxe 的一个跨平台( Mac,Windows,Linux, Android, iOS 和 WebGL)的游戏引�
 
   - **snow**: luxe 的跨平台底层, 包含各种 c/c++ 库.
 
-	```bash
-	haxelib git flow https://github.com/underscorediscovery/flow.git
-	
-	# 你需要使用 git submodule 来更新依赖的第三方子模块
-	haxelib git snow https://github.com/underscorediscovery/snow.git
-	
-	haxelib git luxe https://github.com/underscorediscovery/luxe.git
-	
-	# 如果手动 git clone 的话使用下边命令安装
-	haxelib dev <library> <path/to/library>
-	
-	# 测试安装的正确性
-	cd /path/to/luxe/tests/features/draw/
-	haxelib run flow run web
-	```
+```bash
+haxelib git flow https://github.com/underscorediscovery/flow.git
+
+# 你需要使用 git submodule 来更新依赖的第三方子模块
+haxelib git snow https://github.com/underscorediscovery/snow.git
+
+haxelib git luxe https://github.com/underscorediscovery/luxe.git
+
+# 如果手动 git clone 的话使用下边命令安装
+haxelib dev <library> <path/to/library>
+
+# 测试安装的正确性
+cd /path/to/luxe/tests/features/draw/
+haxelib run flow run web
+```
 
  * 第四步: c++编译器,
 

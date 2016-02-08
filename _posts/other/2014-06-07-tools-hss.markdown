@@ -164,9 +164,9 @@ HSS 还强制一些好的 CSS 做法
 
  * background 属性有一个固定的顺序, 如下:
 
-	```bash
-	background: [color] [url] [repeat] [scroll|fixed] [horiz.] [vert.]
-	```
+```bash
+background: [color] [url] [repeat] [scroll|fixed] [horiz.] [vert.]
+```
 
 
 

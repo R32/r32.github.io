@@ -23,19 +23,19 @@ categories: haxe
 
  * `@:structInit`: 用于cpp, https://github.com/HaxeFoundation/haxe/issues/4526
 
-	```haxe
-	@:struct class MyStruct {
-	  public var a:Int;
-	  public var b:String;
-	  public inline function new(a,?b) {
-	      this.a = a;
-	      this.b = b;
-	  }
+```haxe
+@:struct class MyStruct {
+	public var a:Int;
+	public var b:String;
+	public inline function new(a,?b) {
+		this.a = a;
+		this.b = b;
 	}
-	// would allow to be initialized with:
-	var m1 : MyStruct = { a : 0 };
-	var m2 : MyStruct = { a : 0, b : "hello" };
-	```
+}
+// would allow to be initialized with:
+var m1 : MyStruct = { a : 0 };
+var m2 : MyStruct = { a : 0, b : "hello" };
+```
 
  * `import.hx`: 注意区别于其它类, 只能允许 import 和 using 语句, 作为项目中默认导入的包, 但是目前 IDE 支持的不好.
 
@@ -47,74 +47,75 @@ categories: haxe
 
  * haxe.ds.Either 二个类型, 这样可以让一个函数返回二种类型
 
-	```haxe
-	typedef MyResult = Either<Error, String>;
-	
-	var result:MyResult = Left(new Error("something smells"));
-	
-	var result:MyResult = Right("the answer is 42");
-	
-	// haxe.ds.Option 注意和 Either 区别
-	function foo(i:Int):Option<Int>{
-		return i < 0 ? None : Some(i);
-	}
-	```
+```haxe
+typedef MyResult = Either<Error, String>;
+
+var result:MyResult = Left(new Error("something smells"));
+
+var result:MyResult = Right("the answer is 42");
+
+// haxe.ds.Option 注意和 Either 区别
+function foo(i:Int):Option<Int>{
+	return i < 0 ? None : Some(i);
+}
+```
 
  * 处理 extern 类 haxe.extern.EitherType; 和  haxe.extern.Rest;	
 
-	```haxe
-	import haxe.extern.Rest;
-	import haxe.extern.EitherType;
+```haxe
+import haxe.extern.Rest;
+import haxe.extern.EitherType;
 	
-	extern class MyExtern {
-		static function f1(s:String, r:Rest<Int>):Void;
-		static function f2(e:EitherType<Int, String>):Void;
+extern class MyExtern {
+	static function f1(s:String, r:Rest<Int>):Void;
+	static function f2(e:EitherType<Int, String>):Void;
+}
+	
+class Main {
+	static function main() {
+	MyExtern.f1("foo", 1, 2, 3); // use 1, 2, 3 as rest argument
+	MyExtern.f1("foo"); // no rest argument
+	//MyExtern.f1("foo", "bar"); // String should be Int
+	
+	MyExtern.f2("foo");
+	MyExtern.f2(12);
+	//MyExtern.f2(true); // Bool should be EitherType<Int, String>
 	}
-	
-	class Main {
-		static function main() {
-		MyExtern.f1("foo", 1, 2, 3); // use 1, 2, 3 as rest argument
-		MyExtern.f1("foo"); // no rest argument
-		//MyExtern.f1("foo", "bar"); // String should be Int
-	
-		MyExtern.f2("foo");
-		MyExtern.f2(12);
-		//MyExtern.f2(true); // Bool should be EitherType<Int, String>
-		}
-	}
-	```
+}
+```
+
  * haxe.Constraints 下的 Function 和 FlatEnum, 用来限制一些动态内型???
 
   - Function 用于限制类型需要为 函数类型
 
   - FlatEnum 用来限制 Enum 的类型.
 
-	```haxe
-	//....
-	var onclick : haxe.Constraints.Function;
-	
-	// 但是这个就不好理解了, 
-	abstract Event<T:Function>(String) from String to String {}
-	
-	enum Flat {
-		A;
-		B;
+```haxe
+//....
+var onclick : haxe.Constraints.Function;
+
+// 但是这个就不好理解了, 
+abstract Event<T:Function>(String) from String to String {}
+
+enum Flat {
+	A;
+	B;
+}
+
+enum NotFlat {
+	F(s:String);
+}
+
+class Test {
+	static function main() {
+		test(A); // ok
+		test(F("foo")); // Constraint check failure for test.T
 	}
 
-	enum NotFlat {
-		F(s:String);
-	}
-
-	class Test {
-		static function main() {
-			test(A); // ok
-			test(F("foo")); // Constraint check failure for test.T
-		}
-
-		static function test<T:haxe.Constraints.FlatEnum>(t:T) { }
-	}
+	static function test<T:haxe.Constraints.FlatEnum>(t:T) { }
+}
 	
-	```
+```
 	
 #### typedef 对性能的影响 
 
@@ -153,38 +154,38 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
 
  * 泛形, 返回类型或者Void, 参考 haxe.Time 的 measure 方法源码如下: 
 
-	```haxe
-	public static function measure<T>( f : Void -> T, ?pos : PosInfos ) : T {
-		var t0 = stamp();
-		var r = f();
-		Log.trace((stamp() - t0) + "s", pos);
-		return r;
-	}
+```haxe
+public static function measure<T>( f : Void -> T, ?pos : PosInfos ) : T {
+	var t0 = stamp();
+	var r = f();
+	Log.trace((stamp() - t0) + "s", pos);
+	return r;
+}
 	
 	
-	$type(Timer.measure(function(){
-		// output: Warning: Void
-	}));
+$type(Timer.measure(function(){
+	// output: Warning: Void
+}));
 	
-	$type(Timer.measure(function(){
-		return true;
-		// output: Warning: Bool
-	}));
-	```
+$type(Timer.measure(function(){
+	return true;
+	// output: Warning: Bool
+}));
+```
 
  * 如果一属性(Property)为(get,set), 那么在 set 中可以不需要给这个属性赋值, 否则需要加上 `@:isVar`
 
-	```haxe
-	public var id(get,set):Int;
-	function get_id():Int{
-		return 100;
-	}
-	function set_id(v:Int):Int{
-		// do something
-		// return this.id = v;		// 如果这样做, 则需要加上 @:isVar
-		return v;					// good
-	}
-	```
+```haxe
+public var id(get,set):Int;
+function get_id():Int{
+	return 100;
+}
+function set_id(v:Int):Int{
+	// do something
+	// return this.id = v;		// 如果这样做, 则需要加上 @:isVar
+	return v;					// good
+}
+```
 
  * 对于命令行(CLI)程序, 包含有中文字符的文件代码应该为 ansi ,在 dos 中才会正确显示中文.
 
@@ -206,10 +207,10 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
 
  * `typedef SString<Const> = String`. http://haxe.org/manual/macro-generic-build.html#const-type-parameter
 	
-	```haxe
-	//这行在 sys.db.Type.hx 文件中.于是可以有如下定义
-	var name:SString<10>; // SQL VARCHAR(10)
-	```
+```haxe
+//这行在 sys.db.Type.hx 文件中.于是可以有如下定义
+var name:SString<10>; // SQL VARCHAR(10)
+```
 	
  * flashdevelop -> 项目属性 -> 编译器选项 -> Additional Compiler Options
 
@@ -223,14 +224,14 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
 	
  * 函数可选参数, 自动的参数顺序
 
-	```haxe
-	function foo(i:Int, ?a:Array<Int>, ?f:Float){
-		trace(i,f);
-	}
+```haxe
+function foo(i:Int, ?a:Array<Int>, ?f:Float){
+	trace(i,f);
+}
 	
-	// 	haxe 编译器 将自动为第二个参数填入 null,
-	foo(10,0.123); //output => 10, 0.123
-	```	
+// 	haxe 编译器 将自动为第二个参数填入 null,
+foo(10,0.123); //output => 10, 0.123
+```	
 
  * **隐藏包名** 当包名(文件夹名称)以 `_` 作前缀时, 代码编辑器不会智能提示出这个包名, 相当于添加了 `@:noCompletion`
 
@@ -244,59 +245,59 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
 
 	> 在 haxe 中即使是局部方法, this 的指向永远为其所在的类,而一些如 JS 或 AS 平台却不是这样. `__this__` 必须接在 `untyped` 之后, 以表式目标平台类的 `this`, 可以将下列代码编译成 JS,以区别不同之处.
 	
-	```haxe
-	class Foo {
-		var value:String;
-		public function new():Void {
-			value = "ffffffffffff";
-			var obj1 = { callb: function() { trace(this); } };
-			var obj2 = { callb: function() { trace(untyped __this__); } };
+```haxe
+class Foo {
+	var value:String;
+	public function new():Void {
+		value = "ffffffffffff";
+		var obj1 = { callb: function() { trace(this); } };
+		var obj2 = { callb: function() { trace(untyped __this__); } };
 			
-			obj1.callb(); // [object Foo]
-			obj2.callb(); // [object global]
-		}
-		static function main() {		
-			new Foo();
-		}
+		obj1.callb(); // [object Foo]
+		obj2.callb(); // [object global]
 	}
-	```
+	static function main() {		
+		new Foo();
+	}
+}
+```
 
  * **初使化静态变量**  `static function __init__(){}`; 
 	
-	```haxe
-	//注意 和 区分直接赋值的先后顺序.
-	class Foo{
+```haxe
+//注意 和 区分直接赋值的先后顺序.
+class Foo{
 		
-		public static var value:String = "var";
+	public static var value:String = "var";
 		
-		static function __init__(){
-			value = "init func";
-		}
-		
-		public function new() {
-			trace(value);	
-		}
-		
-		public static function main(){
-			new Foo(); // output: var , 说明 __init__ 的赋值比直接赋值要早.
-		}								
-	
+	static function __init__(){
+		value = "init func";
 	}
-	```
+		
+	public function new() {
+		trace(value);	
+	}
+		
+	public static function main(){
+		new Foo(); // output: var , 说明 __init__ 的赋值比直接赋值要早.
+	}								
+	
+}
+```
 	
  * 泛型构造方法中有 new Some<T>() 这样的创建泛型实例时, 最好加上 `@:generic` 元标记.
 
-	```haxe
-	// 如果这个方法是 new Array<T>(),倒是没什么错误, 但是
-	// Vector 在实例化时需要 默认类型来填充各单元, 所以不加 @:generic 时将报错,或得到的值不正确
-	@:generic function vec<T>(n:T){
-		var v = new haxe.ds.Vector<T>(5);
-		for(i in 0...5){
-			v.set(i, n)
-		}
-		return v
+```haxe
+// 如果这个方法是 new Array<T>(),倒是没什么错误, 但是
+// Vector 在实例化时需要 默认类型来填充各单元, 所以不加 @:generic 时将报错,或得到的值不正确
+@:generic function vec<T>(n:T){
+	var v = new haxe.ds.Vector<T>(5);
+	for(i in 0...5){
+		v.set(i, n)
 	}
-	```
+	return v
+}
+```
 		
  * `Std.int`: 包括 Math.round,Math.floor,Math.ceil 在处理较大数字时, 将超出Int界限
 
@@ -351,24 +352,24 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
 
  * 何时省略参数类型, 未来也许会修正这个 https://github.com/HaxeFoundation/haxe/issues/2548
 
-	```haxe
-	class Test {
-	    public static function bar (m){		// 这里最好明确 m 的类型如 bar(m:Foo2)
-	        m.doIt();
-	    }
-	    public static function main () {
-		// 编译到 cpp 为: m->__Field(HX_CSTRING("doIt"),true)()->__Field(HX_CSTRING("doIt"),true)();
-		// 如果 bar(m:Foo2) 则为：	m->doIt();
-	        bar(new Foo2());
-	    }
-	}
-	class Foo2{
-	    public function new () {}
-	    public function doIt():Foo2 {
-	        return this;
-	    }
-	}
-	```
+```haxe
+class Test {
+	public static function bar (m){		// 这里最好明确 m 的类型如 bar(m:Foo2)
+        m.doIt();
+    }
+    public static function main () {
+	// 编译到 cpp 为: m->__Field(HX_CSTRING("doIt"),true)()->__Field(HX_CSTRING("doIt"),true)();
+	// 如果 bar(m:Foo2) 则为：	m->doIt();
+        bar(new Foo2());
+    }
+}
+class Foo2{
+    public function new () {}
+    public function doIt():Foo2 {
+        return this;
+    }
+}
+```
 
  * `haxe.PosInfos` 这个类是一个魔法类, 因为编译器将自动填充它. 你只需要定义就行了, 参看 [Log and Trace Features]({% post_url 2014-03-28-log-and-trace-features %})
 
@@ -395,23 +396,23 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
 
  	> 通常 `neko` 编绎不能通过,意味着所有基于 `c++` 平台的编绎都将出现异常.
 
- 	```xml
- 	<!-- 加入下边这一行将能正常运行 -->
- 	<haxeflag name="-dce full" />
- 	
- 	<!-- optional 可选 -->
- 	<haxedef name="NAPE_RELEASE_BUILD" />
+```xml
+<!-- 加入下边这一行将能正常运行 -->
+<haxeflag name="-dce full" />
 
- 	<!-- 对于 `haxeflixel` 的 demo 如果添加了 `-dce full`,则需要添加下行 -->
- 	<!-- 注意下行的 PlayState 为 flixel-demo 示例中的一个类 -->
- 	<haxeflag name="--macro keep(null,['PlayState','flixel.system.FlxAssets','flixel.system.ui','flixel.ui'])" />
- 	```
+<!-- optional 可选 -->
+<haxedef name="NAPE_RELEASE_BUILD" />
+
+<!-- 对于 `haxeflixel` 的 demo 如果添加了 `-dce full`,则需要添加下行 -->
+<!-- 注意下行的 PlayState 为 flixel-demo 示例中的一个类 -->
+<haxeflag name="--macro keep(null,['PlayState','flixel.system.FlxAssets','flixel.system.ui','flixel.ui'])" />
+```
 
  * hscript 使用类似于 for(i in 0...10) 循环时,(最新版的 haxe 可能已经修复了这个问题)
 
-	```bash
-	--macro keep('IntIterator')
-	```
+```bash
+--macro keep('IntIterator')
+```
 
 
 ### 函数绑定
@@ -538,31 +539,32 @@ $type(json);	// Unknown<0>(即:Monomorphs)
 
  * Parameterized Dynamic Variables
 
- 	```haxe
- 	// 通常解析一个结构不明确的 xml 文件时会用到.
- 	// xml 的数据全是 String 类型.
- 	var att : Dynamic<String> = xml.attributes;
-    att.name = "Nicolas";
-    att.age = "26";
-    //...
- 	```
+ ```haxe
+ // 通常解析一个结构不明确的 xml 文件时会用到.
+ // xml 的数据全是 String 类型.
+ var att : Dynamic<String> = xml.attributes;
+ att.name = "Nicolas";
+ att.age = "26";
+ //...
+ ```
+
  * [Implementing Dynamic](http://haxe.org/manual/types-dynamic-implemented.html)
 
- 	```haxe
- 	class C implements Dynamic<Int> {
-    	public var name : String;
-    	public var address : String;
-	}
-	var c = new C();
-	var n : String = c.name; // ok
-	var a : String = c.address; // ok
-	var i : Int = c.phone; // ok : use Dynamic
-	var c : String = c.country; // ERROR
-	// c.country is an Int because of Dynamic<Int>
+```haxe
+class C implements Dynamic<Int> {
+    public var name : String;
+    public var address : String;
+}
+var c = new C();
+var n : String = c.name; // ok
+var a : String = c.address; // ok
+var i : Int = c.phone; // ok : use Dynamic
+var c : String = c.country; // ERROR
+// c.country is an Int because of Dynamic<Int>
 
-	// 参考 haxe.xml.Fast.hx 文件
-	// 可以实现接口的 resolve 方法,当访问属性时会自动转接到 resolve 上.
- 	```
+// 参考 haxe.xml.Fast.hx 文件
+// 可以实现接口的 resolve 方法,当访问属性时会自动转接到 resolve 上.
+```
 
 ### 正则表达式
 
@@ -805,14 +807,14 @@ class Helo{
  
  	> 实际上 `{}` 可以看成匿名类型,然后这个类型只要包含 `prev next` 属性 或 `hasCode` 方法就行了, 分析 `haxe.macro.Type.hx` 的 `Ref`
 	
-		```haxe
-	 	typedef Ref<T> = {
-			public function get() : T;
-			public function toString() : String;
-		}
+```haxe
+typedef Ref<T> = {
+	public function get() : T;
+	public function toString() : String;
+}
 
-		// 只要一个类型它包含了 get 及 toString ,就可以看成是 Ref
-		``` 
+// 只要一个类型它包含了 get 及 toString ,就可以看成是 Ref
+``` 
 
 
 
@@ -879,32 +881,31 @@ typedef 象是一种别名的工具.像定义了一个接口,但是不需要写 
 
  * 如果你想把一个 直接结构量`{x:0,y:0,width:`100}` 赋值给一个变量, typedef struct 是最好的选择了.
 
-	```haxe
-	typedef Abc = {
-		var name:String;
-		function f():Void;
-	}
+```haxe
+typedef Abc = {
+	var name:String;
+	function f():Void;
+}
 
-	// 类似于写 接口, 或 extern 类.
-	typedef Window = {
-		var x:Float;
-		var y:Float;
-		@:optional var width:Int;
-		@:optional var height:Int;
-		function exit():Void;
-		
-	}
+// 类似于写 接口, 或 extern 类.
+typedef Window = {
+	var x:Float;
+	var y:Float;
+	@:optional var width:Int;
+	@:optional var height:Int;
+	function exit():Void;
+}
 	
-	// 类似于 JSON 形参一样,
-	typedef Window = {
-		x:Float,
-		y:Float,
-		?width:Int,	// 用 ? 替换掉 @:optional var, 而且结尾用 , 号
-		?height:Int,
-		exit:Void->Void
-	}
-	var w:Window = {x:0,y:0};	
-	``` 
+// 类似于 JSON 形参一样,
+typedef Window = {
+	x:Float,
+	y:Float,
+	?width:Int,	// 用 ? 替换掉 @:optional var, 而且结尾用 , 号
+	?height:Int,
+	exit:Void->Void
+}
+var w:Window = {x:0,y:0};	
+``` 
 
 ### abstract
 
@@ -916,15 +917,15 @@ abstract 用于抽象化数据结构,用于包装底层类型, 其行为更像�
 
  > 在 abstract 语法内 的 static 成员方法,不需要 using, 见 [abstract-selective-functions](http://haxe.org/manual/types-abstract-selective-functions.html) 这一点对运算符重载很重要, 因为运算符重载有时需要添加 `@:commutative` 来交换二个操作数的位置,就 **必须** 使用 static 类型的方法重载.
 
-	```haxe
-	@:commutative @:op(A + B) private static inline function addWithFloat(a:UInt, b:Float):Float {
-		return a.toFloat() + b;
-	}
+```haxe
+@:commutative @:op(A + B) private static inline function addWithFloat(a:UInt, b:Float):Float {
+	return a.toFloat() + b;
+}
 
-	@:commutative @:op(A * B) private static inline function mulWithFloat(a:UInt, b:Float):Float {
-		return a.toFloat() * b;
-	}
-	```
+@:commutative @:op(A * B) private static inline function mulWithFloat(a:UInt, b:Float):Float {
+	return a.toFloat() * b;
+}
+```
 
 
 分隔线
@@ -936,11 +937,11 @@ http://old.haxe.org/doc/remoting
 
  * Proxy 魔法类,自动包装 Api类的public属性方法, http://old.haxe.org/doc/remoting/proxy
 
- ```js
- class MyApi extends Proxy<Api>{}
- // 而 Api 类则为另一个端的类, MyApi 将被包装成和 Api 具有一样公共方法的类.
- new MyApi(connection);
- ```
+```js
+class MyApi extends Proxy<Api>{}
+// 而 Api 类则为另一个端的类, MyApi 将被包装成和 Api 具有一样公共方法的类.
+new MyApi(connection);
+```
 
  * Connection
 

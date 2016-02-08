@@ -39,88 +39,88 @@ haxelib 用于管理 haxe库,  `haxelib run libname` 可以调用指定库下边
 
  * 命令行, 注: 很多命令是交互式的, 会提示你如何操作
 
-	```bash		
-	Haxe Library Manager 3.2.0-rc.1 - (c)2006-2015 Haxe Foundation
-	  Usage: haxelib [command] [options]
-	  Basic
-	    install   : 在线安装指定库, 或 hxml 文件中的所有库
-	    upgrade   : 在线更新所以已经安装了的库
-	    update    : 在线更新指定库
-	    remove    : 移除指定库(从磁盘上删除 haxelib 根目录中的库,但不会删除外部的 dev 库)
-	    list      : 列出指定库或名称相匹配的库(如果指定参数)
-	    set       : 设定库的版本, 用于多个版本库的选择, 注意:如果通过 haxelib dev 指定了开发版本, 那么 dev 版本仍优先于指定的版本号
-		
-		# https://github.com/HaxeFoundation/hxcpp/issues/143
-		# haxe 3.2 new 和 delete 已经更名为 newrepo 以及 deleterepo
-	    new       : 创建新的本地仓库, 将在当前目前创建一个 .haxelib 的目录, 当位于这个目录上时, haxelib 的所有操作将指向这个新建的目录
-	    delete    : 删除 new 创建的本地仓库(将从磁盘中), 
-	  
-	  Information
-	    search    : 在线搜询名称相关库, 
-	    info      : 在线列出指定库的详细信息, 全名匹配, 例: haxelib info lime
-	    user      : 列出指定用户的信息及这个用户提交的所有 haxe 库. 
-	    config    : 打印 haxelib 仓库所在目录(绝对路径)
-	    path      : 得到指定库的所在路径(绝对路径), 库的版本信息, 及　ndll 库目录(如果有的话)
-		version   : 当前 haxelib 自身版本
-		help      : 显示可选列表
-	  
-	  Development
-	    submit    : 提交或更新自已写的 haxe 库到　haxelib 服务器
-	    register  : 注册 haxelib 新用户
-	    local     : 离线方式安装库, 压缩包名字随意. 例: haxelib local xxx.zip
-	    dev       : 设置指定目录为库, 常用于 fork 别人的库 例: haxelib dev openfl fork_openfl_dir
-	    git       : 连接下载 git 版本库, 需要 git 命令支持
-	  
-	  Miscellaneous
-	    setup     : 设置 haxelib 仓库路径(默认为 haxe 根目录的 lib)
-		
-		# 估计就是上边的被移除了的 new 和 delete
-		newrepo   : [EXPERIMENTAL] create a new local repository
-        deleterepo: delete the local repository
-	    
-		selfupdate: 更新 haxelib 自身
-	    convertxml: 转换 haxelib.xml 文件为 haxelib.json
-	    run       : 运行指定类库下的 run.n 文件
-	    proxy     : 设置 Http 代理.
-	  
-	  Available switches
-	    --flat    : do not use --recursive cloning for git
-	    --always  : answer all questions with yes
-	    --debug   : run in debug mode
-	    --never   : answer all questions with no
-	    --global  : force global repo if a local one exists	
+```bash		
+Haxe Library Manager 3.2.0-rc.1 - (c)2006-2015 Haxe Foundation
+  Usage: haxelib [command] [options]
+  Basic
+    install   : 在线安装指定库, 或 hxml 文件中的所有库
+    upgrade   : 在线更新所以已经安装了的库
+    update    : 在线更新指定库
+    remove    : 移除指定库(从磁盘上删除 haxelib 根目录中的库,但不会删除外部的 dev 库)
+    list      : 列出指定库或名称相匹配的库(如果指定参数)
+    set       : 设定库的版本, 用于多个版本库的选择, 注意:如果通过 haxelib dev 指定了开发版本, 那么 dev 版本仍优先于指定的版本号
 	
-	============== 一些常用命令 ==============
-		
-	haxelib info lime #在线查询列出关于 lime 库的信息
-		
-	haxelib list  # 列出本地所有安装包,用`[]` 中适号包含着的为当前所使用版本
-		
-	haxelib list li   #列出本地包含 li 字符的库有哪些,其一些其它信息
+	# https://github.com/HaxeFoundation/hxcpp/issues/143
+	# haxe 3.2 new 和 delete 已经更名为 newrepo 以及 deleterepo
+    new       : 创建新的本地仓库, 将在当前目前创建一个 .haxelib 的目录, 当位于这个目录上时, haxelib 的所有操作将指向这个新建的目录
+    delete    : 删除 new 创建的本地仓库(将从磁盘中), 
+  
+  Information
+    search    : 在线搜询名称相关库, 
+    info      : 在线列出指定库的详细信息, 全名匹配, 例: haxelib info lime
+    user      : 列出指定用户的信息及这个用户提交的所有 haxe 库. 
+    config    : 打印 haxelib 仓库所在目录(绝对路径)
+    path      : 得到指定库的所在路径(绝对路径), 库的版本信息, 及　ndll 库目录(如果有的话)
+	version   : 当前 haxelib 自身版本
+	help      : 显示可选列表
+  
+  Development
+    submit    : 提交或更新自已写的 haxe 库到　haxelib 服务器
+    register  : 注册 haxelib 新用户
+    local     : 离线方式安装库, 压缩包名字随意. 例: haxelib local xxx.zip
+    dev       : 设置指定目录为库, 常用于 fork 别人的库 例: haxelib dev openfl fork_openfl_dir
+    git       : 连接下载 git 版本库, 需要 git 命令支持
+  
+  Miscellaneous
+    setup     : 设置 haxelib 仓库路径(默认为 haxe 根目录的 lib)
+	
+	# 估计就是上边的被移除了的 new 和 delete
+	newrepo   : [EXPERIMENTAL] create a new local repository
+deleterepo: delete the local repository
+    
+	selfupdate: 更新 haxelib 自身
+    convertxml: 转换 haxelib.xml 文件为 haxelib.json
+    run       : 运行指定类库下的 run.n 文件
+    proxy     : 设置 Http 代理.
+  
+  Available switches
+    --flat    : do not use --recursive cloning for git
+    --always  : answer all questions with yes
+    --debug   : run in debug mode
+    --never   : answer all questions with no
+    --global  : force global repo if a local one exists	
 
-	haxelib install haxepunk #在线安装名为 haxepunk 的库
-		
-	haxelib local some.zip  #安装已经下载到硬盘上的库,通常用为 zip 格式, zip文件名随意
-		
-	haxelib update stablexui #在线更新名为 stablexui 的库
-		
-	haxelib upgrade #连网检测所有本地库是否存在更新,并提示是否更新
-		
-	#下边命令是指定一个库的开发目录
-	#当你修改 某一个库的源码时,可以先复制一份到其它目录
-	#然后用 haxelib dev 指定使用这个目录的文件作为开发
-	haxelib dev libname directory_name 
-		
-	haxelib dev haxeui G:\dev-haxeui # 以后调用 haxeui 库时将使用 G:\dev-haxeui 下的文件
-	# haxelib list haxeui 可以显示 haxeui 信息,是否使用了 dev 
-	haxelib dev haxeui #不带目录名 从dev模式中切换回来
-		
-	haxelib selfupdate # 更新 haxelib 自已
-		
-	haxelib remove libname #删除库,这个库将会从磁盘移除
-	 
-	haxelib run libname #运行 libname库目录下 编译为neko平台的 run.n 文件		
-	```
+============== 一些常用命令 ==============
+	
+haxelib info lime #在线查询列出关于 lime 库的信息
+	
+haxelib list  # 列出本地所有安装包,用`[]` 中适号包含着的为当前所使用版本
+	
+haxelib list li   #列出本地包含 li 字符的库有哪些,其一些其它信息
+
+haxelib install haxepunk #在线安装名为 haxepunk 的库
+	
+haxelib local some.zip  #安装已经下载到硬盘上的库,通常用为 zip 格式, zip文件名随意
+	
+haxelib update stablexui #在线更新名为 stablexui 的库
+	
+haxelib upgrade #连网检测所有本地库是否存在更新,并提示是否更新
+	
+#下边命令是指定一个库的开发目录
+#当你修改 某一个库的源码时,可以先复制一份到其它目录
+#然后用 haxelib dev 指定使用这个目录的文件作为开发
+haxelib dev libname directory_name 
+	
+haxelib dev haxeui G:\dev-haxeui # 以后调用 haxeui 库时将使用 G:\dev-haxeui 下的文件
+# haxelib list haxeui 可以显示 haxeui 信息,是否使用了 dev 
+haxelib dev haxeui #不带目录名 从dev模式中切换回来
+	
+haxelib selfupdate # 更新 haxelib 自已
+	
+haxelib remove libname #删除库,这个库将会从磁盘移除
+ 
+haxelib run libname #运行 libname库目录下 编译为neko平台的 run.n 文件		
+```
 
  * 开发并上传库 见:[haxe.org/com/haxelib](http://haxe.org/com/haxelib)
 
@@ -150,14 +150,14 @@ nekotools 是一个安装 haxe 时附带的工具,nekotools 很简单只有二�
 
 	> nekotools server 不仅仅能将 html 输出到浏览器,还能处理 neko 文件并输出.
 
-	```bash
-	#做网页相关的东西时,很多功能需要以 http 的形式访问才能正常.
-	#不带参数快速绑定当前目录到 localhost:2000
-	nekotools server
-	
-	# 绑定 d:\dev 目录到 0.0.0.0:80
-	nekotools server -p 80 -h 0.0.0.0 -d d:\dev
-	```
+```bash
+#做网页相关的东西时,很多功能需要以 http 的形式访问才能正常.
+#不带参数快速绑定当前目录到 localhost:2000
+nekotools server
+
+# 绑定 d:\dev 目录到 0.0.0.0:80
+nekotools server -p 80 -h 0.0.0.0 -d d:\dev
+```
 	
  * `nekotools boot`	将 neko平台的 .n 文件转换成独立的 exe 文件
 

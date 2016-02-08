@@ -51,13 +51,13 @@ createXXXXX(str:String):Xml	// 创建并回返回相应的节点
 成员字段:
 
 ```haxe
-var nodeName:String;		// Element节点的名称
+var nodeName:String;	// Element节点的名称
 
-var nodeType:XmlType;		// 只读,节点的类型.
+var nodeType:XmlType;	// 只读,节点的类型.
 
-var nodeValue:String;		// 节点值, 只有当节点 **不是** Document 或 Element 类型时才有效.
+var nodeValue:String;	// 节点值, 只有当节点 **不是** Document 或 Element 类型时才有效.
 
-var parent:Xml;				// 只读, 返回节点的父节点. 没有则返回 null. 只有 Document 或 Element 才能作为父节点.
+var parent:Xml;		// 只读, 返回节点的父节点. 没有则返回 null. 只有 Document 或 Element 才能作为父节点.
 ```
 
 成员方法: 详细自行参考 API

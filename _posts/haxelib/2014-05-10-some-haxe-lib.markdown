@@ -143,32 +143,32 @@ haxe LD34游戏示例: http://haxe.io/ld/34/
 	
   - Promhx Http Class　提供非常类似于 haxe.Http
 
-		```haxe
-		var h = new promhx.haxe.Http("somefile.txt");
-		h.then(function(x){
-			trace(x); // this will be the text content from somefile.txt
-		});
-		h.request(); // initialize request.
-		```
+```haxe
+var h = new promhx.haxe.Http("somefile.txt");
+h.then(function(x){
+	trace(x); // this will be the text content from somefile.txt
+});
+h.request(); // initialize request.
+```
 		
   - EventTools 用于适应已经存在的事件系统如 JS 或 Flash, 推荐用 `using using promhx.haxe.EventTools` 引入
 
 		> 注: 由于使用的是 Promise 而非 Stream ,因此只能用于一次性的事件, 感觉是　源码最后一行返回错误
 
-		```haxe
-		using promhx.haxe.EventTools;
-		//...
-		var cur = flash.Lib.current.stage;
-        var p = cur.eventStream(cur, 'click');
-		p.then(function(e:MouseEvent){trace(e.localX);});
-		```
+```haxe
+using promhx.haxe.EventTools;
+//...
+var cur = flash.Lib.current.stage;
+var p = cur.eventStream(cur, 'click');
+p.then(function(e:MouseEvent){trace(e.localX);});
+```
 	
   - JQueryTools 同样通过 `using`, 但是这个没有 EventTools 那样的一次性事件错误
 
-		```haxe
-		var ts = new JQuery("#target").eventStream('click');
-		ts.then(function(e:JqEvent){});
-		```
+```haxe
+var ts = new JQuery("#target").eventStream('click');
+ts.then(function(e:JqEvent){});
+```
 	
   - Macro do-notation  形为上像是操作符重载的东西,无视它
 	
@@ -176,124 +176,124 @@ haxe LD34游戏示例: http://haxe.io/ld/34/
 
 		> 通过 保存 then 方法的返回,之后能解除 
 
-		```haxe
-		var ds = new Deferred<Int>();
-		var s = ds.stream();
-		var s2 = s.then(function(x){
-			trace("这个方法不会被调用,因为已经被解除");
-		});
+```haxe
+var ds = new Deferred<Int>();
+var s = ds.stream();
+var s2 = s.then(function(x){
+	trace("这个方法不会被调用,因为已经被解除");
+});
 
-		s.detachStream(s2);
-		ds.resolve(1);
+s.detachStream(s2);
+ds.resolve(1);
 		```
 	
   - Bound Deferreds: As of v 1.08 promhx includes a "DeferredPromise" and "DeferredStream" option. 
 	
-	```haxe
-		static function main() {
-		// 声明 Deferred,  which is the writable interface
-		var dp1 = new Deferred<Int>();
+```haxe
+static function main() {
+	// 声明 Deferred,  which is the writable interface
+	var dp1 = new Deferred<Int>();
 
-		// 声明 Promise,  使用 Deferred 实例 作为参数
-		var p1 = new Promise<Int>(dp1);
-		// var p1 = dp1.promise();			// 可替换上行
+	// 声明 Promise,  使用 Deferred 实例 作为参数
+	var p1 = new Promise<Int>(dp1);
+	// var p1 = dp1.promise();			// 可替换上行
+	
+	// 简单: 当 value 有效时传递 promise ,  Stream 同样
+	p1.then(function(x) { trace("delivered " + x); } );
+	
+	
+	// 传递多个 promises 当它们全部有效时.
+	// "then" 方法必须匹配　参数类型 及 参数数量 根据 "when" 的参数		
+	var dp2 = new Deferred<Int>();
+	var p2 = dp2.promise();
+	Promise.when(p1, p2).then(function(x, y) { trace(x + y); } );
+	
+	
+	// Stream 有其自已的 "when" 方法, 叫做 "whenever"
+	// 注意 返回的 Stream 将随时处理(resolve) *任意一项* 当 stream 参数发生改变
+	// 注上: 就是第一次需要 多个 resolve才能触发, 之后 任意一个 resolve 都将触发
+	var ds1 = new Deferred<Int>();
+	var ds2 = new Deferred<Int>();
+	var s1 = ds1.stream();
+	var s2 = new Stream(ds2);
+	Stream.whenever(s1, s2).then(function(x, y) { trace(x + y); } );
+	
+	// Stream.whenever 可以混合使用 Stream 和 Promise
+	// 注: 虽然文档说可以支持,但下行通过 haxe 编译, 因此是不支持混合的,
+	//Stream.whenever(s1, p1).then(function(x, y) trace(x + y));
+	
+	// "then" 的返回值是另一个 Promise实例, 因此可以　链式调用
+	// TODO: 不知道这种 可无返回值的函数是如何定义的 Unknown<0>
+	Promise.when(p1, p2).then(function(x, y) { return x + y; } ).then(function(x) { trace(x); } );
+	
+	
+	var dp3 = new Deferred<String>();
+	var p3 = dp3.promise();
+	
+	// pipe 方法让你能手动指示新的 Promise 实例用于链式调用
+	// 它能预先存在或在回调方法中创建,  Stream 也同样类似
+	// 个人注: pipe 需要返回 Promise|Stream 实例, 而 then 只要返回　值就能自动返回一个新的 Promise|Stream
+	// 因此 pipe 似乎没有什么存在的作用???
+	Promise.when(p1, p2).then(function(x, y) { return x + y; } )
+		.pipe(function(x) return p3)	// 在 pipe 参数方法中返回 promise 实例
+		.then(function(x) trace(x));	// 函数接受 dp3.resolve 的值
+	
+	// 可以很容易捕获错误在指定的回调函数中
+	Promise.when(p1, p2).then(function(x, y) { throw "an error"; } )
+		.catchError(function(x) { trace(x); } );
+	
+	// Errors 通过 promise 链传播.
+	// 可以重新抛出通过 haxe's try/catch 语法
+	// Stream 同样类似
+	Promise.when(p1, p2).then(function(x, y) { throw "an error"; return "hello"; } )
+		.then(function(x) { trace(x + " world!"); } )
+		.catchError(function(x) { 
+			try{
+				throw(x);	
+			}catch(e:String){
+				trace('caught a string: ' + e);
+			}catch(e:Dynamic){
+				trace('caught something unknown:' + e);
+			}
+		} );
 		
-		// 简单: 当 value 有效时传递 promise ,  Stream 同样
-		p1.then(function(x) { trace("delivered " + x); } );
-		
-		
-		// 传递多个 promises 当它们全部有效时.
-		// "then" 方法必须匹配　参数类型 及 参数数量 根据 "when" 的参数		
-		var dp2 = new Deferred<Int>();
-		var p2 = dp2.promise();
-		Promise.when(p1, p2).then(function(x, y) { trace(x + y); } );
-		
-		
-		// Stream 有其自已的 "when" 方法, 叫做 "whenever"
-		// 注意 返回的 Stream 将随时处理(resolve) *任意一项* 当 stream 参数发生改变
-		// 注上: 就是第一次需要 多个 resolve才能触发, 之后 任意一个 resolve 都将触发
-		var ds1 = new Deferred<Int>();
-		var ds2 = new Deferred<Int>();
-		var s1 = ds1.stream();
-		var s2 = new Stream(ds2);
-		Stream.whenever(s1, s2).then(function(x, y) { trace(x + y); } );
-		
-		// Stream.whenever 可以混合使用 Stream 和 Promise
-		// 注: 虽然文档说可以支持,但下行通过 haxe 编译, 因此是不支持混合的,
-		//Stream.whenever(s1, p1).then(function(x, y) trace(x + y));
-		
-		// "then" 的返回值是另一个 Promise实例, 因此可以　链式调用
-		// TODO: 不知道这种 可无返回值的函数是如何定义的 Unknown<0>
-		Promise.when(p1, p2).then(function(x, y) { return x + y; } ).then(function(x) { trace(x); } );
-		
-		
-		var dp3 = new Deferred<String>();
-		var p3 = dp3.promise();
-		
-		// pipe 方法让你能手动指示新的 Promise 实例用于链式调用
-		// 它能预先存在或在回调方法中创建,  Stream 也同样类似
-		// 个人注: pipe 需要返回 Promise|Stream 实例, 而 then 只要返回　值就能自动返回一个新的 Promise|Stream
-		// 因此 pipe 似乎没有什么存在的作用???
-		Promise.when(p1, p2).then(function(x, y) { return x + y; } )
-			.pipe(function(x) return p3)	// 在 pipe 参数方法中返回 promise 实例
-			.then(function(x) trace(x));	// 函数接受 dp3.resolve 的值
-		
-		// 可以很容易捕获错误在指定的回调函数中
-		Promise.when(p1, p2).then(function(x, y) { throw "an error"; } )
-			.catchError(function(x) { trace(x); } );
-		
-		// Errors 通过 promise 链传播.
-		// 可以重新抛出通过 haxe's try/catch 语法
-		// Stream 同样类似
-		Promise.when(p1, p2).then(function(x, y) { throw "an error"; return "hello"; } )
-			.then(function(x) { trace(x + " world!"); } )
-			.catchError(function(x) { 
-				try{
-					throw(x);	
-				}catch(e:String){
-					trace('caught a string: ' + e);
-				}catch(e:Dynamic){
-					trace('caught something unknown:' + e);
-				}
-			} );
-			
-		// 回调函数内部的 throw 将会被忽略, 除非定义 -D PromhxExposeErrors
-		
-		// errorThen 可以在抛出错误之后继续后边的调用链
-		// 如果 errorThen 前边的 then 有　返回值, 那么这个 errorThen 也必须有返回值才能匹配
-		p1.then(function(x) { throw "-- IfElse --" + x; return "-- If --"; } ).errorThen(function(x) { trace(x); return "-- Else --"; } ).then(function(s) { trace(s); } );		
-		
-		// Promises 能通过各种状态检测
-		
-		// 检测 是否已经处理(resolve),(因为 Promise 只能 resolve 一次)
-		trace(p1.isResolved());
-		
-		// 检测　是否 挂起(pending) 操作于下一次循环
-		// 有时候　promise 并没有完成 resolve, 
-		// 这个发生在 promise 延迟执行(on flash, js) 或处于更新其它 promise 中. TODO: 未理解
-		trace(p1.isPending());
-		
-		
-		// Check to see if the promise has completed fulfilling its updates.
-		trace(p1.isFulfilled());
-		
-		// Check to see if a promise has been rejected.  This can happen if
-		// the promise throws an error, or if the current promise is waiting
-		// on a promise that has thrown an error.
-		trace(p1.isRejected());
-		
-		// finally, resolve the promise values, which will start the
-		// evaluation of all promises.
-		dp1.resolve(1);
-		dp2.resolve(2);
-		dp3.resolve('hi');
+	// 回调函数内部的 throw 将会被忽略, 除非定义 -D PromhxExposeErrors
+	
+	// errorThen 可以在抛出错误之后继续后边的调用链
+	// 如果 errorThen 前边的 then 有　返回值, 那么这个 errorThen 也必须有返回值才能匹配
+	p1.then(function(x) { throw "-- IfElse --" + x; return "-- If --"; } ).errorThen(function(x) { trace(x); return "-- Else --"; } ).then(function(s) { trace(s); } );		
+	
+	// Promises 能通过各种状态检测
+	
+	// 检测 是否已经处理(resolve),(因为 Promise 只能 resolve 一次)
+	trace(p1.isResolved());
+	
+	// 检测　是否 挂起(pending) 操作于下一次循环
+	// 有时候　promise 并没有完成 resolve, 
+	// 这个发生在 promise 延迟执行(on flash, js) 或处于更新其它 promise 中. TODO: 未理解
+	trace(p1.isPending());
+	
+	
+	// Check to see if the promise has completed fulfilling its updates.
+	trace(p1.isFulfilled());
+	
+	// Check to see if a promise has been rejected.  This can happen if
+	// the promise throws an error, or if the current promise is waiting
+	// on a promise that has thrown an error.
+	trace(p1.isRejected());
+	
+	// finally, resolve the promise values, which will start the
+	// evaluation of all promises.
+	dp1.resolve(1);
+	dp2.resolve(2);
+	dp3.resolve('hi');
 
-		// You can "resolve" a stream as well
-		ds1.resolve(1);
-		ds1.resolve(1);
-		ds2.resolve(2);
-	}
-	```
+	// You can "resolve" a stream as well
+	ds1.resolve(1);
+	ds1.resolve(1);
+	ds2.resolve(2);
+}
+```
 	
  * **[openfl-bitfive](https://github.com/YellowAfterlife/openfl-bitfive)** readme 上写着比 openfl 默认的 **html5后端** 更好.
 
@@ -318,44 +318,44 @@ haxe LD34游戏示例: http://haxe.io/ld/34/
 
  * [thx.core](https://github.com/fponticelli/thx.core) 
 
-	```
-	Set		:  A Set is a list of unique values.
-	
-	Tuple	:  A Tuple is a value containing multiple values of potentially different types.
-	```
+```
+Set		:  A Set is a list of unique values.
+
+Tuple	:  A Tuple is a value containing multiple values of potentially different types.
+```
 
  * [tink_core](https://github.com/haxetink/tink_core) 
 
-	```
-	# 包含几个轻量级工具库. 源码都简单.
-	
-	
-	Pair	:	双, 例如用来给 Map 类型排序,就需要建一个 Array<Pait> 的数组..
-	
-	Either	:	二者之一,Left(T1)或Right(T2), 用于参数可以接受二种类型,
-	
-	Lazy	:	abstract Lazy<T>(Void->T), lazy evaluation,
-				把一个值包装成 返回这个值的函数, 没必要这么做吧???
-	
-	Error	:	集合了一些网络错误, 例如: ErrorCode.NotFound == 404
-	
-	Outcome	:	常用于函数返回值, 用来检测返回值是否出错.OutcomeTools 有一些可用于 using 的方法
-				类似于 haxe.ds.Option
-				C 语言中常常返回 0, 表示正确, 非 0 值为错误代码
-	
-	Future	:	文档太长, 但大概类似于 Promise 之类的东西
-	
-	Ref		:	感觉没必要. 这个类使用 Vector 的第一个元素存储值.来达到引用效果.
-	
-	Noise	:	表示空,用于表示一个类型, 示例: 当你操作成功却不需要做任何事情时
-				function writeToFile(content:String):Outcome<Noise, IoError>;
-				
-	Callback	:	abstract Callback<T>(Null<T->Void>) from (T->Void) {}	
-	
-	CallbackLink:	abstract CallbackLink(Null<Void->Void>){}
-	
-	CallbackList:	abstract CallbackList<T>(Array<Cell<T>>){}
-	```
+```
+# 包含几个轻量级工具库. 源码都简单.
+
+
+Pair	:	双, 例如用来给 Map 类型排序,就需要建一个 Array<Pait> 的数组..
+
+Either	:	二者之一,Left(T1)或Right(T2), 用于参数可以接受二种类型,
+
+Lazy	:	abstract Lazy<T>(Void->T), lazy evaluation,
+			把一个值包装成 返回这个值的函数, 没必要这么做吧???
+
+Error	:	集合了一些网络错误, 例如: ErrorCode.NotFound == 404
+
+Outcome	:	常用于函数返回值, 用来检测返回值是否出错.OutcomeTools 有一些可用于 using 的方法
+			类似于 haxe.ds.Option
+			C 语言中常常返回 0, 表示正确, 非 0 值为错误代码
+
+Future	:	文档太长, 但大概类似于 Promise 之类的东西
+
+Ref		:	感觉没必要. 这个类使用 Vector 的第一个元素存储值.来达到引用效果.
+
+Noise	:	表示空,用于表示一个类型, 示例: 当你操作成功却不需要做任何事情时
+			function writeToFile(content:String):Outcome<Noise, IoError>;
+			
+Callback	:	abstract Callback<T>(Null<T->Void>) from (T->Void) {}	
+
+CallbackLink:	abstract CallbackLink(Null<Void->Void>){}
+
+CallbackList:	abstract CallbackList<T>(Array<Cell<T>>){}
+```
 
  * [cleversort](https://github.com/jasononeil/cleversort) Haxe macro for helping to sort arrays based on multiple properties with a very simple syntax 
 

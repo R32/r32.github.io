@@ -86,23 +86,23 @@ AGAL 限制：每个程序 200 个 opcode。
 
   - **`fs<0~7>`** 仅用于 fragmentProgram
 
-	```
-	# 语法为 fs<n> <flags>, 其中 <flags> 定义为:
-	
-	 * 纹理维度: 2d, cube
-	
-	 * mip映射: nomip(mipnone), mipnearest, miplinear
-	
-	 * 纹理过滤: nearest, linear
-	
-	 * 纹理重复: repeat, wrap, clamp
-	
-	# 例如，一个没有MIP映射和现象过滤的标准2D纹理可以使用以下代码采样到临时寄存器 ft1 中：
-	
-	tex ft1, v0, fs0 <2d,linear,nomip>
-	
-	# 在上面的示例中，可变寄存器 v0 持有插入的纹理UV。
-	```
+```
+# 语法为 fs<n> <flags>, 其中 <flags> 定义为:
+
+ * 纹理维度: 2d, cube
+
+ * mip映射: nomip(mipnone), mipnearest, miplinear
+
+ * 纹理过滤: nearest, linear
+
+ * 纹理重复: repeat, wrap, clamp
+
+# 例如，一个没有MIP映射和现象过滤的标准2D纹理可以使用以下代码采样到临时寄存器 ft1 中：
+
+tex ft1, v0, fs0 <2d,linear,nomip>
+
+# 在上面的示例中，可变寄存器 v0 持有插入的纹理UV。
+```
 
 <br />
 
@@ -139,13 +139,13 @@ class Shader extends hxsl.Shader {
 
 	> 如 VertexBuffer 除了坐标还包含颜色或uv数据, 那么 input 的数据类型应该定义相应的字段,如:
 		
-		```
-		var input : {
-			pos : Float3,
-			norm : Float3,
-			uv : Float2,
-		};
-		```
+```
+var input : {
+	pos : Float3,
+	norm : Float3,
+	uv : Float2,
+};
+```
 
  * 0个或多个变量对应于 AGAL渐变寄存器(`v<0~7>`),在 vertexProgram 中将数据插值写入, 然后在 fragmentProgram 中读取
 
