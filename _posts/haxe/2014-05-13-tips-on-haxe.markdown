@@ -19,6 +19,24 @@ categories: haxe
 
 ### 最新改动
 
+一些是 Git 版本
+
+ * `@:structInit`: 用于cpp, https://github.com/HaxeFoundation/haxe/issues/4526
+
+	```haxe
+	@:struct class MyStruct {
+	  public var a:Int;
+	  public var b:String;
+	  public inline function new(a,?b) {
+	      this.a = a;
+	      this.b = b;
+	  }
+	}
+	// would allow to be initialized with:
+	var m1 : MyStruct = { a : 0 };
+	var m2 : MyStruct = { a : 0, b : "hello" };
+	```
+
  * `import.hx`: 注意区别于其它类, 只能允许 import 和 using 语句, 作为项目中默认导入的包, 但是目前 IDE 支持的不好.
 
 	> https://github.com/HaxeFoundation/haxe/issues/1138
@@ -352,7 +370,7 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
 	}
 	```
 
- * `haxe.PosInfos` 这个类是一个魔法类, 因为编译器将自动填充它. 你只需要定义就行了, 参看 [Log and Trace Features]({% post_url haxe/2014-03-28-log-and-trace-features %})
+ * `haxe.PosInfos` 这个类是一个魔法类, 因为编译器将自动填充它. 你只需要定义就行了, 参看 [Log and Trace Features]({% post_url 2014-03-28-log-and-trace-features %})
 
 
 #### Flashdevelop
@@ -803,7 +821,7 @@ class Helo{
 
 [Tips and Tricks](http://haxe.org/manual/tips_and_tricks)
 
-[全部内建元标记]({% post_url haxe/2014-03-30-commands %})
+[全部内建元标记]({% post_url 2014-03-30-commands %})
 
 除了编译器内建的, haxe 允许自定义元标记, 格式为 `@` 字符作前缀(编译器内建的以 `@:` 为前缀, 当然你也能定义以 `@:` 作前缀的元标记, 这只是规范,　并没有强制要求). 例: `@some`. 可以通过 haxe.rtti.Meta 在运行时访问这些元标记内容, 
 

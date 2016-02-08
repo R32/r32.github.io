@@ -88,7 +88,7 @@ flow
 
 原文: https://underscorediscovery.github.io/flow/
 
-[flow 个人笔记]({% post_url haxelib/2015-03-09-flow %})
+[flow 个人笔记]({% post_url 2015-03-09-flow %})
 
 snow
 ------

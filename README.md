@@ -127,7 +127,8 @@ Liquid 模板语法参见  https://github.com/Shopify/liquid/wiki/Liquid-for-Des
 	```
 #### TODOS:
 
- * 由于 github-pages 将在 5月份不再支持 `redcarpet` 而使用 `kramdown` 来处理 markdown 文件,这个估计要改动很多页面
+ - [ ] 由于 github-pages 将在 5月份不再支持 `redcarpet` 而使用 `kramdown` 来处理 markdown 文件,这个估计要改动很多页面
 
   - https://help.github.com/articles/updating-your-markdown-processor-to-kramdown/
 
+ - [x] 由于 jekyll 升级到了 3.0 因此之前 `{{post_url dir/filename}}` 的语法需要调整为 `{{post_url filename}}` 即移除目录就行了.
