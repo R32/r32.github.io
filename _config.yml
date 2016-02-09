@@ -24,7 +24,7 @@ destination: /cygdrive/r/_site
 
 include: []
 
-exclude: ['*.md','*.less','assets/css/metro-bootstrap.css','assets/css/bootstrap.css','Thumbs.db','crossdomain.xml']
+exclude: ['*.md','*.less','assets/css/metro-bootstrap.css','assets/css/bootstrap.css','Thumbs.db']
 
 keep_files: ['.git','.svn','_test']
 
