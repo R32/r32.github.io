@@ -10,7 +10,11 @@ categories: haxe
 
 ### Tips
 
- * 当将一个方法作为参时,比如 `addEventListener(onSome)` 如果可以的话尽量将这个方法定义为静态方法避免 haxe 做多余的上下文(this)绑定. 这样输出的代码更整洁
+ * 尽量使用 git 版本的 haxe
+
+ * 尽量添加编译参数 `-D analyzer` 以优化输出, 一些情况下 `-dce full` 也是值得的
+
+ * 当将一个方法作为参数时,比如 `addEventListener(onSome)` 如果可以的话尽量将这个方法定义为静态方法避免 haxe 做多余的上下文(this)绑定. 这样输出的代码更整洁
 
 ###　黑魔法
 
@@ -45,7 +49,7 @@ untyped __js__("var c = a+b");
 
 	对于一些方法（如 `Array::indexOf`）,haxe使用了兼容各种浏览的实现, 如果定义这个标记,将不会构建这些多余的兼容性代码
 
- * `js-flatten` [deprecated]平坦模式.  由于 haxe 3.2 中这将是默认行为,应此被移除
+ * ~~`js-flatten`~~ 平坦模式.  由于 haxe 3.2 中这将是默认行为,应此被移除
 
 	> 使用更少的对象属性构建类, 例如: 默认情况下会创建的类有时似于 Main.a.b.c 加这个属性后将为 Main_a_b_c 这样就降低了访问对象的深度
 	
@@ -168,8 +172,7 @@ private static function __init__() : Void untyped {
 
 ### nodejs
 
-[haxelib nodejs](https://github.com/dionjwa/nodejs-std) 添加了一些 sys 包以及其它方法, 使得在 js 目标中仍然可以访问 sys 包, 但是目前提供的方法不是很全.  这个类库同时提供一些 node-webkit 的方法.
-
+首先使用这个库 https://github.com/HaxeFoundation/hxnodejs
 
 ### 浏览器
 
