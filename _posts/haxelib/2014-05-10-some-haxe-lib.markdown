@@ -50,10 +50,6 @@ categories: haxelib
 	> 2D ONLY, COLLISION ONLY. No physics here. By design :)
 	
  * [HxScout](https://github.com/jcward/hxScout) A free cross-platform Scout alternative, written in Haxe/OpenFL
-
- * **[tora](https://github.com/HaxeFoundation/tora)** NekoVM Application Server
-
-	> 类似于 php, 用于处理网页动态内容, 我的一个 [nginx + tora:FastCGI](https://github.com/R32/HelloWorld/blob/Older/test/neko-nginx-tora/Nx.hx) 的 demo. 
 	
  * [libnoise](https://github.com/memilian/libnoise) This is a haxe port of libnoise, the coherent noise library. The port is almost complete, only the gradient and noise2D utilities are missing.
 

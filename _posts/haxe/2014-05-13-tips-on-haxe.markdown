@@ -19,12 +19,22 @@ categories: haxe
 
 ### 最新改动
 
-一些是 Git 版本
+注意一些是 Git dev版本
 
- * `@:structInit`: 用于cpp, https://github.com/HaxeFoundation/haxe/issues/4526
+ * [Nicolas 在前二天的直播主要讲的二点](https://groups.google.com/forum/#!topic/haxelang/GaekP1atMwE)
+
+  - 新的 meatadata `@:structInit`见下边描述, 以及 `inline new`
+
+  - 一个值得注意的编译标记是 `-D dump=pretty` 能获得更易读的 dump
+
+  - 同时非常推荐的另一个为 `-D analyzer`(这个标记我一直添加着, 这是新的代码优化器)
+
+ * `@:structInit`: https://github.com/HaxeFoundation/haxe/issues/4526
+
+  - 文档未完成 https://github.com/HaxeFoundation/HaxeManual/issues/231
 
 ```haxe
-@:struct class MyStruct {
+@:structInit class MyStruct {
 	public var a:Int;
 	public var b:String;
 	public inline function new(a,?b) {

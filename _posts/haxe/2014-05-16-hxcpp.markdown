@@ -7,6 +7,8 @@ categories: haxe
 
 ---
 
+[hxcpp-guide](https://github.com/snowkit/hxcpp-guide) 手册进度未知.
+
 这里主要记录一些和 hxcpp 相关的东西, 由于我没有找到 hxcpp 的相关文档, 因此不保证内容的正确性.
 
 需要安装 [haxelib hxcpp](https://github.com/HaxeFoundation/hxcpp)。　

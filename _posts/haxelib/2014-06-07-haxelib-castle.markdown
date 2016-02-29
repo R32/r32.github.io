@@ -134,7 +134,7 @@ castleDB 保存为一个扩展名为 `.cdb` 的文件, 其实它是一个 JSON �
 
  	> JSON格式: 这个列的值为一个图片的 md5 值, 这时和 `.cdb` 会存在一个同名的 .img 后缀的 JSON 文件, 文件格式类似于 `{"md5string": "data:image/png;base64,........"}`
 	
- * **Tile** 类似于图片,一张图片上存放多个 Tile,类似于 SpriteSheet
+ * **Tile** 类似于图片,一张图片上存放多个 Tile
 	
  * **List** 当类型为 List 将创建一个新的隐藏子表。 [见后边章节描述...](#list-column)
 	

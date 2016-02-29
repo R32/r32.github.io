@@ -864,6 +864,10 @@ http://haxe.org/manual/cr-metadata.html
 
 @:structAccess       : Marks an extern class as using struct access('.') not
                         pointer('->') (cpp only)
+# haxe 3.3 新增 https://github.com/HaxeFoundation/haxe/issues/4526
+# 允许以匿名结构的方式初使化一个类
+@:structInit         : Allows to initialize the class with a structure that
+                       matches constructor parameters
 						
 @:suppressWarnings   : Adds a SuppressWarnings annotation for the generated Java class (java only)
 

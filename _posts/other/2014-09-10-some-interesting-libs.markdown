@@ -13,11 +13,15 @@ https://github.com/sindresorhus/awesome
 
 #### Tools
 
+ * [Tor网络向导](https://bridges.torproject.org/) 需要方Qiang
+
  * [lantern](https://github.com/getlantern/lantern) 可以方Qiang
 
  * **[wink](http://www.debugmode.com/wink/)** 录屏软件, 录制为flash, 能在某些点自动暂停
 
  * [daff](https://github.com/paulfitz/daff) align and compare tables 比较二个表格文件（csv）差异
+
+ * [svipt](https://github.com/JeriXNet/svipt) 命令行工具图形处理. takes svg file as an input to prepare app icon files for different platforms
 
  * [fontello](https://github.com/fontello/fontello) This tool lets you combine icon webfonts for your own project.
 

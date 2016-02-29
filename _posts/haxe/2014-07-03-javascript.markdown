@@ -16,7 +16,8 @@ categories: haxe
 
  * 当将一个方法作为参数时,比如 `addEventListener(onSome)` 如果可以的话尽量将这个方法定义为静态方法避免 haxe 做多余的上下文(this)绑定. 这样输出的代码更整洁
 
-###　黑魔法
+
+### 黑魔法
 
  * `__js__` 用于直接嵌入 js 代码
 

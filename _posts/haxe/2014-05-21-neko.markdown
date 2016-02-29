@@ -53,22 +53,19 @@ function fn(){
 **重要:** `pop(block)` 当 block 为 true, 将为阻塞模式, 也就是说调用 pop(true) 时, 当没有元素可用于pop( *类似于调用空数组的pop方法* ), 将阻塞当前进程直至有元素可以弹出. 用于多线程编程.
 
 ```haxe
-var dq = new Deque<Int>();
-		
-Thread.create(function() {
-	Sys.sleep(2);
-	dq.add(100);
-});
-trace("if block is true, and has no value can be pop()");
-trace(dq.pop(true));
-trace("end");
+var q = new Deque<Int>();
+Thread.create(function() { trace(q.pop(true)); });
+Thread.create(function() { trace(q.pop(true)); });
+q.add(1);
+q.add(2);
+Sys.sleep(1)
 ```
 
 #### vm.Mutex
 
 http://old.haxe.org/api/neko/vm/mutex, 示例可以参考上边 Thread 处的示例.
 
-总来来说 Mutex 是也一个阻塞, 当 `mutex.acquire()` 时, 如果同个实例中前边已经调用,那么将阻塞等待释放.
+用于阻塞个多个线程同时操作相同一个变量
 
 #### vm.Lock
 
