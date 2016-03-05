@@ -29,6 +29,49 @@ http://old.haxe.org/doc/advanced/magic#neko-magic
 
  * `vm.Ui` UI线程同步队列, 似乎没什么作用???
 
+#### neko.Lib
+
+```haxe
+
+// 从NDLL库中加载 Neko primitive 方法
+public static function load( lib : String, prim : String, nargs : Int ) : Dynamic;
+
+// 同上, 只是如果加载出错将返回一个空的方法而不抛出异常。
+public static function loadLazy(lib,prim,nargs) : Dynamic
+
+// 重新抛出异常
+public static function rethrow( e : Dynamic ) : Dynamic;
+
+// 使用 Neko 源生的序列化方法, 序列化方法在速度上有优化而不是数据大小.
+public static function serialize( v : Dynamic ) : haxe.io.Bytes;
+
+// 使用 Neko 源生的**反**序列化方法.
+public static function unserialize( s : haxe.io.Bytes ) : Dynamic;
+
+// 使用 Neko 源生的**反**序列化方法. 这个方法假设所有的序列化数据都由当前模块序列化,
+// 即使模块名不同. 这可能发生在如果你反序列化一些数据到mod_neko, 而
+// 那些数据的序列化是在不同的服务器上使用了不同的文件路径
+public static function localUnserialize( s : haxe.io.Bytes ) : Dynamic;
+
+// 转换 neko 值为等效的 haxe 值. 用于将wrapping的 String,Arrays 的raw值型式转换成haxe对象型式
+public static function nekoToHaxe( v : Dynamic ) : Dynamic;
+
+// 转换 haxe 值为等效的 neko 值. 用于将unwrap的 String 和 Arrays 的对象型式转换成neko的raw值型式
+public static function haxeToNeko( v : Dynamic ) : Dynamic;
+
+//返回一个对象包含所有编译了(import导入了或者其它引入方式)的packages和classes, 
+//例: Lib.getClasses().Main, 返回 Main.hx 类（Class<Main>）
+//例: Reflect.fields(Lib.getClasses().pkg), [@Some,Some], 如果是包则带有 @的是成员,而另一个则是静态.
+//当你需要初使化一堆 SPOD 表时可能会用到这个方法, 而不需要一个一个的指定
+public static function getClasses() : Dynamic;
+
+// 返回字符串引用提供的参数 byte, 因此如果修改了 byte, 则字符串的值也将会同时改变.
+public inline static function stringReference( b : haxe.io.Bytes ):String;
+
+// 参考 stringReference, 只是反过来了.
+public inline static function bytesReference( s : String ) : haxe.io.Bytes;
+```
+
 #### vm.Thread
 
 多线程示例: http://old.haxe.org/doc/neko/threads , 包含了 Deque, Mutex ;

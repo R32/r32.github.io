@@ -13,6 +13,8 @@ https://github.com/sindresorhus/awesome
 
 #### Tools
 
+ * [letsencrypt](https://letsencrypt.org/) 国外一个公共的免费SSL项目, 如果需要免费的SSL证书
+
  * [Tor网络向导](https://bridges.torproject.org/) 需要方Qiang
 
  * [lantern](https://github.com/getlantern/lantern) 可以方Qiang

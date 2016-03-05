@@ -256,7 +256,6 @@ macro public static function tut_file(name:String) {
 
 	
 ```haxe
-
 //example: trace(tut_parse());  => {width => 800, lang => zh-CH, note => 测试, sprite => [object Sprite]}
 macro public static function tut_parse() {
 	var str = "测试";    // Tip:在单引号字符串中,可以使用 ${变量} 来引用一些变量, 
@@ -279,13 +278,13 @@ macro 关键字后可以接任意 haxe 表达式 http://haxe.org/manual/macro-re
 
  * `${}` 或 `$e{}`: `Expr -> Expr`
 
- * `$a{}` : `Expr -> Array<Expr>` 用于把数量未确定的参数传递给 作参数的函数, 示例见 Promhx 库的 Promise.when
+ * `$a{}` : `Expr -> Array<Expr>` 用于把数量未确定的参数传递给函数, 示例见 Promhx 库的 Promise.when
 
- * `$b{}` : `Array<Expr> -> Expr`
+ * `$b{}` : `Array<Expr> -> Expr` 构建**块表达式**
 
  * `$i{}` : `String -> Expr` 注: 这里的 String 变量名字符串. 表示为: EConst(CIdent())
 
- * `$p{}` : `Array<String> -> Expr` 同上. String 指的是变量名.
+ * `$p{}` : `Array<String> -> Expr` 同上. String 指的是变量名. 例: `macro $p{}["Main","main"]}; => Main.main`
 
  * `$v{}` : `Dynamic -> Expr` 这个经常会用到. e.g: `return macro $v{"hello world"}`
 
@@ -500,6 +499,7 @@ getOutput():String
 include(pack:String, rec:Bool = true, ignore:Array<String> = null, classPaths:Array<String> = null)
 
 // JS 平台. 嵌入 JS 文件到 输出端, 目前 haxe 只提供 jQuery 和 swfObject 二个 JS 文件
+// Embed a JavaScript file at compile time (can be called by `--macro` or within an `__init__` method).
 includeFile(fileName:Dynamic):Dynamic;
 
 /**

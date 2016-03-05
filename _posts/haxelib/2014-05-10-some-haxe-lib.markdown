@@ -15,6 +15,8 @@ categories: haxelib
 
  * http://haxe.io 主要是一些 haxe 的新闻, 经常能看到一些惊异的东西.
 
+ * [如何优化你的 haxe 代码](https://github.com/delahee/haxe.opt)
+ 
 #### 工具
 
 一些常见的工具如 format, hscript 将不在这里列出..

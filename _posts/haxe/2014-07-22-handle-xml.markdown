@@ -135,11 +135,24 @@ var fast = new Fast(xml.firstElement)
 
 http://old.haxe.org/api/haxe/xml/proxy
 
-感觉这个类没什么用.示例参考源码注释. 仅能提供智能语法提示访问 带有 id 属性(id属性名的第一个字母不能为数字)的 Element. 
+似乎是用来做本地化的.示例参考源码注释. 仅能提供智能语法提示访问带有"id"属性(id属性名的第一个字母不能为数字)的 Element. 
 
-至于通过 `.` 符号访问 id 值会返回什么?还得自已设置。
+至于通过 `.` 符号访问 id 值会返回什么?还得自已加载XML解析然后设置构造函数。
 
 `Proxy<"myxml.xml",T>` 的 "myxml.xml" 需要在 classPath 中,即当前目录或 `-cp` 指定的目录
+
+示例: https://github.com/ncannasse/hxWiki/blob/master/src/Text.hx
+
+```haxe
+private class AllTexts extends haxe.xml.Proxy<"myxml.xml",String> {}
+
+class Main{
+	static function main(){
+		var get = new AllTexts(function(id){return id + id});
+		// get.someId 返回什么值完全看上边的构造函数参数
+	}
+}
+```
 
 #### Check
 

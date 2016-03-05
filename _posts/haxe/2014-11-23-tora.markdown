@@ -502,11 +502,11 @@ class App {
 
 ### issue
 
- * 感觉 nginx + fcgi 好像有问题(未知)
-
- * 如何实现高效的 session, 感觉使用 Share 模块并不太好
+ * 如何实现高效的 session, 感觉使用 Share 模块并不太好(hxwiki 使用的是数据库来处理)
 
  * tora 是如何实现将 haxe 生成的 neko 代码被另一个 neko 模块用 Lib.load 来调用??? neko.vm.Loader.make
+
+也许另一个分支 https://github.com/motion-twin/tora 已经实现下边的一些， 并且包含有 hxssl.
 
  * 在 Protocol上实现 WebSocket,由于 unsafe 是直连的,因此只要修改 tora 端的代码就好了, 但
 

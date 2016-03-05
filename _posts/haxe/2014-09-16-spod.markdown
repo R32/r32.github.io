@@ -11,7 +11,9 @@ SPOD 建立在 SQLite 或 Mysql 上. 全称为 Simple Persistent Object Database
  
 <!-- more -->
 
-原文引用: http://old.haxe.org/manual/spod
+原英文: http://old.haxe.org/manual/spod
+
+示例: https://github.com/ncannasse/hxWiki/tree/master/src/db
 
 ### SPOD类
 
@@ -138,7 +140,7 @@ typedef SEnum<E:EnumValue> = Null<E>	// 允许存储不具有参数, 简单的in
 
  * `@:skip`： 忽略此字段，表示这个字段不是数据库结构中的一部分
 
- * `@:relation`： 将此作为一种关系的字段声明 [(见下面的特定部分)](#关系)
+ * `@:relation`： 将此作为一种关系的字段声明 [见下面的特定部分](#关系)
 
 用于SPOD类:
 
@@ -155,6 +157,11 @@ class UserGroup extends sys.db.Object {
 ```
 
  * `@:index(field1,field2,...,[unique])`: 声明指定的字段为索引(index)-并将按此顺序进行索引。如果最后一个字段是 unique 类型这意味着这是唯一性索引(unique index)（可以声明多个@:index, 每个字段值的组合可以只能出现一次）
+
+
+ * `@:skip`: 跳过自动创建 manager, 
+
+ * `@:skipFields` 忽略当前类(非父类和子类)的所有字段
 
 #### 构建表格
 
@@ -576,4 +583,6 @@ SDate 是二进制的 blob. 为了允许任何类型的序列化(文本或二进
 
 ### 自动插入,搜索,编辑生成
 
-[SpodAdmin](http://github.com/ncannasse/spodadmin) 项目提供了一个基于 HTML 的界面, 允许插入和搜索/编辑和删除 SPOD 对象根据已编译的 SPOD 信息, 它还允许数据库同步根据 SPOD 结构在编译时自动检测差异在编译时和当前 DB之间.  
+[dbadmin](https://github.com/ncannasse/dbadmin) 项目提供了一个基于 HTML 的界面, 允许插入和搜索/编辑和删除 SPOD 对象根据已编译的 SPOD 信息, 它还允许数据库同步根据 SPOD 结构在编译时自动检测差异在编译时和当前 DB之间.  
+
+注意这个库只是个 haxelib, 并非独立的应用.

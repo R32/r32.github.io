@@ -15,6 +15,10 @@ categories: haxe
 
  * [windows-installer 最新的开发版下载](http://hxbuilds.s3-website-us-east-1.amazonaws.com/builds/haxe/windows-installer/haxe_latest.tar.gz)
 
+ * [如何优化你的 haxe 代码](https://github.com/delahee/haxe.opt)
+
+ * **Tips:** 在编译时其实可以不用指定 `-main` 参数, 这样的程序将没有入口像是一个库, 例: `haxe -js lib.js Lib`
+
 <!-- more -->
 
 ### 最新改动
@@ -23,7 +27,7 @@ categories: haxe
 
  * [Nicolas 在前二天的直播主要讲的二点](https://groups.google.com/forum/#!topic/haxelang/GaekP1atMwE)
 
-  - 新的 meatadata `@:structInit`见下边描述, 以及 `inline new`
+  - 新的 meatadata `@:structInit`见下边描述, 以及适用于小型结构的 `inline new`
 
   - 一个值得注意的编译标记是 `-D dump=pretty` 能获得更易读的 dump
 
@@ -94,14 +98,13 @@ class Main {
 }
 ```
 
- * haxe.Constraints 下的 Function 和 FlatEnum, 用来限制一些动态内型???
+ * haxe.Constraints 下的的类基本都是一些 **类型限制**
 
   - Function 用于限制类型需要为 函数类型
 
   - FlatEnum 用来限制 Enum 的类型.
 
 ```haxe
-//....
 var onclick : haxe.Constraints.Function;
 
 // 但是这个就不好理解了, 
@@ -124,8 +127,32 @@ class Test {
 
 	static function test<T:haxe.Constraints.FlatEnum>(t:T) { }
 }
-	
 ```
+  - `Constructible<T>`
+
+```haxe
+private class A {
+	public function new() {}
+}
+
+@:generic
+private class B<T:haxe.Constraints.Constructible<Void->Void>> extends A {
+}
+
+class Issue4457 extends Test
+{
+
+	public function test()
+	{
+		new B<A>();
+	}
+
+}
+```
+
+  - `interface IMap<K,V>`
+
+
 	
 #### typedef 对性能的影响 
 
@@ -241,7 +268,20 @@ function foo(i:Int, ?a:Array<Int>, ?f:Float){
 	
 // 	haxe 编译器 将自动为第二个参数填入 null,
 foo(10,0.123); //output => 10, 0.123
-```	
+```
+
+ * `@:enum abstract`, 除了静态变量,还允许 inline 形式的方法
+
+```haxe
+@:enum abstract C(Int) {
+	var X = 0;
+	var Y = 1;
+	var Z = 2;
+	var W = 3;
+	public static inline function ofInt(i:Int) : C return cast i;
+	public inline function getIndex() : Int return this;
+}
+```
 
  * **隐藏包名** 当包名(文件夹名称)以 `_` 作前缀时, 代码编辑器不会智能提示出这个包名, 相当于添加了 `@:noCompletion`
 
@@ -941,6 +981,81 @@ abstract 用于抽象化数据结构,用于包装底层类型, 其行为更像�
 分隔线
 ------
 
+一些类细节
+
+#### haxe.web.Dispatch
+
+http://old.haxe.org/manual/dispatch
+
+```haxe
+var api = { doUser : function() trace("CALLED") };
+haxe.web.Dispatch.run("/user", new Map<String,String>(), api);
+// haxe.web.Dispatch.run(neko.Web.getURI(), neko.Web.getParams(), new Other());
+```
+
+ * 最好开启 mod_rewrite 模块做网站单入口, 如果需要多个入口则建议以类似于 `XXX.domain.com` 而不是 `domain.com/XXX` 的形式出现
+
+ * api 内的方法可以为类实例, 但方法得以 "do" 开头, 如果 api 对象中没有找到匹配的 doXXXX 或是根站点("/")则将调用 `doDefault`
+
+	> 如果连 "doDefault" 都没有提供, 则将报错, 注意这个是区分大小写的 "/user" 对应 "doUser"
+
+ * 为了处理 GET 变量, do 方法的参数名可设为 `args`
+
+```haxe
+class Api {
+    // ...
+    function doMultiply( args: { x : Int, y : Int } ) {
+        trace(args.x*args.y);
+    }
+}
+var params = new Map<String,String>();
+params.set("x","5");
+params.set("y","6");
+Dispatch.run("/multiply", params, new Api());
+```
+
+	上边的示例, 如果缺少一个参数将会报异常, 因此参数类型可以设为类似于 `x:Null<Int>` 这样.
+	
+	或者要么没有参数要么二个参数必须有 `?args: { x : Int, y : Int }`, **这非常适合处理如果必须的几个参数**
+
+ * 如果参数过多不方便使用 args 来获取, 则可以用 Dispatch 作参数类型
+
+```haxe
+function doMultiply( d:Dispatch ) {
+	if(d.params != null){
+		trace(d.params);
+	}else{
+		trace("no arguments");
+	}
+	// d.name => "doMultiply", 所调用的入口API名称
+	// untyped d.subDispatch => true
+	// d.cfg => {} 不必理会
+	// d.parts => [], 例: "/multiply/mod/act" => ["mod", "act"] ;大小写有区别
+}
+```
+
+	当使用 Dispatch 作类型时, 各种 mod, act 参数都可以省略(或者加上也没关系), 因为都可以从这个参数中获取
+	
+ * `d.dispatch(api)` Sub Dispatch(感觉没有实际应用的意义)
+
+```haxe
+function doMultiply( d:Dispatch, mod:String, act:String) {
+	trace("BEFORE");
+	d.dispatch(this);	// 可以是其它 api 类, 但由于在这里 subDispatch 已经为 ture,
+						// 因此不会再重复调用 doMultiply, 而是会调用 doDefault
+	trace("AFTER");
+}
+Dispatch.run("/multiply/module/act/1")
+```
+
+ * metadata 处理, onMeta 将在调用方法之前执行用来执行一些检测或设置
+
+ * spod 支持
+
+ * 编译时, metadata检测, (高级特性), 允许metadata检测宏这将确保metadata的正确声明.
+
+	> 就是自已写一个 checkMeta 的方法然后覆盖掉 Dispatch 自带的那个, 看示例感觉这个有些多余,而且麻烦
+
 ### haxe.remoting
 
 http://old.haxe.org/doc/remoting
@@ -955,7 +1070,7 @@ new MyApi(connection);
 
  * Connection
 
-#### Context
+#### haxe.remoting.Context
 
 "被调用者"将方法绑定在这个类上
 
