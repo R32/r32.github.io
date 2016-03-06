@@ -128,7 +128,7 @@ class Test {
 	static function test<T:haxe.Constraints.FlatEnum>(t:T) { }
 }
 ```
-  - `Constructible<T>`
+  - `Constructible<T>` ???用于参数类型, 表示为一个可实例化的类型
 
 ```haxe
 private class A {
@@ -172,6 +172,17 @@ neko  : 28.201 ------ anon: 19.601  # 运算前期速度还行，越到后边越
 ```
 
 意外的是 neko 中, anon 竟然快于 class 结构, 而且由于 neko 本身就不适合用于 float 计算
+
+### snippet
+
+[old.haxe.org 的一些代码片段](http://old.haxe.org/doc/snip)
+
+ * 以“行”分隔文本字符串: `~/[\r\n]+/g.split(text)`
+
+  - 同上移除所有空格和TAB字符串并: `~/[ \t]+/g.split(lineText)`
+
+  - 再加上 join 方法可用于字符串替换, 如果字符串简单可以直接用 str.split 方法如: `path.split("\\").join("/")`
+
 
 ### 源码布局
 
@@ -994,6 +1005,8 @@ haxe.web.Dispatch.run("/user", new Map<String,String>(), api);
 ```
 
  * 最好开启 mod_rewrite 模块做网站单入口, 如果需要多个入口则建议以类似于 `XXX.domain.com` 而不是 `domain.com/XXX` 的形式出现
+
+  - [apache mod_rewrite - 金步国中文文档]http://www.jinbuguo.com/apache/menu22/mod/mod_rewrite.html
 
  * api 内的方法可以为类实例, 但方法得以 "do" 开头, 如果 api 对象中没有找到匹配的 doXXXX 或是根站点("/")则将调用 `doDefault`
 

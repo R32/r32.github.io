@@ -237,69 +237,6 @@ memory(file:String)	# 解析一个 neko 文件并打印其所有 names 占用的
 
   - `onDisconnect()` 仅用于 flash
 
-示例: 
-
-```bash
-> tora.exe -unsafe localhost:6667 -config vh.conf
-[DATE] Opening unsafe port on localhost:6667
-[DATE] Starting Tora server on 127.0.0.1:6666 with 32 threads
-```
-
-vh.conf, 配置是提供给 tora的, 因为 flash 将直接连接 tora, 而不通过 apache/nginx
-
-```xml
-<VirtualHost>
-    DocumentRoot D:/Apache22/htdocs
-    ServerName localhost
-</VirtualHost>
-```
-
-flash 示例:
-
-```haxe
-class Main{
-	static function main() {
-		var h = "http://localhost:6667";
-		trace("connect to:" + h);
-		var p = new tora.Protocol(h);
-		
-		p.onData = function(data:String){
-			trace("data: " + data);
-		};
-		
-		p.onError = function(msg:String){
-			trace("error: " + msg);
-		};
-		
-		p.onDisconnect = function(){
-			trace("disconnect");
-		};
-		
-		p.addHeader("headerKey", "headerValue");
-		p.addParameter("paramKey", "paramValue");
-		p.connect();
-	}
-}
-```
-
-服务器端 index.n:
-
-```haxe
-class Main{
-	static public function main(){
-		neko.Web.logMessage("new instance");
-		neko.Web.cacheModule(run);
-        run();
-	}
-	
-	static function run(){
-		Sys.println("ClientHeaders: " + neko.Web.getClientHeaders());
-		Sys.println("ClientParams" + neko.Web.getParams());
-		Sys.print("hello world!");
-	}
-}
-```
-
 #### Queue
 
 参考 tora/test 中的示例, Queue 需要 Protocol 绕过 Apache直接连接 tora. 而 Protocol 依赖于 flash的Socket.
@@ -326,7 +263,30 @@ p.call(url);
 
  * 另一个 B-client 则直接调用名字相同的 notify, 这时所有调用了 addHandler 将收到消息 `onData(msg)` 
 
-示例修改版:
+示例: 
+
+```bash
+> tora.exe -unsafe localhost:6667 -config vh.conf
+[DATE] Opening unsafe port on localhost:6667
+[DATE] Starting Tora server on 127.0.0.1:6666 with 32 threads
+```
+
+当用于线上服务器时, 可以指定 `tora -config httpd.conf` 并配置好相应的 VirtualHost 二级域名就行了,下边是本地测试用
+
+```xml
+<!-- 把 index.n 置下边指定目录, 注意路径不要加引号, 因为 tora 没处理引号, -->
+<!-- 注意这是本地测试因此不要把下边配置添加入到 httpd.conf 中去, 随便建一个文件如 vh.conf 就好 -->
+<VirtualHost>  
+    DocumentRoot /Apache22/htdocs/unsafe 
+    ServerName localhost
+</VirtualHost>
+```
+
+ * 细节: tora 解析 -config 文件后, 将生成一个 `ServerName|ServerAlias => DocumentRoot` 的 map,
+
+	> 当 flash 通过 socket 连接过去时, socket.connect 的主机参数(host) 将作为 ServerName 然后获得 DocumentRoot 即 index.n 的正确位置 
+
+flash + index.n 端:
 
 ```haxe
 #if neko
@@ -424,7 +384,7 @@ class Test {
         run();
 	#end
 	}
-	
+	#if neko
 	static function run(){
 		var params = neko.Web.getParams();
 		var cl = Std.parseInt(params.get("client"));
@@ -441,6 +401,7 @@ class Test {
 			}
 		}
 	}
+	#end
 }
 ```
 
