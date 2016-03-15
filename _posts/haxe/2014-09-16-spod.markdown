@@ -159,9 +159,11 @@ class UserGroup extends sys.db.Object {
  * `@:index(field1,field2,...,[unique])`: 声明指定的字段为索引(index)-并将按此顺序进行索引。如果最后一个字段是 unique 类型这意味着这是唯一性索引(unique index)（可以声明多个@:index, 每个字段值的组合可以只能出现一次）
 
 
- * `@:skip`: 跳过自动创建 manager, 
+ * `@:skip`: ???跳过自动创建 manager, 
 
- * `@:skipFields` 忽略当前类(非父类和子类)的所有字段
+ * `@:skipFields` ???忽略当前类(非父类和子类)的所有字段
+
+	> 注: 这上边二个估计是用于多重继承时, 如: `Session -> SessionData -> db.Object`, 这时中间那个类基本都会同时添加这二个.
 
 #### 构建表格
 

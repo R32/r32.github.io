@@ -25,17 +25,23 @@ categories: haxe
 
 注意一些是 Git dev版本
 
+ * `extern clsss` 不知从什么时候起也允许有函数体了, 这样的话更方便JS模块化编程
+
+ * [haxe 3.3 支持 extern 的 abstract 类以及 extern @:enum abstract](https://github.com/HaxeFoundation/haxe/issues/4862)
+
+ * [haxe 3.3 新的操作符](https://github.com/TiVo/intellij-haxe/issues/375) `||=, &&= 以及 后置!`, 但似乎只适用于 abstract 类中的操作符中载
+
  * [Nicolas 在前二天的直播主要讲的二点](https://groups.google.com/forum/#!topic/haxelang/GaekP1atMwE)
 
   - 新的 meatadata `@:structInit`见下边描述, 以及适用于小型结构的 `inline new`
 
   - 一个值得注意的编译标记是 `-D dump=pretty` 能获得更易读的 dump
 
-  - 同时非常推荐的另一个为 `-D analyzer`(这个标记我一直添加着, 这是新的代码优化器)
+  - haxe 3.3 `-D analyzer` 将默认为打开状态
 
  * `@:structInit`: https://github.com/HaxeFoundation/haxe/issues/4526
 
-  - 文档未完成 https://github.com/HaxeFoundation/HaxeManual/issues/231
+  - 文档未完成 https://github.com/HaxeFoundation/HaxeManual/issues/231	
 
 ```haxe
 @:structInit class MyStruct {
@@ -1102,6 +1108,41 @@ new MyApi(connection);
   - params 传递给调用方法的参数.
 
 其实, 应该使用 **ContextAll** 替换这个类.
+
+### haxe.rtti
+
+[运行时类型(runtime type information)](http://haxe.org/manual/cr-rtti.html)
+
+如果在定义 class 时, 加上元标签 `@:rtti`, 则这个类将会有一个 untyped 的 静态字段 `__riit`，
+这个字段为一个 xml 的字符串包含了所有这个类的信息, 可以通过 `haxe.rtti.XmlParser` 来分析。
+将获得个 [RTTI Structure]()的数据结构。
+
+```haxe
+@:rtti class Main {
+  var x:String;
+  static function main() {
+    var rtti = haxe.rtti.Rtti.getRtti(Main);
+    trace(rtti);
+  }
+}
+```
+
+其实由于 macro 最近用得越来越多(在编译时获得类信息), rtti 用到的地方越来越少了， 目前 SPOD 和 tora 的 Share 都是基于 rtti 的。
+
+**重要:** 需要在类上添加元标签 `@:rtti` 才能使用这个包中的类, 这个类因此就获得“运行时类型(runtime type)”, 注意和编译时类型相区分。
+
+ * `haxe.rtti.Meta`: 前边应该有提到, 任何元标签都能通过这个类获得， 这个类不需要指定 rtti 元标记。
+
+ * `haxe.rtti.XmlParser`: 用于解析 __riit 字段, 见 API 文档
+
+```haxe
+var rtti:String = untyped SomeClass.__rtti;
+var t = new haxe.rtti.XmlParser().processElement( Xml.parse(rtti).firstElement() );
+switch(t){
+	case TClassdecl(cc):
+	default:
+}
+```
 
 
 ### List

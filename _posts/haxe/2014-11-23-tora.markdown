@@ -158,6 +158,16 @@ AddHandler tora-handler .n
 
 	对于 htdocs 目录或虚拟目录的修改, 自行参考 apache 文档
 
+##### mod_rewrite
+
+ * [配置 apache 2.2 mod_rewrite](http://www.jinbuguo.com/apache/menu22/mod/mod_rewrite.html)
+
+httpd.conf 启用日志调试:
+
+```conf
+RewriteLog "/path/to/file.log"
+RewriteLogLevel 9	# 0 代表关闭, 9 代表开启最大 debug 输出
+```
 
 ### 启动
 
@@ -421,6 +431,8 @@ class Test {
 
  * `free()` 删除这个 name 所对应的共享的数据，需要在获得锁的状态下调用
 
+ * **重要:** Share 支持的字段数据类型有限,参看 `Persist::processType` 对数据的解析, 例如不支持 Map, 并不不支持 rtti 在 abstract 类上
+
 
 需要注意是， 不能保证数据的并发访问, 一个对锁定的数据进行修改的线程可能导致另一个读取没有锁定数据的线程崩溃, 这需要你来保证适当的原子性, （？？？每个对 `Share::get` 方法都传入 true 为参数）
 
@@ -463,15 +475,35 @@ class App {
 
 ### issue
 
- * 如何实现高效的 session, 感觉使用 Share 模块并不太好(hxwiki 使用的是数据库来处理)
-
  * tora 是如何实现将 haxe 生成的 neko 代码被另一个 neko 模块用 Lib.load 来调用??? neko.vm.Loader.make
 
-也许另一个分支 https://github.com/motion-twin/tora 已经实现下边的一些， 并且包含有 hxssl.
+  - 参考 tora.hx 中的 initLoader 和 ModToraApi.hx
+
+ * ~~如果在 index.n 写文件,怎么避免多线程之间的冲突了? 是否需要一个常驻于 tora.exe 的 Mutex 对象？~~
+
+  - 实测: 其实只要简单在 index.n 中使用 Mutex 就行了, 之前想多了.
 
  * 在 Protocol上实现 WebSocket,由于 unsafe 是直连的,因此只要修改 tora 端的代码就好了, 但
 
   - 问题是如何同时兼容 Socket 与 WebSocket了? 修改还是继承 Client.hx 了?
 
+	> 也许另一个分支 https://github.com/motion-twin/tora 已经实现， 并且包含有 hxssl.
+
 <br />
+
+
+
+motion-twin tora
+------
+
+这是一个分叉版本的 tora, 集成了 webSocket, redis 支持, 下边是一些新增加的 neko tora.n 的启动参数:
+
+```bash
+-tlsCipherList <
+-tlsDHFile <
+-websocket <host:port>   # 本地地址:本地端口
+-unsafeTLS <host:port> <cert> <key>     # SSL <本地地址:本地端口> <path/*.pem> <path/*.key>
+-websocketTLS <host:port> <cert> <key>  # WSS <本地地址:本地端口> <证书链> <私钥>
+```
+
 <br />

@@ -12,8 +12,6 @@ categories: haxe
 
  * 尽量使用 git 版本的 haxe
 
- * 尽量添加编译参数 `-D analyzer` 以优化输出, 一些情况下 `-dce full` 也是值得的
-
  * 当将一个方法作为参数时,比如 `addEventListener(onSome)` 如果可以的话尽量将这个方法定义为静态方法避免 haxe 做多余的上下文(this)绑定. 这样输出的代码更整洁
 
 
@@ -42,7 +40,7 @@ untyped __js__("var c = a+b");
 
 通过 `-D` 或相关宏定义的值
 
- * `js-classic`: 不使用闭包和 "strict mode" 包装代码输出.
+ * `js-classic`: **经典模式**, 即: 不使用闭包和 "strict mode" 包装代码输出.
 
  * `jquery-ver`: The jQuery version supported by js.jquery.*. The version is encoded as an interger. e.g. 1.11.3 is encoded as 11103
 
@@ -126,6 +124,8 @@ class Main {
 
 由于 Javascript **上下文** 的随意性, 并没有好的工具能自动创建 extern class, 所以需要自已手动为这些外部 JS 文件写 extern class 声明. 
 
+ * 从 webidl 文件获得一些类型参考 https://github.com/mozilla/gecko-dev/tree/master/dom/webidl
+
 由于 JS 中方法的参数可以是不同类型, 因此在写 extern class 时,会经常用到 元标签 @:overload
 
 ```haxe
@@ -170,6 +170,26 @@ private static function __init__() : Void untyped {
  * 当一个 extern class 的 method 将要作为参数传递时,需要这样做.
 
  * static 静态方法不受此影响,
+
+#### 模块化编程
+
+extern class 不知从哪个版本开始起允许有函数体(非inline), 这样的话:
+
+```haxe
+#if b_js extern #end class A {
+	public function new():Void {
+		trace("new A");
+	}
+}
+
+#if a_js extern #end class B {
+	public function new():Void {
+		trace("new B");
+	}
+}
+```
+
+編譯 a.js 的時候加 "-D a_js". 相對的，編譯b.js 的時候加 "-D b_js"
 
 ### nodejs
 

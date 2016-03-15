@@ -284,9 +284,10 @@ macro 关键字后可以接任意 haxe 表达式 http://haxe.org/manual/macro-re
 
  * `$i{}` : `String -> Expr` 注: 这里的 String 变量名字符串. 表示为: EConst(CIdent())
 
- * `$p{}` : `Array<String> -> Expr` 同上. String 指的是变量名. 例: `macro $p{}["Main","main"]}; => Main.main`
+ * `$p{}` : `Array<String> -> Expr` path. String 指的是变量名. 例: `macro $p{}["Main","main"]}; => Main.main`
 
  * `$v{}` : `Dynamic -> Expr` 这个经常会用到. e.g: `return macro $v{"hello world"}`
+
 
 ```haxe
 var complexType = macro :hxd.res.Loader;

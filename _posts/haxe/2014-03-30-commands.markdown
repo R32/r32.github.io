@@ -359,7 +359,8 @@ absolute-path          : Print absolute file path in trace output
 # 添加 Scout (aka Monocle) 支持. Since SVN r5429
 advanced-telemetry     : Allow the SWF to be measured with Monocle tool
 
-# 代码优化器, 以精简代码, http://haxe.org/manual/cr-static-analyzer.html
+# 新的代码优化器, 以精简代码, http://haxe.org/manual/cr-static-analyzer.html
+# 在 haxe 3.3 中默认为打开状态
 analyzer               : Use static analyzer for optimization (experimental)
 
 as3                    : Defined when outputing flash9 as3 source code
@@ -578,19 +579,23 @@ http://haxe.org/manual/cr-metadata.html
 # 允许声明的包访问当前包 类或字段
 @:allow              : (Target path)Allows private access from package, type or field
 
-# http://haxe.org/manual/cr-static-analyzer.html#modules
-# 优化配置 文档 # 参数 https://github.com/HaxeFoundation/haxe/blob/development/analyzer.ml
-# 最近更新: https://github.com/HaxeFoundation/haxe/commit/d57112a64a5e0f7b867378446702e45cb73d664f
-# e.g: @:analyzer(no_simplification) , 注意没有引号的参数, 编译时需要指定 "-D analyzer", 这时下边的参数都为打开状态
+## http://haxe.org/manual/cr-static-analyzer.html#modules
+## 优化配置 文档 # 参数 https://github.com/HaxeFoundation/haxe/blob/development/analyzer.ml
+## 最近更新: https://github.com/HaxeFoundation/haxe/commit/d57112a64a5e0f7b867378446702e45cb73d664f
+## 局部配置: e.g: @:analyzer(no_simplification) , 注意参数没有引号, 编译时需要指定 "-D analyzer", 这时下边的参数都为打开状态
+## 全局配置: 一些参数可以在编译时通过 -D 指定, 例如: -D analyzer-no-const-propagation
 # no_check
 # no_const_propagation 与 const_propagation "稀疏有条件的常数传播(WIKI)"
 # copy_propagation 与 no_copy_propagation - 检测局部变量的别名并替换掉
 # code_motion 与 no_code_motion
 # no_local_dce 与 local_dce	- 检测以及移除局部未使用的变量.
-# ignore
+# fusion - 
+# purity_inference - 
+# unreachable_code - 
+# ignore - 
 # no_simplification
 # dot_debug 
-@:analyzer(param)           : Used to configure the static analyzer
+@:analyzer(param)    : Used to configure the static analyzer
 
 @:annotation         : Annotation (@interface) definitions on -java-lib imports will be annotated with this metadata. Has no effect on types compiled by Haxe (java only)
 

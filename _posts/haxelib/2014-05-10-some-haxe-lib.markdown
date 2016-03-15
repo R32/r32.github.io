@@ -61,6 +61,8 @@ categories: haxelib
 
   - 文档在这: http://old.haxe.org/com/libs/mtwin
 
+ * [google closure](https://github.com/back2dos/closure) 优化 JS 代码, 感觉更像是 yuicompressor 的东西
+
 #### 游戏引擎
 
 haxe LD32游戏示例 : https://github.com/skial/haxe.io/issues/118
