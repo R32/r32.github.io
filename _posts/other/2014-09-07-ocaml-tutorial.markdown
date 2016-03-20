@@ -7,17 +7,17 @@ categories: other
 
 ---
 
-尝试接触下函数式语言, 这有个安装配置视频视频 http://www.algo-prog.info/ocaide/tutorials/4-installingOnWindows/installingOnWindows.htm
+尝试接触下函数式语言, 这有个安装配置视频视频 <http://www.algo-prog.info/ocaide/tutorials/4-installingOnWindows/installingOnWindows.htm>
 
- * cygwin， 这里安装 ocaml 蛮简单不需要像视频里那样下载源码编译.
+* cygwin， 这里安装 ocaml 蛮简单不需要像视频里那样下载源码编译.
 
   - 双击运行 cygwin-setup.exe, 在界面里选择 `ocaml: The OCaml compiler and runtime(install helper)` 就完成了. 
 
- * eclipse + OcaIDE, 在插件安装里输入 `http://www.algo-prog.info/ocaide/`
+* eclipse + OcaIDE, 在插件安装里输入 <http://www.algo-prog.info/ocaide/>
 
-	> 安装时需要可以访问 Google(用Lantern), 需要 Java 1.7 版本(如果打开eclipse出错可以修改ini文件调小Xms和Xmx的值).
+  安装时需要可以访问 Google(用Lantern), 需要 Java 1.7 版本(如果打开eclipse出错可以修改ini文件调小Xms和Xmx的值).
 	
- * 配置, 在 "窗口" - "首选项" 中找到 OcaIDE,进行一些配置,如 path 等等
+* 配置, 在 "窗口" - "首选项" 中找到 OcaIDE,进行一些配置,如 path 等等
 
   - `Ocaml Binaries Directory`: 点击 Browse 定位目录(关联于cygwin的根目录, 如果不在 `cygwin/bin` 就在 `cygwin/usr/local/bin` 找找), 选好目录后按下 "Apply"
 
@@ -29,7 +29,7 @@ categories: other
 
   - 重启eclipse, 你将会在控制台窗口处的"ocaml toplevel"看到 "OCaml version 4.01.0" 这样的字符.
 
- * TIPS: 如果 `which ocaml` 显示 `usr/lib/bin` 其实真实路径为 `PATH/TO/cygwin/bin`, 同样 `ocamlc -where` 显示 `usr/lib/ocaml` 其实路径在 `PATH/TO/cygwin/lib/ocaml`
+* TIPS: 如果 `which ocaml` 显示 `usr/lib/bin` 其实真实路径为 `PATH/TO/cygwin/bin`, 同样 `ocamlc -where` 显示 `usr/lib/ocaml` 其实路径在 `PATH/TO/cygwin/lib/ocaml`
 
   - 如果需要用 eclipse 来直接编译 ocaml 需要将 cygwin/bin 添加到路径
 
@@ -56,17 +56,17 @@ ocamlc -o hello Hello.ml
 Hello world!
 ```
 
-eclipse 项目常用: 视频 http://www.algo-prog.info/ocaide/tutorials/3-projects/projects.htm
+eclipse 项目常用: 视频 <http://www.algo-prog.info/ocaide/tutorials/3-projects/projects.htm>
 
- * 要求:需要将 cygwin/bin 添加到系统路径。 eclipse 似乎不能在启动时添加一个临时的系统变量.
+* 要求:需要将 cygwin/bin 添加到系统路径。 eclipse 似乎不能在启动时添加一个临时的系统变量.
 
- * `文件 -> 新建 -> "Ocaml Project ocamlbuild"`
+* `文件 -> 新建 -> "Ocaml Project ocamlbuild"`
 
- * 进入到项目后, `右键 -> 新建 -> Module` 选择路径然后输入 Hello 即可
+* 进入到项目后, `右键 -> 新建 -> Module` 选择路径然后输入 Hello 即可
 
- * 在项目上右键选择 "属性", 配置一下 "Project" 的 "Target" 行, 舅 hello.ml 则输入 hello.byte
+* 在项目上右键选择 "属性", 配置一下 "Project" 的 "Target" 行, 舅 hello.ml 则输入 hello.byte
 
- * 运行, 在 _build 目录内找到 .byte 文件, `右键 -> 运行方式 -> Ocaml Compiler Output`
+* 运行, 在 _build 目录内找到 .byte 文件, `右键 -> 运行方式 -> Ocaml Compiler Output`
 
   - 如果简单的文件像这个 helloworld, 在源码上右键然后选择 "Load in TopLevel" 即可
 
@@ -125,15 +125,15 @@ let average a b =
 
 将得到: `val average : float -> float -> float = <fun>`, 参数类型 -> 参数类型 -> 返回值类型
 
- * ocaml 是强静态类型语言.(就是没有一些动态语言  Int,Float,String 之间的通用类型)
+* ocaml 是强静态类型语言.(就是没有一些动态语言  Int,Float,String 之间的通用类型)
 
- * ocaml 使用类型推理 解析数据类型, 所以不必声明变量类型
+* ocaml 使用类型推理 解析数据类型, 所以不必声明变量类型
 
- * ocaml 不做任何隐式转换, 如果你想要一个浮点数, 必须是 2.0, 因为 2 是一个整数.
+* ocaml 不做任何隐式转换, 如果你想要一个浮点数, 必须是 2.0, 因为 2 是一个整数.
 
- * ocaml 加法运算 `+` 只作用于整数, 如需要用于 Flaot 类型,则为 `+.`(注意有小数点), 同样 `-.` `*.` `/.` 用于 Flaot 数.
+* ocaml 加法运算 `+` 只作用于整数, 如需要用于 Flaot 类型,则为 `+.`(注意有小数点), 同样 `-.` `*.` `/.` 用于 Flaot 数.
 
- * ocaml 没有 return 关键字, 函数中最后一行将为函数的返回值.
+* ocaml 没有 return 关键字, 函数中最后一行将为函数的返回值.
 
 
 **无参数的函数**: 使用 `()` 当参数. `()` 的类型为 unit, 像其它语言的 void
@@ -434,9 +434,9 @@ OCaml带有很多有趣的模块（含有用代码的库）。例如标准模块
 
 例如如果想用Graphics中的函数，存在两种方法:
 
- * 一是在程序开头声明open Graphics;;。`open` 有点象Java中的 `import` 语句，不过更象Perl中的 use语句。
+* 一是在程序开头声明open Graphics;;。`open` 有点象Java中的 `import` 语句，不过更象Perl中的 use语句。
 
- * 二是在所有函数调用前加上前缀，比如Graphics.open_graph。
+* 二是在所有函数调用前加上前缀，比如Graphics.open_graph。
 
 
 ### Pervasives模块
@@ -465,21 +465,21 @@ read_line ();;
 
 什么时候你应该使用;;，什么时候你应该使用;，什么时候你都不用。这是一个很有意思的窍门，除非你能真正掌握这点。而且往往也会花费初学者很长的时间来掌握。
 
- * 规则 #1: 必须使用 ;; 在代码的最顶端来分隔不同的语句,并且绝对不要在函数定义中或者其他的语句中使用。
+* 规则 #1: 必须使用 ;; 在代码的最顶端来分隔不同的语句,并且绝对不要在函数定义中或者其他的语句中使用。
 
-```ocaml
-Random.self_init ();;
-Graphics.open_graph " 640x480";;
+  ```ocaml
+  Random.self_init ();;
+  Graphics.open_graph " 640x480";;
+  
+  let rec iterate r x_init i =
+  	if i = 1 then 
+  		x_init
+  	else
+  		let x = iterate r x_init (i-1) in
+  		r *. x *. (1.0 -. x);;	
+  ```
 
-let rec iterate r x_init i =
-	if i = 1 then 
-		x_init
-	else
-		let x = iterate r x_init (i-1) in
-		r *. x *. (1.0 -. x);;	
-```
-	
- * 规则 #2: 可省略的 ;;
+* 规则 #2: 可省略的 ;;
 
   - 关键字 let 之前
 
@@ -491,15 +491,17 @@ let rec iterate r x_init i =
 
   - 一些其它（非常少）Ocaml能够 “猜出” 是语句结尾而不是中间的地方
   
- * 规则 #3 和 #4:  关于单独的分号 ;
+* 规则 #3 和 #4:  关于单独的分号 ;
 
-	> 它与 ;; 完成不同, 单独的分号 ;, 被称为 **连接点**(sequence point),
-	> 具有在 c, c++, java 和 perl 一样的用途. 
-	> 我打赌你不知道它表示“先执行这个位置之前的语句，执行完成之后继续之后的语句”。 
+  > 它与 ;; 完成不同, 单独的分号 ;, 被称为 **连接点**(sequence point),
+  >
+  > 具有在 c, c++, java 和 perl 一样的用途. 
+  >
+  > 我打赌你不知道它表示“先执行这个位置之前的语句，执行完成之后继续之后的语句”。 
 	
- * 规则 #3: 把let ... in看作一条语句，永远不要在它后面加上单独的;
+* 规则 #3: 把let ... in看作一条语句，永远不要在它后面加上单独的;
 
- * 规则 #4：在所有代码块中其他的语句后面跟上一个单独的; 最后一个例外
+* 规则 #4：在所有代码块中其他的语句后面跟上一个单独的; 最后一个例外
 
 
 上面示例中的for循环内部就是一个很好的例子。 请注意我们从来都不会在下面的代码中使用单独的;
@@ -517,10 +519,11 @@ done
 
 **`;`** 注解: Brian Hurt 更正了一些我对于";"的观点。 ; 是和 + 一样的运算符。当然只是概念上的，并不完全一样。
 
- > **`+`** 具有 `int -> int -> int` 类型, 接受二个整型并返回一个整型(求合). 
-
- > **`;`** 的类型是 `unit -> 'b -> 'b`, 接受两个值并简单返回第二个. 就像 C 语言中的`,`(逗号)运算符,
- > 你可以如同 `a+b+c+d` 一样的写 `a;b;c;d`.
+> **`+`** 具有 `int -> int -> int` 类型, 接受二个整型并返回一个整型(求合). 
+>
+> **`;`** 的类型是 `unit -> 'b -> 'b`, 接受两个值并简单返回第二个. 就像 C 语言中的`,`(逗号)运算符,
+>
+> 你可以如同 `a+b+c+d` 一样的写 `a;b;c;d`.
 
 
 几乎任何东西都是表达式，这是OCaml中一个从未很好描述过的"脑筋急转弯(mental leaps)".  `if/then/else` 是一个表达式, a;b 是一个表达式. `math foo with ...` 是一个表达式. 下面的代码完全合法(并且都是做同样的一件事):
@@ -1101,7 +1104,7 @@ plus 2 3;;
 
 #### function
 
-https://ocaml.org/learn/tutorials/functional_programming.zh.html
+<https://ocaml.org/learn/tutorials/functional_programming.zh.html>
 
 注意虽然在一些地方 fun 和 function 可以一样,但是它们是有区别的:
 
@@ -1195,22 +1198,23 @@ plus 2 3;;
 
 非懒惰和懒惰, OCaml是缺省非懒惰， 但是在需要的时候支持懒惰的风格。
 
- * 对于一个非懒惰的语言，参数和函数总是在使用前被求值，然后再传入到函数中
+* 对于一个非懒惰的语言，参数和函数总是在使用前被求值，然后再传入到函数中
 
- * 在懒惰语言中，一些奇怪的事情会发生。函数的参数只有在被使用的时候才会被求值
+* 在懒惰语言中，一些奇怪的事情会发生。函数的参数只有在被使用的时候才会被求值
 
-```ocaml
-let give_me_a_three _ = 3;;
-(* val give_me_a_three : 'a -> int = <fun> *)
-give_me_a_three (1/0);;
-(* Exception: Division_by_zero. *)
+  ```ocaml
+  let give_me_a_three _ = 3;;
+  (* val give_me_a_three : 'a -> int = <fun> *)
+  give_me_a_three (1/0);;
+  (* Exception: Division_by_zero. *)
+  
+  let lazy_expr = lazy (1/0);;
+  (* val lazy_expr : int lazy_t = <lazy> *)
+  
+  give_me_a_three lazy_expr;;
+  (* - : int = 3 *)
+  ```
 
-let lazy_expr = lazy (1/0);;
-(* val lazy_expr : int lazy_t = <lazy> *)
-
-give_me_a_three lazy_expr;;
-(* - : int = 3 *)
-```
 
 模块
 ------
@@ -1707,82 +1711,82 @@ String.fill 和 String.blit 分别是 C 语言 memset 和 strcpy, String.copy �
 
 在第一个示例中, 我们要将整个文件读入内存(很长的字符串), 对此有三种可能的方法:
 
- * 方法一:  获得文件的长度(length), 然后使用 really_input方法读入. 这是最简单的方法但很可能不能用于 通道(channel)(通道并不是真正的文件例如从键盘输入)
+* 方法一:  获得文件的长度(length), 然后使用 really_input方法读入. 这是最简单的方法但很可能不能用于 通道(channel)(通道并不是真正的文件例如从键盘输入)
 
-```ocaml
-open Printf
+  ```ocaml
+  open Printf
+  
+  let read_whole_chan chan = 
+    let len = in_channel_length chan in
+    let result = string.create len in
+    really_input chan result 0 len;
+    result
+  
+  let read_whole_file filename =
+    let chan = open_in filename in
+    read_whole_chan chan
+  
+  let () =
+    let filename = Sys.argv.(1) in
+    let str = read_whole_file filename in
+    printf "I read %d characters from %s\n" (String.length str) filename 
+  
+  (* 不是很理想, 因为 read_whole_chan 不会像 键盘输入或套接字之类的非文件流 *)
+  ```
 
-let read_whole_chan chan = 
-  let len = in_channel_length chan in
-  let result = string.create len in
-  really_input chan result 0 len;
-  result
+* 方法二: 使用 while 循环,以 抛出异常(exception)的方式从循环中退出
 
-let read_whole_file filename =
-  let chan = open_in filename in
-  read_whole_chan chan
+  ```ocaml
+  open Printf
+  let read_whole_chan chan =
+    let buf = Buffer.create 4096 in
+    try
+      while true do
+        let line = input_line chan in
+        Buffer.add_string buf line;
+        Buffer.add_char buf '\n'
+      done;
+      assert false (* This is never executed
+              (always raise Assert_failure). *)
+    with
+      End_of_file -> Buffer.contents buf
+  
+  let read_whole_file filename =
+    let chan = open_in filename in
+    read_whole_chan chan
+  
+  let () =
+    let filename = Sys.argv.(1) in
+    let str = read_whole_file filename in
+    printf "I read %d characters from %s\n" (String.length str) filename
+  ```
 
-let () =
-  let filename = Sys.argv.(1) in
-  let str = read_whole_file filename in
-  printf "I read %d characters from %s\n" (String.length str) filename 
+* 方法三: 递归, 以 抛出异常(exception)的方式结束递归. 它不太容易理解
 
-(* 不是很理想, 因为 read_whole_chan 不会像 键盘输入或套接字之类的非文件流 *)
-```
-
- * 方法二: 使用 while 循环,以 抛出异常(exception)的方式从循环中退出
-
-```ocaml
-open Printf
-let read_whole_chan chan =
-  let buf = Buffer.create 4096 in
-  try
-    while true do
+  ```ocaml
+  open Printf
+  	  
+  let read_whole_chan chan =
+    let buf = Buffer.create 4096 in
+    let rec loop () =
       let line = input_line chan in
       Buffer.add_string buf line;
-      Buffer.add_char buf '\n'
-    done;
-    assert false (* This is never executed
-            (always raise Assert_failure). *)
-  with
-    End_of_file -> Buffer.contents buf
-
-let read_whole_file filename =
-  let chan = open_in filename in
-  read_whole_chan chan
-
-let () =
-  let filename = Sys.argv.(1) in
-  let str = read_whole_file filename in
-  printf "I read %d characters from %s\n" (String.length str) filename
-```
-
- * 方法三: 递归, 以 抛出异常(exception)的方式结束递归. 它不太容易理解
-
-```ocaml
-open Printf
-	  
-let read_whole_chan chan =
-  let buf = Buffer.create 4096 in
-  let rec loop () =
-    let line = input_line chan in
-    Buffer.add_string buf line;
-    Buffer.add_char buf '\n';
-    loop () in
-  try
-    loop ()
-  with
-    End_of_file -> Buffer.contents buf
-  
-let read_whole_file filename =
-  let chan = open_in filename in
-  read_whole_chan chan
-  
-let () =
-  let filename = Sys.argv.(1) in
-  let str = read_whole_file filename in
-  printf "I read %d characters from %s\n" (String.length str) filename
-```	
+      Buffer.add_char buf '\n';
+      loop () in
+    try
+      loop ()
+    with
+      End_of_file -> Buffer.contents buf
+    
+  let read_whole_file filename =
+    let chan = open_in filename in
+    read_whole_chan chan
+    
+  let () =
+    let filename = Sys.argv.(1) in
+    let str = read_whole_file filename in
+    printf "I read %d characters from %s\n" (String.length str) filename
+  ```	
 
 (注: 通道(channel) 应该就是所谓的 **文件流** 吧,类似于 stderr,stdio,stdin 之类的)
 
@@ -1877,7 +1881,4 @@ ocamldoc.exe	#
 #......
 ```
 
-
-
-
-
+<br />

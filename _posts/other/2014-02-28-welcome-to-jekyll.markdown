@@ -39,24 +39,24 @@ end
 
 
 
- * 可以在 `_config.yaml` 添加下边语句:
+* 可以在 `_config.yaml` 添加下边语句:
 
-```yaml
-markdown: redcarpet
-extensions: [fenced_code_blocks]
-```
+  ```yaml
+  markdown: redcarpet
+  extensions: [fenced_code_blocks]
+  ```
 
 
 
- * 就可以用 `backticks` 的方式来代码高亮
+* 就可以用 `backticks` 的方式来代码高亮
 
-```
-	```ruby
-	def foo
-		puts 'foo'
-	end
-	```
-```
+  ~~~
+  ```ruby
+  def foo
+  	puts 'foo'
+  end
+  ```
+  ~~~
 
 Check out the [Jekyll docs][jekyll] for more info on how to get the most out of Jekyll. File all bugs/feature requests at [Jekyll's GitHub repo][jekyll-gh].
 

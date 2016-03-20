@@ -45,79 +45,77 @@ git pull --depth=1 origin master
 
 但是这样好像仍然下载了整个仓库？？？因此还得使用 svn 命令行工具(cygwin安装界面里搜 subver..)
 
- * 将 github 的 https URL 中的 `/master/tree/` 替换成 `/trunk/`
+* 将 github 的 https URL 中的 `/master/tree/` 替换成 `/trunk/`
 
- * 输入: `svn co <URL> <LOCAL_DIR>`
+* 输入: `svn co <URL> <LOCAL_DIR>`, 但这个最近在 github 也变得不适用了
 
-	> 但这个最近在 github 也变得不适用了
-
+  
 #### 更新
 
- * `远端(remote) -> Add` 输入 fork 的原始分支, bob名字任意
+* `远端(remote) -> Add` 输入 fork 的原始分支, bob名字任意
  
   - `git remote add bob https://github.com/DoubleSpout/restjs.git`
 
- * `远端(remote) -> 从获取(fetch)` , 选择相应的名字如bob
+* `远端(remote) -> 从获取(fetch)` , 选择相应的名字如bob
 
   - `git fetch bob`
 
- * `合并(merge) -> 本地合并` 
+* `合并(merge) -> 本地合并` 
 
   - git merge bob/master`
 
- * 可能需要手动调整合并冲突, 然后再缓存提交
+* 可能需要手动调整合并冲突, 然后再缓存提交
 
-```bash
-# 如有冲突,查看当前有哪些文件产生了冲突:
-git diff
+  ```bash
+  # 如有冲突,查看当前有哪些文件产生了冲突:
+  git diff
+  
+  # 解决掉冲突之后
+  git add file.txt
+  
+  # 如果你觉得你合并后的状态是一团乱麻，想把当前的修改都放弃
+  git reset --hard HEAD
+  ```
 
-# 解决掉冲突之后
-git add file.txt
+  > GUI 这里需要自已单击已经修改了的冲突文件,而不是点击 缓存 按钮
 
-# 如果你觉得你合并后的状态是一团乱麻，想把当前的修改都放弃
-git reset --hard HEAD
+* **rebase** 如果是 fork 别的人项目,这个命令比 merge 要好
 
-```
+  ```bash
+  # rebase合并
+  git rebase bob/master
+  
+  # 如果有冲突(conflict), 则修改冲突后添加到缓存
+  # 查看冲突使用 git diff 命令
+  git add	path/to/conflict.file
+  
+  # 不需要执行 git commit,而是:
+  git rebase --continue
 
-	> GUI 这里需要自已单击已经修改了的冲突文件,而不是点击 缓存 按钮
-
- * **rebase** 如果是 fork 别的人项目,这个命令比 merge 要好
-
-```bash
-# rebase合并
-git rebase bob/master
-
-# 如果有冲突(conflict), 则修改冲突后添加到缓存
-# 查看冲突使用 git diff 命令
-git add	path/to/conflict.file
-
-# 不需要执行 git commit,而是:
-git rebase --continue
-
-## 如果感觉有什么不对,可用于中断并恢复
-git rebase --abort
-```
+  ## 如果感觉有什么不对,可用于中断并恢复
+  git rebase --abort
+  ```
 
 #### 上传
 
- * 本地提交后点 `上传` 就行了
+* 本地提交后点 `上传` 就行了
 
   - `git push origin master`
 
 ### 其它
 
 
- * 恢复 **单个文件** 到某个历史版本
+* 恢复 **单个文件** 到某个历史版本
 
-```bash
-# git checkout COMMIT_HASH -- path_to_file.ext
-git checkout 45a0c601f32b1c245c988d00e364e27b9b90eff0 -- readme.md
+  ```bash
+  # git checkout COMMIT_HASH -- path_to_file.ext
+  git checkout 45a0c601f32b1c245c988d00e364e27b9b90eff0 -- readme.md
+  
+  # 从 HEAD 中恢复
+  git checkout -- readme.md
+  ```
 
-# 从 HEAD 中恢复
-git checkout -- readme.md
-```
-
- * upstream, 自动更新 fork 版本 repo
+* upstream, 自动更新 fork 版本 repo
 
   - 先将仓库指定为 upstream `git remote add upstream https://github.com/fork.git`
 
@@ -125,93 +123,92 @@ git checkout -- readme.md
 
   - `git merge upstream/master`
 
- * github 语言统计, `.gitattributes`
+* github 语言统计, `.gitattributes`
 
-```bash
-# 将所有 JS 文件当成 统计为 Haxe
-*.js linguist-language=Haxe
+  ```bash
+  # 将所有 JS 文件当成 统计为 Haxe
+  *.js linguist-language=Haxe
+  
+  
+  # Use the linguist-vendored attribute to vendor or un-vendor paths
+  # 被标记为 linguist-vendored 是表示不统计, 而 = false 是添加到统计
+  special-vendored-path/* linguist-vendored
+  jquery.js linguist-vendored=false
+  
+  # Use the linguist-documentation attribute to mark or unmark paths as documentation.
+  project-docs/* linguist-documentation
+  docs/formatter.rb linguist-documentation=false
+  ```
 
+* stash 用于保存当前工作
 
-# Use the linguist-vendored attribute to vendor or un-vendor paths
-# 被标记为 linguist-vendored 是表示不统计, 而 = false 是添加到统计
-special-vendored-path/* linguist-vendored
-jquery.js linguist-vendored=false
-
-# Use the linguist-documentation attribute to mark or unmark paths as documentation.
-project-docs/* linguist-documentation
-docs/formatter.rb linguist-documentation=false
-```
-
- * stash 用于保存当前工作
-
-```bash
-git stash
-# 之后整个目录会回到最后一次提交时的状态
-# 以便于临时修改一些Bug.
-
-# 做一些提交后,想回到工作目录
-git stash apply
-
-# 处理冲突如果有
-git add <filename>
-git reset HEAD <filename> 
-# 或 git reset HEAD 	# 注意执行这个命令时需要确认文件已经被添加,因为未添加到缓存的所有文件将被重置
-
-git stash clear
-
-# 如果需要提交到 github 还是用新分支吧.做完再合并到主线上来.
-```
+  ```bash
+  git stash
+  # 之后整个目录会回到最后一次提交时的状态
+  # 以便于临时修改一些Bug.
+  
+  # 做一些提交后,想回到工作目录
+  git stash apply
+  
+  # 处理冲突如果有
+  git add <filename>
+  git reset HEAD <filename> 
+  # 或 git reset HEAD 	# 注意执行这个命令时需要确认文件已经被添加,因为未添加到缓存的所有文件将被重置
+  
+  git stash clear
+  
+  # 如果需要提交到 github 还是用新分支吧.做完再合并到主线上来.
+  ```
 	
- * 没有共同祖先的分支, http://gitbook.liuhui998.com/5_1.html
+* 没有共同祖先的分支, http://gitbook.liuhui998.com/5_1.html
 
-```bash
-git symbolic-ref HEAD refs/heads/newbranch 
-rm .git/index 
-git clean -fdx 
-#<do work> 
-git add your files 
-git commit -m 'Initial commit'
-```
-	
- * 查找文件是每个部分是谁修改的
+  ```bash
+  git symbolic-ref HEAD refs/heads/newbranch 
+  rm .git/index 
+  git clean -fdx 
+  #<do work> 
+  git add your files 
+  git commit -m 'Initial commit'
+  ```
 
-```bash
-git blame path/to/file.ext
+* 查找文件是每个部分是谁修改的
 
-# http://gitbook.liuhui998.com/5_5.html
-```
-	
- * 使用二分法查找问题出在哪? 最后把问题以 patch 的形式提交而不是修改历史
+  ```bash
+  git blame path/to/file.ext
+  # http://gitbook.liuhui998.com/5_5.html
+  ```
 
-```bash
-git bisect start
-git bisect good v2.6.18
-git bisect bad master
+* 使用二分法查找问题出在哪? 最后把问题以 patch 的形式提交而不是修改历史
 
-# 通过不停的 git bisect bad, good 查找问题
+  ```bash
+  git bisect start
+  git bisect good v2.6.18
+  git bisect bad master
+  
+  # 通过不停的 git bisect bad, good 查找问题
+  
+  # 找到问题后,恢复到git bisect start,  
+  git bisect reset
+  
+  # 更多参考 http://gitbook.liuhui998.com/5_4.html
+ ```
 
-# 找到问题后,恢复到git bisect start,  
-git bisect reset
+* 将改动做成补丁
 
-# 更多参考 http://gitbook.liuhui998.com/5_4.html
-```
-	
- * 将改动做成补丁
-
-```bash
-# 首先创建一个新分支如 patch-1,然后 checkout,
-# 输入以下命令后将在在目录下生成一个 .patch 的文件:
-git format-patch master
-
-# hash之间的改动做成补丁
-git format-patch <old_sha>...<new_sha> -o <patch_dir>
-
-# 应用patch(不完整),
-git apply --start xxx.patch		# 检查 patch
-git apply --check xxx.patch		# 是否能应用成功
-
-git am -s < xxx.patch			# 应用patch
-```
+  ```bash
+  # 首先创建一个新分支如 patch-1,然后 checkout,
+  # 输入以下命令后将在在目录下生成一个 .patch 的文件:
+  git format-patch master
+  
+  # hash之间的改动做成补丁
+  git format-patch <old_sha>...<new_sha> -o <patch_dir>
+  
+  # 应用patch(不完整),
+  git apply --start xxx.patch		# 检查 patch
+  git apply --check xxx.patch		# 是否能应用成功
+  
+  git am -s < xxx.patch			# 应用patch
+  ```
 
 #### submodule
 
@@ -221,7 +218,7 @@ git am -s < xxx.patch			# 应用patch
 git submodule add 仓库地址 本地存放路径
 ```
 
-参考 http://blog.csdn.net/wangjia55/article/details/24400501
+参考 <http://blog.csdn.net/wangjia55/article/details/24400501>
 
 通常 克隆仓库不会下载 submodule, 因此需要:
 
@@ -319,16 +316,16 @@ regsvr32 /u git_shell_ext.dll
 
 #### 常用命令
 
-https://github.com/bpassos/git-commands
+<https://github.com/bpassos/git-commands>
 
-http://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000
+<http://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000>
 
-https://github.com/search?utf8=%E2%9C%93&q=git+%E5%91%BD%E4%BB%A4&type=Repositories&ref=searchresults
+<https://github.com/search?utf8=%E2%9C%93&q=git+%E5%91%BD%E4%BB%A4&type=Repositories&ref=searchresults>
 <br />
 
 #### travis-ci
 
- * 跳过构建: 在提交消息中的任意位置添加 `[ci skip]`, 比如当你只是更新 README 文件时.
+* 跳过构建: 在提交消息中的任意位置添加 `[ci skip]`, 比如当你只是更新 README 文件时.
 
 
 GIT Server
@@ -336,5 +333,5 @@ GIT Server
 
 建立 Git 服务器, 在提交之后自动调用 sh 文件编译项目, 发邮件给成员.
 
-http://ju.outofmemory.cn/entry/16893
+<http://ju.outofmemory.cn/entry/16893>
 

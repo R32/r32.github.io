@@ -24,21 +24,21 @@ class Main {
 
 <!-- more -->
 
-trace 将输出: `My name is Mark, 30 years old`。原文: http://haxe.org/manual/std-template.html
+trace 将输出: `My name is Mark, 30 years old`。原文: <http://haxe.org/manual/std-template.html>
 
 #### 表达式
 
 haxe.Template 使用双冒号 `::` 作为替换分隔符, 因此表达式放置于二对 `::` 中间, 表达式可以为下边形式
 
- * `::name::` : 变量 name 的值
+* `::name::` : 变量 name 的值
 
- * `::expr.field::` : 字段访问
+* `::expr.field::` : 字段访问
 
- * `::(expr)::` : 计算 expr 之后的值
+* `::(expr)::` : 计算 expr 之后的值
 
- * `::(e1 OP e2)::` 运算符 OP 作用于 e1 和 e2
+* `::(e1 OP e2)::` 运算符 OP 作用于 e1 和 e2
 
- * `::(135)::` : 整数常量, 注意: 不允许 Float 类型
+* `::(135)::` : 整数常量, 注意: 不允许 Float 类型
 
 运算符语法有一些苛刻, 由于它不能处理运算符的优先级, 因此需要为每个表达式加上小括号.  
 
@@ -144,7 +144,7 @@ class Main {
 }
 typedef User = {name:String, distance:Int}
 ```
-trace 将输出: `Mark ran 3.5 kilometers in 15 minutes.` 另一个示例: http://old.haxe.org/doc/cross/template#macros
+trace 将输出: `Mark ran 3.5 kilometers in 15 minutes.` 另一个示例: <http://old.haxe.org/doc/cross/template#macros>
 
 #### Globals
 
@@ -181,106 +181,106 @@ Usage : temploc [options] <files>
 
 安装:
 
- * makefile 编译得到 temploc.exe 文件,并将这个文件放置于环境变量的路径文件夹
+* makefile 编译得到 temploc.exe 文件,并将这个文件放置于环境变量的路径文件夹
 
- * 在 haxe 项目中调用 templo 目录下的 `Loader.hx`(这个文件通过Process执行temploc.exe)
+* 在 haxe 项目中调用 templo 目录下的 `Loader.hx`(这个文件通过Process执行temploc.exe)
 
-```haxe	
-// 注意默认情况下以 haxe 的输出文件夹为目录顶层,通常为 bin
-// 所有目录名必须以 / 结尾, 目录必须自行建立,如果不存在则出错
-
-Loader.BASE_DIR = "some/"		// mtt模板文件所在目录, 默认为 "",
-
-Loader.TMP_DIR = "mtt/"			// 存放临时文件, 默认为 "/tmp/",因此非 unix-like 系统必须设置
-								
-Loader.MACROS = null;			// macro文件, 默认为 "macros.mtt" 没有则设为 null
-
-var t = new templo.Loader("some.mtt");	// 这个是以系统文件的形式加载的
-t.execute({ values : [1,2,3,4] });		// 
-```
+  ```haxe	
+  // 注意默认情况下以 haxe 的输出文件夹为目录顶层,通常为 bin
+  // 所有目录名必须以 / 结尾, 目录必须自行建立,如果不存在则出错
+  
+  Loader.BASE_DIR = "some/"		// mtt模板文件所在目录, 默认为 "",
+  
+  Loader.TMP_DIR = "mtt/"			// 存放临时文件, 默认为 "/tmp/",因此非 unix-like 系统必须设置
+  								
+  Loader.MACROS = null;			// macro文件, 默认为 "macros.mtt" 没有则设为 null
+  
+  var t = new templo.Loader("some.mtt");	// 这个是以系统文件的形式加载的
+  t.execute({ values : [1,2,3,4] });		// 
+  ```
 
 (注:或者也可以使用 mtwin 库的 templo.Template 像 haxe.Template 一样, 或者使用 hxtemplo 这个haxe 的移植库)
 
 #### templo 语法
 
-语法和 haxe.Template 很像, 参考 http://old.haxe.org/com/libs/mtwin/templo
+语法和 haxe.Template 很像, 参考 <http://old.haxe.org/com/libs/mtwin/templo>
 
- * 正常情况下 data 中的数据的 `< > & "` 将转义成 `&lt; &gt; &amp; &quot;`
+* 正常情况下 data 中的数据的 `< > & "` 将转义成 `&lt; &gt; &amp; &quot;`
 
- * raw, 表示不进行转义
+* raw, 表示不进行转义
 
-```js
-context.myMessage = "<p>Hello haxe</p>";		// in haxe
+  ```js
+  context.myMessage = "<p>Hello haxe</p>";		// in haxe
+  
+  before: ::myMessage::
+  after : ::raw myMessage::
+  
+  // 将转换为
+  before : &lt;p&gt;Hello haxe&lt;/p&gt;
+  after : <p>Hello haxe</p>
+  ```
 
-before: ::myMessage::
-after : ::raw myMessage::
+* if,elseif,else,end,  这几个和 haxe.Template 一样
 
-// 将转换为
-before : &lt;p&gt;Hello haxe&lt;/p&gt;
-after : <p>Hello haxe</p>
-```
+* cond, 属于 if 的另一种改善形式. 如下示例, 当条件为 false 时, 将不会输出 `<ul></ul>` 整个元素.
 
- * if,elseif,else,end,  这几个和 haxe.Template 一样
+  ```html
+  <ul id="userMenu" ::cond user.isLogged::>
+  	<li><a href="/logout">Log out</a></li>
+  	<li><a href="/account">My account</li>
+  </ul>
+  ```
 
- * cond, 属于 if 的另一种改善形式. 如下示例, 当条件为 false 时, 将不会输出 `<ul></ul>` 整个元素.
+* switch, 如果你包含有下边 enum, 注: EnumValue 的值不能为 null,则表报错,你可传 **非** EnumValue对应的数字值,如 -1 或任意字符串.
 
-```html
-<ul id="userMenu" ::cond user.isLogged::>
-	<li><a href="/logout">Log out</a></li>
-	<li><a href="/account">My account</li>
-</ul>
-```
+  ```haxe
+  enum QuestItem{
+  	ITEM(id:Int);
+  	MONEY(amount:Int);
+  	XP(amount:Int);
+  }
+  ```
 
- * switch, 如果你包含有下边 enum, 注: EnumValue 的值不能为 null,则表报错,你可传 **非** EnumValue对应的数字值,如 -1 或任意字符串.
+  你可以这样使用 switch, **注意:** 要和 QuestItem 中先后顺序一至. 
 
-```haxe
-enum QuestItem{
-	ITEM(id:Int);
-	MONEY(amount:Int);
-	XP(amount:Int);
-}
-```
+  ```html
+  ::switch myEnum::DEFAULT VALUE(默认值,如果省略则为空值)
+  ::case:: Item ::args[0]::
+  ::case:: ::args[0]:: gold
+  ::case:: ::args[0]:: XP
+  ::end::
+  
+  <!-- switch 2, case 0 带表第一个 EnumValue值 -->
+  ::switch myEnum::
+  ::case 0:: ITEM
+  ::case 2:: XP
+  ::end::
+  ```	
+  
+* foreach, 这里和标准库 haxe.Template 有点差异, 标准库没有自定义的 value 变量,而是使用 `__current__`
+  
+  ```html
+  ::foreach value iterable::
+  	You can use ::value:: there
+  ::end::
+  
+  <!-- 如 listOfNumbers = [0, 2, 5, 6],  -->
+  ::foreach n listOfNumbers::
+  	Number = ::n::
+  ::end::	
+  ```
+  
+* repeat, 相当于 foreach 与 cond 的混合体, 只在当条件为 true, 才会迭代输出
+  
+  ```html
+  <ul>
+  	<li ::repeat user listOfConnectedUsers::>
+  		<a href="/user/::user.id::">::user.name::</a>
+  	</li>
+  </ul>
+  ```
 
-	你可以这样使用 switch, **注意:** 要和 QuestItem 中先后顺序一至. 
-
-```html
-::switch myEnum::DEFAULT VALUE(默认值,如果省略则为空值)
-::case:: Item ::args[0]::
-::case:: ::args[0]:: gold
-::case:: ::args[0]:: XP
-::end::
-
-<!-- switch 2, case 0 带表第一个 EnumValue值 -->
-::switch myEnum::
-::case 0:: ITEM
-::case 2:: XP
-::end::
-```	
-
- * foreach, 这里和标准库 haxe.Template 有点差异, 标准库没有自定义的 value 变量,而是使用 `__current__`
-
-```html
-::foreach value iterable::
-	You can use ::value:: there
-::end::
-
-<!-- 如 listOfNumbers = [0, 2, 5, 6],  -->
-::foreach n listOfNumbers::
-	Number = ::n::
-::end::	
-```
-
- * repeat, 相当于 foreach 与 cond 的混合体, 只在当条件为 true, 才会迭代输出
-
-```html
-<ul>
-	<li ::repeat user listOfConnectedUsers::>
-		<a href="/user/::user.id::">::user.name::</a>
-	</li>
-</ul>
-```
-	
- * repeat 配合 foreach. `repeat.<itemName>.*` 这种 repeat 表式达可以有更多检测
+* repeat 配合 foreach. `repeat.<itemName>.*` 这种 repeat 表式达可以有更多检测
 
   - `repeat.<item>.index` 整形值,范围从 0 到 length-1
 
@@ -296,193 +296,188 @@ enum QuestItem{
 
   - `repeat.<item>.size` length(当有效时)
 
-```html
-<table>
-    <tbody>
-        ::foreach user listOfConnectedUsers::
-        <tr class="odd::repeat.user.odd::">
-            <td>::repeat.user.number::</td>
-            <td>::user.name::</td>
-        </tr>
-        ::end::
-    </tbody>
-</table>
-```
+  ```html
+  <table>
+      <tbody>
+          ::foreach user listOfConnectedUsers::
+          <tr class="odd::repeat.user.odd::">
+              <td>::repeat.user.number::</td>
+              <td>::user.name::</td>
+          </tr>
+          ::end::
+      </tbody>
+  </table>
+  ```
 
- * set, 这个操作符允许在模板中创建变量, 注意其中的一个 eval 操作符(没文档,估计是用于再次赋值计算时)
+* set, 这个操作符允许在模板中创建变量, 注意其中的一个 eval 操作符(没文档,估计是用于再次赋值计算时)
 
-```html
-::set myVar = myValue::
+  ```html
+  ::set myVar = myValue::
+  
+  ::set isLogged = (user != null) && (user.id != null)::
+  
+  ::set sum = 0::
+  ::foreach i listOfNumbers::
+      number = ::i::
+      ::eval sum = sum + i::
+  ::end::
+  Sum = ::sum::	
+  ```
 
-::set isLogged = (user != null) && (user.id != null)::
+* fill, 形为像 set, 但是允许捕获一些 html 字符串, 并将其值作为一个变量.
 
-::set sum = 0::
-::foreach i listOfNumbers::
-    number = ::i::
-    ::eval sum = sum + i::
-::end::
-Sum = ::sum::	
-```
+  ```html
+  ::fill navigation::			<!-- 捕获开始 -->	
+  <div>
+      <a href="/previous">Previous</a> |
+      ::foreach page resultPages::
+      <a href="/page/::page::">::page::</a> |
+      ::end::
+      <a href="/next">Next</a>
+  </div>
+  ::end::						<!-- 捕获结束 -->
+  
+  <!-- we use the filled variable -->
+  ::raw navigation::
+  
+  <table>
+      <thead>
+          <tr>
+              <th>#</th>
+              <th>name</th>
+          </tr>
+      </thead>
+      <tbody>
+          ::foreach name listOfNames::
+          <tr>
+              <th>::startIndex + repeat.name.index::</th>
+              <th>::name::</th>
+          </tr>
+      </tbody>
+  </table>
+  <!-- we reuse the filled variable to avoid executing the loop twice -->
+  ::raw navigation::	
+  ```
 
- * fill, 形为像 set, 但是允许捕获一些 html 字符串, 并将其值作为一个变量.
+* use, 用于在当前模板引用其它的模板文件,二个模板将共享它们的变量, 共享的变量请注意先后顺序
 
-```html
-::fill navigation::			<!-- 捕获开始 -->	
-<div>
-    <a href="/previous">Previous</a> |
-    ::foreach page resultPages::
-    <a href="/page/::page::">::page::</a> |
-    ::end::
-    <a href="/next">Next</a>
-</div>
-::end::						<!-- 捕获结束 -->
-
-<!-- we use the filled variable -->
-::raw navigation::
-
-<table>
-    <thead>
-        <tr>
-            <th>#</th>
-            <th>name</th>
-        </tr>
-    </thead>
-    <tbody>
-        ::foreach name listOfNames::
-        <tr>
-            <th>::startIndex + repeat.name.index::</th>
-            <th>::name::</th>
-        </tr>
-    </tbody>
-</table>
-
-
-<!-- we reuse the filled variable to avoid executing the loop twice -->
-::raw navigation::	
-```
-
- * use, 用于在当前模板引用其它的模板文件,二个模板将共享它们的变量, 共享的变量请注意先后顺序
-
-```html
-<!-- userMenu.mtt: -->
-<div id="userMenu">
-    <div>Logged as ::user.login::</div>
-    <ul>
-        <li><a href="/logout">Log out</a></li>
-        <li><a href="/account">My account</a></li>
-    </ul>
-</div>
-
-<!-- myPage.mtt : -->	
-<html>
-    <head>
-        ...
-    </head>
-    <body>
-        ...
-        <!-- 显示 menu 二次, 这里需要用 ::end:: 作结尾 (稍后再解释) -->
-        ::use 'userMenu.mtt'::::end::
-        ::use 'userMenu.mtt'::::end::
-        ...
-    </body>
-</html>	
-```
+  ```html
+  <!-- userMenu.mtt: -->
+  <div id="userMenu">
+      <div>Logged as ::user.login::</div>
+      <ul>
+          <li><a href="/logout">Log out</a></li>
+          <li><a href="/account">My account</a></li>
+      </ul>
+  </div>
+  
+  <!-- myPage.mtt : -->	
+  <html>
+      <head>
+          ...
+      </head>
+      <body>
+          ...
+          <!-- 显示 menu 二次, 这里需要用 ::end:: 作结尾 (稍后再解释) -->
+          ::use 'userMenu.mtt'::::end::
+          ::use 'userMenu.mtt'::::end::
+          ...
+      </body>
+  </html>	
+  ```
 	
-	另一个实例: 注意在 use 和 end 中间,给变量 content 进行了填充
+  另一个实例: 注意在 use 和 end 中间,给变量 content 进行了填充
 	
-```html
-<!-- design.mtt :-->	
-<html>
-    <head>
-        <title>My title</title>
-    </head>
-    <body>
-        <h1>My title</h1>
+  ```html
+  <!-- design.mtt :-->	
+  <html>
+      <head>
+          <title>My title</title>
+      </head>
+      <body>
+          <h1>My title</h1>
+  
+          <!-- 假设另一个模板将会引用这个模板,并且给 content 变量填充值 -->
+          ::raw content::
+      </body>
+  </html>
+  
+  
+  <!-- mypage.mtt : -->
+  ::use 'design.mtt'::	
+      ::fill content::
+          <h2>My page</h2>
+          some data here
+      ::end::	
+  ::end::	
+  ```
 
-        <!-- 假设另一个模板将会引用这个模板,并且给 content 变量填充值 -->
-        ::raw content::
-    </body>
-</html>
-
-
-<!-- mypage.mtt : -->
-::use 'design.mtt'::	
-    ::fill content::
-        <h2>My page</h2>
-        some data here
-    ::end::	
-::end::	
-```
+  由于上述 use,fill 的语法非常麻烦, 因此在 use 和 end 中间的字符串将自动填充为 **`__content__`**
 	
-	由于上述 use,fill 的语法非常麻烦, 因此在 use 和 end 中间的字符串将自动填充为 **`__content__`**
+  因此下边更为简洁:
 	
-	因此下边更为简洁:
+  ```html
+  <!-- mypage.mtt : -->
+  ::use 'design.mtt'::
+  <h2>The content to write in design.mtt</h2>
+  ::end::
+  
+  <!-- design.mtt :-->
+  ::raw __content__::
+  ```
+  
+  在上边的示例中使用了 `::use 'design.mtt'::` 用引号引用模板, 实际上,可以更灵活像这样:
+  
+  ```html
+  ::use theme+'.mtt'::
+  ...
+  ::end::
+  ```
+
+  这样的话, theme 可以被当成一个变量, 当设变量 theme='design' 时,那么则对应为 'design.mtt',其它当 theme = 'blueDesign' 时则将对应 'blueDesign.mtt'
+  	
+* attr 一个添加attribute语法糖, 注意常量字符串要用引号括起来,否则会被当成变量处理
+  
+  ```html
+  <ul>
+  ::foreach link links::
+      <li><a ::attr title link.title; href link.href::>::link.title::</a></li>
+  ::end::
+  </ul>
+  
+  <!-- 上边的那行 li 其实就等于 -->
+  	<li><a href="::link.href::" title="::link.title::">::link.title::</a></li>
+  ```
+
+  将产生:
+
+  ```html
+  <ul>
+      <li><a href="http://www.google.com" title="google search">google search</a></li>
+      <li><a href="http://www.haxe.org" title="Haxe">Haxe</a></li>
+  </ul>	
+  ```
 	
-```html
-<!-- mypage.mtt : -->
-::use 'design.mtt'::
-<h2>The content to write in design.mtt</h2>
-::end::
-
-<!-- design.mtt :-->
-::raw __content__::
-```
-
-在上边的示例中使用了 `::use 'design.mtt'::` 用引号引用模板, 实际上,可以更灵活像这样:
-
-```html
-::use theme+'.mtt'::
-...
-::end::
-```
+  看上去非常适合用在表单的 input,select/option 这些元素上:
 	
-	这样的话, theme 可以被当成一个变量, 当设变量 theme='design' 时,那么则对应为 'design.mtt',其它当 theme = 'blueDesign' 时则将对应 'blueDesign.mtt'
-	
- * attr 一个添加attribute语法糖, 注意常量字符串要用引号括起来,否则会被当成变量处理
+  ```html
+  <!-- 只有当 someCondition 的值为 true 时,才会添加 checked="checked" -->
+  <input type="checkbox" value="some value" ::attr checked someCondition::/>	
+  
+  <select>
+      ::foreach opt availableOptions::
+      <option value="::opt.value::" ::attr selected (opt.value == currentValue)::>::opt.name::</option>
+      ::end::
+  </select>	
+  ```
 
-```html
-<ul>
-::foreach link links::
-    <li><a ::attr title link.title; href link.href::>::link.title::</a></li>
-::end::
-</ul>
+* attr 和条件检测,常量字符串用引号包围。 当条件表达为 **非true** 值时, 则不会添加任何属性
 
-<!-- 上边的那行 li 其实就等于 -->
-	<li><a href="::link.href::" title="::link.title::">::link.title::</a></li>
-```
-	
-	将产生:
-	
-```html
-<ul>
-    <li><a href="http://www.google.com" title="google search">google search</a></li>
-    <li><a href="http://www.haxe.org" title="Haxe">Haxe</a></li>
-</ul>	
-```
-	
-	看上去非常适合用在表单的 input,select/option 这些元素上:
-	
-```html
-<!-- 只有当 someCondition 的值为 true 时,才会添加 checked="checked" -->
-<input type="checkbox" value="some value" ::attr checked someCondition::/>	
-
-<select>
-    ::foreach opt availableOptions::
-    <option value="::opt.value::" ::attr selected (opt.value == currentValue)::>::opt.name::</option>
-    ::end::
-</select>	
-```
-	
-
- * attr 和条件检测,常量字符串用引号包围。 当条件表达为 **非true** 值时, 则不会添加任何属性
-
-```html
-::attr attributeName if( someCondition ) "A" else "B"::
-
-or
-
-::attr attributeName if( someCondition ) "A"::
-``` 
+  ```html
+  ::attr attributeName if( someCondition ) "A" else "B"::
+  or
+  ::attr attributeName if( someCondition ) "A"::
+  ``` 
 
 #### templo macros
 
@@ -549,7 +544,7 @@ AFTER
 <a href="#" $$at()>$$f(::name::)</a>
 ```
 
- * templo 3.0 不可以在标签内部调用宏,即 `<p $$some(xxxx)></p>` 将会报错, 你应该把尝试直接标签写到 macros 里去.
+* templo 3.0 不可以在标签内部调用宏,即 `<p $$some(xxxx)></p>` 将会报错, 你应该把尝试直接标签写到 macros 里去.
 
 #### 优化模式
 
@@ -557,11 +552,11 @@ AFTER
 
 templo 提供优化模式(或叫生产模式)即假译所有的模板已经编译完成. 使得服务器忽略模板源码然后直接跳至 neko 模块. 这个特性有一些好处:
 
- * 快速(没有文件修改时间检测)
+* 快速(没有文件修改时间检测)
 
- * 安全(编译所有的模块在布署之前, 因此任何一个模块有错误你都会先知道)
+* 安全(编译所有的模块在布署之前, 因此任何一个模块有错误你都会先知道)
 
- * 你不需要布署源码,仅上传已经编译好的模块就行了
+* 你不需要布署源码,仅上传已经编译好的模块就行了
 
 通常在开发期间你不要设置 `Loader.OPTIMIZED` 为 true
 
@@ -569,8 +564,7 @@ templo 提供优化模式(或叫生产模式)即假译所有的模板已经编�
 
 ### HHP
 
-这个库还是蛮简单 PHP-like templating system for Haxe: https://github.com/RealyUniqueName/HHP 
-
+这个库还是蛮简单 PHP-like templating system for Haxe: <https://github.com/RealyUniqueName/HHP>
 
 
 <br />

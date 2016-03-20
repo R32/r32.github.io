@@ -13,13 +13,13 @@ categories: haxelib
 
 <!-- more -->
 
- * FlxBasic
+* FlxBasic
 
- > active 控制是否 update(),visible 控制是否 draw()
-
- > alive 只是一个状态属性, exists 表明 是否已经 destroy()
-
- > 已经 destory()或 kill() 的对象可以调用 revive() 而复原
+  > active 控制是否 update(),visible 控制是否 draw()
+  >
+  > alive 只是一个状态属性, exists 表明 是否已经 destroy()
+  >
+  > 已经 destory()或 kill() 的对象可以调用 revive() 而复原
 
 ### 安装
 

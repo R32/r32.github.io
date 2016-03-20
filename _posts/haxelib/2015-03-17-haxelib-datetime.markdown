@@ -10,32 +10,32 @@ categories: haxelib
 haxe 标准库的 Date 类不能处理时区(timezone), 返回的总是当前时区,相对于 Flash或JS, haxe 的 Date 没有 相关的 UTC 方法.
 **而 Datetime 的方法全部都是通过时区(UTC)方法**. 
 
-datetime 的源码地址为: https://github.com/RealyUniqueName/DateTime
+datetime 的源码地址为: <https://github.com/RealyUniqueName/DateTime>
 
 <!-- more -->
 
 
 ### 简介
 
- * DateTime 是基于 float(32位)的抽像(abstract)类
+* DateTime 是基于 float(32位)的抽像(abstract)类
 
- * 支持日期从 公元 1 年到 公元 16 777 215年(也许更多).
+* 支持日期从 公元 1 年到 公元 16 777 215年(也许更多).
 
- * DateTime 完全跨平台,因由是由纯(pure)　haxe　代码实现.
+* DateTime 完全跨平台,因由是由纯(pure)　haxe　代码实现.
 
- * 性能: 取决于指定平台，可以比标准的 Date 快 7倍或 慢 10倍.
+* 性能: 取决于指定平台，可以比标准的 Date 快 7倍或 慢 10倍.
 
- * datetime.getTime() 不包含微秒(milliseconds) , 这是由于32位float的存储关系
+* datetime.getTime() 不包含微秒(milliseconds) , 这是由于32位float的存储关系
 
- * datetime 使用的月份值是从 1~12,而不是 0~11;
+* datetime 使用的月份值是从 1~12,而不是 0~11;
 
 #### 重要
 
 除了主动调用 local(), 需要记住 DateTime 的方法全部是基于 **通用时区**
 
- * 因此: 如果你打算获得一个本地时间应该用: DateTime.local 而不是 DateTime.now.
-	
- * 在与标准库的 Date 比较 时间戳时, 先调用 DateTime::utc, 使时区一致
+* 因此: 如果你打算获得一个本地时间应该用: DateTime.local 而不是 DateTime.now.
+   
+* 在与标准库的 Date 比较 时间戳时, 先调用 DateTime::utc, 使时区一致
 
 
 ### 示例
@@ -119,16 +119,16 @@ trace( tz.format(utc, '%F %T %z %Z') ); // 2014-09-19 05:37:45 +0400 MSK
 
 ### API
 
-原项目API文档: http://doc.stablex.ru/datetime/index.html
+原项目API文档: <http://doc.stablex.ru/datetime/index.html>
 
 #### DateTime
 
 
 #### TimeZone
 
-Datetime 使用 IANA timezone database用于处理 时区  http://www.iana.org/time-zones
+Datetime 使用 IANA timezone database用于处理 时区  <http://www.iana.org/time-zones>
 
-本地时区检测代码移植于JS库的 jstimezonedetect , 地址为:https://bitbucket.org/pellepim/jstimezonedetect.
+本地时区检测代码移植于JS库的 jstimezonedetect , 地址为: <https://bitbucket.org/pellepim/jstimezonedetect>.
 注意: 查看JS库的Readme了解一些限制
 
 ##### TimeZone database
@@ -145,29 +145,29 @@ Datetime 使用 IANA timezone database用于处理 时区  http://www.iana.org/t
 
 ### 最新改动
 
- * `datetime.TimeZone.get(zoneName)` - 现在返回 null,如果 zoneName 不符合 IANA 时区名称
+* `datetime.TimeZone.get(zoneName)` - 现在返回 null,如果 zoneName 不符合 IANA 时区名称
 
- * `datetime.Timezone.getZonesList(): Array<String>` - 返回时区名称列表
+* `datetime.Timezone.getZonesList(): Array<String>` - 返回时区名称列表
 
- * `datetime.DateTime.local()` - **现在已经更改为静态方法**　获得一个本地时区的 DateTime 实例
+* `datetime.DateTime.local()` - **现在已经更改为静态方法**　获得一个本地时区的 DateTime 实例
 
- * `datetime.DTMonth`  - 新的 enum,包含月份列表
+* `datetime.DTMonth`  - 新的 enum,包含月份列表
 
- * `datetime.DateTime.monthStart()` - 现已为 private 方法. 使用 `getMonthStart(month:DTMonth):DateTime` 替代
+* `datetime.DateTime.monthStart()` - 现已为 private 方法. 使用 `getMonthStart(month:DTMonth):DateTime` 替代
 
- * `datetime.DateTime.yearStart()` - 现已为 private 方法. 使用 `snap(Year(Down)):DateTime` 替换.
+* `datetime.DateTime.yearStart()` - 现已为 private 方法. 使用 `snap(Year(Down)):DateTime` 替换.
 
- * new classes which describe periods between time changes in timezone: datetime.utils.pack.TZPeriod, datetime.utils.pack.DstRule. Both implement datetime.utils.pack.IPeriod
+* new classes which describe periods between time changes in timezone: datetime.utils.pack.TZPeriod, datetime.utils.pack.DstRule. Both implement datetime.utils.pack.IPeriod
 
- * `datetime.Timezone.getAllPeriods():Array<IPeriod>` - returns all periods between timechanges in this zone
+* `datetime.Timezone.getAllPeriods():Array<IPeriod>` - returns all periods between timechanges in this zone
 
- * datetime.Timezone.getPeriodForLocal(localDateTime) : TZPeriod - returns period which contains localDateTime
+* datetime.Timezone.getPeriodForLocal(localDateTime) : TZPeriod - returns period which contains localDateTime
 
- * datetime.Timezone.getPeriodForUtc(utc) : TZPeriod - returns period wich contains utc
+* datetime.Timezone.getPeriodForUtc(utc) : TZPeriod - returns period wich contains utc
 
- * Changed TZdata file format (reduced from 2.5Mb to 116Kb)
+* Changed TZdata file format (reduced from 2.5Mb to 116Kb)
 
- * Added script for 'semi-automatic' TZdata updates: haxelib run datetime 
+* Added script for 'semi-automatic' TZdata updates: haxelib run datetime 
 
 
 为避免混乱下边是一些参数一致的示例:

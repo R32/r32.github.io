@@ -11,15 +11,15 @@ SPOD 建立在 SQLite 或 Mysql 上. 全称为 Simple Persistent Object Database
  
 <!-- more -->
 
-原英文: http://old.haxe.org/manual/spod
+原英文: <http://old.haxe.org/manual/spod>
 
-示例: https://github.com/ncannasse/hxWiki/tree/master/src/db
+示例: <https://github.com/ncannasse/hxWiki/tree/master/src/db>
 
 ### SPOD类
 
 
 
-下边说明中 SPOD 用于表示继承了`sys.db.Object`的类, 而小写的 spod 则为其实例(即一行数据).
+下边说明中 SPOD 用于表示继承了 sys.db.Object 的类, 而小写的 spod 则为其实例(即一行数据).
 
 #### 对应类型
 
@@ -138,32 +138,32 @@ typedef SEnum<E:EnumValue> = Null<E>	// 允许存储不具有参数, 简单的in
 
 用于成员字段:
 
- * `@:skip`： 忽略此字段，表示这个字段不是数据库结构中的一部分
+* `@:skip`： 忽略此字段，表示这个字段不是数据库结构中的一部分
 
- * `@:relation`： 将此作为一种关系的字段声明 [见下面的特定部分](#关系)
+* `@:relation`： 将此作为一种关系的字段声明 [见下面的特定部分](#关系)
 
 用于SPOD类:
 
- * `@:table("myTableName")`： 表名在数据库中的名称（默认与类名相同）
+* `@:table("myTableName")`： 表名在数据库中的名称（默认与类名相同）
 
- * `@:id(field1,field2,...)`： 指定表的主键字段。例如下面的类并没有一个唯一的 id 与自动递增，但两个字段组成 联合主键 
+* `@:id(field1,field2,...)`： 指定表的主键字段。例如下面的类并没有一个唯一的 id 与自动递增，但两个字段组成 联合主键 
 
-```haxe
-@:id(uid,gid)
-class UserGroup extends sys.db.Object {
-	public var uid : SInt;
-	public var gid : SInt;
-}
-```
+  ```haxe
+  @:id(uid,gid)
+  class UserGroup extends sys.db.Object {
+  	public var uid : SInt;
+  	public var gid : SInt;
+  }
+  ```
 
- * `@:index(field1,field2,...,[unique])`: 声明指定的字段为索引(index)-并将按此顺序进行索引。如果最后一个字段是 unique 类型这意味着这是唯一性索引(unique index)（可以声明多个@:index, 每个字段值的组合可以只能出现一次）
+* `@:index(field1,field2,...,[unique])`: 声明指定的字段为索引(index)-并将按此顺序进行索引。如果最后一个字段是 unique 类型这意味着这是唯一性索引(unique index)（可以声明多个@:index, 每个字段值的组合可以只能出现一次）
 
 
- * `@:skip`: ???跳过自动创建 manager, 
+* `@:skip`: ???跳过自动创建 manager, 
 
- * `@:skipFields` ???忽略当前类(非父类和子类)的所有字段
+* `@:skipFields` ???忽略当前类(非父类和子类)的所有字段
 
-	> 注: 这上边二个估计是用于多重继承时, 如: `Session -> SessionData -> db.Object`, 这时中间那个类基本都会同时添加这二个.
+  注: 这上边二个估计是用于多重继承时, 如: `Session -> SessionData -> db.Object`, 这时中间那个类基本都会同时添加这二个.
 
 #### 构建表格
 
@@ -209,39 +209,39 @@ if(!sys.db.TableCreate.exists(User.manager)){
 ```
 有二个静态方法可用于spod的初使化及结束:
 
- * `sys.db.Manager.initialize()`: 用于初始化SPOD类, 因此请确保至少一次在使用SPOD类之前调用它。
+* `sys.db.Manager.initialize()`: 用于初始化SPOD类, 因此请确保至少一次在使用SPOD类之前调用它。
 
- * `sys.db.Manager.cleanup()`: 将清理缓存.
+* `sys.db.Manager.cleanup()`: 将清理缓存.
 
-	> (will cleanup the temporary object cache. This can be done if you are using server module caching to free memory or after a rollback to make sure that we don't use the cached object version)
+  > (will cleanup the temporary object cache. This can be done if you are using server module caching to free memory or after a rollback to make sure that we don't use the cached object version)
 
 注意区别: `SPOD::manager`用于SPOD(表格)操作, 而`sys.db.Manager`管理连接到数据库.
 
 sys.db.Connection 实例具有如下方法: 源码参见 各实现平台包如: neko/_std/sys/SQLite.hx
 
- * `request(sql:String):sys.db.ResultSet`: 例: request("select * from User");
+* `request(sql:String):sys.db.ResultSet`: 例: request("select * from User");
 
- * `close():Void`: 关闭数据库连接 
+* `close():Void`: 关闭数据库连接 
 
- * `escape(s:String):String`: 转义单引号
+* `escape(s:String):String`: 转义单引号
 
- * `quote(s:String):String`: 转义单引号并用单引号括起来: `"'"+s.split("'").join("''")+"'"`
+* `quote(s:String):String`: 转义单引号并用单引号括起来: `"'"+s.split("'").join("''")+"'"`
 
-	> 如果你使用 request(sql), **不要忘记** 使用这个方法,以防止一些SQL注入语句
+  > 如果你使用 request(sql), **不要忘记** 使用这个方法,以防止一些SQL注入语句
+  >
+  > 例: `request("select * from User WHERE name LIKE " + quote(name))`
 
-	> 例: `request("select * from User WHERE name LIKE " + quote(name))`
+* `addValue(s:StringBuf, v:Dynamic ):Void;`: 
 
- * `addValue(s:StringBuf, v:Dynamic ):Void;`: 
+* `lastInsertId():Int`: 需要在insert之后才有效,和最后一个插入的自增id值一致
 
- * `lastInsertId():Int`: 需要在insert之后才有效,和最后一个插入的自增id值一致
+* `dbName():String`: 数据库类型名称, 如: SQLite
 
- * `dbName():String`: 数据库类型名称, 如: SQLite
+* `startTransaction():Void`: 启动事务, 之后便可以进行 commit/rollback 操作.
 
- * `startTransaction():Void`: 启动事务, 之后便可以进行 commit/rollback 操作.
+* `commit():Void` 确认,
 
- * `commit():Void` 确认,
-
- * `rollback():Void`: 回滚,回滚到最后一次的commit() 
+* `rollback():Void`: 回滚,回滚到最后一次的commit() 
 
 #### 表格操作
 
@@ -249,43 +249,43 @@ sys.db.Connection 实例具有如下方法: 源码参见 各实现平台包如: 
 
 参数 cond 为查询条件, cond将由宏解析并支持多种格式, [参看后边的搜索查询](#搜索查询)
 
- * `all(?lock:Bool):List<User>`: 参数带`?`表示可以为 Null 值,即`(lock:Null<Bool> = null)`
+* `all(?lock:Bool):List<User>`: 参数带`?`表示可以为 Null 值,即`(lock:Null<Bool> = null)`
 
- * `count(cond:Dynamic):Int`: 返回符合条件的数量, 如需
+* `count(cond:Dynamic):Int`: 返回符合条件的数量, 如需
 
- * `dbClass():Class<Dynamic>`: dbClass() == User
+* `dbClass():Class<Dynamic>`: dbClass() == User
 
- * `dbInfos():sys.db.RecordInfos`: 获得表格信息，如主键,索引,
+* `dbInfos():sys.db.RecordInfos`: 获得表格信息，如主键,索引,
 
- * `delete(cond:Dynamic, ?options:{}):Void`: 根据条件(cond)删除行数据
+* `delete(cond:Dynamic, ?options:{}):Void`: 根据条件(cond)删除行数据
 
   - options 类型为{?orderBy:field, ?limit:[pos,len], ?forceIndex:[field]}, 对于forceIndex 似乎只支持 Mysql
 
- * `dynamicSearch(x:{}, ?lock:Bool):List<User>`:
+* `dynamicSearch(x:{}, ?lock:Bool):List<User>`:
 
- * `forceUpdate(o:User, field:String):Void`:
+* `forceUpdate(o:User, field:String):Void`:
 
- * `get(id:Int, ?lock:Bool):User`: 返回单个 spod(即一行数据)
+* `get(id:Int, ?lock:Bool):User`: 返回单个 spod(即一行数据)
 
- * `search(cond:Dynamic, ?options:{}, ?lock:Bool):List<User>`: 
+* `search(cond:Dynamic, ?options:{}, ?lock:Bool):List<User>`: 
 
- * `select(cond:Dynamic, ?options:{}, ?lock:Bool):User`: 
+* `select(cond:Dynamic, ?options:{}, ?lock:Bool):User`: 
 
- * `unsafeCount(sql:String):Int`:	sql 为 SQL语句,只是返回值不一致, 例: unsafeCount("select count(*) from User");
+* `unsafeCount(sql:String):Int`:	sql 为 SQL语句,只是返回值不一致, 例: unsafeCount("select count(*) from User");
 
-	> 注: 所有 unsafe为前缀的方法最后都将调用 unsafeExecute 也就是 cnx.request(string), 只是对sql做了一些附加处理而已.
+  > 注: 所有 unsafe为前缀的方法最后都将调用 unsafeExecute 也就是 cnx.request(string), 只是对sql做了一些附加处理而已.
 
- * `unsafeDelete(sql:String):Void`:
+* `unsafeDelete(sql:String):Void`:
 
- * `unsafeGet(id:Int, ?lock:Bool):User`:
+* `unsafeGet(id:Int, ?lock:Bool):User`:
 
- * `unsafeGetId(o:User):Int`:
+* `unsafeGetId(o:User):Int`:
 
- * `unsafeGetWithKeys(keys:{}, ?lock:Bool):User`:
+* `unsafeGetWithKeys(keys:{}, ?lock:Bool):User`:
 
- * `unsafeObject(sql:String,lock:Bool):User`:
+* `unsafeObject(sql:String,lock:Bool):User`:
 
- * `unsafeObjects(sql:String,lock:Bool):List<User>`:
+* `unsafeObjects(sql:String,lock:Bool):List<User>`:
 
 当你需要实现一些特殊的表格操作时,可以自定义一个 manager, 由于 Manager 类是基于宏的, 因此定义一个 manager 并没有那么简单
 
@@ -368,19 +368,19 @@ unsafeSearch("SELECT * FROM User WHERE id < "+Manager.quoteInt(minId));
 
 搜索查询支持下面的语法:
 
- * 常量、 整数、 浮点数、 字符串、null、true和false
+* 常量、 整数、 浮点数、 字符串、null、true和false
 
- * 所有操作符 `+, -, *, /, %, |, &, ^, >>, <<, >>>`
+* 所有操作符 `+, -, *, /, %, |, &, ^, >>, <<, >>>`
 
- * 一元运算符 `!, -, ~`
+* 一元运算符 `!, -, ~`
 
- * 比较运算符 `==, >=, <=, >, <, !=`
+* 比较运算符 `==, >=, <=, >, <, !=`
 
- * 条件测试 `&&, ||`
+* 条件测试 `&&, ||`
 
- * 圆括号(parenthesizes)
-  
- * 调用及字段访问(编译成 Haxe 表达式)
+* 圆括号(parenthesizes)
+ 
+* 调用及字段访问(编译成 Haxe 表达式)
 
 #### 额外的语法
 
@@ -406,33 +406,33 @@ function listName( ?name : String ) {
 
 在搜索查询中，可以使用以下 SQL 全局函数:
 
- * `$now():SDateTime`  , 返回当前日期 (SQL NOW())
+* `$now():SDateTime`  , 返回当前日期 (SQL NOW())
 
- * `$curDate():SDate` , 返回当前日期 (SQL CURDATE())
+* `$curDate():SDate` , 返回当前日期 (SQL CURDATE())
 
- * `$date(v:SDateTime):SDate` 返回的日期部分不包含时间 （SQL DATE())
+* `$date(v:SDateTime):SDate` 返回的日期部分不包含时间 （SQL DATE())
 
- * `$seconds(v:Float):SInterval` 返回日期间隔, 以秒为单位 (SQL INTERVAL v SECOND)
+* `$seconds(v:Float):SInterval` 返回日期间隔, 以秒为单位 (SQL INTERVAL v SECOND)
 
- * `$minutes(v:Float):SInterval` 返回日期间隔的 分钟值(SQL INTERVAL v MINUTE)
+* `$minutes(v:Float):SInterval` 返回日期间隔的 分钟值(SQL INTERVAL v MINUTE)
 
- * `$hours(v:Float):SInterval` 返回日期间隔的 小时值(SQL INTERVAL v HOUR)
+* `$hours(v:Float):SInterval` 返回日期间隔的 小时值(SQL INTERVAL v HOUR)
 
- * `$hours(v:Float):SInterval` 返回日期间隔的 小时值(SQL INTERVAL v HOUR)
+* `$hours(v:Float):SInterval` 返回日期间隔的 小时值(SQL INTERVAL v HOUR)
 
- * `$days(v:Float):SInterval` 返回日期间隔的 天值(SQL INTERVAL v DAY)
+* `$days(v:Float):SInterval` 返回日期间隔的 天值(SQL INTERVAL v DAY)
 
- * `$months(v:Float):SInterval` 返回日期间隔的 月值(SQL INTERVAL v MONTH)
+* `$months(v:Float):SInterval` 返回日期间隔的 月值(SQL INTERVAL v MONTH)
 
- * `$years(v:Float):SInterval` 返回日期间隔的 年值(SQL INTERVAL v YEAR)
+* `$years(v:Float):SInterval` 返回日期间隔的 年值(SQL INTERVAL v YEAR)
 
 您可以在搜索查询中使用以下 SQL 运算符:
 
- * stringA.like(stringB) : 将使用 SQL LIKE 操作符来查找 如果 stringB 包含在 stringA
+* stringA.like(stringB) : 将使用 SQL LIKE 操作符来查找 如果 stringB 包含在 stringA
 
-	> 例: $name.like("J%") 或 "filedname".like("J%"), 
-	
- * TODO: 在源码中除了 like 还有 has, 但是没有 has 的文档, has 看上去用于 SFlags(EnumFlags)字段
+  例: `$name.like("J%") 或 "filedname".like("J%")`, 
+   
+* TODO: 在源码中除了 like 还有 has, 但是没有 has 的文档, has 看上去用于 SFlags(EnumFlags)字段
 
 
 #### SQL IN
@@ -455,13 +455,13 @@ User.manager.search(true, {orderBy : name, limit : 20 });
 
 支持以下选项:
 
- * orderBy: 可以指定几个排序字段, 使用减号(-)操作符将表示为降序.
+* orderBy: 可以指定几个排序字段, 使用减号(-)操作符将表示为降序.
 
-	> 例如: `orderBy : [-name,id] 将生成 SQL ORDER BY name DESC, id`
+  例如: `orderBy : [-name,id] 将生成 SQL ORDER BY name DESC, id`
 
- * limit: 限定搜索返回结果集, 可以使用 haxe 变量和表达式, 例如: { limit : [pos,length] } 
+* limit: 限定搜索返回结果集, 可以使用 haxe 变量和表达式, 例如: { limit : [pos,length] } 
 
- * forceIndex: 强制使用此索引搜索。　例如: { forceIndex : [name,date] }
+* forceIndex: 强制使用此索引搜索。　例如: { forceIndex : [name,date] }
 
 #### Select/Count/Delete
 
@@ -571,11 +571,11 @@ class User extends sys.db.Object {
 }
 ```
 
- * 当访问读取 phones 字段时(只在第一次),它是已经反序列化的. 默认情况下 数据将存储为 haxe-serialized 字符串, 但是你可以自定义 Manager,创自定义的 序列及反序列化方法.
+* 当访问读取 phones 字段时(只在第一次),它是已经反序列化的. 默认情况下 数据将存储为 haxe-serialized 字符串, 但是你可以自定义 Manager,创自定义的 序列及反序列化方法.
 
- * 当 phones 字段被读取或写入时, 将设置 标志以记住其变化
+* 当 phones 字段被读取或写入时, 将设置 标志以记住其变化
 
- * 当 SPOD 对象插入(insert)或更新(update)时, 修改后的数据将被序列化并最终发送到数据库,如果发生了更改.
+* 当 SPOD 对象插入(insert)或更新(update)时, 修改后的数据将被序列化并最终发送到数据库,如果发生了更改.
 
 因此, 压入数据到 phones 数据或直接修改 phones 号码将被 SPOD 引擎察觉到.
 

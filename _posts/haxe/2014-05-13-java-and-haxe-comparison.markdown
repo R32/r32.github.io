@@ -325,48 +325,48 @@ class HelloCFFI{
 
 [15分钟　java 快速入门](https://github.com/jdonaldson/learnxinyminutes-docs/blob/master/java.html.markdown)
 
- * 变量定义
+* 变量定义
 
-	```java
-	// 感觉和 C 语言很像
-	int i = 10;
-	char c = 'A';
-	char [] cs = {'A','B','C'};
-	String str = "Helo";
-	Object [] obj = new Object[3]; // 初使化后数组长度必须为已知;
-	obj[0] = new Object();
-	```
+  ```java
+  // 感觉和 C 语言很像
+  int i = 10;
+  char c = 'A';
+  char [] cs = {'A','B','C'};
+  String str = "Helo";
+  Object [] obj = new Object[3]; // 初使化后数组长度必须为已知;
+  obj[0] = new Object();
+  ```
 
- * `java.lang` 这个包不需要导入就可以直接使用.
-
- * `java.lang.Object`
+* `java.lang` 这个包不需要导入就可以直接使用.
  
-	> 除了Java的基础类型,所有类型都是继承于 Object,包括 String. 很多数据类型必须为 Object.
- 
-	> 感觉很像 AS3. 在 AS3 中 Object 是所有 类 的基类.
+* `java.lang.Object`
 
- 
- * `final` 关键字
+  > 除了Java的基础类型,所有类型都是继承于 Object,包括 String. 很多数据类型必须为 Object.
+  >
+  > 感觉很像 AS3. 在 AS3 中 Object 是所有 类 的基类.
 
-	```java
-	// final 除了 有 const 的行为
-	// 还可以改变 一个变量作用域,叫做 final local variable
-	// 下边示例中的 @Override run 方法,并不可以访问 其所在的局部变量
-	// 但是局部变量加上 finnal 关键字后.就可以了
-	public void foo() {
-		final String x = "hello";
-		String y = "there";
+* `final` 关键字
 
-		Runnable runnable = new Runnable() {
-			@Override public void run() {
-				System.out.println(x); // This is valid
-				System.out.println(y); // This is not
-			}
-		};
-      runnable.run();
-	}
-	// 这个示例同样展示了 Java 可以在 实例化时,写 override 方法 
-	```
+  ```java
+  // final 除了 有 const 的行为
+  // 还可以改变 一个变量作用域,叫做 final local variable
+  // 下边示例中的 @Override run 方法,并不可以访问 其所在的局部变量
+  // 但是局部变量加上 finnal 关键字后.就可以了
+  public void foo() {
+  	final String x = "hello";
+  	String y = "there";
+  	Runnable runnable = new Runnable() {
+  		@Override public void run() {
+  			System.out.println(x); // This is valid
+  			System.out.println(y); // This is not
+  		}
+  	};
+    runnable.run();
+  }
+  // 这个示例同样展示了 Java 可以在 实例化时,写 override 方法 
+  ```
+
+<br />
 
 
 

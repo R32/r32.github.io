@@ -8,15 +8,15 @@ categories: other
 ---
 
 
-客户端选择及所有 IRC 相关:  http://www.irc-wiki.org/Main_Page
+客户端选择及所有 IRC 相关:  <http://www.irc-wiki.org/Main_Page>
 
- * 桌面端 
+* 桌面端 
 
   - nettalk 感觉不错.但不支持 SSL 连接.
 
 <!-- more -->
 
- * android 手机端从用户列表中选择一个 nickname 都不太方便,
+* android 手机端从用户列表中选择一个 nickname 都不太方便,
 
   - Yaaic github 开放源码, 界面好看, 能自动加入频道,验证密码, 
 
@@ -26,26 +26,26 @@ categories: other
 ### 源码参考
 
 
-**Start 2404** Web IRC client: http://shout-irc.com/  
+**Start 2404** Web IRC client: <http://shout-irc.com/>
 
 **Start 156** The best IRC library for node.js https://github.com/gf3/IRC-js 
 
-**Start 1873** 基于 node-webkit 的应用 https://github.com/slate/slate 
+**Start 1873** 基于 node-webkit 的应用 <https://github.com/slate/slate>
 
-flash 客户端源码参考: https://github.com/unic0rn/tiramisu
+flash 客户端源码参考: <https://github.com/unic0rn/tiramisu>
 
 
 ### 基本命令
 
 一些基础概念, 细节请参看 RFC 1459
 
- * IRC 服务器: IRC 不属于任何一个公司, 任何人都可以运行 IRC 服务器, 但是你应该选择大家常用服务器比如: freenode
+* IRC 服务器: IRC 不属于任何一个公司, 任何人都可以运行 IRC 服务器, 但是你应该选择大家常用服务器比如: freenode
 
- * IRC 客户端: 用户选择用于 IRC 聊天的 APP(应用或软件).
+* IRC 客户端: 用户选择用于 IRC 聊天的 APP(应用或软件).
 
- * 提到: IRC 聊天室中, 当谈话内容中包含了你的 nickname, 这时 IRC客户端会发出一些提示, 就像 其它常见聊天中的 `@nickname`
+* 提到: IRC 聊天室中, 当谈话内容中包含了你的 nickname, 这时 IRC客户端会发出一些提示, 就像 其它常见聊天中的 `@nickname`
 
- * 密语: 以 `/msg nickname message` 时,称为 "密语", 这时接收信息的人的IRC客户端通常会打开一个新窗口用于私聊
+* 密语: 以 `/msg nickname message` 时,称为 "密语", 这时接收信息的人的IRC客户端通常会打开一个新窗口用于私聊
 
 命令以 斜线 `/` 开始, 后接英文字符, 忽略大小写. http://en.wikipedia.org/wiki/List_of_Internet_Relay_Chat_commands, 
 
@@ -239,7 +239,7 @@ IRC 聊天不需要注册, 填写 呢称(nickname) 之后,就可以连接服务�
 RFC 2812
 ------
 
-http://tools.ietf.org/html/rfc2812
+<http://tools.ietf.org/html/rfc2812>
 
 ### Label
 
@@ -253,7 +253,7 @@ Servers的名字作为其唯一标识, 名字最长为63个字符. 查看语法�
 
 对于每一个客户端,所有服务器必须具有以下信息：
 
- * 网路(netwide)唯一标识符(其格式取决于客户端的类型)和介绍了客户端的服务器。
+* 网路(netwide)唯一标识符(其格式取决于客户端的类型)和介绍了客户端的服务器。
 
 ##### Users(用户)
 
@@ -261,11 +261,11 @@ Servers的名字作为其唯一标识, 名字最长为63个字符. 查看语法�
 
 虽然限制为最长9个字符,但客户端 **应该** 接受更长的字符串,因为更长的字符串可能在未来的协议中定义
 
- * Operators(管理员) 一类特殊User,在网络允许执行一般的维护, 如根据需要断开并重新连接服务器
+* Operators(管理员) 一类特殊User,在网络允许执行一般的维护, 如根据需要断开并重新连接服务器
 
-	> 虽然给管理员授予权力被视为危险, 但这经常是有必要的.
-
-	> 最具有争议的是管理员的能力，例如: 管理员可以强制关闭客户端到服务器的连接.
+  > 虽然给管理员授予权力被视为危险, 但这经常是有必要的.
+  >
+  > 最具有争议的是管理员的能力，例如: 管理员可以强制关闭客户端到服务器的连接.
 
 ##### Services(服务员)
 
@@ -294,13 +294,13 @@ Servers的名字作为其唯一标识, 名字最长为63个字符. 查看语法�
 
 每个 IRC 消息可能主要由三部分组成: 它们之间使用空格分隔(`0x20`)
 
- * 前缀(prefix)可选. 如果有,则由冒号(`:`)作为消息的第一个字符出现,然后紧接前缀, 前缀与冒号之间不可以有空白字符.前缀用于服务器指示消息的真实来源.
+* 前缀(prefix)可选. 如果有,则由冒号(`:`)作为消息的第一个字符出现,然后紧接前缀, 前缀与冒号之间不可以有空白字符.前缀用于服务器指示消息的真实来源.
 
-	> 如果消息没有前缀，则假定它源于从它接收到的连接.客户端在发送消息时 **不应该** 使用前缀,如果使用了,唯一有效的前缀是与客户端相关联的注册昵称.
+  > 如果消息没有前缀，则假定它源于从它接收到的连接.客户端在发送消息时 **不应该** 使用前缀,如果使用了,唯一有效的前缀是与客户端相关联的注册昵称.
 
- * 命令(command) 命令必须为有效的IRC命令或3个ASCII文本数字
+* 命令(command) 命令必须为有效的IRC命令或3个ASCII文本数字
 
- * 命令参数(command parameters) 最多15个.
+* 命令参数(command parameters) 最多15个.
 
 IRC消息的一行总是以CRLF作为结束. 以及消息 **不应该** 超过 512个字符,长度包括了CRLF字符,因此只有510个字符长度用于命令和参数. [这些没有定义如何连接上一行消息(这样的话一条过长的消息将被分割.)]
 
@@ -328,9 +328,9 @@ SPACE	=  %x20
 
 NOTES:
 
- * 所有的参数(params)都需要符合 <middle>或<trailing>. <trailing>是允许在参数中附加空格(0x20)的小技巧.
+* 所有的参数(params)都需要符合 <middle>或<trailing>. <trailing>是允许在参数中附加空格(0x20)的小技巧.
 
- * NULL(0x00)字符并没有作为消息的结束, 但它会导至 C 字符串处理的复杂性,因此 NULL 不允许出现在消息之中
+* NULL(0x00)字符并没有作为消息的结束, 但它会导至 C 字符串处理的复杂性,因此 NULL 不允许出现在消息之中
 
 .......
 
@@ -342,9 +342,9 @@ NOTES:
 
 当字符串中允许使用通配符, 将被称为 "mask"
 
- * `?` 匹配单个任意字符
+* `?` 匹配单个任意字符
 
- * `*` 匹配0个或任意个的任意字符
+* `*` 匹配0个或任意个的任意字符
 
 ### Message Details
 
@@ -362,29 +362,29 @@ NOTES:
 
 `PASS` 命令不是必须的,但它必须在 `NICK/USER` 命令之前执行. 一个建议的客户端登记顺序如下:
 
- * Pass message
+* Pass message
 
- * Service message
+* Service message
 
- * Nick message
+* Nick message
 
- * User message
+* User message
 
 ##### Password message
 
 这个命令用于设置"连接密码". 如果使用密码,那么必须在在 `NICK/USER` 命令之前使用.
 
- * 命令: `PASS`
+* 命令: `PASS`
 
- * 参数: `<password>`
+* 参数: `<password>`
 
- * 应答: 
+* 应答: 
 
   - `ERR_NEEDMOREPARAMS`
 
   - `ERR_ALREADYREGISTRED`
 
- * 示例: `PASS scretpasswordhere`
+* 示例: `PASS scretpasswordhere`
 
 (个人注:这个密码不太同于我们常用的密码,需要用户名, 它有些类似于充值卡的冲值码,只要正确, 那么才允许连接.)
 
@@ -392,11 +392,11 @@ NOTES:
 
 设置或更改当前昵称.
 
- * 命令: `NICK`
+* 命令: `NICK`
 
- * 参数: `<nickname>`
+* 参数: `<nickname>`
 
- * 应答:
+* 应答:
 
   - `ERR_NONICKNAMEGIVEN`
 
@@ -410,18 +410,18 @@ NOTES:
 
   - `ERR_RESTRICTED`
 
- * 示例: `NICK Wiz`	; 尝试使用 Wiz 作为其昵称
+* 示例: `NICK Wiz`	; 尝试使用 Wiz 作为其昵称
 
- * 应答示列: `:Wiz!jto@tolsun.oulu.fi NICK Kilroy`	; 服务器通知 Wiz 更改其名字已经更改为 Kilroy
+* 应答示列: `:Wiz!jto@tolsun.oulu.fi NICK Kilroy`	; 服务器通知 Wiz 更改其名字已经更改为 Kilroy
 
 
 ##### User message
 
 在开始连接时,指定 username(用户名,注册了连接服务器的用户名,用户名可以有多个昵称),hostname(主机名),realname(真实姓名).
 
- * 命令: `USER`
+* 命令: `USER`
 
- * 参数: `<user> <mode> <unused> <realname>`
+* 参数: `<user> <mode> <unused> <realname>`
 
   - `<mode>` 参数应该为数字, 可用于自动设置用户模式当向服务器登记时.这个参数为bitmask(位掩码),并仅有2位有其含义: 如果 bit2为1,将为 "w"模式, 如果bit3为1, 则为 "i"模式. 参见 [User mode message](#User_mode_message)
 
@@ -429,13 +429,13 @@ NOTES:
 
   - `<realname>` 可以包含空格字符
 
- * 应答: 
+* 应答: 
 
   - `ERR_NEEDMOREPARAMS`
 
   - `ERR_ALREADYREGISTRED`
 
- * 示例: 注意最后一个参数 `:Ronnie Reagan` 包含了空格
+* 示例: 注意最后一个参数 `:Ronnie Reagan` 包含了空格
 
   - `USER guest 0 * :Ronnie Reagan` ; 用户登入
 
@@ -446,11 +446,11 @@ NOTES:
 
 普通用户使用此命令获得管理员权限.
 
- * 命令: `OPER`
+* 命令: `OPER`
 
- * 参数: `<name> <password>`
+* 参数: `<name> <password>`
 
- * 应答:
+* 应答:
 
   - `ERR_NEEDMOREPARAMS`
 
@@ -460,16 +460,16 @@ NOTES:
 
   - `ERR_PASSWDMISMATCH`
 
- * 示例: `OPER foo bar`
+* 示例: `OPER foo bar`
 
 
 ##### User mode message
 
 用户模式消息, 用户模式通常用于更改用户的状态, 如果仅有 nickname 参数,则只显示nickname的当前模式.
 
- * 命令: `MODE`
+* 命令: `MODE`
 
- * 参数: `<nickname> *( ( "+" / "-" ) *( "i" / "w" / "o" / "O" / "r" ) )`
+* 参数: `<nickname> *( ( "+" / "-" ) *( "i" / "w" / "o" / "O" / "r" ) )`
 
   - `a` 用户是否为暂离, 这个标记不应该由用户通过 User MODE 设置,而应该使用 AWAY 命令
 
@@ -485,13 +485,13 @@ NOTES:
 
   - `s` 是否接受服务器通知. 这个标记已经过时,但可能仍然可以使用
 
- * 应答: 
+* 应答: 
 
   - `ERR_NEEDMOREPARAMS`	`ERR_USERSDONTMATCH`
 
   - `ERR_UMODEUNKNOWNFLAG`	`RPL_UMODEIS`
 
- * 示例:
+* 示例:
 
 ```bash
 MODE WiZ -w		;
@@ -506,27 +506,27 @@ Mode WiZ -o		; 移除 WiZ 的管理员
 
 登入为新服务器.
 
- * 命令: `SERVICE`
+* 命令: `SERVICE`
 
- * 参数: `<nickname> <reserved> <distribution> <type> <reserved> <info>`
+* 参数: `<nickname> <reserved> <distribution> <type> <reserved> <info>`
 
   - `<distribution>` 指定可见性.
 
   - `<tyle>` 作为保留以供将来使用
 
- * 应答:
+* 应答:
 
- * 示例: `SERVICE dict * *.fr 0 0 :French Dictionary`
+* 示例: `SERVICE dict * *.fr 0 0 :French Dictionary`
 
 ##### Quit
 
 客户端终止会话.
 
- * 命令: `Quit`
+* 命令: `Quit`
 
- * 参数: `[Quit Message]`
+* 参数: `[Quit Message]`
 
- * 示例: `QUIT :Gone to have lunch`
+* 示例: `QUIT :Gone to have lunch`
 
   - 服务器将广播: `:syrk!kalt@millennium.stealth.net QUIT :Gone to have lunch`
 

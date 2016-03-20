@@ -7,28 +7,28 @@ categories: haxe
 
 可以说 haxe 的目标平台最稳定的就是 flash 平台了.
 
- * flash.Lib 提供几个方法,也许会很有用, 如:
+* flash.Lib 提供几个方法,也许会很有用, 如:
 
-```as
-// 如在 as3 中经常用到的 
-event.currentTarget as SomeClass
-
-// 在 haxe 应该写为
-Lib.as(event.currentTarget, SomeClass);
-
-// 在浏览器中将 trace 输出到浏览器的 console
-Lib.redirectTraces()
-
-// 调用 as3 自带的 trace 而非 haxe 提供的.
-Lib.trace(arg:Dynamic)
-```
+  ```as
+  // 如在 as3 中经常用到的 
+  event.currentTarget as SomeClass
+  
+  // 在 haxe 应该写为
+  Lib.as(event.currentTarget, SomeClass);
+  
+  // 在浏览器中将 trace 输出到浏览器的 console
+  Lib.redirectTraces()
+  
+  // 调用 as3 自带的 trace 而非 haxe 提供的.
+  Lib.trace(arg:Dynamic)
+  ```
 
 <!-- more -->
 
 
 ### 跨域安全沙箱错误
 
-`crossdomain.xml` 中文参考: http://www.adobe.com/cn/devnet/adobe-media-server/articles/cross-domain-xml-for-streaming.html
+`crossdomain.xml` 中文参考: <http://www.adobe.com/cn/devnet/adobe-media-server/articles/cross-domain-xml-for-streaming.html>
 
 很可能需要添加编译参数 `-D network-sandbox` 使得 swf 只能访问网络.
 
@@ -304,15 +304,15 @@ You can use a patch file with --macro patchTypes('patchFile')
 
 总的来说不算太复杂, 只是需要一些耐心
 
- * [Preloader](http://old.haxe.org/doc/flash/preloader)
+* [Preloader](http://old.haxe.org/doc/flash/preloader)
 
- * openfl 项目, `haxepunk` 库源码有一个很好的示例.
+* openfl 项目, `haxepunk` 库源码有一个很好的示例.
 
-```xml
-<app preloader="MyPreloader" />
-<!-- 源码中必须能查找得到MyPreloader这个类,也可以指定包名如: -->
-<app preloader="com.myname.Preloader" />
-```
+  ```xml
+  <app preloader="MyPreloader" />
+  <!-- 源码中必须能查找得到MyPreloader这个类,也可以指定包名如: -->
+  <app preloader="com.myname.Preloader" />
+  ```
 
 ### 补充
 
@@ -322,15 +322,12 @@ You can use a patch file with --macro patchTypes('patchFile')
 
 ```haxe
 class LEByteArray extends ByteArray{
-	
 	public function new(len:UInt) {
 		super();
 		super.length = len;
 		super.endian = Endian.LITTLE_ENDIAN;
 	}
-	
 	override public function clear():Void {}
-	
 	@:setter(length) function set_length(len:UInt):Void {
 		if(len > super.length){
 		  super.length = len;
@@ -338,7 +335,6 @@ class LEByteArray extends ByteArray{
 			throw 'You are not allowed to change the length.';	
 		}
 	}
-	
 	@:setter(endian) function set_endian(endian:String):Void {
 		//throw new Error( 'You are not allowed to change the endian.' );
 		throw 'You are not allowed to change the endian.';
@@ -360,17 +356,17 @@ SWF文件结构
 
 `SWF = HEADER + TAGS`, 数据结构描述:
 
- * swf使用 twips 表示 Rect 数据，1 twips=1/20 pixel
+* swf使用 twips 表示 Rect 数据，1 twips=1/20 pixel
 
- * 无特别说明，使用 litle endian 结构,后边用 LE 表示
+* 无特别说明，使用 litle endian 结构,后边用 LE 表示
 
- * 定点数， (8-8),(16-16) 二种 使用 litle endian.
+* 定点数， (8-8),(16-16) 二种 使用 litle endian.
 
- * 浮点数， 16(半精度) ,32(单精度) ,64(双精度)
+* 浮点数， 16(半精度) ,32(单精度) ,64(双精度)
 
- * 变长数，通常为低于32位, 使用 符号位扩展成 Int 类型. signExtend1, signExtend8, signExtend16
+* 变长数，通常为低于32位, 使用 符号位扩展成 Int 类型. signExtend1, signExtend8, signExtend16
 
- * 字符串，字符串是以全0结束的byte序列，采用utf-8编码
+* 字符串，字符串是以全0结束的byte序列，采用utf-8编码
 
 通过参考 format 库中的 swf 目录:
 
@@ -396,7 +392,6 @@ b05+SB		SB		 # left, 单位为 twip, 1 twip等于1/20象素
 02~03		 2		# 定点数8-8, 总帧数
 
 # ----- SWF TAGS -----
-
 ```
 
 <br />

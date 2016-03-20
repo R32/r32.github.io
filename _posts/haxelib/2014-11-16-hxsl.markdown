@@ -35,14 +35,20 @@ AGAL 限制：每个程序 200 个 opcode。
 
  * **vertexProgram** 将操作 VertexBuffer3D 中定义的数据，负责将顶点投影到剪辑空间，并将任何所需的顶点数据（例如颜色）传递到fragmentProgram
 
-	> 将接收来自两个源的输入：顶点缓冲区和常量寄存器。使用 Context3D setVertexBufferAt() 方法指定具体顶点属性 寄存器要使用的顶点数据。您最多可以为顶点属性定义 8 个寄存器。顶点属性值读取自三角形列表中每个顶点的顶点缓冲区，并放置在属性寄存器中。使用 Context3D setProgramConstantsFromMatrix() 或 setProgramConstantsFromVector() 方法指定常量 寄存器。常量寄存器为三角形列表中的每个顶点保留相同的值。（您只能在 drawTriangles() 调用之间修改常量值。） 
-
-	> 负责将三角形顶点投影到剪辑空间（x 和 y 轴上 ±1 之间和 z 轴上 0-1 之间的规范可视区域），并将转换后的坐标放置到输出寄存器中。（通常，将通过一组常量寄存器为着色器提供适当的投影矩阵。）vertexProgram 还必须将 fragmentProgram 所需的任何顶点属性或计算值复制到一组名为渐变 寄存器的特殊变量中。在运行片段程序时，将根据当前片段与三角形每个顶点的距离线性插入渐变寄存器提供的值。
+	> 将接收来自两个源的输入：顶点缓冲区和常量寄存器。使用 Context3D setVertexBufferAt() 方法指定具体顶点属性 寄存器要使用的顶点数据。您最多可以为顶点属性定义 8 个寄存器。顶点属性值读取自三角形列表中每个顶点的顶点缓冲区，并放置在属性寄存器中。
+	>
+	>使用 Context3D setProgramConstantsFromMatrix() 或 setProgramConstantsFromVector() 方法指定常量 寄存器。常量寄存器为三角形列表中的每个顶点保留相同的值。（您只能在 drawTriangles() 调用之间修改常量值。） 
+	>
+	> 负责将三角形顶点投影到剪辑空间（x 和 y 轴上 ±1 之间和 z 轴上 0-1 之间的规范可视区域），并将转换后的坐标放置到输出寄存器中。
+	>
+	>（通常，将通过一组常量寄存器为着色器提供适当的投影矩阵。）vertexProgram 还必须将 fragmentProgram 所需的任何顶点属性或计算值复制到一组名为渐变 寄存器的特殊变量中。在运行片段程序时，将根据当前片段与三角形每个顶点的距离线性插入渐变寄存器提供的值。
 
  * **fragmentProgram** 将操作 vertexProgram 传递给它的属性，并为三角形的每个栅格化片段生成颜色，最终形成像素颜色。
 
-	> 接收来自渐变寄存器和一组独立常量寄存器的值（使用 setProgramConstantsFromMatrix() 或 setProgramConstantsFromVector() 设置）。您也可以从使用取样寄存器上载到渲染上下文的纹理读取纹理数据。使用 Context3D setTextureAt() 方法指定具体取样器寄存器要访问的纹理。fragmentProgram 负责将其输出寄存器设置为颜色值。
-	
+	> 接收来自渐变寄存器和一组独立常量寄存器的值（使用 setProgramConstantsFromMatrix() 或 setProgramConstantsFromVector() 设置）。
+	>
+	> 也可以从使用取样寄存器上载到渲染上下文的纹理读取纹理数据。使用 Context3D setTextureAt() 方法指定具体取样器寄存器要访问的纹理。fragmentProgram 负责将其输出寄存器设置为颜色值。
+	>
 	> 请注意，fragmentProgram 在 3D 编程文献中具有多个名称，如: 片段着色器 or 像素着色器
 
 ### AGAL寄存器
@@ -54,44 +60,52 @@ AGAL 限制：每个程序 200 个 opcode。
 寄存器组件可通过坐标存取器（xyzw）或通过颜色存取器（rgba）存取,
 
 
- * **属性:**  顶点着色器输入, 使用 Context3D.setVertexBufferAt() 指定的顶点缓冲区
+* **属性:**  顶点着色器输入, 使用 Context3D.setVertexBufferAt() 指定的顶点缓冲区
+
   - 仅用于 vertexProgram **`va<0~7>`**
 
- * **常量:** 处理 AS3 传递到着色器参数. 由 Context3D::setProgramConstants() 设置
+* **常量:** 处理 AS3 传递到着色器参数. 由 Context3D::setProgramConstants() 设置
+
   - **`fc<0~127>`** 用于 vertexProgram 
+
   - **`vc<0~27>`** 用于 fragmentProgram
 
- * **临时:** 用于计算的临时寄存器, 无法从程序外部访问
+* **临时:** 用于计算的临时寄存器, 无法从程序外部访问
+
   - **`vt<0~7>`** 用于 vertexProgram 
+
   - **`ft<0~7>`** 用于 fragmentProgram
 
- * **输出:** 着色器输出,在 vertexProgram 中，输出为剪辑空间位置；在 fragmentProgram 中，输出为颜色
+* **输出:** 着色器输出,在 vertexProgram 中，输出为剪辑空间位置；在 fragmentProgram 中，输出为颜色
+
   - **`op`** 用于 vertexProgram 
+
   - **`oc`** 用于 fragmentProgram
 
- * **渐变:** 用于将数据从 vertexProgram 传递到 fragmentProgram。传递的数据由 GPU 恰当地插入，使 fragmentProgram 能够收到被处理的像素的正确值
+* **渐变:** 用于将数据从 vertexProgram 传递到 fragmentProgram。传递的数据由 GPU 恰当地插入，使 fragmentProgram 能够收到被处理的像素的正确值
+
   - **`v<0~7>`**
 
- * **采样:** 片段着色器输入,读取自使用 Context3D.setTextureAt() 指定的纹理
+* **采样:** 片段着色器输入,读取自使用 Context3D.setTextureAt() 指定的纹理
   - **`fs<0~7>`** 仅用于 fragmentProgram
 
-```
-# 语法为 fs<n> <flags>, 其中 <flags> 定义为:
+  ```bash
+  # 语法为 fs<n> <flags>, 其中 <flags> 定义为:
 
- * 纹理维度: 2d, cube
+  纹理维度: 2d, cube
 
- * mip映射: nomip(mipnone), mipnearest, miplinear
+  mip映射: nomip(mipnone), mipnearest, miplinear
 
- * 纹理过滤: nearest, linear
+  纹理过滤: nearest, linear
 
- * 纹理重复: repeat, wrap, clamp
+  纹理重复: repeat, wrap, clamp
 
-# 例如，一个没有MIP映射和现象过滤的标准2D纹理可以使用以下代码采样到临时寄存器 ft1 中：
+  # 例如，一个没有MIP映射和现象过滤的标准2D纹理可以使用以下代码采样到临时寄存器 ft1 中：
+  tex ft1, v0, fs0 <2d,linear,nomip>
 
-tex ft1, v0, fs0 <2d,linear,nomip>
+  # 在上面的示例中，可变寄存器 v0 持有插入的纹理UV。
+  ```
 
-# 在上面的示例中，可变寄存器 v0 持有插入的纹理UV。
-```
 
 <br />
 
@@ -124,39 +138,39 @@ class Shader extends hxsl.Shader {
 
 分析 SRC 的内容为:
 
- * 一个 input 对变量, 对应于 VertexBuffer 的数据. 
+* 一个 input 对变量, 对应于 VertexBuffer 的数据. 
 
-	> 如 VertexBuffer 除了坐标还包含颜色或uv数据, 那么 input 的数据类型应该定义相应的字段,如:
+  > 如 VertexBuffer 除了坐标还包含颜色或uv数据, 那么 input 的数据类型应该定义相应的字段,如:
 		
-```
-var input : {
-	pos : Float3,
-	norm : Float3,
-	uv : Float2,
-};
-```
+  ```
+  var input : {
+	  pos : Float3,
+	  norm : Float3,
+	  uv : Float2,
+  };
+  ```
 
- * 0个或多个变量对应于 AGAL渐变寄存器(`v<0~7>`),在 vertexProgram 中将数据插值写入, 然后在 fragmentProgram 中读取
+* 0个或多个变量对应于 AGAL渐变寄存器(`v<0~7>`),在 vertexProgram 中将数据插值写入, 然后在 fragmentProgram 中读取
 
- * 一个带参数(constants for all the vertexes processed)的 vertex 方法
+* 一个带参数(constants for all the vertexes processed)的 vertex 方法
 
- * 一个带参数(constants for all the pixels processed)的 fragment 方法,
+* 一个带参数(constants for all the pixels processed)的 fragment 方法,
 
 变量类型定义:
 
- * Float: 单个32位浮点数
+* Float: 单个32位浮点数
 
- * Float2, Float3, Float4: 2,3,4 个浮点数
+* Float2, Float3, Float4: 2,3,4 个浮点数
 
- * Matrix|M44: 4x4矩阵 相应的矩阵
+* Matrix \| M44: 4x4矩阵 相应的矩阵
 
- * M33, M43, M34: 
+* M33, M43, M34: 
 
- * Texture: 2D纹理
+* Texture: 2D纹理
 
- * CubeTexture: 立方体纹理
+* CubeTexture: 立方体纹理
 
- * Int|Color: 32位整数,　转化到 Float4 每个浮点数为 0.0~1.0
+* Int \| Color: 32位整数,　转化到 Float4 每个浮点数为 0.0~1.0
 
 每个着色器(vertex及fragment方法) 需要赋值给 **out:Float4** 变量(各自对应于输出寄存器)
 

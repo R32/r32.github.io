@@ -9,11 +9,11 @@ categories: haxe
 
 一些示例:
 
- * [处理 Zip 和 Tar](http://old.haxe.org/doc/neko/zip)
+* [处理 Zip 和 Tar](http://old.haxe.org/doc/neko/zip)
 
- * [使用 threadserver](http://old.haxe.org/doc/neko/threadserver)
+* [使用 threadserver](http://old.haxe.org/doc/neko/threadserver)
 
- * 可能需要参考 http://nekovm.org/doc 的文档获得一些细节, 比如源码: `__dollar__print`
+* 可能需要参考 http://nekovm.org/doc 的文档获得一些细节, 比如源码: `__dollar__print`
 
   - http://nekovm.org/doc/libs
 
@@ -21,13 +21,13 @@ categories: haxe
 
 ### 黑魔法
 
-http://old.haxe.org/doc/advanced/magic#neko-magic
+<http://old.haxe.org/doc/advanced/magic#neko-magic>
 
 ### package neko
 
 这里只是描述几个类, 在 cpp 包中都有相对应的类(只少数几个没有)
 
- * `vm.Ui` UI线程同步队列, 似乎没什么作用???
+* `vm.Ui` UI线程同步队列, 似乎没什么作用???
 
 #### neko.Lib
 
@@ -76,19 +76,19 @@ public inline static function bytesReference( s : String ) : haxe.io.Bytes;
 
 多线程示例: http://old.haxe.org/doc/neko/threads , 包含了 Deque, Mutex ;
 
- * `sendMessage( msg : Dynamic ):Void` 注意简单数据类型传拷贝,复杂类型传引用. 你可以直接传递线程
+* `sendMessage( msg : Dynamic ):Void` 注意简单数据类型传拷贝,复杂类型传引用. 你可以直接传递线程
 
-```haxe
-var t1 = Thread.create(fn);
-t1.sendMessage(Thread.current());	
+  ```haxe
+  var t1 = Thread.create(fn);
+  t1.sendMessage(Thread.current());	
+  
+  function fn(){
+  	var main:Thread = Thread.readMessage(true);
+  	//......
+  }
+  ```
 
-function fn(){
-	var main:Thread = Thread.readMessage(true);
-	//......
-}
-```
-
- * `readMessage(block = true):Dynamic` 读取 sendMessage 传递的变量 
+* `readMessage(block = true):Dynamic` 读取 sendMessage 传递的变量 
 
 
 #### vm.Deque 
@@ -106,7 +106,7 @@ Sys.sleep(1)
 
 #### vm.Mutex
 
-http://old.haxe.org/api/neko/vm/mutex, 示例可以参考上边 Thread 处的示例.
+<http://old.haxe.org/api/neko/vm/mutex>, 示例可以参考上边 Thread 处的示例.
 
 用于阻塞个多个线程同时操作相同一个变量
 
@@ -130,18 +130,16 @@ Sys.sleep(3);
 
 作为 thread 的局部变量, 为解决多线程程序的并发问题提供了一种新的思路,  示例见 `std/haxe/io/FPHelper.hx`
 
-声明静态绑定线程的本地对象和变量时必须遵守下列原则：原文见 https://msdn.microsoft.com/zh-cn/library/6yh4a9k1.aspx
+声明静态绑定线程的本地对象和变量时必须遵守下列原则：原文见 <https://msdn.microsoft.com/zh-cn/library/6yh4a9k1.aspx>
 
- * 只能应用于 数据声明和定义, 不能用于函数声明或定义
+* 只能应用于 数据声明和定义, 不能用于函数声明或定义
 
- * 只能用在具有　static 作用域的数据项上(haxe 的 static 只能作用于类字段)
+* 只能用在具有　static 作用域的数据项上(haxe 的 static 只能作用于类字段)
 
 
 #### net.Poll
 
-在单个线程中轮询多个非阻塞 socket, http://old.haxe.org/api/neko/net/poll
-
-
+在单个线程中轮询多个非阻塞 socket, <http://old.haxe.org/api/neko/net/poll>
 
 ```haxe
 class Poll {
@@ -157,7 +155,6 @@ class Poll {
 	// 预置socket数组用于轮询，
 	function prepare( read: Array<Socket>, write: Array<Socket> ):Void;
 }
-
 // example: copy from tora/Tora.hx
 var changed = false;
 var poll = new neko.net.Poll(4096);
@@ -175,7 +172,6 @@ while(true){
 		socks[idx].....
 	}
 }
-
 ```
 
 #### vm.Loader
@@ -189,11 +185,11 @@ Loader 可以用于动态地加载其它 neko 模块(`.n`文件)，
 Loader 可用于沙箱安全。当模块已经加载到指定的 loader， 
 这个 loader可以管理被加载的模块安全通过过滤哪些 primitives 可以被加载
 
- > 通常通过 `Loader.local()` 获得当前 neko Loader(加载器), 然后 `loader.getCache()` 取得这个 loader 下的所有模块, 例如: `app.n => [Module Object]`
-
- > loader.loadModule, 如果 cache 中不在,则将在路径中搜索指定模块并在成功加载之后立刻执行.
-
- > loader.primitive 是用来加载 C 代码端生成的胶水函数的, 而非 haxe 生成的.
+> 通常通过 `Loader.local()` 获得当前 neko Loader(加载器), 然后 `loader.getCache()` 取得这个 loader 下的所有模块, 例如: `app.n => [Module Object]`
+>
+> loader.loadModule, 如果 cache 中不在,则将在路径中搜索指定模块并在成功加载之后立刻执行.
+>
+> loader.primitive 是用来加载 C 代码端生成的胶水函数的, 而非 haxe 生成的.
 
 
 #### vm.Module
@@ -202,21 +198,21 @@ Neko 虚拟机的可执行文件, 一个 Module 对应一个 `.n` 文件
 
 静态方法:
 
- * `static local():Module`: 返回当前Module实例
+* `static local():Module`: 返回当前Module实例
 
- * `static read(i:Input, l:Loader):Module`: 从 Input 中读取 Module 到指定的 Loader, Module 将被初使化但还没有执行
+* `static read(i:Input, l:Loader):Module`: 从 Input 中读取 Module 到指定的 Loader, Module 将被初使化但还没有执行
 
- * `static readBytes(i:Byte, l:Loader):Module`: 同上,初使化的模块还没有执行
+* `static readBytes(i:Byte, l:Loader):Module`: 同上,初使化的模块还没有执行
 
- * `static readPath(name:String, path:Array<String>, l:Loder):Module`: 在指定的路径(path)中加载指定模块(name),初使化的模块还没有执行。
+* `static readPath(name:String, path:Array<String>, l:Loder):Module`: 在指定的路径(path)中加载指定模块(name),初使化的模块还没有执行。
 
- * `static readGlobalsNames(i:Input):Array<String>`: 
+* `static readGlobalsNames(i:Input):Array<String>`: 
 
 一些成员方法: 这些方法不需要过多的关注,
 
- * `execute():Dynamic`: 一个模块可以被执行多次, 每次都会初使化。 注意: 这个方法 **并非** 返回 Sys.exit(i) 的值, 因为被加载的模块如果调用了 Sys.exit 则所有的模块将退出, 即不会再执行后边的任何代码. 
+* `execute():Dynamic`: 一个模块可以被执行多次, 每次都会初使化。 注意: 这个方法 **并非** 返回 Sys.exit(i) 的值, 因为被加载的模块如果调用了 Sys.exit 则所有的模块将退出, 即不会再执行后边的任何代码. 
 
- * `getExports():Map<String,Dynamic> `, `exportsTable():Dynamic` 二个方法, 前者通过 Reflect 将后者的返回用 Map 进行了包装。除了`__module`字段, 其它所有字段需要在 **执行后** 才有值
+* `getExports():Map<String,Dynamic> `, `exportsTable():Dynamic` 二个方法, 前者通过 Reflect 将后者的返回用 Map 进行了包装。除了`__module`字段, 其它所有字段需要在 **执行后** 才有值
 
   - `__module`: TODOS(未知的抽像类型)
 
@@ -224,23 +220,23 @@ Neko 虚拟机的可执行文件, 一个 Module 对应一个 `.n` 文件
 
   - `__unserialize` ??? 对应为一个函数,似乎不用理会
 
- * `globalsCount():Int, setGlobal(n:Int, v:Dynamic):Void, getGlobal(n:Int):Dynamic`: int 值分别对应组成neko Module的每个元素(字符串, 函数......等等)
+* `globalsCount():Int, setGlobal(n:Int, v:Dynamic):Void, getGlobal(n:Int):Dynamic`: int 值分别对应组成neko Module的每个元素(字符串, 函数......等等)
 
 
 ### std.ndll
 
-通过 `neko.Lib.load("std",@name,@args)` 加载的方法, 源码在: https://github.com/HaxeFoundation/neko/tree/master/libs/std ,
+通过 `neko.Lib.load("std",@name,@args)` 加载的方法, 源码在: <https://github.com/HaxeFoundation/neko/tree/master/libs/std> ,
 
- * `print_redirect(print:Dynamic->Void):Void`: 重定向 print 的输出
+* `print_redirect(print:Dynamic->Void):Void`: 重定向 print 的输出
 
- * `set_trusted : bool -> void` : 优化一些操作,
+* `set_trusted : bool -> void` : 优化一些操作,
 
 <br />
 
 nekovm
 ------
 
-从这里开始的内容并非是 haxe 代码。http://nekovm.org/doc
+从这里开始的内容并非是 haxe 代码。<http://nekovm.org/doc>
 
 nekoc.exe:
 
@@ -269,11 +265,11 @@ neko 语言的语法被设计成易于解析与生成，并不适用于直接编
 
 随记:
 
- * `_` 表示一个空的表达式
+* `_` 表示一个空的表达式
 
- * 在 `while` 循环外, 不允许有 `continue` 和 `break`
+* 在 `while` 循环外, 不允许有 `continue` 和 `break`
 
- * 算术运算有下列优先级(从下到上)
+* 算术运算有下列优先级(从下到上)
   - 赋值
   - `++=` 与 `--=`
   - `&&` 与 `||`
@@ -287,27 +283,27 @@ neko 语言的语法被设计成易于解析与生成，并不适用于直接编
 
 neko 中的值可以是下列之一:
 
- - Null: 特殊值 `null` 用于未初使化的变量
- - 整数, 常见的十进制形式(123或-12)或十六进制形式(0x1A2B)
- - 浮点数, 
- - 布尔值: 由二个小写的 `true` 与 `false`
- - 字符串: 双引号包车的字符串(例: "foo", "hello,\nworld!")。neko 字符串是可变的,意味着可以修改它们。
- - 数组: 索引从 0 开始的整数索引表。
- - Object: 一个表，将标识符或字符串与值相关联。 例如: `{i1 => v1, i2 => v2}`
- - 函数: 在 neko 中函数也是值，
- - Abstract： 不能从 neko 访问的 C 数据
+- Null: 特殊值 `null` 用于未初使化的变量
+- 整数, 常见的十进制形式(123或-12)或十六进制形式(0x1A2B)
+- 浮点数, 
+- 布尔值: 由二个小写的 `true` 与 `false`
+- 字符串: 双引号包车的字符串(例: "foo", "hello,\nworld!")。neko 字符串是可变的,意味着可以修改它们。
+- 数组: 索引从 0 开始的整数索引表。
+- Object: 一个表，将标识符或字符串与值相关联。 例如: `{i1 => v1, i2 => v2}`
+- 函数: 在 neko 中函数也是值，
+- Abstract： 不能从 neko 访问的 C 数据
 
 一些注意事项:
 
- * 由于虚拟机性能方面的原因整数为31位，An API for full 32-bit integers is available through a standard library.
+* 由于虚拟机性能方面的原因整数为31位，An API for full 32-bit integers is available through a standard library.
 
- * 浮点数为64位双精度
+* 浮点数为64位双精度
 
- * 字符串为8位的字节序列，可以包含 `\0`字符。 字符串的长度必须明确而不是 `\0` 前的字符串长。
+* 字符串为8位的字节序列，可以包含 `\0`字符。 字符串的长度必须明确而不是 `\0` 前的字符串长。
 
 #### 流程
 
- * if 与 while 的条件表达式只接受布尔值, 因此会经常用到 `$istrue`
+* if 与 while 的条件表达式只接受布尔值, 因此会经常用到 `$istrue`
 
   - `$istrue(null)` 为 false, `$istrue(0)` 也为 false, 其它都为 true。
 
@@ -315,42 +311,42 @@ neko 中的值可以是下列之一:
 
  * 需要注意的是 while 中的 break 语句, 由于任何表达式都是值, 因此 break value,可以作为 while 的返回值。
 
- * var 声明的局部变量与未加 var 声明的全局变量被局部引用时有不一样的结果.
+* var 声明的局部变量与未加 var 声明的全局变量被局部引用时有不一样的结果.
 
- * 二个整数相除将返回浮点数, 可以使用 `$idiv` 作整数除法运算
+* 二个整数相除将返回浮点数, 可以使用 `$idiv` 作整数除法运算
 
- * 和 JS 类似, `&&` 与 `||` 可以被短路. 这意味着如果 第一个操作数为 true, 那么不会计算第二个表达式. 例: `"hello" && "world"` 将只返回 "hello"
+* 和 JS 类似, `&&` 与 `||` 可以被短路. 这意味着如果 第一个操作数为 true, 那么不会计算第二个表达式. 例: `"hello" && "world"` 将只返回 "hello"
 
- * $nargs 返回一个函数的参数个数, 如果 -1,则表示为可变参数
+* $nargs 返回一个函数的参数个数, 如果 -1,则表示为可变参数
 
- * $call 类似于 JS中的 apply, 例: `$call(func, context, $array(3,4))`
+* $call 类似于 JS中的 apply, 例: `$call(func, context, $array(3,4))`
 
- * `$closure`, 有点类似于 haxe 中的 function.bind, 但是又绑定了上下文
+* `$closure`, 有点类似于 haxe 中的 function.bind, 但是又绑定了上下文
 
-```js
-var add = function(x,y) { return x + y };
-var plus5 = $closure(add,null,5); // null context and 5 as first argument
-$print( plus5(2) ); // 7
+  ```js
+  var add = function(x,y) { return x + y };
+  var plus5 = $closure(add,null,5); // null context and 5 as first argument
+  $print( plus5(2) ); // 7
 
-// 处理 this
-var f = function() { $print(this) };
-f = $closure(f,55);
-f(); // prints 55	
-```
+  // 处理 this
+  var f = function() { $print(this) };
+  f = $closure(f,55);
+  f(); // prints 55	
+  ```
 
- * `$apply`, 可以直接调用函数， 如果函数需要额外的参数将推迟到获得更多参数.
+* `$apply`, 可以直接调用函数， 如果函数需要额外的参数将推迟到获得更多参数.
 
-```js
-var f = function(x,y) { return x + y };
-f(1,2);
-$apply(f,1)(2); // equivalent
-$apply(f,1,2); // equivalent	
-```
+  ```js
+  var f = function(x,y) { return x + y };
+  f(1,2);
+  $apply(f,1)(2); // equivalent
+  $apply(f,1,2); // equivalent	
+  ```
 .....
 
 ### Neko Libraries
 
-http://nekovm.org/doc/libs
+<http://nekovm.org/doc/libs>
 
 对于 Builtins 中的方法可以直接调用, 而 Std 中的库需要导出如:
 

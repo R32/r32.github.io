@@ -7,15 +7,15 @@ categories: haxelib
 
 ### 简介
 
-项目地址: https://github.com/underscorediscovery/differ
+项目地址: <https://github.com/underscorediscovery/differ>
 
- * Separating Axis Theorem(SA-T分离轴定律).多边形,圆,线 碰撞检测,目前仅支持 2D.
+* Separating Axis Theorem(SA-T分离轴定律).多边形,圆,线 碰撞检测,目前仅支持 2D.
 
- * **仅为碰撞检测**,不带各种物理形为
+* **仅为碰撞检测**,不带各种物理形为
 
- * 一些简单画图用于 debug
+* 一些简单画图用于 debug
 
- * 和其它其于 SAT 检测库一样, 不能直接处理凹多边形, 需要拆成凸多边形.
+* 和其它其于 SAT 检测库一样, 不能直接处理凹多边形, 需要拆成凸多边形.
 
 <!-- more -->
 
@@ -67,29 +67,29 @@ class FlShapeDrawer extends ShapeDrawer {
 
 ### 库目录和文件
 
- * `Collision.hx` 碰撞检测, 单个vs单个(Shape),或单个vs多个(Array<Shape>)
+* `Collision.hx` 碰撞检测, 单个vs单个(Shape),或单个vs多个(Array<Shape>)
 
- * `ShapeDrawer.hx` 用于调试时显示各种 shapes.
+* `ShapeDrawer.hx` 用于调试时显示各种 shapes.
 
-	> **仅仅只** 需要覆盖这个类的画线条(drawLing)方法就可以用于 debug drawing.当然你也可以覆盖其它方法.
+  **仅仅只** 需要覆盖这个类的画线条(drawLing)方法就可以用于 debug drawing.当然你也可以覆盖其它方法.
 	
   - drawShapeCollision 画出碰撞的二个形状原点(origins)和和第一个形状的空间向量(unit vector),
 
 #### data
 
- * `RayCollision.hx` 检测线与形状碰撞,如果相离则返回 null. start 和 end 代表和多边形相交的二个点.
+* `RayCollision.hx` 检测线与形状碰撞,如果相离则返回 null. start 和 end 代表和多边形相交的二个点.
 
   - `start:Float` 线与形状相交的起始处, 取值在 0~1.0
 
   - `end:Float` 取值在 0~N, 将值大于 1 时,说明 end 在 线的延长线上. 如果 start == end, 说明 线与形状相切
 
- * `RayIntersection.hx` 检测二个线碰撞, 如果 u1,u2 二个值为正值则可以断定二个线相交.
+* `RayIntersection.hx` 检测二个线碰撞, 如果 u1,u2 二个值为正值则可以断定二个线相交.
 
   - `u1:Float` 交点在第一条线位置.取值范围在(-1~1.0之间),低于其中一个数小于0的数表示相离, 等于0为相切, 大于 0 为相交
 
   - `u2:Float` 交点位于第二条线......
 
- * `ShapeCollision.hx` 当二个形状(shape)碰撞时的返回值类型, 如果为 null, 则表示没有碰撞.
+* `ShapeCollision.hx` 当二个形状(shape)碰撞时的返回值类型, 如果为 null, 则表示没有碰撞.
 
   - `overlap:Float`: the overlap amount(???同separation,只是计算二个原点的距离(Point.distance))
 
@@ -99,9 +99,9 @@ class FlShapeDrawer extends ShapeDrawer {
 
 #### math
 
- * `Matrix.hx` 转换矩阵, a, b, c, d, tx, ty; API方法参看 Flash手册的 Matrix
+* `Matrix.hx` 转换矩阵, a, b, c, d, tx, ty; API方法参看 Flash手册的 Matrix
 
- * `Vector.hx` 相当类似于 Point 的类.
+* `Vector.hx` 相当类似于 Point 的类.
 
 #### sat
 
@@ -109,12 +109,12 @@ sat 数学算法,这里不深入研究
 
 #### shapes
 
- * `Circle.hx` 圆, 似乎只能创建正圆形
+* `Circle.hx` 圆, 似乎只能创建正圆形
 
- * `Polygon.hx` 多边形,提供几个静态方法用于创建 正方形, 长方形, 正三角形, 正多边形
+* `Polygon.hx` 多边形,提供几个静态方法用于创建 正方形, 长方形, 正三角形, 正多边形
 
- * `Ray.hx` 线.
+* `Ray.hx` 线.
 
- * `Shape.hx` Circle与Polygon的基类.
+* `Shape.hx` Circle与Polygon的基类.
 
 <br />

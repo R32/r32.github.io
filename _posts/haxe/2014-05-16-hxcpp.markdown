@@ -9,9 +9,9 @@ categories: haxe
 
 [hxcpp-guide](https://github.com/snowkit/hxcpp-guide) 手册进度未知.
 
- * 以 extern 的形式编译第三方库 http://snowkit.github.io/linc/, 这种形式避免是直接使用 c/cpp 源码, 因此更快
+* 以 extern 的形式编译第三方库 <http://snowkit.github.io/linc/>, 这种形式避免是直接使用 c/cpp 源码, 因此更快
 
- * 以 CFFI 的形式编译第三方库, https://github.com/native-toolkit, 这种形式主要是为了同时给 neko 提供相应的调用
+* 以 CFFI 的形式编译第三方库, <https://github.com/native-toolkit>, 这种形式主要是为了同时给 neko 提供相应的调用
 
   - [关于 CFFI/Extern 最详细的说明](https://github.com/snowkit/hxcpp-guide/issues/1)
 
@@ -39,40 +39,40 @@ hxcpp 会自动根据平台选择不同的 C++编译器. 任意平吧上编译�
 
 ### 编译
 
- * 编译器配置,找到并修改 `user/.hxcpp_config.xml`, 比如 win7 中这个文件通常在 `C:\Users\MYNAME\` 下, 通常只在使用 andorid 或一些指定平台时才要配置这个.
+* 编译器配置,找到并修改 `user/.hxcpp_config.xml`, 比如 win7 中这个文件通常在 `C:\Users\MYNAME\` 下, 通常只在使用 andorid 或一些指定平台时才要配置这个.
 
-	> 如果这个文件缺失, hxcpp 将会从 toolchain 目录下自动复制 example.hxcpp_config 
+  如果这个文件缺失, hxcpp 将会从 toolchain 目录下自动复制 example.hxcpp_config 
 
- * ~~ 实际上你可以在 neko 中快速开发及测试,因为 cpp 和 neko 的 API 基本一致,等到将要 release 时再以 hxcpp 编译 ~~
+* ~~ 实际上你可以在 neko 中快速开发及测试,因为 cpp 和 neko 的 API 基本一致,等到将要 release 时再以 hxcpp 编译 ~~
 
   - 目前可以用 `-D cppia` 来调试
 
 #### hxcpp-debugger
 
-https://github.com/HaxeFoundation/hxcpp-debugger/wiki/Getting-started
+<https://github.com/HaxeFoundation/hxcpp-debugger/wiki/Getting-started>
 
 #### 黑魔法
 
- * `__cpp__` 直接在 haxe 代码中嵌入 cpp 源码.　https://github.com/HaxeFoundation/haxe/pull/2875
+* `__cpp__` 直接在 haxe 代码中嵌入 cpp 源码.　<https://github.com/HaxeFoundation/haxe/pull/2875>
 
 
-```haxe
-// __cpp__ 后边的 字符串不支持　字符串连接变量, 只是直接常量字符串
-untyped __cpp__('printf("hello world!")');
+  ```haxe
+  // __cpp__ 后边的 字符串不支持　字符串连接变量, 只是直接常量字符串
+  untyped __cpp__('printf("hello world!")');
+  
+  // 使用下边方法传递变量到 __cpp__
+  // 但是如果使用了传参数,很容易就出错在多行时.
+  inline private static function setInt(bytes:haxe.io.BytesData, addr:Int, x:Int){
+  	untyped __cpp__("*((int *) ({0}->GetBase() + {1})) = {2}",bytes,addr,x);
+  }
+  
+  // 实际上可以直接使用 CPP 的变量, 但只可以是函数的参数变量, 不可以为函数体内部的局部变量, 
+  public function setFade(start_msec:Int){
+  	untyped __cpp__("gme_set_fade(start_msec);");	// 	直接引用函数参数变量, 
+  }
+  ```
 
-// 使用下边方法传递变量到 __cpp__
-// 但是如果使用了传参数,很容易就出错在多行时.
-inline private static function setInt(bytes:haxe.io.BytesData, addr:Int, x:Int){
-	untyped __cpp__("*((int *) ({0}->GetBase() + {1})) = {2}",bytes,addr,x);
-}
-
-// 实际上可以直接使用 CPP 的变量, 但只可以是函数的参数变量, 不可以为函数体内部的局部变量, 
-public function setFade(start_msec:Int){
-	untyped __cpp__("gme_set_fade(start_msec);");	// 	直接引用函数参数变量, 
-}
-```
-
- * `__global__` 参看 `\haxe\std\cpp\_std\Std.hx` 源码.
+* `__global__` 参看 `\haxe\std\cpp\_std\Std.hx` 源码.
 
 
 #### Metas
@@ -157,20 +157,20 @@ In order to [improve support for interacting](http://haxe.1354130.n2.nabble.com/
 
 #### extern class
 
-另一个调用外部 sdl 源码的示例: https://gist.github.com/nadako/c8aec20c2a7751348f91
+另一个调用外部 sdl 源码的示例: <https://gist.github.com/nadako/c8aec20c2a7751348f91>
 
 参看 `hxcpp\test\native`, 重要的是： 
 
- * 无法以 new 的方式来创建外部 cpp 类, 因为它返回的是一个指针, 只能用　静态方法创建
+* 无法以 new 的方式来创建外部 cpp 类, 因为它返回的是一个指针, 只能用　静态方法创建
 
-```haxe
-@:native("new RGB")
-public static function create(r:Int, g:Int, b:Int):Pointer<RGB>;
-```
+  ```haxe
+  @:native("new RGB")
+  public static function create(r:Int, g:Int, b:Int):Pointer<RGB>;
+  ```
 
- * 在 extern class 上加上 @:structAccess,
+* 在 extern class 上加上 @:structAccess,
 
- * 如果 extern class 源码没有定义命名空间, 那么 这个 hx 类 也不应该有包名
+* 如果 extern class 源码没有定义命名空间, 那么 这个 hx 类 也不应该有包名
 
   - (推荐)用 `@:native("ClassName")`　省略掉包名就行了.
 
@@ -204,32 +204,27 @@ cpp.Float64    double
 
 只有上边几种类型是不需要转换的, 但上边只有数据基本类型,  其它 Array, String 都需要做一些转换. 
 
- * **cpp.NativeArray** C 语言中所描述的数组, 即同类型连续排列的内存引用
-
+* **cpp.NativeArray** C 语言中所描述的数组, 即同类型连续排列的内存引用
   - hxarray.(`__unsafe_get, __unsafe_set, __get, __set`) 带 unsafe 的方法没有做边界检测.
 
-```haxe
-// Pointer<T>, T 的类型和 数组类型一致
-var pa:cpp.Pointer<Int> = cpp.Pointer.arrayElem([1,2,3], 0 )
-var pa2:cpp.Pointer<Float> = cpp.NativeArray.address([1.0, 2.0, 3.0], 0);
-```
+  ```haxe
+  // Pointer<T>, T 的类型和 数组类型一致
+  var pa:cpp.Pointer<Int> = cpp.Pointer.arrayElem([1,2,3], 0 )
+  var pa2:cpp.Pointer<Float> = cpp.NativeArray.address([1.0, 2.0, 3.0], 0);
+  ```
 
  * **cpp.NativeString**, 转换成 `char*` 也可以调用 `var cstr:ConstPointer<Char> = untyped hxstr.__s`
 
-```haxe
-using cpp.NativeString;
-
-//......
-var str:String = "haxeString2CString";
-
-// 编译为 ::cpp::Pointer< ::cpp::Char > cstr = ::cpp::Pointer< ::cpp::Char >(::cpp::Pointer_obj::fromPointer(str.__s));
-var cstr:ConstPointer<Char> = str.c_str();
-
-str = cstr.fromPointer();
-	
-// .__s 这个成员变量在　neko 平台也适用.
-var cstr2:ConstPointer<Char> = untyped str.__s;
-```
+  ```haxe
+  using cpp.NativeString;  
+  //......
+  var str:String = "haxeString2CString";  
+  // 编译为 ::cpp::Pointer< ::cpp::Char > cstr = ::cpp::Pointer< ::cpp::Char >(::cpp::Pointer_obj::fromPointer(str.__s));
+  var cstr:ConstPointer<Char> = str.c_str();  
+  str = cstr.fromPointer();
+  // .__s 这个成员变量在　neko 平台也适用.
+  var cstr2:ConstPointer<Char> = untyped str.__s;
+  ```
 
 ### buildXml
 
@@ -471,7 +466,7 @@ dir:			- ??? 和 dospath 一样, 只是多了检测
 
 先将外部的 C/C++ 库编译成 lib.ndll 用于在　haxe 代码中调用. hxcpp包源码的 test 中有一个 cffi 的示例.
 
-一个工具能自动写一些模板 https://github.com/player-03/ExtensionBoilerplate
+一个工具能自动写一些模板 <https://github.com/player-03/ExtensionBoilerplate>
 
 ### cppia
 
@@ -491,12 +486,11 @@ dir:			- ??? 和 dospath 一样, 只是多了检测
 
 ### Defines
 
-
+<http://haxe.org/manual/target-cpp-defines.html>
 
 ```bash
 HAXE_OUTPUT_FILE		# 指定输出文件名称, 因为 -cpp bin 指定的是个目录
 
-### http://haxe.org/manual/target-cpp-defines.html
 ANDROID_HOST
 ANDROID_NDK_DIR
 ANDROID_NDK_ROOT

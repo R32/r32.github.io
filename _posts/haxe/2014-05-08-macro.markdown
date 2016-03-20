@@ -9,8 +9,9 @@ categories: haxe
 
 宏 是 Haxe 最主要也是最强大的特性,最新的[官网参考](http://haxe.org/manual/macro.html)
 
- > 在编译时通过计算初使化一些值,比如 UI 的配置等等.
- > 扫描资源文件夹,用于自动嵌入文件或者 IDE 智能提示
+> 在编译时通过计算初使化一些值,比如 UI 的配置等等.
+>
+> 扫描资源文件夹,用于自动嵌入文件或者 IDE 智能提示
 
 <!-- more -->
 
@@ -20,7 +21,7 @@ categories: haxe
 
 [条件编译 (Conditional Compilation)](http://haxe.org/manual/lf-condition-compilation.html). 通过使用 `#if #else #elseif #end` 来 **检测编译器标志**
 
- > 编译标志(define), 通过使用 -D key=value 或只是 -D key 来设置, 未设置 value 默认值将为字符串 1. **所有 -D 定义标记的值类型都为字符串**
+编译标志(define), 通过使用 `-D key=value` 或只是 -D key 来设置, 未设置 value 默认值将为字符串 1. **所有 -D 定义标记的值类型都为字符串**
 
 ```haxe
 #if flash
@@ -57,25 +58,29 @@ trace("haxe version > 3.1");
 
 在 `#if` 和 `#elseif` 之后的条件允许以下表达式:
 
- * **重要:** 任意编译标志(haxe-defines)将替换成名字相同的 条件标识符, 如果带 减(-)号,将会 **同时** 生成另一个 带 下划线(_)的标识符
+* **重要:** 任意编译标志(haxe-defines)将替换成名字相同的 条件标识符, 如果带 减(-)号,将会 **同时** 生成另一个 带 下划线(_)的标识符
 
-	> **请注意:** `-D some-flag` 将会产生 `some-flag` 和 `some_flag` 二个条件标识符. 但是 `#if` 或 `#elseif` 却**只能识别**带下划线的那一个. 
-	> 减号那个需要用引号括起来, 而用引号括起来的标识符却又不能使用一些运算符.
-	> 宏方法中 Compiler.getDefine 或 Context.definedValue 能正确识别这二个.
+  > **请注意:** `-D some-flag` 将会产生 `some-flag` 和 `some_flag` 二个条件标识符. 
+  >
+  > 但是 `#if` 或 `#elseif` 却**只能识别**带下划线的那一个. 
+  >
+  > 减号那个需要用引号括起来, 而用引号括起来的标识符却又不能使用一些运算符.
+  >
+  > 宏方法中 Compiler.getDefine 或 Context.definedValue 能正确识别这二个.
+  >
+  > 是否Bug? haxe --help-defines 下的 haxe-ver 只能通过 haxe_ver 才能检测得到. 一些其它标志未测试.hxml文件
+  >
+  > **结论:** 即使定义标志时为 减(-)号, 但检测编译标志时, 请使用 下划线(_) 替换掉 减(-)号.
 
-	> 是否Bug? haxe --help-defines 下的 haxe-ver 只能通过 haxe_ver 才能检测得到. 一些其它标志未测试.
+* **重要:** 使用 **haxelib** 时 会生成同库名一样的 条件标识符, 减(-)号问题和上边一样
 
-	> **结论:** 即使定义标志时为 减(-)号, 但检测编译标志时, 请使用 下划线(_) 替换掉 减(-)号.
+* String, Int, Float 常量值可以直接使用, 0值 以及 空字符串 用于表示 false
 
- * **重要:** 使用 **haxelib** 时 会生成同库名一样的 条件标识符, 减(-)号问题和上边一样
+* 逻辑运算符 `&&(与), ||(或), !(非)`, 注意使用 () 将表达式括起来
 
- * String, Int, Float 常量值可以直接使用, 0值 以及 空字符串 用于表示 false
+* 条件运算符 `==, !=, >, >=, <=`, 注意使用 () 将表达式括起来
 
- * 逻辑运算符 `&&(与), ||(或), !(非)`, 注意使用 () 将表达式括起来
-
- * 条件运算符 `==, !=, >, >=, <=`, 注意使用 () 将表达式括起来
-
- * 圆括号`()`, 用于组合多个表达式
+* 圆括号`()`, 用于组合多个表达式
 
 
 同样可以把条件标识符放置在 `@:require` 之后
@@ -97,40 +102,41 @@ class Foo{
 
 其它:
 
- * 编译标记除了用于条件编译,还可以用于传值:
+* 编译标记除了用于条件编译,还可以用于传值:
 
-	> 例如 宏函数 只支持常量不支持使用变量传值,这时使用 条件编译标记 来赋值,
-	> 然后在代码使用 `haxe.macro.Compiler.getDefine(flag)` 来获得
-	
-	> 对于 Compiler.define,只能通过 Context 类下的方法获得
+  > 例如 宏函数 只支持常量不支持使用变量传值,这时使用 条件编译标记 来赋值,
+  >
+  > 然后在代码使用 `haxe.macro.Compiler.getDefine(flag)` 来获得
+  >
+  > 对于 Compiler.define,只能通过 Context 类下的方法获得
 
- * 这里假设需定义一个叫 hello 的标记, 并且将 hello 赋值为 world.
+* 这里假设需定义一个叫 hello 的标记, 并且将 hello 赋值为 world.
 
-	> 命令行编译或者 **.hxml文件** 使用 `-D hello` ,如果需要赋值为world则是 `-D hello=world`
+  > 命令行编译或者 **.hxml文件** 使用 `-D hello` ,如果需要赋值为world则是 `-D hello=world`
+  >
+  > flashdevelop 可以在 **项目属性** -> **编译器选项** -> **常规** -> **Directives** 的 **`String[] Array`** 中添加一行 `hello` ,如果需要赋值为world则是 `hello=world`
+  >
+  > openfl 项目可以在 .xml [配置文件](http://www.openfl.org/documentation/projects/project-files/xml-format/)中添加 `<haxedef name="hello" />`,如果需要赋值为world则为 `<haxedef name="hello" value="world" />`,
+  >
+  > 注意: openfl 项目中设置 flashdevelop 的项目属性会被忽略,只能通过 .xml 文件来配置
 
-	> flashdevelop 可以在 **项目属性** -> **编译器选项** -> **常规** -> **Directives** 的 **`String[] Array`** 中添加一行 `hello` ,如果需要赋值为world则是 `hello=world`
-
-	> openfl 项目可以在 .xml [配置文件](http://www.openfl.org/documentation/projects/project-files/xml-format/)中添加 `<haxedef name="hello" />`,如果需要赋值为world则为 `<haxedef name="hello" value="world" />`,
-	
-	> 注意: openfl 项目中设置 flashdevelop 的项目属性会被忽略,只能通过 .xml 文件来配置
-
-```haxe
-// 测试条件编译标记
-#if hello
-trace("hello");
-#end
-```
+  ```haxe
+  // 测试条件编译标记
+  #if hello
+  trace("hello");
+  #end
+  ```
 
 宏
 ------
 
 haxe 宏分为三种类型:
 
- * 表达式宏,
+* 表达式宏,
 
- * 宏构建 `@:build`
+* 宏构建 `@:build`
 
- * 初使化宏. 主要是通过 编译参数 --macro 来执行, 运行顺序在解析 main 之前, 所以通常用来配置编译器行为
+* 初使化宏. 主要是通过 编译参数 --macro 来执行, 运行顺序在解析 main 之前, 所以通常用来配置编译器行为
 
 ### 宏方法
 
@@ -140,153 +146,152 @@ haxe 宏分为三种类型:
 
 给宏函数传参数时,**参数应该是常量**, 如果传变量只能获得 变量名 不能获得 变量值(因为宏编译时赋值还没发生).
 
- * 最简单, `macro 常量`
+* 最简单, `macro 常量`
 
-```haxe
-// 示例:    trace( tut_const() );    =>     相当于 trace("simple");
-macro public static function tut_const() {
-    return macro "simple";
-}
-```
+  ```haxe
+  // 示例:    trace( tut_const() );    =>     相当于 trace("simple");
+  macro public static function tut_const() {
+      return macro "simple";
+  }
+  ```
 
- * 使用变量, `macro $v{变量}`, 注意: 变量类型不能为 `Expr` ,只能是简单的数据类型,数组,及 结构对象.
+* 使用变量, `macro $v{变量}`, 注意: 变量类型不能为 `Expr` ,只能是简单的数据类型,数组,及 结构对象.
 
-```haxe
-// 示例:    trace( tut_variable() );    =>     trace("so easy!");
-macro public static function tut_variable() {
-	var easy:String = "easy!";
-	return macro "so " + $v{ easy };
-}
+  ```haxe
+  // 示例:    trace( tut_variable() );    =>     trace("so easy!");
+  macro public static function tut_variable() {
+  	var easy:String = "easy!";
+  	return macro "so " + $v{ easy };
+  }
+  // 示例:    trace( tut_array([1,2,3,4,5]) );    =>     trace([1,2,3,4,5,10]);
+  macro public static function tut_array(arr:Array<Int>) {
+  	arr.push(10);
+  	return macro $v{arr};
+  }
+   //注意 ${ 变量 } ,不能是复杂数据类型,下边语句 因为 编译器不知道如何将 Map 类型转换成 Expr
+   macro public static function tut_map() {
+  	var map:Map<String,String> = new Map<String,String>();
+  	map.set('desc', 'some msg');
+  	try{
+  		return macro $v{map}; // 错误: Unsupported value {desc => "some msg"}
+  	}catch (err:Dynamic) {
+  		return macro $v{err};
+  	}
+  }
+  ```
 
-// 示例:    trace( tut_array([1,2,3,4,5]) );    =>     trace([1,2,3,4,5,10]);
-macro public static function tut_array(arr:Array<Int>) {
-	arr.push(10);
-	return macro $v{arr};
-}
+* Expr类型变量, `macro $Expr变量`, 加前缀 $ 就行了,只能出现在 macro 的语句后边
 
+  > 你应该注意到了,即使宏函数参数声明为 Expr 类型,在调用这个函数时传的值却是 字符串类型.
+  >
+  > 如果参数为 Expr 时,编译器会自动转换这些直接常量为 Expr,然后在宏函数内部 这个变量将会是 Expr 类型.
 
- //注意 ${ 变量 } ,不能是复杂数据类型,下边语句 因为 编译器不知道如何将 Map 类型转换成 Expr
- macro public static function tut_map() {
-	var map:Map<String,String> = new Map<String,String>();
-	map.set('desc', 'some msg');
-	try{
-		return macro $v{map}; // 错误: Unsupported value {desc => "some msg"}
-	}catch (err:Dynamic) {
-		return macro $v{err};
-	}
-}
-```
+  ```haxe
+  // trace( tut_param('456') );	=> trace('123456');
+  macro public static function tut_param(param:Expr) {
+  
+  	var str:String = "123"; 
+  	        
+  	return macro $v{str} + $param;
+  }
+  
+  // 这有个复杂的示例:
+  // trace( repeat(10,5) )	=>		[10,10,10,10,10]
+  macro public static function repeat(e : Expr, eN : Expr) {
+  	return macro [for( x in 0...$eN ) $e];
+  }
+  
+  // Tips: 在宏函数体中获得 Expr 的值
+  // getValue("hello");	then val = 'hello';
+  macro public static function getValue(ep:Expr){
+  	var val = haxe.macro.ExprTools.getValue(ep));
+  	return macro null;
+  }
+  ```
 
- * Expr类型变量, `macro $Expr变量`, 加前缀 $ 就行了,只能出现在 macro 的语句后边
+* 处理文件.
 
- 	> 你应该注意到了,即使宏函数参数声明为 Expr 类型,在调用这个函数时传的值却是 字符串类型.
+  这只是一个从文件中解析数据的示例.
+  
+  或者你可以通过 template 以及 haxe.io.File 来动态将文件数据写成一个 class
 
- 	> 如果参数为 Expr 时,编译器会自动转换这些直接常量为 Expr,然后在宏函数内部 这个变量将会是 Expr 类型.
+  ```xml
+  <?xml version="1.0" encoding="utf-8" ?>
+  <root>
+  <data lang="zh">
+  	<user name="小明" phone="123" addr="详细地址描述" />
+  	<user name="小红" phone="456" addr="不存在" />
+  </data>
+  <data lang="en">
+  	<user name="ming" phone="123" addr="expanded address details." />
+  	<user name="hong" phone="456" addr="..." />
+  </data>
+  </root>
+  ```
+  
+  haxe code:
 
-```haxe
-// trace( tut_param('456') );	=> trace('123456');
-macro public static function tut_param(param:Expr) {
+  ```haxe
+  // example trace(tut_file("test.xml")) => [{ name : 小明, addr : 详细地址描述, phone : 123 },{ name : 小红, addr : 不存在, phone : 456 }]
+  macro public static function tut_file(name:String) {
+  	var content = sys.io.File.getContent( Context.resolvePath(name) );
+  	var xml = Xml.parse(content);
+  	var fast = new haxe.xml.Fast(xml.firstElement());
+          
+  	var ret = new Array<Dynamic>();
+      
+  	for (data in fast.nodes.data) {
+  		if (data.att.lang == 'zh') {
+  			for (user in data.nodes.user) {
+  				var obj:Dynamic<String> = { };    
+  				for (k in user.x.attributes()) {                        
+  					Reflect.setField(obj, k, user.att.resolve(k));
+  				}
+  			ret.push(obj);
+  			}
+  		}    
+  	}
+  	return macro $v{ret};
+  }	
+  ```
 
-	var str:String = "123"; 
-	        
-	return macro $v{str} + $param;
-}
+* 使用 Context.parseInlineString 用于解析字符串代码, 多数ui库,都使用这个方法来预处理 xml 配置文件
 
-// 这有个复杂的示例:
-// trace( repeat(10,5) )	=>		[10,10,10,10,10]
-macro public static function repeat(e : Expr, eN : Expr) {
-	return macro [for( x in 0...$eN ) $e];
-}
-
-// Tips: 在宏函数体中获得 Expr 的值
-// getValue("hello");	then val = 'hello';
-macro public static function getValue(ep:Expr){
-	var val = haxe.macro.ExprTools.getValue(ep));
-	return macro null;
-}
-```
-
- * 处理文件.
-
-	> 这只是一个从文件中解析数据的示例.
-
-	> 或者你可以通过 `template` 以及 `haxe.io.File` 来动态将文件数据写成一个 `class`
-
-```xml
-<?xml version="1.0" encoding="utf-8" ?>
-<root>
-<data lang="zh">
-	<user name="小明" phone="123" addr="详细地址描述" />
-	<user name="小红" phone="456" addr="不存在" />
-</data>
-<data lang="en">
-	<user name="ming" phone="123" addr="expanded address details." />
-	<user name="hong" phone="456" addr="..." />
-</data>
-</root>
-```
-
-```haxe
-// example trace(tut_file("test.xml")) => [{ name : 小明, addr : 详细地址描述, phone : 123 },{ name : 小红, addr : 不存在, phone : 456 }]
-macro public static function tut_file(name:String) {
-	var content = sys.io.File.getContent( Context.resolvePath(name) );
-	var xml = Xml.parse(content);
-	var fast = new haxe.xml.Fast(xml.firstElement());
-        
-	var ret = new Array<Dynamic>();
-    
-	for (data in fast.nodes.data) {
-		if (data.att.lang == 'zh') {
-			for (user in data.nodes.user) {
-				var obj:Dynamic<String> = { };    
-				for (k in user.x.attributes()) {                        
-					Reflect.setField(obj, k, user.att.resolve(k));
-				}
-			ret.push(obj);
-			}
-		}    
-	}
-	return macro $v{ret};
-}	
-```
-
- * 使用 `Context.parseInlineString` 用于解析字符串代码, 多数ui库,都使用这个方法来预处理 xml 配置文件
-
-	> 这个方法有一定的局限性,通常使用类似的匿名函数，不可以包含 class 这些.
+  这个方法有一定的局限性,通常使用类似的匿名函数，不可以包含 class 这些.
 
 	
-```haxe
-//example: trace(tut_parse());  => {width => 800, lang => zh-CH, note => 测试, sprite => [object Sprite]}
-macro public static function tut_parse() {
-	var str = "测试";    // Tip:在单引号字符串中,可以使用 ${变量} 来引用一些变量, 
-	var code:String = '
-		function() {
-			var map = new haxe.ds.StringMap<Dynamic>();
-			map.set("note","${str}"); 
-			map.set("width", Lib.current.stage.stageWidth);
-			map.set("lang", flash.system.Capabilities.language);
-			map.set("sprite", new flash.display.Sprite());
-			return map;
-		}()';
-	return  haxe.macro.Context.parseInlineString(code,haxe.macro.Context.currentPos());
-}
-```
+  ```haxe
+  //example: trace(tut_parse());  => {width => 800, lang => zh-CH, note => 测试, sprite => [object Sprite]}
+  macro public static function tut_parse() {
+  	var str = "测试";    // Tip:在单引号字符串中,可以使用 ${变量} 来引用一些变量, 
+  	var code:String = '
+  		function() {
+  			var map = new haxe.ds.StringMap<Dynamic>();
+  			map.set("note","${str}"); 
+  			map.set("width", Lib.current.stage.stageWidth);
+  			map.set("lang", flash.system.Capabilities.language);
+  			map.set("sprite", new flash.display.Sprite());
+  			return map;
+  		}()';
+  	return  haxe.macro.Context.parseInlineString(code,haxe.macro.Context.currentPos());
+  }
+  ```
 
 ### Reification Escaping
 
-macro 关键字后可以接任意 haxe 表达式 http://haxe.org/manual/macro-reification-expression.html
+macro 关键字后可以接任意 haxe 表达式 <http://haxe.org/manual/macro-reification-expression.html>
 
- * `${}` 或 `$e{}`: `Expr -> Expr`
+* `${} 或 $e{}: Expr -> Expr`
 
- * `$a{}` : `Expr -> Array<Expr>` 用于把数量未确定的参数传递给函数, 示例见 Promhx 库的 Promise.when
+* `$a{} : Expr -> Array<Expr>` 用于把数量未确定的参数传递给函数, 示例见 Promhx 库的 Promise.when
 
- * `$b{}` : `Array<Expr> -> Expr` 构建**块表达式**
+* `$b{} : Array<Expr> -> Expr` 构建**块表达式**
 
- * `$i{}` : `String -> Expr` 注: 这里的 String 变量名字符串. 表示为: EConst(CIdent())
+* `$i{} : String -> Expr` 注: 这里的 String 变量名字符串. 表示为: EConst(CIdent())
 
- * `$p{}` : `Array<String> -> Expr` path. String 指的是变量名. 例: `macro $p{}["Main","main"]}; => Main.main`
+* `$p{} : Array<String> -> Expr` path. String 指的是变量名. 例: `macro $p{}["Main","main"]}; => Main.main`
 
- * `$v{}` : `Dynamic -> Expr` 这个经常会用到. e.g: `return macro $v{"hello world"}`
+* `$v{} : Dynamic -> Expr` 这个经常会用到. e.g: `return macro $v{"hello world"}`
 
 
 ```haxe
@@ -299,11 +304,11 @@ var method = macro {
  
 haxe 3.1+
 
- * 字段名 {$name : 1} 
+* 字段名 {$name : 1} 
 
- * 函数名 function $name(){}
+* 函数名 function $name(){}
 
- * `try/catch` try{e()}catch($name:Dynamic){}
+* `try/catch` try{e()}catch($name:Dynamic){}
 
 ```haxe
 class Main {
@@ -332,16 +337,15 @@ class Main {
 
 build宏函数 与 普通的宏函数不一样的地方:
 
- * 返回的类型不是 `Expr` ,而是 `Array<Field>`. (`haxe/macro/Expr.hx` 文件中定义了 `Field`)
+* 返回的类型不是 `Expr` ,而是 `Array<Field>`. (`haxe/macro/Expr.hx` 文件中定义了 `Field`)
 
- * build 宏函数内部的 macro.Context **没有** getLocalMethid 和 getLocalVars. 
+* build 宏函数内部的 macro.Context **没有** getLocalMethid 和 getLocalVars. 
 
- * build 宏函数内部的 macro.Context **有** getBuildFields()
+* build 宏函数内部的 macro.Context **有** getBuildFields()
 
- * 不是直接调用,而是将元标记 `@:build` 或 `@:autoBuild` 放在一个 `class` 或 `enum` 定义中.
+* 不是直接调用,而是将元标记 `@:build` 或 `@:autoBuild` 放在一个 `class` 或 `enum` 定义中.
 
 [build 一个示例]({% post_url 2014-05-13-tips-on-haxe %}#自定义元标记-metadata), 其实 haxelib heaps 库中 hxd 目录下有很多很好的宏构建示例
-
 
 
 **在宏构建方法中, 使用 macro 关键字能省很多麻烦的事情**, 比如宏动态创建字段时: 注意 kind 字段
@@ -377,70 +381,70 @@ Context.getType("Void");
 
 泛型构建. 主要是用理处理泛型, 比如你可以读取一个文本文件而构建一个相应的类(先定义,然后返回类型)
 
- * 当泛形类使用 **Const**作参数时,例如:`class Some<Const>{}` [使用常量作为泛形参数](http://haxe.org/manual/macro-generic-build.html#const-type-parameter)
+* 当泛形类使用 **Const**作参数时,例如:`class Some<Const>{}` [使用常量作为泛形参数](http://haxe.org/manual/macro-generic-build.html#const-type-parameter)
 
-	> 这个特性被用于 SPOD 中的数据类型,比如限制字符串的长度： `typedef SString<Const> = String`;
+  这个特性被用于 SPOD 中的数据类型,比如限制字符串的长度： `typedef SString<Const> = String`;
 
 和 `:build` 的区别:
 
- * 返回类型为 `ComplexType`, 而不是 `Array<Field>`, 返回值将
+* 返回类型为 `ComplexType`, 而不是 `Array<Field>`, 返回值将
 	
-```haxe
-// Main.hx
-class Main{
-	static pubic function main(){
-		var s:Some = "Hello world";
-		s.substr(1,5);	// haxe 会自动帮你导出 substr 方法是如何实现的, 是不是很神奇很复杂??但却不实用
-		// 因此 genericBuild 函数中你应该先构建一个类型通过 Context.defineType,然后返回它,这才是正确的做法.
-		// 或者 通过 defineModule 构建一个模块,最后返回 null 值. 这样的话 Some 相当于一个空类
-	}
-}
-
-
-// Some.hx
-@:genericBuild(Some.gen())
-class Some{
-	static function gen():ComplexType{
-		return macro :String;	// 把 Some 实例(instance)当成 String 类型
-	}
-}
-```
+  ```haxe
+  // Main.hx
+  class Main{
+  	static pubic function main(){
+  		var s:Some = "Hello world";
+  		s.substr(1,5);	// haxe 会自动帮你导出 substr 方法是如何实现的, 是不是很神奇很复杂??但却不实用
+  		// 因此 genericBuild 函数中你应该先构建一个类型通过 Context.defineType,然后返回它,这才是正确的做法.
+  		// 或者 通过 defineModule 构建一个模块,最后返回 null 值. 这样的话 Some 相当于一个空类
+  	}
+  }
+  
+  
+  // Some.hx
+  @:genericBuild(Some.gen())
+  class Some{
+  	static function gen():ComplexType{
+  		return macro :String;	// 把 Some 实例(instance)当成 String 类型
+  	}
+  }
+  ```
 
 ### 成员宏方法
 
 上边示例的都是都过 static 的方式调用 宏方法, 当宏方法为成员方法时, 第一个参数将由编译器自动填充为 `this`
 
- * 限制: haxe 3.2 注意当宏方法为成员方法(非static)时, 
+* 限制: haxe 3.2 注意当宏方法为成员方法(非static)时, 
 
- * 限制: 不能在同一个相同文件中调用这个宏方法。 如: 在 Foo.hx 定义的成员宏方法，不可以在 Foo.hx 中调用.
+* 限制: 不能在同一个相同文件中调用这个宏方法。 如: 在 Foo.hx 定义的成员宏方法，不可以在 Foo.hx 中调用.
 
- * 在以链式的方法调用它时, 注意它能会返回 null 值,
+* 在以链式的方法调用它时, 注意它能会返回 null 值,
 
-```haxe
-
-class Main{
-	public static function main(){
-		var f = new Foo();
-		f.test();
-	}
-}
-
-// Foo.hx
-#if macro
-	import haxe.macro.Expr;
-	import haxe.macro.Context;
-	import haxe.PosInfos;
-	import sys.io.File;
-#end
-class Foo{
-	pubic function new(){}
-	// 你不能在 Foo.hx 中调用 test 方法
-	macro public function test(thiz){
-		var callerType	= Context.typeExpr(thiz);
-		return macro null;
-	}
-}
-```
+  ```haxe
+  
+  class Main{
+  	public static function main(){
+  		var f = new Foo();
+  		f.test();
+  	}
+  }
+  
+  // Foo.hx
+  #if macro
+  	import haxe.macro.Expr;
+  	import haxe.macro.Context;
+  	import haxe.PosInfos;
+  	import sys.io.File;
+  #end
+  class Foo{
+  	pubic function new(){}
+  	// 你不能在 Foo.hx 中调用 test 方法
+  	macro public function test(thiz){
+  		var callerType	= Context.typeExpr(thiz);
+  		return macro null;
+  	}
+  }
+  ```
 
 感觉没什么机会能用到这个特性, 感觉用 inline 似乎能做同样的事情.
 
@@ -532,8 +536,6 @@ setFieldType(className:String, field:String, type:String, isStatic:Bool = null):
 // 设置输出文件名, 绝对路径全名包括磁盘. 例如编译到 hello.swf, 那么 输出文件名为 X:\path\to\hello.swf
 setOutput(fileOrDir:String):Void
 ```
-
-
 
 
 ### Context
@@ -720,77 +722,75 @@ warning(msg:String, pos:Position):Void
 
 [参考](http://old.haxe.org/manual/macros/advanced)
 
- * 可变参数
+* 可变参数, 如果你希望使用可变参数,可以使用 `Array<Expr>` 作为最后一个参数
 
-	> 如果你希望使用可变参数,可以使用 `Array<Expr>` 作为最后一个参数
+  ```haxe
+  macro static function foo(e : Array<Expr>):Expr{
+  // ...
+  }
+  ``` 
 
-```haxe
-macro static function foo(e : Array<Expr>):Expr{
-// ...
-}
-``` 
+* 更可读
 
- * 更可读
-
-	> 大部分宏方法使用 Expr 类型参数并且返回的也是 Expr 类型,为了让代码更为可读, 你可以使用 `ExprOf<Type>` 来替代 `Expr`
-	> 如果你查看源码的话会发现其实 `typedef ExprOf<T> = Expr`
+  > 大部分宏方法使用 Expr 类型参数并且返回的也是 Expr 类型,为了让代码更为可读, 你可以使用 `ExprOf<Type>` 来替代 `Expr`
+  >
+  > 如果你查看源码的话会发现其实 `typedef ExprOf<T> = Expr`
 
 
- * 成员宏方法
+* 成员宏方法
 
- * 宏 + using
+* 宏 + using
 
- * Macro-in-macro
+* Macro-in-macro
 
- * End-of-compilation generation
+* End-of-compilation generation
 
- * 使用宏进行编译器配置
+* 使用宏进行编译器配置
 
-	> 编译时使用类似于 `--macro : call the given macro before typing anything else`
+  > 编译时使用类似于 `--macro : call the given macro before typing anything else`
+  >
+  > 例:添加编译标记: --macro include('my.package')
+  >
+  > openfl 示例: `<haxeflag name="--macro keep('PlayState')" />`
 
-	> 例:添加编译标记: --macro include('my.package')
-
-	> openfl 示例: `<haxeflag name="--macro keep('PlayState')" />`
-
- * 基准测试 / 优化 (Benchmarking / Optimization)
+* 基准测试 / 优化 (Benchmarking / Optimization)
 
 
 ### 其它
 
- * unify 参考 http://haxe.org/manual/type-system-unification.html
+* unify 参考 http://haxe.org/manual/type-system-unification.html
 
-```haxe
-using haxe.macro.TypeTools;
-//....
-var t = Context.typeof(macro null); // TMono(<mono>)    
-var ts = Context.typeof(macro "foo"); //TInst(String,[])
-Context.unify(t, ts);
-trace(t); // TMono(<mono>)
-trace(t.follow()); //TInst(String,[])
-```
-
- * 在函数构建函数中的值对比, getLocalClass
-
-```haxe
-// file:/// a/b/Test.hx
-package a.b;
-
-class Test{}
-// getLocalModule() => a.b.Test
-// getLocalClass().toString() => a.b.Test
-// getLocalClass().get().name => Test
-// getLocalClass().get().module => a.b.Test
-// getLocalClass().get().pack => [a,b]
-
-// Foo 类同样在 Test.hx 文件中
-calss Foo{}
-// getLocalModule() => a.b.Test
-// getLocalClass().toString() => a.b.Foo
-// getLocalClass().get().name => Foo
-// getLocalClass().get().module => a.b.Test
-// getLocalClass().get().pack => [a,b] 
-```
-
+  ```haxe
+  using haxe.macro.TypeTools;
+  //....
+  var t = Context.typeof(macro null); // TMono(<mono>)    
+  var ts = Context.typeof(macro "foo"); //TInst(String,[])
+  Context.unify(t, ts);
+  trace(t); // TMono(<mono>)
+  trace(t.follow()); //TInst(String,[])
+  ```
+  
+   * 在函数构建函数中的值对比, getLocalClass
+  
+  ```haxe
+  // file:/// a/b/Test.hx
+  package a.b;
+  
+  class Test{}
+  // getLocalModule() => a.b.Test
+  // getLocalClass().toString() => a.b.Test
+  // getLocalClass().get().name => Test
+  // getLocalClass().get().module => a.b.Test
+  // getLocalClass().get().pack => [a,b]
+  
+  // Foo 类同样在 Test.hx 文件中
+  calss Foo{}
+  // getLocalModule() => a.b.Test
+  // getLocalClass().toString() => a.b.Foo
+  // getLocalClass().get().name => Foo
+  // getLocalClass().get().module => a.b.Test
+  // getLocalClass().get().pack => [a,b] 
+  ```
 
 <br />
 <br />

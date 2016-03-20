@@ -575,14 +575,15 @@ int main (){
 对于new double[n]之后,对于 delete 是否需要加上括号 `[]`: 
 
 
- > 《深度探索C++对象模型》P259的描述，“寻找数组维度给delete运算符的效率带来极大的影响，所以才导致这样的妥协：
- > 只有在中括号出现时，编译器才寻找数组的维度，否则它便假设只有单独一个objects要被删除。”
+> 《深度探索C++对象模型》P259的描述，“寻找数组维度给delete运算符的效率带来极大的影响，所以才导致这样的妥协：
+>
+> 只有在中括号出现时，编译器才寻找数组的维度，否则它便假设只有单独一个objects要被删除。”
 
- * delete [] 释放空间,并且调用了每个对象的析构函数
+* delete [] 释放空间,并且调用了每个对象的析构函数
 
- * delete 释放空间, 并且调用了第一个的析构函数
+* delete 释放空间, 并且调用了第一个的析构函数
 
- * 对于 char,int,float,double,struct ,基本类型的对象没有析构函数,他们等价
+* 对于 char,int,float,double,struct ,基本类型的对象没有析构函数,他们等价
 
 
 
@@ -616,13 +617,13 @@ int main (){
 
 ### 类
 
- * 如果定义了 构造函数或继承了虚函数的话,就不能用 大括号 进行初使化
+* 如果定义了 构造函数或继承了虚函数的话,就不能用 大括号 进行初使化
 
- * class 默认成员访问为 private, struct 默认为 public.
+* class 默认成员访问为 private, struct 默认为 public.
 
- * class 继承默认是 private，而struct继承默认是public.
+* class 继承默认是 private，而struct继承默认是public.
 
- * 对于 `template <struct T>`, 将报错为 未定义的类型, 因此需要写成 `template <class T>`
+* 对于 `template <struct T>`, 将报错为 未定义的类型, 因此需要写成 `template <class T>`
 
 ```cpp
 using namespace std;
@@ -1091,11 +1092,11 @@ int main(int argc, const char ** argv){
 
 #### 访问控制
 
- * public: 公共
+* public: 公共
 
- * protected: 保护, 继承类可以访问基类的 protected 成员.
+* protected: 保护, 继承类可以访问基类的 protected 成员.
 
- * private: 私有
+* private: 私有
 
 访问继承, 例如: `class Vector: public Octopus{}`
 
@@ -1129,193 +1130,188 @@ class TriVector: public Vector, public Number{
 其它
 ------
 
- * 指针快速索引
+* 指针快速索引
 
-```cpp
-int const *n; 	// 指针可变,指向的值不可变
-
-int	*const m; 	// 指针不可变,指向的值可变
-
-const int const *mn;
-
-int *a[]; 		// array of pointers. 英文的意思更清楚
-
-int (*a)[]; 	// pointer to array.
-
-int *f(); 		// 返回一个int类型指针
-
-int (*f)(); 	// 函数指针.
-
-// 多唯数组指针对应
-int x[10][20];
-int(*px)[20];
-px = x;			//等同于 px = &x[0]
-```
-
- * `#ifdef __cplusplus` 一些源码能常见到的.
-
-	> C++ 语言在编译的时候为了解决函数的多态问题，会改变函数名称，但 C 语言则不会，因此会造成链接时找不到对应函数的情况，此时C函数就需要用extern “C”进行链接指定，这告诉编译器， **请保持我的名称，不要给我生成用于链接的中间函数名**.
-
-```cpp
-#ifdef __cplusplus
-	extern "C" { // extern C 修饰变量和函数按照 C 语言方式编译和连接;
-#endif
-
-	void gme_clear_playlist( Music_Emu* );
-	 	
-#ifdef __cplusplus
-	}	// extern C 结尾
-#endif
-```
-
- 
- * 函数后边跟 const, 表示这个函数不会修改成员变量.
-
-```cpp
-int current_track() const;
-
-//....
-
-int current_track() const{
-	return x;
-}
-```
-
- * 初使化成员列表, 可以初使化 const 类型成员.
-
-	> 如果有一个类成员, 类型为 类或结构, 而这个成员需要参数来初使化, 这时就需要对这个类成员进行初使化.
-
-```cpp
-class Vector{
-public:
-	double x;
-	double y;
-	const double PI;
-	Vector(): x(1.0), y(1.0), PI(3.1415926){
-	
-	}	
-};
-```
-	
- * 匿名 namespace
-
-	> 相对于 C 的 static 声明来说, 可以在匿名的空间里面声明很多变量和函数,这样可以省去了对每个变量和函数添加static声明.
-	> 实质上匿名空间的功能跟static声明是一样的
-	
- * define 中的 `#` 和 `##`
-
-  - `#` 在宏展开时会将 `#` 后边的参数替换成字符串
-
-```cpp
-#define p(exp) printf(#exp)
-// 调用 p(test) 展开后为: printf("test")
-```
-
-  - `##` 将前后两个的单词拼接在一起。
-
-```cpp
-#define cat(x,y) x##y
-// 调用 cat(var, 123) 展开后为: var123
-```
-
-  - `#@` 将值序列变为一个字符
-
-```cpp
-#define ch(c) #@c
-// 调用 ch(a) 展开后为: 'a'
-```
-
- * 关键字扩展
+  ```cpp
+  int const *n; 	// 指针可变,指向的值不可变
   
-  - MSVC - `__declspec` http://www.cnblogs.com/ylhome/archive/2010/07/10/1774770.html
+  int	*const m; 	// 指针不可变,指向的值可变
+  
+  const int const *mn;
+  
+  int *a[]; 		// array of pointers. 英文的意思更清楚
+  
+  int (*a)[]; 		// pointer to array.
+  
+  int *f(); 		// 返回一个int类型指针
+  
+  int (*f)(); 		// 函数指针.
+  
+  // 多唯数组指针对应
+  int x[10][20];
+  int(*px)[20];
+  px = x;			//等同于 px = &x[0]
+  ```
+
+* `#ifdef __cplusplus` 一些源码能常见到的.
+
+  > C++ 语言在编译的时候为了解决函数的多态问题，会改变函数名称，但 C 语言则不会，因此会造成链接时找不到对应函数的情况，此时C函数就需要用extern “C”进行链接指定，这告诉编译器， **请保持我的名称，不要给我生成用于链接的中间函数名**.
+
+  ```cpp
+  #ifdef __cplusplus
+  	extern "C" { // extern C 修饰变量和函数按照 C 语言方式编译和连接;
+  #endif
+  
+  	void gme_clear_playlist( Music_Emu* );
+  	 	
+  #ifdef __cplusplus
+  	}	// extern C 结尾
+  #endif
+  ```
+
+* 函数后边跟 const, 表示这个函数不会修改成员变量.
+
+  ```cpp
+  int current_track() const;
+  //....
+  int current_track() const{
+  	return x;
+  }
+  ```
+
+* 初使化成员列表, 可以初使化 const 类型成员.
+
+  > 如果有一个类成员, 类型为 类或结构, 而这个成员需要参数来初使化, 这时就需要对这个类成员进行初使化.
+
+  ```cpp
+  class Vector{
+  public:
+  	double x;
+  	double y;
+  	const double PI;
+  	Vector(): x(1.0), y(1.0), PI(3.1415926){
+  	
+  	}	
+  };
+  ```
+
+* 匿名 namespace
+
+  > 相对于 C 的 static 声明来说, 可以在匿名的空间里面声明很多变量和函数,这样可以省去了对每个变量和函数添加static声明.
+  >
+  > 实质上匿名空间的功能跟static声明是一样的
+	
+* define 中的 `#` 和 `##`
+
+  `#` 在宏展开时会将 `#` 后边的参数替换成字符串
+
+  ```cpp
+  #define p(exp) printf(#exp)
+  // 调用 p(test) 展开后为: printf("test")
+  ```
+
+  `##` 将前后两个的单词拼接在一起。
+
+  ```cpp
+  #define cat(x,y) x##y
+  // 调用 cat(var, 123) 展开后为: var123
+  ```
+
+  `#@` 将值序列变为一个字符
+
+  ```cpp
+  #define ch(c) #@c
+  // 调用 ch(a) 展开后为: 'a'
+  ```
+
+* 关键字扩展
+  
+  - MSVC - `__declspec` <http://www.cnblogs.com/ylhome/archive/2010/07/10/1774770.html>
 
   - 其它　- `__attribute__` 自已搜
 
-```cpp
-// 示例:
-#ifdef _MSC_VER
-  #if defined(HXCPP_DLL_IMPORT)
-     #define HXCPP_EXTERN_CLASS_ATTRIBUTES __declspec(dllimport)
+  ```cpp
+  // 示例:
+  #ifdef _MSC_VER
+    #if defined(HXCPP_DLL_IMPORT)
+       #define HXCPP_EXTERN_CLASS_ATTRIBUTES __declspec(dllimport)
+    #else
+       #define HXCPP_EXTERN_CLASS_ATTRIBUTES __declspec(dllexport)
+    #endif
   #else
-     #define HXCPP_EXTERN_CLASS_ATTRIBUTES __declspec(dllexport)
+    #if defined(HXCPP_DLL_EXPORT)
+       #define HXCPP_EXTERN_CLASS_ATTRIBUTES __attribute__((visibility("default")))
+    #else
+       #define HXCPP_EXTERN_CLASS_ATTRIBUTES
+    #endif
   #endif
-#else
-  #if defined(HXCPP_DLL_EXPORT)
-     #define HXCPP_EXTERN_CLASS_ATTRIBUTES __attribute__((visibility("default")))
-  #else
-     #define HXCPP_EXTERN_CLASS_ATTRIBUTES
-  #endif
-#endif
-```
+  ```
 	
- * `explicit` 用来修饰类的构造函数,防止隐式转换 http://www.educity.cn/develop/461209.html
+* `explicit` 用来修饰类的构造函数,防止隐式转换 <http://www.educity.cn/develop/461209.html>
 
- * 三规则, 其中第二条,可以在第一条加explicit防止显示赋值
+* 三规则, 其中第二条,可以在第一条加explicit防止显示赋值
 
-```cpp
-// 1. copy constructor
-person(const person& that) : name(that.name), age(that.age){
-}
+  ```cpp
+  // 1. copy constructor
+  person(const person& that) : name(that.name), age(that.age){
+  }
+  
+  // 2. copy assignment operator
+  person& operator=(const person& that){
+  	name = that.name;
+  	age = that.age;
+  	return *this;
+  }
+  
+  // 3. destructor
+  ~person(){
+  }
+  ```
 
-// 2. copy assignment operator
-person& operator=(const person& that){
-	name = that.name;
-	age = that.age;
-	return *this;
-}
+* 子类中使用 using 声明引入基类成员 <http://www.cnblogs.com/ustc11wj/archive/2012/08/11/2637316.html>
 
-// 3. destructor
-~person(){
-}
-```
-
- * 子类中使用 using 声明引入基类成员 http://www.cnblogs.com/ustc11wj/archive/2012/08/11/2637316.html
-
- * `operator new` http://blog.sina.com.cn/s/blog_3c6889fe0100tqe8.html
+* `operator new` <http://blog.sina.com.cn/s/blog_3c6889fe0100tqe8.html>
 
 
 	
 #### c11
 
-c11 新特性 http://blog.csdn.net/doctorsc/article/details/6777849
+c11 新特性 <http://blog.csdn.net/doctorsc/article/details/6777849>
 
-http://zh.cppreference.com/w/cpp/utility
+<http://zh.cppreference.com/w/cpp/utility>
 
- * 关键字 nullptr, 取代 NULL, 0
+* 关键字 nullptr, 取代 NULL, 0
 
- * auto_ptr<type> c++ 11已经被弃用, 引入了新的智能针对类 shared_ptr 和 unique_ptr
+* auto_ptr<type> c++ 11已经被弃用, 引入了新的智能针对类 shared_ptr 和 unique_ptr
 
- * 检测是否支持 c++ 11, 问题是各编译器对 c11的支持各不一样
+* 检测是否支持 c++ 11, 问题是各编译器对 c11的支持各不一样
 
-```cpp
-// __cplusplus这个宏通常被定义为一个整型值。而且随着标准变化，__cplusplus宏一般会是一个比以往标准中更大的值。
-// 比如在C++03标准中，__cplusplus的值被预定为199711L，
-// 而在C++11标准中， __cplusplus被预定义为201103L
-#if __cplusplus < 201103L
-	#error "should use C++11 implementation"
-#endif
-```
-	
- * std::`move(container) | (InIt_begin, InIt_end, OutIt_Dest)` 避免值的多次复制, 
+  ```cpp
+  // __cplusplus这个宏通常被定义为一个整型值。而且随着标准变化，__cplusplus宏一般会是一个比以往标准中更大的值。
+  // 比如在C++03标准中，__cplusplus的值被预定为199711L，
+  // 而在C++11标准中， __cplusplus被预定义为201103L
+  #if __cplusplus < 201103L
+  	#error "should use C++11 implementation"
+  #endif
+  ```
+
+* std::`move(container) | (InIt_begin, InIt_end, OutIt_Dest)` 避免值的多次复制, 
 
   - 由于STL是传值赋值,感觉这似乎是让人不要使用指针而用 move. 但是 move 的左右值很难使用.
 
-```cpp
-string tmp = "hello world";
-string str = move(tmp); // 这里 tmp 的内容消失了而转移到了 str 上.
-
-// && 表示传给它的变量将是一个临时变量(即可废弃的变量)
-// 感觉 move 的使用非常复杂， 各种左右值
-string &&foo(string &&s){
-	return move(s);		// 加上 move 又将 s 提升至 &&
-}
-string str2 = foo(move(str));	// 加上 move 将参数提升至 &&
-```
-
-
+  ```cpp
+  string tmp = "hello world";
+  string str = move(tmp); // 这里 tmp 的内容消失了而转移到了 str 上.
+  
+  // && 表示传给它的变量将是一个临时变量(即可废弃的变量)
+  // 感觉 move 的使用非常复杂， 各种左右值
+  string &&foo(string &&s){
+  	return move(s);		// 加上 move 又将 s 提升至 &&
+  }
+  string str2 = foo(move(str));	// 加上 move 将参数提升至 &&
+  ```
 
 #### little endian
-
 
 
 ```cpp
@@ -1333,60 +1329,60 @@ static union { char c[4]; unsigned long mylong; } endian_test = {'l', '?', '?', 
 STL
 ------
 
- * copy(src_start,src_end, dst_start) 参数全是 iterator 类型, 
+* copy(src_start,src_end, dst_start) 参数全是 iterator 类型, 
 
   - 其它API都很好找, http://classfoo.com/ccby/article/tZTzs
 
- * advance(it,distance) 是为了给不能随机访问的迭代器提供类似随机访问的功能
+* advance(it,distance) 是为了给不能随机访问的迭代器提供类似随机访问的功能
 
- * cast 新的转型操作符给了编译器更多的信息,也让编译器清楚知道了转型的理由, 稍了解就行了无需关注
+* cast 新的转型操作符给了编译器更多的信息,也让编译器清楚知道了转型的理由, 稍了解就行了无需关注
 
-	> static_cast 只有当类型有其定义, 转换才会成功（??? 隐式转换 explicit）
+  > static_cast 只有当类型有其定义, 转换才会成功（??? 隐式转换 explicit）
+  >
+  > dynamic_cast 将多态类型向下转型(downcast,父类转换到子类)
+  >
+  > const_cast, reinterpret_cast
+  >
+  > 小圆括号`()`: 可以替换除 dynamic_cast 之外的三种转型
 	
-	> dynamic_cast 将多态类型向下转型(downcast,父类转换到子类)
-	
-	> const_cast, reinterpret_cast
-	
-	> 小圆括号`()`: 可以替换除 dynamic_cast 之外的三种转型
-	
- * pair<T1,T2>
+* pair<T1,T2>
 
- * tuple (c++ 11) 
+* tuple (c++ 11) 
 
-```cpp
-#include <tuple>
-#include <iostream>
-#include <string>
-#include <stdexcept>
- 
-std::tuple<double, char, std::string> get_student(int id){
-    if (id == 0) return std::make_tuple(3.8, 'A', "Lisa Simpson");
-    if (id == 1) return std::make_tuple(2.9, 'C', "Milhouse Van Houten");
-    if (id == 2) return std::make_tuple(1.7, 'D', "Ralph Wiggum");
-    throw std::invalid_argument("id");
-}
- 
-int main(){
-    auto student0 = get_student(0);
-    std::cout << "ID: 0, "
-              << "GPA: " << std::get<0>(student0) << ", "
-              << "grade: " << std::get<1>(student0) << ", "
-              << "name: " << std::get<2>(student0) << '\n';
- 
-    double gpa1;
-    char grade1;
-    std::string name1;
-    std::tie(gpa1, grade1, name1) = get_student(1);
-    std::cout << "ID: 1, "
-              << "GPA: " << gpa1 << ", "
-              << "grade: " << grade1 << ", "
-              << "name: " << name1 << '\n';
-}
-```
+  ```cpp
+  #include <tuple>
+  #include <iostream>
+  #include <string>
+  #include <stdexcept>
+   
+  std::tuple<double, char, std::string> get_student(int id){
+      if (id == 0) return std::make_tuple(3.8, 'A', "Lisa Simpson");
+      if (id == 1) return std::make_tuple(2.9, 'C', "Milhouse Van Houten");
+      if (id == 2) return std::make_tuple(1.7, 'D', "Ralph Wiggum");
+      throw std::invalid_argument("id");
+  }
+   
+  int main(){
+      auto student0 = get_student(0);
+      std::cout << "ID: 0, "
+                << "GPA: " << std::get<0>(student0) << ", "
+                << "grade: " << std::get<1>(student0) << ", "
+                << "name: " << std::get<2>(student0) << '\n';
+   
+      double gpa1;
+      char grade1;
+      std::string name1;
+      std::tie(gpa1, grade1, name1) = get_student(1);
+      std::cout << "ID: 1, "
+                << "GPA: " << gpa1 << ", "
+                << "grade: " << grade1 << ", "
+                << "name: " << name1 << '\n';
+  }
+  ```
 
 ### container
 
-http://wenku.baidu.com/view/34698d68561252d380eb6e87.html
+<http://wenku.baidu.com/view/34698d68561252d380eb6e87.html>
 
 所有容器都是 value 的语意而非 reference, 容器执行插入元素的操作时, 内部实施拷贝动作. 
 因此 STL容器内存储的元素必须能够被拷贝(必须提供拷贝构造函数)
@@ -1395,52 +1391,52 @@ http://wenku.baidu.com/view/34698d68561252d380eb6e87.html
 
 通常不会丢出异常, 因此要求使用运行者确保传入参数的正确.
 
- * 序列式(sequence) 每个元素都有固定位置. 有 vector,deque,list, string
+* 序列式(sequence) 每个元素都有固定位置. 有 vector,deque,list, string
 
- * 关联式(associated) 位置取决于排序规则,和插入顺序无关. 有 set, map
+* 关联式(associated) 位置取决于排序规则,和插入顺序无关. 有 set, map
 
 常见操作方法:
 
- * `.size()` 容器元素数量
+* `.size()` 容器元素数量
 
- * `.capacity()` 返回分配的内存容量,以 type 为单位而不是字节, 
+* `.capacity()` 返回分配的内存容量,以 type 为单位而不是字节, 
 
   - **重要:** 当这个值发生改变意味着内存已经发生改变,已经重新分配了内存,数据也复制到了内存新块, 因此前边的 iterator 将全失效
 
- * `.empty()` 是否为空, 如果 size() 返回为 0,就认定为空, 而忽略 capacity的值
+* `.empty()` 是否为空, 如果 size() 返回为 0,就认定为空, 而忽略 capacity的值
 
- * `.max_size()` 元素最大数量, 这个通常对应电脑的内存大小
+* `.max_size()` 元素最大数量, 这个通常对应电脑的内存大小
 
- * `.clear()` 仅删除所有元素,使 size()为空, 但 capacity 不变
+* `.clear()` 仅删除所有元素,使 size()为空, 但 capacity 不变
 
- * `.erase(iter_beg,iter_end)|(iter_pos)` 删除元素,不改动 capacity
+* `.erase(iter_beg,iter_end)|(iter_pos)` 删除元素,不改动 capacity
 
- * `.reserve(n)` 设置capacity(容量)大小, 小于等于当前 capacity 的值将被忽略, 也就是只有更大的值才会生效.
+* `.reserve(n)` 设置capacity(容量)大小, 小于等于当前 capacity 的值将被忽略, 也就是只有更大的值才会生效.
 
- * `.resize(n)|(n, pad)` 重设元素数量, 当 n 大于 capacity 值, 会重新分配内存,并以default填充(如果没有指定 pad), 否则形为像 erase,只是参数不一致.
+* `.resize(n)|(n, pad)` 重设元素数量, 当 n 大于 capacity 值, 会重新分配内存,并以default填充(如果没有指定 pad), 否则形为像 erase,只是参数不一致.
 
- * `.inert()` 只要不改变 capacity值
+* `.inert()` 只要不改变 capacity值
 
- * swap(v1, v2) 仅交换二个容器的元素, 元素超过capacity,则正常按capacity改动规则分配内存.而不会忽略
+* swap(v1, v2) 仅交换二个容器的元素, 元素超过capacity,则正常按capacity改动规则分配内存.而不会忽略
 
 通过迭代器函数: c++ 11 支持 `.cbegin()` 等以 c 加开头的迭代器, c 表示为 const
 
- * `.begin()` 指向第一个元素,
+* `.begin()` 指向第一个元素,
 
- * `.end()` 指向最后一个元素 **的下一个**
+* `.end()` 指向最后一个元素 **的下一个**
 
- * `.rbegin()` 逆向时第一个
+* `.rbegin()` 逆向时第一个
 
- * `.rend()` 逆向时最后一个元素 **的下一个**
+* `.rend()` 逆向时最后一个元素 **的下一个**
 
 
 容器比较: 可以使常正常的逻辑判断符. 或赋值(值拷贝)
 
 #### iterator
 
-原文: https://zh.wikipedia.org/wiki/Iterator_(STL)
+原文: <https://zh.wikipedia.org/wiki/Iterator_(STL)>
 
- * input
+* input
 
   - `*iter` 解引用只能作为右值
 
@@ -1448,19 +1444,19 @@ http://wenku.baidu.com/view/34698d68561252d380eb6e87.html
 
   - `iter=iter(赋值), iter==iter(条件判断),iter!=iter(条件判断)`
 
- * output 只能作为左值
+* output 只能作为左值
 
   - `*iter` 只能作为左值
 
   - `iter=iter` 赋值
 
- * forward: 向前迭代器. 同时具有 input，output的所有功能,可反复遍历操作
+* forward: 向前迭代器. 同时具有 input，output的所有功能,可反复遍历操作
 
- * bidirectional: 双向迭代器. 在 forward的基础上, 多了单步向步遍历的能力
+* bidirectional: 双向迭代器. 在 forward的基础上, 多了单步向步遍历的能力
 
   -  `--iter; iter--`
 
- * random Access: 随机迭代器. 在 bidirectional 的基础上，具有直接访问数据的能力.
+* random Access: 随机迭代器. 在 bidirectional 的基础上，具有直接访问数据的能力.
 
   - `iter+=i; iter-=i; iter+i; iter-i` 与 int 加减
 
@@ -1472,20 +1468,20 @@ http://wenku.baidu.com/view/34698d68561252d380eb6e87.html
 
 #### string
 
-http://www.cplusplus.com/reference/string/string/string/
+<http://www.cplusplus.com/reference/string/string/string/>
 
 VC中 通常一个string的capacity要大于size,(而有的编译器不会多分配) 用于防止多次分配内存. 当 capacity 值发生改变之后, 先前的迭代器将失效.
 
- * `.c_str()` 和 `.data()` 分别表示字符串和字节流,都是 const 的形式, 但可以强制转换
+* `.c_str()` 和 `.data()` 分别表示字符串和字节流,都是 const 的形式, 但可以强制转换
 
- * `.copy(char* dst, len, srcpos=0)` 注意区别 std::copy, 从string的srcpos位置复制 len 个字符到 dst.
+* `.copy(char* dst, len, srcpos=0)` 注意区别 std::copy, 从string的srcpos位置复制 len 个字符到 dst.
 
- * `.erase(pos, len = length - pos)` 除了通用的参数类型,还接受 iterator 之外还接受 int 参数.
+* `.erase(pos, len = length - pos)` 除了通用的参数类型,还接受 iterator 之外还接受 int 参数.
 
 
 #### vector
 
- * 赋值, 赋值操作将重新分配内存, assign对应于构造函数的重载
+* 赋值, 赋值操作将重新分配内存, assign对应于构造函数的重载
 
   - v1 = v2; 将 v2 值全部复制给 v1
 
@@ -1495,7 +1491,7 @@ VC中 通常一个string的capacity要大于size,(而有的编译器不会多分
 
   - v1.swap(v2) 交换二个变量值
 
- * 元素存取
+* 元素存取
 
   - v.at(idx) 如果越界,丢出out_of_range
 
@@ -1505,7 +1501,7 @@ VC中 通常一个string的capacity要大于size,(而有的编译器不会多分
 
   - v.back() 传回最后一个元素,不检测是否存在
 
- * 插入和删除
+* 插入和删除
 
   - v.insert(pos, elem), v.insert(pos, n, elem), v.insert(pos, beg, end)
 
@@ -1520,58 +1516,58 @@ VC中 通常一个string的capacity要大于size,(而有的编译器不会多分
 双向链表, list 没有 capacity 属性,及相关属性, 适合经常删除添加的,
 迭代器不可以和数值相加, 只能 `++,--`
 
- * `.front()` 返回第一个元素
+* `.front()` 返回第一个元素
 
- * `.back()` 返回最后一个元素
+* `.back()` 返回最后一个元素
 
- * `.emplace(iter_pos,&&args)` c++ 11, 处理需要 move 的类型数据.
+* `.emplace(iter_pos,&&args)` c++ 11, 处理需要 move 的类型数据.
 
- * `.splice(iter_pos, &list_x)` 这个不像JS端的 splice, 而是
+* `.splice(iter_pos, &list_x)` 这个不像JS端的 splice, 而是
 
-```cpp
-list<int> L1 = {1, 2, 3, 4};
-list<int> L2 = {10, 20, 30};
-auto it = ++L1.begin();		
-L1.splice (it, L2);		// L1: 1 10 20 30 2 3 4
-						// 迭代器 "it" 依然指向数字  2 (第5个元素)
-						// L2 为空, 	
-L2.splice(L2.begin(), L1, it);				// 重载, 只切取一个元素
-						// L1: 1 10 20 30 3 4
-						// L2: 2
-						// 迭代器 "it" 现在已经失效
-it = L1.begin();
-std::advance(it,3);		// "it" 指向到 30;
-L1.splice(L1.begin(), L1, it, L1.end());	// 重载, 切除range
-						// L1: 30 3 4 1 10 20
-```
+  ```cpp
+  list<int> L1 = {1, 2, 3, 4};
+  list<int> L2 = {10, 20, 30};
+  auto it = ++L1.begin();		
+  L1.splice (it, L2);		// L1: 1 10 20 30 2 3 4
+  						// 迭代器 "it" 依然指向数字  2 (第5个元素)
+  						// L2 为空, 	
+  L2.splice(L2.begin(), L1, it);				// 重载, 只切取一个元素
+  						// L1: 1 10 20 30 3 4
+  						// L2: 2
+  						// 迭代器 "it" 现在已经失效
+  it = L1.begin();
+  std::advance(it,3);		// "it" 指向到 30;
+  L1.splice(L1.begin(), L1, it, L1.end());	// 重载, 切除range
+  						// L1: 30 3 4 1 10 20
+  ```
 
 #### set
 
 Set的作用就是排序。每个元素的值不能直接被改变,它的每个元素的值必须惟一，而且系统会根据该值来 **自动将数据排序**
 
- * 初使化 set<int> s = {1, 2, 3, 4};
+* 初使化 set<int> s = {1, 2, 3, 4};
 
- * `count(val)` 统计容器内值相等的数量, 由于唯一性, 将返回 1 或 0
+* `count(val)` 统计容器内值相等的数量, 由于唯一性, 将返回 1 或 0
 
- * `lower_bound(val)`
+* `lower_bound(val)`
 
-```cpp
-set<int> s = { 1, 2, 3, 4, 5, 6, 7 , 8 };
-
-s.erase(s.lower_bound(3), s.upper_bound(6));	// lower(3) 返回的 it 指向 3
-												// 而 upper(6) 返回的则指向 6 的下一个 7
-for (auto it = s.begin(); it != s.end(); it++){
-	cout << " " << *it;							// 1 2 7 8
-}
-```
+  ```cpp
+  set<int> s = { 1, 2, 3, 4, 5, 6, 7 , 8 };
+  
+  s.erase(s.lower_bound(3), s.upper_bound(6));	// lower(3) 返回的 it 指向 3
+  												// 而 upper(6) 返回的则指向 6 的下一个 7
+  for (auto it = s.begin(); it != s.end(); it++){
+  	cout << " " << *it;							// 1 2 7 8
+  }
+  ```
 
 #### map
 
 key 唯一性, 或者选择 multimap,支持多key. **自动将数据排序** 如果不需要排序则使用 unordered_map
 
- * 初使化 map<int, int> m = 
+* 初使化 map<int, int> m = 
 
- * 插入
+* 插入
 
   - pair: m.insert(pair<int, int>(1, 1));
 
@@ -1579,39 +1575,39 @@ key 唯一性, 或者选择 multimap,支持多key. **自动将数据排序** 如
 
   - 数组形式: m[3] = 3;
 
- * 迭代器
+* 迭代器
 
- * 嵌套定义: `map<sring,map<string,long> > //注意：最后两个>之间有个空格`
+* 嵌套定义: `map<sring,map<string,long> > //注意：最后两个>之间有个空格`
 
 #### deque
 
 双端队列, 在接口上和vector 非常相似，但没capacity()属性,元素被保存在不同的存储块中,
 
- * 首尾两端的其他地方插入和删除元素,将会使相应begin或end的 iterator 失效
+* 首尾两端的其他地方插入和删除元素,将会使相应begin或end的 iterator 失效
 
- * shrink_to_fit() (c++ 11)重新调整存储块大小,例如 一个很大的长度被清除大部分元素时,可调用.
+* shrink_to_fit() (c++ 11)重新调整存储块大小,例如 一个很大的长度被清除大部分元素时,可调用.
 
 #### queue
 
 FIFO(First-In First-Out); 默认的容器为 deque.
 
- * 和传统的数组有点不太一样的是 pop 弹出的是前边的元素(只弹出不返回),
+* 和传统的数组有点不太一样的是 pop 弹出的是前边的元素(只弹出不返回),
 
- * 没有迭代器
+* 没有迭代器
 
 #### stack
 
 LIFO(Last-in first-out),类似于数组, 默认的容器为 deque. 提供的方法仅有 `empty,size,top,push,emplace,pop,swap`
 
- * `.top()` 返回的是引用,也就是 对应于pop的那个元素
+* `.top()` 返回的是引用,也就是 对应于pop的那个元素
 
- * 没有迭代器
+* 没有迭代器
 
 <br />
 
 boost
 --------
 
-http://www.boost.org/
+<http://www.boost.org/>
 
 <br />

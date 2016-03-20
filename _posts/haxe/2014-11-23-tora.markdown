@@ -8,30 +8,28 @@ categories: haxe
 
 Tora 是一个基于 neko 的单进程多线程服务器应用程序，用来作为网站后台程序。它本身并不包含 HTTP 服务器, 而使用代理的方式
 
- * 由 Apache 或 nginx 接收 HTTP 请求并处理
+* 由 Apache 或 nginx 接收 HTTP 请求并处理
 
- * Apache 或 nginx 将指定的 `.n` 文件的请求发送给 tora.n
+* Apache 或 nginx 将指定的 `.n` 文件的请求发送给 tora.n
 
- * tora.n 处理之后并返送回处理结果给 Apache/nginx.
+* tora.n 处理之后并返送回处理结果给 Apache/nginx.
 
 <!-- more -->
 
- * **Tips**: 需要使用 `Web.cacheModule` 才能在请求阻塞时另开线程启动同一个模块, 但这种情形下将会开启多个实例, 多实例的情形静态变量的值...参看下边提到的 issue
+* **Tips**: 需要使用 `Web.cacheModule` 才能在请求阻塞时另开线程启动同一个模块, 但这种情形下将会开启多个实例, 多实例的情形静态变量的值...参看下边提到的 issue
 
 ### 安装
 
-这个链接是 apache 的 https://github.com/jasononeil/tora-installation-helper
+这个链接是 apache 的 <https://github.com/jasononeil/tora-installation-helper>
 
 **建议使用 apache** 作为服务器, 因此 nginx 的 fcgi 模式是其它人提供的 patch, 稳定性未知
 
 #### tora
 
- * 下载 [tora](https://github.com/HaxeFoundation/tora)
+* 下载 [tora](https://github.com/HaxeFoundation/tora)
 
- * 双击 tora.hxml 编译 tora.n 和 tora_admin.n(这个对应Admin.hx)
-
+* 双击 tora.hxml 编译 tora.n 和 tora_admin.n(这个对应Admin.hx)
   - tora.n 与 nigix 或 apache 交互的后台服务器， 可以使用 `nekotools boot` 将这个文件制做成 tora.exe 文件（执行这个exe需要neko环境）
-
   - tora_admin.n 可以看成一个网页, 因此以网页的形式打开这个文件在配置好之后，可以查看一些参数.
 
 tora.n 命令行参数:
@@ -143,24 +141,25 @@ location /templo {
 
 推荐使用这个代替 nginx 获得更好的稳定性.
 
- * 选择 httpd.apache 2.2 版本(2.4会在未来的neko版本中兼容), 这里选的是 [windows 平台](http://httpd.apache.org/docs/current/platform/windows.html#down), 然后根据 readme 文件安装
+* 选择 httpd.apache 2.2 版本(2.4会在未来的neko版本中兼容), 这里选的是 [windows 平台](http://httpd.apache.org/docs/current/platform/windows.html#down), 然后根据 readme 文件安装
 
-```bash
-# 可以在 haxe 安装目录找到这些文件, mod_neko2.ndll 适用于 apache 2.x, 而 mod_neko.ndll 仅用于 apache 1.3
-# 下边二行可以在 apache 服务器中运行普通的 .n 程序, 被注释掉是因为后边使用了 tora 作代替
-# LoadModule neko_module "C:/HaxeToolkit/neko/mod_neko2.ndll"
-# AddHandler neko-handler .n
+  ```bash
+  # 可以在 haxe 安装目录找到这些文件, mod_neko2.ndll 适用于 apache 2.x, 而 mod_neko.ndll 仅用于 apache 1.3
+  # 下边二行可以在 apache 服务器中运行普通的 .n 程序, 被注释掉是因为后边使用了 tora 作代替
+  # LoadModule neko_module "C:/HaxeToolkit/neko/mod_neko2.ndll"
+  # AddHandler neko-handler .n
+  
+  # 使用 tora, mod_tora2.ndll 和 mod_tora.ndll 的差别参见上边
+  LoadModule tora_module "C:/HaxeToolkit/neko/mod_tora2.ndll"
+  AddHandler tora-handler .n
+  ```
 
-# 使用 tora, mod_tora2.ndll 和 mod_tora.ndll 的差别参见上边
-LoadModule tora_module "C:/HaxeToolkit/neko/mod_tora2.ndll"
-AddHandler tora-handler .n
-```
+对于 htdocs 目录或虚拟目录的修改, 自行参考 apache 文档
 
-	对于 htdocs 目录或虚拟目录的修改, 自行参考 apache 文档
 
 ##### mod_rewrite
 
- * [配置 apache 2.2 mod_rewrite](http://www.jinbuguo.com/apache/menu22/mod/mod_rewrite.html)
+* [配置 apache 2.2 mod_rewrite](http://www.jinbuguo.com/apache/menu22/mod/mod_rewrite.html)
 
 httpd.conf 启用日志调试:
 
@@ -171,57 +170,57 @@ RewriteLogLevel 9	# 0 代表关闭, 9 代表开启最大 debug 输出
 
 ### 启动
 
- * 配置好后,启动 apache/nginx
+* 配置好后,启动 apache/nginx
 
- * 启动 tora.n(如果是 nginx 服务器, 注意应该开启 `-fcgi` 模式)
+* 启动 tora.n(如果是 nginx 服务器, 注意应该开启 `-fcgi` 模式)
 
- * 上边二步的顺序随意, 最后用浏览器打开测试就行, 建议在浏览器中加载 tora_admin.n 看是否能正常显示
+* 上边二步的顺序随意, 最后用浏览器打开测试就行, 建议在浏览器中加载 tora_admin.n 看是否能正常显示
 
 ### Proj
 
-文档只有 http://ncannasse.fr/blog/tora_comet?lang=en
+文档只有 <http://ncannasse.fr/blog/tora_comet?lang=en>
 
 tora目录中的文件是给项目引用使用的,而src目录是 tora.n 的源码, 通常在项目中如果使用 `-lib tora` 则可以忽视这个(因为 haxelib.json 指定了 tora 目录)
 
 下边的 API 虽然是以 Lib.load 的形式加载的, 但其实相对应的源码都在 src 下, 并非 C 端.
 
- * 输出到客户端(浏览器)用 Sys.print 或依赖于这个函数的其它方法
+* 输出到客户端(浏览器)用 Sys.print 或依赖于这个函数的其它方法
 
- * 在 tora 服务器端输出 log 时用 Sys.stderr() 或 Sys.stdout() 或者 Web.logMessage
+* 在 tora 服务器端输出 log 时用 Sys.stderr() 或 Sys.stdout() 或者 Web.logMessage
 
- * Protocol + Queue 用于实现实时消息推送（comet）,遗憾的是不支持 WebSocket 协议,不过可以自已添加这个协议。
+* Protocol + Queue 用于实现实时消息推送（comet）,遗憾的是不支持 WebSocket 协议,不过可以自已添加这个协议。
 
 
 #### API
 
 Api.hx 中的全部为静态方法及静态属性:
 
- * `lib(default,null):String` 初使化时根据 tora.exe 设置的环境变量选择的是 `mod_neko.ndll` 还是 `mod_neko2.ndll`
+* `lib(default,null):String` 初使化时根据 tora.exe 设置的环境变量选择的是 `mod_neko.ndll` 还是 `mod_neko2.ndll`
 
- * `getInfos():Infos;` 获得一些信息, 其实差不多就是打开 tora_admin.n 时所看到的内容
+* `getInfos():Infos;` 获得一些信息, 其实差不多就是打开 tora_admin.n 时所看到的内容
 
- * `command(cmd:String, ?param:String):Dynamic`; 控制 tora.exe 的一些行为 
+* `command(cmd:String, ?param:String):Dynamic`; 控制 tora.exe 的一些行为 
 
-```bash
-# 所有命令如果有输出, 都是直接以 Sys.print 的方式输出, 并不返回任何值
-stop		# 停止 tora
-gc			# 执行 neko.vm.Gc.run(true)
-clean		# 清除所有缓存了的 files, 而 files 包含了所有缓存了的 .n 文件
-hosts		# hosts 保存了使用 -config 加载的所有 VirtualHost, 直接输出 host_name => path/to/file
-share				# 输出 Share 对象的名称及占用大小
-thread(n:Int)		# 输出指定线程信息,如果存在. e.g: `Api.command("thread", "0");`
-memory(file:String)	# 解析一个 neko 文件并打印其所有 names 占用的内存大小
-```
+  ```bash
+  # 所有命令如果有输出, 都是直接以 Sys.print 的方式输出, 并不返回任何值
+  stop		# 停止 tora
+  gc			# 执行 neko.vm.Gc.run(true)
+  clean		# 清除所有缓存了的 files, 而 files 包含了所有缓存了的 .n 文件
+  hosts		# hosts 保存了使用 -config 加载的所有 VirtualHost, 直接输出 host_name => path/to/file
+  share				# 输出 Share 对象的名称及占用大小
+  thread(n:Int)		# 输出指定线程信息,如果存在. e.g: `Api.command("thread", "0");`
+  memory(file:String)	# 解析一个 neko 文件并打印其所有 names 占用的内存大小
+  ```
 
- * `setCron(uri:String, delay:Float ):Void` ??? 服务器端无限重复执行 **当前.n文件**(后边的setCorn将覆盖前边的,因此不会导致多个混乱,注意在这个方法后的代码不要调用 `command("clean")`)
+* `setCron(uri:String, delay:Float ):Void` ??? 服务器端无限重复执行 **当前.n文件**(后边的setCorn将覆盖前边的,因此不会导致多个混乱,注意在这个方法后的代码不要调用 `command("clean")`)
 
   - 可以通过 Web.getURI 获得传递的第一个参数值， 一旦调用后似乎无法停止，难道无限调用 GC???
 
- * `getExports(host: String):Dynamic;` 与 VirtualHost 相关文件 neko.vm.Module)的 exportsTable
+* `getExports(host: String):Dynamic;` 与 VirtualHost 相关文件 neko.vm.Module)的 exportsTable
 
- * `getURL(host:String, uri:String, params:Map<String,String>):String`: 返回与 VirtualHost 相对应的URL值
+* `getURL(host:String, uri:String, params:Map<String,String>):String`: 返回与 VirtualHost 相对应的URL值
 
- * `unsafe_request():Bool`: TODO: 估计只有在 flash 直连到 tora 用 -unsafe 打开的端口模块(见Protocol )时,才会返回 true
+* `unsafe_request():Bool`: TODO: 估计只有在 flash 直连到 tora 用 -unsafe 打开的端口模块(见Protocol )时,才会返回 true
 
 #### Protocol
 
@@ -229,21 +228,21 @@ memory(file:String)	# 解析一个 neko 文件并打印其所有 names 占用的
 
 正常的网页形式数据传递为 `Client -> Apache -> tora -> Apache`, 而如果用 flash 连接 tora可以跳过 apache 这里数据传递变为: `flash -> tora`
 
- * 在启动 tora 服务器时需要指定 -unsafe 和 -config 参数
+* 在启动 tora 服务器时需要指定 -unsafe 和 -config 参数
 
- * 服务器端的 index.n 像正常的网页一样用 print 输出, 
+* 服务器端的 index.n 像正常的网页一样用 print 输出, 
 
- * flash 端只能通过 addHeader或addParameter 传递请求头或传递参数, index.n 可以通过 Web.getClientHeader/Web.getParams 之类的方法 获得数据
+* flash 端只能通过 addHeader或addParameter 传递请求头或传递参数, index.n 可以通过 Web.getClientHeader/Web.getParams 之类的方法 获得数据
 
- * flash 端只接收 index.n 的 print 输出的数据, 忽略掉应答头(因为默认的Protocol不处理这些应答数据)
+* flash 端只接收 index.n 的 print 输出的数据, 忽略掉应答头(因为默认的Protocol不处理这些应答数据)
 
- * 因此 Protocol 仅仅是让 flash 从 tora服务器像http协议那样获得数据, 并不能交互。
+* 因此 Protocol 仅仅是让 flash 从 tora服务器像http协议那样获得数据, 并不能交互。
 
-	> issue: 如果阻塞 index.n 使之保持长连接会怎样了?  这种情况下如果另一个flash连接进来, 这时 tora 将开启新线程再加载一个新的 index.n???
-		
-	> **更新**:, Queue 的 AddHandler 可以防止socket连接中断而保持长连接,但又不会阻塞index.n.
+  > issue: 如果阻塞 index.n 使之保持长连接会怎样了?  这种情况下如果另一个flash连接进来, 这时 tora 将开启新线程再加载一个新的 index.n???
+  >
+  > **更新**:, Queue 的 AddHandler 可以防止socket连接中断而保持长连接,但又不会阻塞index.n.
 
- * 实际上除了 flash, Protocol还可以在 neko 客户端中使用并获得 index.n 的数据(使用 neko 作为客户端记得在 connect 之后调用 `Protocol::wait()`)
+* 实际上除了 flash, Protocol还可以在 neko 客户端中使用并获得 index.n 的数据(使用 neko 作为客户端记得在 connect 之后调用 `Protocol::wait()`)
 
   - `onDisconnect()` 仅用于 flash
 
@@ -262,39 +261,37 @@ class Queue<T> {
 }
 ```
 
- * A-client 通过 addHandler 监听服务器消息推送（Socket 长连接）, 
+* A-client 通过 addHandler 监听服务器消息推送（Socket 长连接）, 
 
-```haxe
-// (实验性)交互, 由于服务器端只能获得 params 或 headers,因此对于已经连接的 Protocol
-p.reset();	// 重置所有请求参数, 但是要注意当出现 disconnect 后重新连接的参数
-m.addHeader("Key1", "Value1"); 
-p.call(url);
-```
+  ```haxe
+  // (实验性)交互, 由于服务器端只能获得 params 或 headers,因此对于已经连接的 Protocol
+  p.reset();	// 重置所有请求参数, 但是要注意当出现 disconnect 后重新连接的参数
+  m.addHeader("Key1", "Value1"); 
+  p.call(url);
+  ```
 
  * 另一个 B-client 则直接调用名字相同的 notify, 这时所有调用了 addHandler 将收到消息 `onData(msg)` 
 
-示例: 
+  ```bash
+  > tora.exe -unsafe localhost:6667 -config vh.conf
+  [DATE] Opening unsafe port on localhost:6667
+  [DATE] Starting Tora server on 127.0.0.1:6666 with 32 threads
+  ```
 
-```bash
-> tora.exe -unsafe localhost:6667 -config vh.conf
-[DATE] Opening unsafe port on localhost:6667
-[DATE] Starting Tora server on 127.0.0.1:6666 with 32 threads
-```
+  当用于线上服务器时, 可以指定 `tora -config httpd.conf` 并配置好相应的 VirtualHost 二级域名就行了,下边是本地测试用
 
-当用于线上服务器时, 可以指定 `tora -config httpd.conf` 并配置好相应的 VirtualHost 二级域名就行了,下边是本地测试用
-
-```xml
-<!-- 把 index.n 置下边指定目录, 注意路径不要加引号, 因为 tora 没处理引号, -->
-<!-- 注意这是本地测试因此不要把下边配置添加入到 httpd.conf 中去, 随便建一个文件如 vh.conf 就好 -->
-<VirtualHost>  
-    DocumentRoot /Apache22/htdocs/unsafe 
-    ServerName localhost
-</VirtualHost>
-```
-
- * 细节: tora 解析 -config 文件后, 将生成一个 `ServerName|ServerAlias => DocumentRoot` 的 map,
-
-	> 当 flash 通过 socket 连接过去时, socket.connect 的主机参数(host) 将作为 ServerName 然后获得 DocumentRoot 即 index.n 的正确位置 
+  ```xml
+  <!-- 把 index.n 置下边指定目录, 注意路径不要加引号, 因为 tora 没处理引号, -->
+  <!-- 注意这是本地测试因此不要把下边配置添加入到 httpd.conf 中去, 随便建一个文件如 vh.conf 就好 -->
+  <VirtualHost>  
+      DocumentRoot /Apache22/htdocs/unsafe 
+      ServerName localhost
+  </VirtualHost>
+  ```
+  
+* 细节: tora 解析 -config 文件后, 将生成一个 `ServerName|ServerAlias => DocumentRoot` 的 map,
+  
+  > 当 flash 通过 socket 连接过去时, socket.connect 的主机参数(host) 将作为 ServerName 然后获得 DocumentRoot 即 index.n 的正确位置 
 
 flash + index.n 端:
 
@@ -419,28 +416,28 @@ class Test {
 
 **在不同的模块(.n文件)中** 共享永久数据(直至重启tora.exe). 比用数据库共享更为高效和便捷 http://old.haxe.org/doc/neko/tora_share,
 
- > 这说明可以在多进程多实例中共享变量, 由于在 tora 中 Web.cacheModule 会有多个同模块实例,导致普通的静态不再适用, 因此 Share 变得非常有必要。
+> 这说明可以在多进程多实例中共享变量, 由于在 tora 中 Web.cacheModule 会有多个同模块实例,导致普通的静态不再适用, 因此 Share 变得非常有必要。
 
- * `new(name:String, make:Void->T)` name 为共享数据的标识符, 如果没有相应的数据,则会调用 make 来新建一个.
+* `new(name:String, make:Void->T)` name 为共享数据的标识符, 如果没有相应的数据,则会调用 make 来新建一个.
 
- * `get(lock:Bool):T` 获得相应的数据, 参数 lock 表示是否锁定,防止其它线程访问. 稍后你需要调用 `.commit()` 来释放锁
+* `get(lock:Bool):T` 获得相应的数据, 参数 lock 表示是否锁定,防止其它线程访问. 稍后你需要调用 `.commit()` 来释放锁
 
- * `set(data:T):Void` 设置数据, 如果你修改了通过 get 获得的数据, 并且想要新到共享,需要调用这个方法
+* `set(data:T):Void` 设置数据, 如果你修改了通过 get 获得的数据, 并且想要新到共享,需要调用这个方法
 
- * `commit():Void`	释放 `get(true)` 的锁定
+* `commit():Void`	释放 `get(true)` 的锁定
 
- * `free()` 删除这个 name 所对应的共享的数据，需要在获得锁的状态下调用
+* `free()` 删除这个 name 所对应的共享的数据，需要在获得锁的状态下调用
 
- * **重要:** Share 支持的字段数据类型有限,参看 `Persist::processType` 对数据的解析, 例如不支持 Map, 并不不支持 rtti 在 abstract 类上
+* **重要:** Share 支持的字段数据类型有限,参看 `Persist::processType` 对数据的解析, 例如不支持 Map, 并不不支持 rtti 在 abstract 类上
 
 
 需要注意是， 不能保证数据的并发访问, 一个对锁定的数据进行修改的线程可能导致另一个读取没有锁定数据的线程崩溃, 这需要你来保证适当的原子性, （？？？每个对 `Share::get` 方法都传入 true 为参数）
 
 由于数据在重启 tora 时失效, 因此在重启 tora 时, 应该先临时关闭网站的访问, 或者哪些数据并不适合用 Share 来保存.
 
-对于 neko 目标,还有个 Web.cacheModule 的方法可以用于缓存数据, 但是这个方法不适用 tora 环境 https://github.com/HaxeFoundation/tora/issues/6 , 因为当一个模块很忙时, tora 会另开一个线程来处理， 这样将会导致多个cache存在。
+对于 neko 目标,还有个 Web.cacheModule 的方法可以用于缓存数据, 但是这个方法不适用 tora 环境 <https://github.com/HaxeFoundation/tora/issues/6> , 因为当一个模块很忙时, tora 会另开一个线程来处理， 这样将会导致多个cache存在。
 
- * 也许可以用 Web.cacheModule 缓存已经打开的数据库连接, 这样即使多个数据库连接存在也没关系
+* 也许可以用 Web.cacheModule 缓存已经打开的数据库连接, 这样即使多个数据库连接存在也没关系
 
 example: 
 
@@ -475,19 +472,19 @@ class App {
 
 ### issue
 
- * tora 是如何实现将 haxe 生成的 neko 代码被另一个 neko 模块用 Lib.load 来调用??? neko.vm.Loader.make
+* tora 是如何实现将 haxe 生成的 neko 代码被另一个 neko 模块用 Lib.load 来调用??? neko.vm.Loader.make
 
   - 参考 tora.hx 中的 initLoader 和 ModToraApi.hx
 
- * ~~如果在 index.n 写文件,怎么避免多线程之间的冲突了? 是否需要一个常驻于 tora.exe 的 Mutex 对象？~~
+* ~~如果在 index.n 写文件,怎么避免多线程之间的冲突了? 是否需要一个常驻于 tora.exe 的 Mutex 对象？~~
 
   - 实测: 其实只要简单在 index.n 中使用 Mutex 就行了, 之前想多了.
 
- * 在 Protocol上实现 WebSocket,由于 unsafe 是直连的,因此只要修改 tora 端的代码就好了, 但
+* 在 Protocol上实现 WebSocket,由于 unsafe 是直连的,因此只要修改 tora 端的代码就好了, 但
 
   - 问题是如何同时兼容 Socket 与 WebSocket了? 修改还是继承 Client.hx 了?
 
-	> 也许另一个分支 https://github.com/motion-twin/tora 已经实现， 并且包含有 hxssl.
+  也许另一个分支 <https://github.com/motion-twin/tora> 已经实现， 并且包含有 hxssl.
 
 <br />
 
@@ -506,6 +503,6 @@ motion-twin tora
 
 最新改动:
 
- - 移除对 hxssl 的依赖, 由于 ssl 已经在 neko 得到支持(nightly build版, 但haxe还未把PR并未整合进来)
+* 移除对 hxssl 的依赖, 由于 ssl 已经在 neko 得到支持(nightly build版, 但haxe还未把PR并未整合进来)
 
 <br />

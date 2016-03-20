@@ -9,15 +9,15 @@ categories: other
 
 [一些 Java 的语法参考]({% post_url 2014-05-13-java-and-haxe-comparison %})
 
- * 下载 [ADT](http://developer.android.com/sdk/index.html)
+* 下载 [ADT](http://developer.android.com/sdk/index.html)
 
- * 解压后, 先运行 `SDK Manager.exe` 下载需要的 android sdk, 这一步将会花上很长时间.
+* 解压后, 先运行 `SDK Manager.exe` 下载需要的 android sdk, 这一步将会花上很长时间.
 
-	> 目前国内需要设置代理 Tools -> Options 在 HTTP Proxy Server 里填 mirrors.neusoft.edu.cn, Port 为 80
+  > 目前国内需要设置代理 Tools -> Options 在 HTTP Proxy Server 里填 mirrors.neusoft.edu.cn, Port 为 80
+  >
+  > 除了 SDK 包,API 文档(在最高等级API 目录里) 还有一些其它的 工具包以及扩展(例如: HAXM 可用于 Inter CPU加速模拟器),
 
-	> 除了 SDK 包,API 文档(在最高等级API 目录里) 还有一些其它的 工具包以及扩展(例如: HAXM 可用于 Inter CPU加速模拟器),
-
- * eclipse 安装中文包, help -> install new software 点击 `ADD...` 按钮, 输入 `http://download.eclipse.org/technology/babel/update-site/R0.12.0/luna`, 确认后选译自已的语言包.
+* eclipse 安装中文包, help -> install new software 点击 `ADD...` 按钮, 输入 `http://download.eclipse.org/technology/babel/update-site/R0.12.0/luna`, 确认后选译自已的语言包.
 
 <!-- more -->
 
@@ -27,9 +27,9 @@ categories: other
 
 再新建 android project 的最后一步时, 将 Create Activity 去掉, 做一个纯代码的 Hello World! 未来再使用 res.layout::xml 来自动构建这些. 下边是一些需要注意的细节:
 
- > 主类 需要在正确的包目录下, android 应用要求有 3 层，主类必须建立在这个目录之下.这里你需要连续建 3 个空目录
-
- > 在 AndroidManifest 的 application标签下的指出这个主类, UI 设置能帮助完成这一步.
+> 主类 需要在正确的包目录下, android 应用要求有 3 层，主类必须建立在这个目录之下.这里你需要连续建 3 个空目录
+>
+> 在 AndroidManifest 的 application标签下的指出这个主类, UI 设置能帮助完成这一步.
 
 
 ```java
@@ -95,11 +95,11 @@ public class Helo extends Activity {
 
 ### 其它
 
- * [中文API](http://androidbox.sinaapp.com/), 这个链接有其它更多不错的内容. 
+* [中文API](http://androidbox.sinaapp.com/), 这个链接有其它更多不错的内容. 
 
 #### Activity
 
-![activity.png](/assets/img/android-activity.png)
+  ![activity.png](/assets/img/android-activity.png)
 
 #### i18n(国际化)
 
@@ -117,7 +117,6 @@ res/values 目录下的 strings.xml 文件, 如果想支持中文, 复制 values
 #### theme(主题)
 
 [原文](http://tieba.baidu.com/p/2029729690)
-
 
 
 ```
@@ -179,8 +178,8 @@ Theme.Dialog.RecentApplications
 
 ### NDK
 
- *[NDK Download ](https://developer.android.com/ndk/downloads/index.html#download)
+* [NDK Download ](https://developer.android.com/ndk/downloads/index.html#download)
 
- * [NDK Sample](https://github.com/googlesamples/android-ndk)
+* [NDK Sample](https://github.com/googlesamples/android-ndk)
 
 <br />

@@ -7,15 +7,15 @@ categories: haxe
 
 ---
 
-之前以为打包成 `.air` 由于需要安装,因此很不方便. 后来发现其实 adobe 有工具打包成bundle的形式(window平台打包成exe文件).可以使用`flash.html.HTMLLoader` 加载普通的网页, 相比`nw.js`打包网页要小20M左右, 最简单的方法是用 `flashdevelop` 创建一个 `haxe/air` 的示例.
+之前以为打包成 `.air` 由于需要安装,因此很不方便. 后来发现其实 adobe 有工具打包成bundle的形式(window平台打包成exe文件).可以使用flash.html.HTMLLoader 加载普通的网页, 相比 nw.js 打包网页要小20M左右, 最简单的方法是用 flashdevelop 创建一个 haxe/air 的示例.
 
 <!-- more -->
 
 对于一些 AIR 属性的类, 你需要使用 haxe 的类库 air3,详情见: `haxelib info ari3`
 
-### 创建 `air app.xml`
+### 创建 air app.xml
 
-AIR 应用程序描述符元素: http://help.adobe.com/zh_CN/air/build/WSfffb011ac560372f2fea1812938a6e463-8000.html
+AIR 应用程序描述符元素: <http://help.adobe.com/zh_CN/air/build/WSfffb011ac560372f2fea1812938a6e463-8000.html>
 
 [官网参考](http://help.adobe.com/en_US/air/build/WS144092a96ffef7cc4c0afd1212601c9a36f-8000.html) 示例: 
 
@@ -138,7 +138,7 @@ adt -package %OPTIONS% %SIGNING_OPTIONS% %OUTPUT% %APP_XML% %APP_DIR%
 
 由于秘成 air安装很麻烦, 因此对于桌面平台建议生成 `-target bundle`: 对于windows平台,这将会生成一个不需要安装的 exe 文件
 
-参考: http://help.adobe.com/zh_CN/air/build/WSfffb011ac560372f709e16db131e43659b9-8000.html
+参考: <http://help.adobe.com/zh_CN/air/build/WSfffb011ac560372f709e16db131e43659b9-8000.html>
 
 ```bash
 # 签名文件参考上小节的 
@@ -154,7 +154,7 @@ adt -package
 
 #### ADL(AIR Debug Launcher)
 
-http://help.adobe.com/zh_CN/air/build/WSfffb011ac560372f-6fa6d7e0128cca93d31-8000.html
+<http://help.adobe.com/zh_CN/air/build/WSfffb011ac560372f-6fa6d7e0128cca93d31-8000.html>
 
 ADL 的完整语法是:
 
@@ -181,17 +181,17 @@ adl [-runtime runtime-directory]	# 指定运行库目录, 如果未指定,则使
 
 ADT 是一个 Java程序, 用于开发 AIR 应用程序的多用途命令行工具 http://help.adobe.com/zh_CN/air/build/WS5b3ccc516d4fbf351e63e3d118666ade46-7fd9.html
 
- * 将 AIR 应用程序打包为 `.air` 安装文件
+* 将 AIR 应用程序打包为 `.air` 安装文件
 
- * 将 AIR 应用程序打包为本机安装程序。
+* 将 AIR 应用程序打包为本机安装程序。
 
-	> 例如：在 Windows 上打包为 .exe 安装程序文件，在 iOS 上打包为 .ipa，或者在 Android 上打包为 .apk
+  例如：在 Windows 上打包为 .exe 安装程序文件，在 iOS 上打包为 .ipa，或者在 Android 上打包为 .apk
 	
- * 将本机扩展打包为 AIR 本机扩展 (ANE) 文件
+* 将本机扩展打包为 AIR 本机扩展 (ANE) 文件
 
- * 1)使用数字证书对 AIR 应用程序签名, 2)更改（迁移）用于应用程序更新的数字签名, 3)创建自签名的数字代码签名证书
+* 1)使用数字证书对 AIR 应用程序签名, 2)更改（迁移）用于应用程序更新的数字签名, 3)创建自签名的数字代码签名证书
 
- * 1)确定连接到计算机的设备, 2)远程安装、启动和卸载移动设备上的应用程序, 3)远程安装和卸载移动设备上的 AIR 运行时
+* 1)确定连接到计算机的设备, 2)远程安装、启动和卸载移动设备上的应用程序, 3)远程安装和卸载移动设备上的 AIR 运行时
 
 ```bash
 adt -command options
@@ -201,7 +201,7 @@ adt -command options
 
 [AIR 中不支持的 WebKit 功能](http://help.adobe.com/zh_CN/air/html/dev/WSb2ba3b1aad8a27b0-67c0013e126afbe6c4d-8000.html)
 
-http://help.adobe.com/zh_CN/air/html/dev/WS5b3ccc516d4fbf351e63e3d118666ade46-7eb3.html
+<http://help.adobe.com/zh_CN/air/html/dev/WS5b3ccc516d4fbf351e63e3d118666ade46-7eb3.html>
 
 ```haxe
 package;
@@ -210,7 +210,6 @@ import flash.display.StageScaleMode;
 import flash.Lib;
 import flash.html.HTMLLoader;
 import flash.net.URLRequest;
-
 
 class Main {
 	
@@ -252,13 +251,13 @@ if(window.runtime){
 
 `frameworks\libs\air\` 目录下的一些脚本
 
- * `AIRAliases.js` 一些快速访问 flash 的端方法
+* AIRAliases.js 一些快速访问 flash 的端方法
 
- * `AIRIntrospector.js` 控制台, 用于协助调试基于 HTML 的应用. 引入后,按下 F12 打开. 这个控制台不怎么好用, 比如没有智能提示
+* AIRIntrospector.js 控制台, 用于协助调试基于 HTML 的应用. 引入后,按下 F12 打开. 这个控制台不怎么好用, 比如没有智能提示
 
 #### 保护源码
 
-由于HTMLLoader环境中js代码在loaded事之后eval命令受限, 因此思路是以 loadString 的方法加载动态生成的页面, 并设 `placeLoadStringContentInApplicationSandbox` 属性为 true. 示例引用: https://forums.adobe.com/message/3510525#3510525
+由于HTMLLoader环境中js代码在loaded事之后eval命令受限, 因此思路是以 loadString 的方法加载动态生成的页面, 并设 placeLoadStringContentInApplicationSandbox 属性为 true. 示例引用: <https://forums.adobe.com/message/3510525#3510525>
 
 下边示例的第二部分是获取 MAC 地址, 但其实 air 有 `NetworkInterface::hardwareAddress` 方法可以做到这个.
 

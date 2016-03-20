@@ -81,19 +81,19 @@ haxelib
 
 #### 快速入门
 
- * haxelib run munit config
+* haxelib run munit config
 
- 	> 将会在当前目录中创建配置文件 `.munit`, 并且创建 一些样例测试于 test 目录下.
+  将会在当前目录中创建配置文件 `.munit`, 并且创建 一些样例测试于 test 目录下.
 
- * haxelib run munit test
+* haxelib run munit test
 
- 	> 根据 `.munit` 文件的配置进行测试.
+  根据 `.munit` 文件的配置进行测试.
 
- * haxelib run munit test -js -as3
+* haxelib run munit test -js -as3
 
- 	> 仅仅测试 js 与 as3 这二个平台.
-
- 	> 备注: munit 不知道是如何实现忽略 hxml 文件中的目标平台? haxe 好像并没有相关的命令行参数,  	
+  仅仅测试 js 与 as3 这二个平台.
+  
+  备注: munit 不知道是如何实现忽略 hxml 文件中的目标平台? haxe 好像并没有相关的命令行参数,  	
 
 
 #### 自动生成
@@ -129,24 +129,24 @@ haxelib run munit gen -filter ExampleTest
 
  5. 修改 TrandTest.hx 之后, 全平台测试: `haxelib run munit test`, 或指定平台测试: `haxelib run munit test -js -as3` , 一般情况下测 `-neko` 平台就行了
 
-	> BUG? `haxelib run munit test` 将会覆盖 第 4 步, 
+  BUG? `haxelib run munit test` 将会覆盖 第 4 步, 
 
 
 #### 依赖
 
 只是这个类依赖的库有些多, 但是很多情况下你不需要了解这些.
 
- * [mcover](https://github.com/massiveinteractive/mcover) 单元测试的代码覆盖率
+* [mcover](https://github.com/massiveinteractive/mcover) 单元测试的代码覆盖率
 
- * [mconsole](https://github.com/massiveinteractive/mconsole) 提供一致的跨平台的 trace 输出.
+* [mconsole](https://github.com/massiveinteractive/mconsole) 提供一致的跨平台的 trace 输出.
 
- * [hamcrest](https://github.com/mikestead/hamcrest-haxe) 匹配断言库
+* [hamcrest](https://github.com/mikestead/hamcrest-haxe) 匹配断言库
 
 
 ### NanoTest
 
 一个日本人写的轻量级单元测试, 和标准库的 haxe.unit 很像, but it can run as pre-compilation macro and can output test failures as compiler warnings or errors.
 
-https://github.com/shohei909/NanoTest
+<https://github.com/shohei909/NanoTest>
 
 <br />

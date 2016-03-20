@@ -5,11 +5,11 @@ date:	2015-03-09 08:12:18
 categories: haxelib
 ---
 
-https://underscorediscovery.github.io/flow/
+<https://underscorediscovery.github.io/flow/>
 
-flow 是一个项目构建工具,基于nodejs, flow的源码包的 bin 目录下有各平台的 `node.exe`, 另 `src/flow/tools` 下包含一个nodejs源码的http服务器用于调试web应用(其实haxe也自带一个http服务器)
+flow 是一个项目构建工具,基于nodejs, flow的源码包的 bin 目录下有各平台的 node.exe, 另 `src/flow/tools` 下包含一个nodejs源码的http服务器用于调试web应用(其实haxe也自带一个http服务器)
 
-flow 通过解析一个 json 配置文件来布署应用. 通常这个 json 文件名为 `project.flow`
+flow 通过解析一个 json 配置文件来布署应用. 通常这个 json 文件名为 project.flow
 
 顺便提下:
 
@@ -41,13 +41,13 @@ haxelib run flow "$@"
 
 通过在命令行中输入 `flow usage` 来获取帮助信息. 可以详细到命令,如: `flow usage run` 这和打开项目源码,找到 cmd/run 目录下的 md 文件一样.
 
- * `flow build <target> [--debug]`
+* `flow build <target> [--debug]`
 
- * `flow run <target> [--debug]`
+* `flow run <target> [--debug]`
 
- * `flow clean <target>`
+* `flow clean <target>`
 
- * `flow package <target>`
+* `flow package <target>`
 
 如果未指定 `<target>`, 则使用你的当前系统, 例如在 mac 中 `flow build` 表现为 `flow build mac --arch 64`
 
@@ -57,33 +57,33 @@ haxelib run flow "$@"
 
 ### 特性
 
- * icons - 嵌入和转换 icons 为所有目标(target)(除了 linux)
+* icons - 嵌入和转换 icons 为所有目标(target)(除了 linux)
 
- * package - 快速打包 builds 为 zip 或 tar
+* package - 快速打包 builds 为 zip 或 tar
 
- * hooks - 前,后钩子(运行nodejs脚本)
+* hooks - 前,后钩子(运行nodejs脚本)
 
- * clean - 删除build和单独的项目输出,或全部
+* clean - 删除build和单独的项目输出,或全部
 
- * upx - 针对桌面平台, 最终二进制文件可以自动压缩
+* upx - 针对桌面平台, 最终二进制文件可以自动压缩
 
- * files - 灵活的复制和模板系统
+* files - 灵活的复制和模板系统
 
- * build - 将haxe代码生成部署应用
+* build - 将haxe代码生成部署应用
 
- * launch - 使用内部的web server,与文件同步(即修改了源码将立即反应)运行app, 以及更多
+* launch - 使用内部的web server,与文件同步(即修改了源码将立即反应)运行app, 以及更多
 
 ### 文件格式
 
-https://underscorediscovery.github.io/flow/flow.html
+<https://underscorediscovery.github.io/flow/flow.html>
 
 如前所述, flow 文件格式为JSON格式的文本字符串.以下使用如下约定:
 
- * `node` 一个 json 对象,例如: `{}`
+* `node` 一个 json 对象,例如: `{}`
 
- * `list` 数组,例:`[]`
+* `list` 数组,例:`[]`
 
- * `key` 为一对key/value ,例: `name:'value'`
+* `key` 为一对key/value ,例: `name:'value'`
 
 
 
@@ -91,13 +91,13 @@ https://underscorediscovery.github.io/flow/flow.html
 
 包含 3 个保留 nodes,分别为:
 
- * flow, 根据需要配置 flow 命令行本身. 配置细节参看 `src/flow/config.json`
+* flow, 根据需要配置 flow 命令行本身. 配置细节参看 `src/flow/config.json`
 
   - 例如: 覆盖 `build.android.sdk 或 build.android.ant_path` 的路径设置
 
- * project, 项目的根节点, flow文件格式主要的部分
+* project, 项目的根节点, flow文件格式主要的部分
 
- * if, 同 project, 但允许条件检测.
+* if, 同 project, 但允许条件检测.
 
 **custom root nodes**
 
@@ -129,19 +129,19 @@ if:{
 
 内建的defines
 
- * `dependency` 任何依赖将会成为 define,
+* `dependency` 任何依赖将会成为 define,
 
   - 参考 haxelib,只是引用define时,使用下滑线"_"代替减号"-"
 
- * `desktop` 当编译为 mac,windows,或linux时
+* `desktop` 当编译为 mac,windows,或linux时
 
- * `mobile`: 当编译为 andoird或ios
+* `mobile`: 当编译为 andoird或ios
 
- * `target`: 当前目标(target)将自动为 define
+* `target`: 当前目标(target)将自动为 define
 
   - web,android,ios,mac,linux,windows....
 
- * `arch-`arch
+* `arch-`arch
 
   - on web, 将使用 `arch-web`
 
@@ -149,23 +149,23 @@ if:{
 
   - `arch-armv7`, `arch-i386` 等等
 
- * `ios-sim` 当构建时指定了 `--sim`
+* `ios-sim` 当构建时指定了 `--sim`
 
- * `debug`: 当开启 `--debug` 时.
+* `debug`: 当开启 `--debug` 时.
 
- * 通过 project.flow 文件定义的
+* 通过 project.flow 文件定义的
 
 #### Conditional project nodes
 
 在根节点 if中, 目前可以使用下边节点:
 
- * files
+* files
 
- * build.fiels
+* build.fiels
 
- * build.defines
+* build.defines
 
- * build.flags
+* build.flags
 
 条件节点依赖于各种 defines
 
@@ -190,11 +190,11 @@ if : {
 
 条件节点支持如下操作符: 
 
- * `!` not
+* `!` not
 
- * `||` or
+* `||` or
 
- * `&&` and
+* `&&` and
 
 但是注意: 使用条件操作符的表达式需要包括在引号内部(单或双引号)
 
@@ -556,8 +556,8 @@ flow并非只作为 luxe的构建工具,但是...
 
 运行 `haxelib run flow run web` 的步骤:
 
- * 获取 args 并传递给 nodejs的 flow.js
+* 获取 args 并传递给 nodejs的 flow.js
 
- * flow.js 解析 project.flow 和 args
+* flow.js 解析 project.flow 和 args
 
 <br />

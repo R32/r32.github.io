@@ -124,56 +124,57 @@ class Test extends mcli.CommandLine{
 
 在源代码中找到的这些标记
 
- * **用于类字段**
+* **用于类字段**
 
-```
-@:skip						# 避免 public 字段被 宏 解析成 命令参数
-@:msg(string)				# 添加附属的说明, 常用于添加　分隔线
-```
+  ```
+  @:skip						# 避免 public 字段被 宏 解析成 命令参数
+  @:msg(string)				# 添加附属的说明, 常用于添加　分隔线
+  ```
 
- * **用于注释中**
+* **用于注释中**
 
-```
-@alias <name>				# 别名, 常用于做一个 单字母的别名, 对于单字母可以用一个 -　调用
-@command <name>				# 更改命令的实际名称, 常用于 将 map 字段更名为 D
-@region <string>			# 同 @:msg(string), 注: 换行符 需要有空格字符作参数的 @region
-@key <name>					# 将默认说明用的 key 改为其它字符, 见上边示例的
-@value <name>				# 同@key, 将默认说明用的 value 改为其它字符, 
-```
+  ```
+  @alias <name>				# 别名, 常用于做一个 单字母的别名, 对于单字母可以用一个 -　调用
+  @command <name>				# 更改命令的实际名称, 常用于 将 map 字段更名为 D
+  @region <string>			# 同 @:msg(string), 注: 换行符 需要有空格字符作参数的 @region
+  @key <name>					# 将默认说明用的 key 改为其它字符, 见上边示例的
+  @value <name>				# 同@key, 将默认说明用的 value 改为其它字符, 
+  ```
 
 #### 其它
 
- * 由于一些函数在运行时才会调用到,所以推荐在继承类上添加 @:keep 防止被 -dce full 清除
+* 由于一些函数在运行时才会调用到,所以推荐在继承类上添加 @:keep 防止被 -dce full 清除
 
- * 方法 的参数类型可以为 Array<String> 但是参数名必须为 varArgs 或 rest, 这个特性常用于 runDefault, 用于处理多个参数
- 
- * `Dispatch.addDecoder` 可用于添加自定义的 解释器, 必须在 `new Dispatch` 之前调用, 示例参看 `sample/git/`
+* 方法 的参数类型可以为 Array<String> 但是参数名必须为 varArgs 或 rest, 这个特性常用于 runDefault, 用于处理多个参数
 
- * 在添加 sub command 时记得给继承类加 @:keep 防止被 -dce 清除, 示例参看 `sample/git/`
+* `Dispatch.addDecoder` 可用于添加自定义的 解释器, 必须在 `new Dispatch` 之前调用, 示例参看 `sample/git/`
 
- * 如果你使用了 haxelib nodejs 库, 那么目前 Sys.args() 返回的参数将带有 node file.js 这二个参数.
+* 在添加 sub command 时记得给继承类加 @:keep 防止被 -dce 清除, 示例参看 `sample/git/`
 
- * 个人调整,支持 -Dkey=value , -D　与　key=value之间没有空格的模式
+* 如果你使用了 haxelib nodejs 库, 那么目前 Sys.args() 返回的参数将带有 node file.js 这二个参数.
 
-```haxe
-@:keep																// 在继承类上添加 @:keep 防止被 -dce full 清除
-class Main{
-	public static function main() {		
-		var args:Array<String> = [];		
-		for(str in Sys.args().slice(ARGSLICE)){								
-			if(str != "-D" && StringTools.startsWith(str,"-D")){	// 将类似 -Dkey=value 变成 -D key=value 的形式
-				args.push("-D");
-				args.push(str.substr(3));
-			}else{
-				args.push(str);
-			}
-		}		
-		new mcli.Dispatch(args).dispatch(new Main());
-	}
-	static inline var ARGSLICE:Int = #if nodejs 2 #else 0 #end;		// nodejs 的 args 会把 node file.js 这二个也加入到 参数
-}	
-```
+* 个人调整,支持 -Dkey=value , -D　与　key=value之间没有空格的模式
 
- * 在 DOS 中正确显示中文
+  ```haxe
+  @:keep
+  class Main{
+  	public static function main() {		
+  		var args:Array<String> = [];		
+  		for(str in Sys.args().slice(ARGSLICE)){
+  			// 将类似 -Dkey=value 变成 -D key=value 的形式
+  			if(str != "-D" && StringTools.startsWith(str,"-D")){
+  				args.push("-D");
+  				args.push(str.substr(3));
+  			}else{
+  				args.push(str);
+  			}
+  		}		
+  		new mcli.Dispatch(args).dispatch(new Main());
+  	}  // nodejs 的 args 会把 node file.js 这二个也加入到 参数
+  	static inline var ARGSLICE:Int = #if nodejs 2 #else 0 #end;
+  }	
+  ```
 
-	> 由于 dos 是 gbk 编码的, 而通常大家的代码都是 utf-8 编码, 因此只要把继承 mcli.CommandLine 的文件编码改为 ansi 就能正确显示中文帮助信息了
+* 在 DOS 中正确显示中文
+
+  由于 dos 是 gbk 编码的, 而通常大家的代码都是 utf-8 编码, 因此只要把继承 mcli.CommandLine 的文件编码改为 ansi 就能正确显示中文帮助信息了

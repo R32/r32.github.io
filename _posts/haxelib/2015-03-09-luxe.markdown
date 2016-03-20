@@ -93,13 +93,13 @@ flow
 snow
 ------
 
-https://underscorediscovery.github.io/snow/
+<https://underscorediscovery.github.io/snow/>
 
 
 
 ### mint
 
-轻量UI库, http://snowkit.github.io/mint/ 
+轻量UI库, <http://snowkit.github.io/mint/>
 
 
 ### 其它
@@ -107,7 +107,7 @@ https://underscorediscovery.github.io/snow/
 
 #### Android设置
 
-原文: http://snowkit.org/2014/10/29/quick-setup-guides-and-help/#androidspecificsetup
+原文: <http://snowkit.org/2014/10/29/quick-setup-guides-and-help/#androidspecificsetup>
 
 你需要告诉 flow(luxe的编译工具), android sdk 以及 ant build tools 的文件位置.而 android ndk 则交由 hxcpp 配置,通过储存为 `[user home directory]/.hxcpp_config.xml`.
 

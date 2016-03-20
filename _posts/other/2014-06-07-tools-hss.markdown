@@ -181,28 +181,28 @@ HSS 源文件的 Rules.nml 文件中列出的整个的 CSS 属性规则，用于
 
 [CSS 选译器](http://www.w3.org/TR/selectors/#selectors) , [中文 w3school css 选译器](http://www.w3school.com.cn/cssref/css_selectors.asp)
 
- * `E`: 支持
+* `E`: 支持
 
- * `E F`: 支持
+* `E F`: 支持
 
- * `E > F`: 支持
+* `E > F`: 支持
 
- * `E ~ F`: 支持
+* `E ~ F`: 支持
 
- * `E + F`: 支持
+* `E + F`: 支持
 
- * `DIV.warning`: 支持
+* `DIV.warning`: 支持
 
- * `E #myid`: 支持
+* `E #myid`: 支持
 
- * `E:first-child, E:link, E:hover` and other CSS2 and 3 pseudo-classes selectors are supported (except the ones that takes an argument)
+* `E:first-child, E:link, E:hover` and other CSS2 and 3 pseudo-classes selectors are supported (except the ones that takes an argument)
 
- * `E[foo], E[foo=value], E[foo|=value], E[foo~=value], E[foo^=value], E[foo$=value], E[foo*=value]`: supported
+* `E[foo], E[foo=value], E[foo|=value], E[foo~=value], E[foo^=value], E[foo$=value], E[foo*=value]`: supported
 
 
 #### 自定义的属性
 
- 当使用 **非标准** CSS 属性时,比如添加一些自定义的属性 或用于 IE hack 时.使用 `CSS()`, 小示例:
+当使用 **非标准** CSS 属性时,比如添加一些自定义的属性 或用于 IE hack 时.使用 `CSS()`, 小示例:
 
 ```bash
 .image{
@@ -247,25 +247,25 @@ var scale = 3;
 
  HSS 添加了一些小的 hacks
 
- * opacity: 将生成相应的 IE 属性 filter alpha
+* opacity: 将生成相应的 IE 属性 filter alpha
 
- * border-radius(and border-top-left-radius, etc) : 将生成 -moz-border-radius 和 -webkit-border-radius 用于支持 Firefox and Chrome/Safari.
+* border-radius(and border-top-left-radius, etc) : 将生成 -moz-border-radius 和 -webkit-border-radius 用于支持 Firefox and Chrome/Safari.
 
- * box-shadow： 将同样生成 -moz-box-shadow and -webkit-box-shadow 以支持 Firefor 和 Chrome/Safari
+* box-shadow： 将同样生成 -moz-box-shadow and -webkit-box-shadow 以支持 Firefor 和 Chrome/Safari
 
- * text-shadow: HSS 支持, 但不显示任何内容对于 IE6-8
+* text-shadow: HSS 支持, 但不显示任何内容对于 IE6-8
 
- * display: inline-block; 将添加 IE 修复以获得正确的支持
+* display: inline-block; 将添加 IE 修复以获得正确的支持
 
- * color: rgba(r, g, b, a); 将添加固定颜色默认值，当浏览器不支持rgba. 例: `rgba(100,80,60,0.5);`
+* color: rgba(r, g, b, a); 将添加固定颜色默认值，当浏览器不支持rgba. 例: `rgba(100,80,60,0.5);`
 
- * background-color: rgba(r, g, b, a); 将添加固定颜色默认值，当浏览器不支持rgba，并且还添加一些 IE6-8 hacks，以正确显示透明背景颜色。唯一的缺点是块背景图像将显示下面的背景色。
+* background-color: rgba(r, g, b, a); 将添加固定颜色默认值，当浏览器不支持rgba，并且还添加一些 IE6-8 hacks，以正确显示透明背景颜色。唯一的缺点是块背景图像将显示下面的背景色。
 
- * background : linear-gradient(#color1,#color2) : 支持所有浏览器, 包括 IE6-8 **New in 1.4**
+* background : linear-gradient(#color1,#color2) : 支持所有浏览器, 包括 IE6-8 **New in 1.4**
 
- * hss-width and hss-height: 将生成width和height，将减去 padding 和 border 的值.
+* hss-width and hss-height: 将生成width和height，将减去 padding 和 border 的值.
 
- * @include('some css string'): 添加 css 字符串. either at the top level or instead of an attribute, this will include raw CSS string in the output, prefixed with the hierarchy classes if any **New in 1.4**
+* @include('some css string'): 添加 css 字符串. either at the top level or instead of an attribute, this will include raw CSS string in the output, prefixed with the hierarchy classes if any **New in 1.4**
 
 
 
