@@ -451,6 +451,18 @@ class Foo2{
 
  * 这是一个 fd 的模板源码 https://github.com/Chman/Snowkit-FD
 
+一些快速设置:
+
+ * HaxeContext - `Completion Mode`: **CompletionServer** (强烈推荐)缓存编译以加速编译速度(只编译有修改过文件)
+
+ * 格式化 - `Trim Trailing Whitespace`: **True**, 当保存代码时将自动清除空行用行尾的空格字符
+
+	> github 上提交 PR 时, 为了使代码更整洁,绝大多数都会有这个要求, 同时也会对 Tab 的格式有要求(可设置)
+
+ * 缩进 - `Coding Style Type`: **BracesOnLine**, (个人喜好)将 `{` 放在行尾,而不是另起一行
+
+ * 缩进 - `Comment Block Indenting`: **NotIndented**, (个人喜好) 注释换行时的 `*` 不缩进
+
 
 ### 遇见的一些错误
 

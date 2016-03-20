@@ -75,8 +75,6 @@ haxe LD34游戏示例: http://haxe.io/ld/34/
 
  * [kha](https://github.com/KTXSoftware/Kha) Super portable software dev kit. 超级便携式软件开发包.
 
-  - 我很怀疑, kha 是否真的有这么好的性能 http://themozokteam.com/playground/frameworkstest/
-
  * **[heaps](https://github.com/ncannasse/heaps)** 使用 stage3D,webGl,openGl, 没有文档
 
  * [haxeflixel](https://github.com/haxeflixel) 基于 openfl, 全位图游戏引擎, 文档非常完善
@@ -125,23 +123,97 @@ haxe LD34游戏示例: http://haxe.io/ld/34/
 
 #### 未分类
 
- * [promhx](https://github.com/jdonaldson/promhx) A promise and functional reactive programming
+一些未分类的
+	
+ * **[openfl-bitfive](https://github.com/YellowAfterlife/openfl-bitfive)** readme 上写着比 openfl 默认的 **html5后端** 更好.
+
+ * [mcli](https://github.com/waneck/mcli)  to easily create CLI applications [中文说明]({% post_url 2014-07-06-haxelib-mcli %})
+			
+ * [hxargs](https://github.com/Simn/hxargs) 简单创建 CLI 程序, 帮助写在自定义的元标签 `@doc` 上.
+
+ * [Cocktail](https://github.com/silexlabs/Cocktail)
+
+	> 解析 简单的 HTML/CSS,并生成各平台,个人感觉这个更像是一个 UI库.	
+
+ * [msignal](https://github.com/massiveinteractive/msignal)
+
+	> A Haxe port of the ActionScript 3 Signals library that leverages Haxe type parameters. Supports AVM1, AVM2, JavaScript, Neko and C++
+	> Haxe 是不带事件处理的, 这个库也许是一个好的选译.
+
+ * [mloader](https://github.com/massiveinteractive/mloader)
+
+	> A cross platform Haxe library for loading resources with utilities for queueing and caching requests. Supports AVM2, JavaScript, Neko and C++
+	
+ * [structural](https://github.com/underscorediscovery/structural) An unencumbered, generic haxe data structures library. 
+
+ * [cleversort](https://github.com/jasononeil/cleversort) Haxe macro for helping to sort arrays based on multiple properties with a very simple syntax 
+
+ * [cereal](https://github.com/submain/cereal) Haxe serialization library for XML,将 haxe 的类序列化为 xml 字符串
+
+ * [casahx](https://github.com/andyli/casahx) 有一些 utils 的工具类,如 StringUtils, 但并不是所有类都是跨平台的
+
+ * [thx.core](https://github.com/fponticelli/thx.core) 
+
+```
+Set		:  A Set is a list of unique values.
+
+Tuple	:  A Tuple is a value containing multiple values of potentially different types.
+```
+
+<hr />
+
+[tink_core](https://github.com/haxetink/tink_core) 
+
+```
+# 包含几个轻量级工具库. 源码都简单.
+
+
+Pair	:	双, 例如用来给 Map 类型排序,就需要建一个 Array<Pait> 的数组..
+
+Either	:	二者之一,Left(T1)或Right(T2), 用于参数可以接受二种类型,
+
+Lazy	:	abstract Lazy<T>(Void->T), lazy evaluation,
+			把一个值包装成 返回这个值的函数, 没必要这么做吧???
+
+Error	:	集合了一些网络错误, 例如: ErrorCode.NotFound == 404
+
+Outcome	:	常用于函数返回值, 用来检测返回值是否出错.OutcomeTools 有一些可用于 using 的方法
+			类似于 haxe.ds.Option
+			C 语言中常常返回 0, 表示正确, 非 0 值为错误代码
+
+Future	:	文档太长, 但大概类似于 Promise 之类的东西
+
+Ref		:	感觉没必要. 这个类使用 Vector 的第一个元素存储值.来达到引用效果.
+
+Noise	:	表示空,用于表示一个类型, 示例: 当你操作成功却不需要做任何事情时
+			function writeToFile(content:String):Outcome<Noise, IoError>;
+			
+Callback	:	abstract Callback<T>(Null<T->Void>) from (T->Void) {}	
+
+CallbackLink:	abstract CallbackLink(Null<Void->Void>){}
+
+CallbackList:	abstract CallbackList<T>(Array<Cell<T>>){}
+```
+
+<hr />
+
+[promhx](https://github.com/jdonaldson/promhx) A promise and functional reactive programming
 
 	> 响应式编程,用于流程控制. 一个 promise|stream 需要一个或多个 deferred.resolve
 	
 	> Promise 和 Stream 的最主要的区别是 Promise 只能调用一次 resolve, 而　Stream　能多次,所以 Promise 适用于 初使化和加载资源，而 Stream 可用于类似于事件管理
 	
-  - Error management
+- Error management
 
-		> 提供许多运行时方法用于错误管理, 如 catchError, errorThen, errorPipe, 参见源码注释
+	> 提供许多运行时方法用于错误管理, 如 catchError, errorThen, errorPipe, 参见源码注释
 		
-		> 通过定义 -D PromhxExposeErrors 可以避免回调方法内部的 throw 被内部捕获, 这个定义能用于调试一些特殊行为
+	> 通过定义 -D PromhxExposeErrors 可以避免回调方法内部的 throw 被内部捕获, 这个定义能用于调试一些特殊行为
 	
-  - Event Loop Management
+- Event Loop Management
 
-		> consider using more promises and streams to break the update operation up across multiple event loops.
+	> consider using more promises and streams to break the update operation up across multiple event loops.
 	
-  - Promhx Http Class　提供非常类似于 haxe.Http
+- Promhx Http Class　提供非常类似于 haxe.Http
 
 ```haxe
 var h = new promhx.haxe.Http("somefile.txt");
@@ -151,9 +223,9 @@ h.then(function(x){
 h.request(); // initialize request.
 ```
 		
-  - EventTools 用于适应已经存在的事件系统如 JS 或 Flash, 推荐用 `using using promhx.haxe.EventTools` 引入
+- EventTools 用于适应已经存在的事件系统如 JS 或 Flash, 推荐用 `using using promhx.haxe.EventTools` 引入
 
-		> 注: 由于使用的是 Promise 而非 Stream ,因此只能用于一次性的事件, 感觉是　源码最后一行返回错误
+	> 注: 由于使用的是 Promise 而非 Stream ,因此只能用于一次性的事件, 感觉是　源码最后一行返回错误
 
 ```haxe
 using promhx.haxe.EventTools;
@@ -163,18 +235,18 @@ var p = cur.eventStream(cur, 'click');
 p.then(function(e:MouseEvent){trace(e.localX);});
 ```
 	
-  - JQueryTools 同样通过 `using`, 但是这个没有 EventTools 那样的一次性事件错误
+- JQueryTools 同样通过 `using`, 但是这个没有 EventTools 那样的一次性事件错误
 
 ```haxe
 var ts = new JQuery("#target").eventStream('click');
 ts.then(function(e:JqEvent){});
 ```
 	
-  - Macro do-notation  形为上像是操作符重载的东西,无视它
+- Macro do-notation  形为上像是操作符重载的东西,无视它
 	
-  - Detaching Streams 仅限于 Stream
+- Detaching Streams 仅限于 Stream
 
-		> 通过 保存 then 方法的返回,之后能解除 
+	> 通过 保存 then 方法的返回,之后能解除
 
 ```haxe
 var ds = new Deferred<Int>();
@@ -187,7 +259,7 @@ s.detachStream(s2);
 ds.resolve(1);
 		```
 	
-  - Bound Deferreds: As of v 1.08 promhx includes a "DeferredPromise" and "DeferredStream" option. 
+- Bound Deferreds: As of v 1.08 promhx includes a "DeferredPromise" and "DeferredStream" option. 
 	
 ```haxe
 static function main() {
@@ -294,76 +366,3 @@ static function main() {
 	ds2.resolve(2);
 }
 ```
-	
- * **[openfl-bitfive](https://github.com/YellowAfterlife/openfl-bitfive)** readme 上写着比 openfl 默认的 **html5后端** 更好.
-
- * [mcli](https://github.com/waneck/mcli)  to easily create CLI applications [中文说明]({% post_url 2014-07-06-haxelib-mcli %})
-			
- * [hxargs](https://github.com/Simn/hxargs) 简单创建 CLI 程序, 帮助写在自定义的元标签 `@doc` 上.
-
- * [Cocktail](https://github.com/silexlabs/Cocktail)
-
-	> 解析 简单的 HTML/CSS,并生成各平台,个人感觉这个更像是一个 UI库.	
-
- * [msignal](https://github.com/massiveinteractive/msignal)
-
-	> A Haxe port of the ActionScript 3 Signals library that leverages Haxe type parameters. Supports AVM1, AVM2, JavaScript, Neko and C++
-	> Haxe 是不带事件处理的, 这个库也许是一个好的选译.
-
- * [mloader](https://github.com/massiveinteractive/mloader)
-
-	> A cross platform Haxe library for loading resources with utilities for queueing and caching requests. Supports AVM2, JavaScript, Neko and C++
-	
- * [structural](https://github.com/underscorediscovery/structural) An unencumbered, generic haxe data structures library. 
-
- * [thx.core](https://github.com/fponticelli/thx.core) 
-
-```
-Set		:  A Set is a list of unique values.
-
-Tuple	:  A Tuple is a value containing multiple values of potentially different types.
-```
-
- * [tink_core](https://github.com/haxetink/tink_core) 
-
-```
-# 包含几个轻量级工具库. 源码都简单.
-
-
-Pair	:	双, 例如用来给 Map 类型排序,就需要建一个 Array<Pait> 的数组..
-
-Either	:	二者之一,Left(T1)或Right(T2), 用于参数可以接受二种类型,
-
-Lazy	:	abstract Lazy<T>(Void->T), lazy evaluation,
-			把一个值包装成 返回这个值的函数, 没必要这么做吧???
-
-Error	:	集合了一些网络错误, 例如: ErrorCode.NotFound == 404
-
-Outcome	:	常用于函数返回值, 用来检测返回值是否出错.OutcomeTools 有一些可用于 using 的方法
-			类似于 haxe.ds.Option
-			C 语言中常常返回 0, 表示正确, 非 0 值为错误代码
-
-Future	:	文档太长, 但大概类似于 Promise 之类的东西
-
-Ref		:	感觉没必要. 这个类使用 Vector 的第一个元素存储值.来达到引用效果.
-
-Noise	:	表示空,用于表示一个类型, 示例: 当你操作成功却不需要做任何事情时
-			function writeToFile(content:String):Outcome<Noise, IoError>;
-			
-Callback	:	abstract Callback<T>(Null<T->Void>) from (T->Void) {}	
-
-CallbackLink:	abstract CallbackLink(Null<Void->Void>){}
-
-CallbackList:	abstract CallbackList<T>(Array<Cell<T>>){}
-```
-
- * [cleversort](https://github.com/jasononeil/cleversort) Haxe macro for helping to sort arrays based on multiple properties with a very simple syntax 
-
- * [cereal](https://github.com/submain/cereal) Haxe serialization library for XML,将 haxe 的类序列化为 xml 字符串
-
- * [casahx](https://github.com/andyli/casahx) 有一些 utils 的工具类,如 StringUtils, 但并不是所有类都是跨平台的
-
-
-
-
-

@@ -217,7 +217,7 @@ memory(file:String)	# 解析一个 neko 文件并打印其所有 names 占用的
 
   - 可以通过 Web.getURI 获得传递的第一个参数值， 一旦调用后似乎无法停止，难道无限调用 GC???
 
- * `getExports(host: String):Dynamic;` 与 VirtualHost 相关文件Module的 exportsTable
+ * `getExports(host: String):Dynamic;` 与 VirtualHost 相关文件 neko.vm.Module)的 exportsTable
 
  * `getURL(host:String, uri:String, params:Map<String,String>):String`: 返回与 VirtualHost 相对应的URL值
 
@@ -499,11 +499,13 @@ motion-twin tora
 这是一个分叉版本的 tora, 集成了 webSocket, redis 支持, 下边是一些新增加的 neko tora.n 的启动参数:
 
 ```bash
--tlsCipherList <
--tlsDHFile <
 -websocket <host:port>   # 本地地址:本地端口
--unsafeTLS <host:port> <cert> <key>     # SSL <本地地址:本地端口> <path/*.pem> <path/*.key>
--websocketTLS <host:port> <cert> <key>  # WSS <本地地址:本地端口> <证书链> <私钥>
+-unsafeTLS <host:port> <cert> <key>     # SSL <本地地址:本地端口> <path/x509_cert> <path/*.key>
+-websocketTLS <host:port> <cert> <key>  # WSS <本地地址:本地端口> <X509证书> <私钥>
 ```
+
+最新改动:
+
+ - 移除对 hxssl 的依赖, 由于 ssl 已经在 neko 得到支持(nightly build版, 但haxe还未把PR并未整合进来)
 
 <br />

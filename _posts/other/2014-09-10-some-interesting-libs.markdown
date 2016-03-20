@@ -65,22 +65,20 @@ font-style: normal;
 ```
 
  * Socket 调试工具
-
   - tcpdump
-
   - ngrep
-
   - Microsoft Network Monitor
-
   - Microsoft Research TCP Analyzer
-
   - [sokit](https://github.com/sinpolib/sokit/releases) 模拟客户或服务器端,但是无法自定义连接协议而只能使用原始Socket
+
 
 #### web
 
 [design-essentials](https://github.com/showcases/design-essentials)
 
 这个章节的大多数内容都是用于美化的 CSS 或 Javascript , 大多数似乎在 ie8 中都会报错.
+
+ * [腾迅原型设计 UIDesigner](http://idesign.qq.com/#!index/feed/id/0)
 
  * [clipboard](https://github.com/zenorocha/clipboard.js) 网页,依赖 falsh 和其它任何库.chrome 42,firefox 41, ie9,opera29,
 
@@ -184,7 +182,7 @@ http://usablica.github.com/intro.js/
 
 #### resource
 
-[Frontend stuff](https://github.com/moklick/frontend-stuff)
+[Frontend stuff](https://github.com/moklick/frontend-stuff) 前端资源
 
  * [图标下载](http://www.easyicon.net/)
 

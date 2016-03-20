@@ -273,6 +273,8 @@ sys.db.Connection 实例具有如下方法: 源码参见 各实现平台包如: 
 
  * `unsafeCount(sql:String):Int`:	sql 为 SQL语句,只是返回值不一致, 例: unsafeCount("select count(*) from User");
 
+	> 注: 所有 unsafe为前缀的方法最后都将调用 unsafeExecute 也就是 cnx.request(string), 只是对sql做了一些附加处理而已.
+
  * `unsafeDelete(sql:String):Void`:
 
  * `unsafeGet(id:Int, ?lock:Bool):User`:

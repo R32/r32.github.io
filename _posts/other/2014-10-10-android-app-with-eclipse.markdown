@@ -177,7 +177,10 @@ Theme.Dialog.RecentApplications
 ```
 
 
+### NDK
 
+ *[NDK Download ](https://developer.android.com/ndk/downloads/index.html#download)
 
+ * [NDK Sample](https://github.com/googlesamples/android-ndk)
 
-
+<br />

@@ -7,8 +7,6 @@ categories: haxelib
 
 heaps 下的 hxsl3 不仅仅是用于 flash,能同时作用于 桌面版的 opengl 以及 webgl, 因此比 haxelib hxsl2 要复杂多了.
  
-<!-- more -->
-
 
 AGAL
 -------
@@ -16,7 +14,7 @@ AGAL
 很多帮助说明可以在 参考AS3 API 手册的相关 class.  [什么是AGAL](http://www.adobe.com/cn/devnet/flashplayer/articles/what-is-agal.html)
 
 资源限制,
-
+<!-- more -->
 ```
 #资源				允许的数量		总内存 
 Vertex buffers		4096			256 MB 
@@ -56,34 +54,25 @@ AGAL 限制：每个程序 200 个 opcode。
 寄存器组件可通过坐标存取器（xyzw）或通过颜色存取器（rgba）存取,
 
 
- * **属性:**  顶点着色器输入, 读取自使用 Context3D.setVertexBufferAt() 指定的顶点缓冲区
-
+ * **属性:**  顶点着色器输入, 使用 Context3D.setVertexBufferAt() 指定的顶点缓冲区
   - 仅用于 vertexProgram **`va<0~7>`**
 
  * **常量:** 处理 AS3 传递到着色器参数. 由 Context3D::setProgramConstants() 设置
-
   - **`fc<0~127>`** 用于 vertexProgram 
-
   - **`vc<0~27>`** 用于 fragmentProgram
 
  * **临时:** 用于计算的临时寄存器, 无法从程序外部访问
-
   - **`vt<0~7>`** 用于 vertexProgram 
-
   - **`ft<0~7>`** 用于 fragmentProgram
 
  * **输出:** 着色器输出,在 vertexProgram 中，输出为剪辑空间位置；在 fragmentProgram 中，输出为颜色
-
   - **`op`** 用于 vertexProgram 
-
   - **`oc`** 用于 fragmentProgram
 
  * **渐变:** 用于将数据从 vertexProgram 传递到 fragmentProgram。传递的数据由 GPU 恰当地插入，使 fragmentProgram 能够收到被处理的像素的正确值
-
   - **`v<0~7>`**
 
  * **采样:** 片段着色器输入,读取自使用 Context3D.setTextureAt() 指定的纹理
-
   - **`fs<0~7>`** 仅用于 fragmentProgram
 
 ```
