@@ -9,15 +9,19 @@ categories: haxelib
 
 收集的一些 haxe 类库,通常这些库都能在 github 找到.
 
-#### 个人
+### misc
 
 这一章节,主要收集一些个人Blog或网站, 本来想写在另一篇档案中的. 还是算了.
+
+* <http://deepnight.net/> 很多有趣的东西
 
 * http://haxe.io 主要是一些 haxe 的新闻, 经常能看到一些惊异的东西.
 
 * [如何优化你的 haxe 代码](https://github.com/delahee/haxe.opt)
+
+* <https://github.com/anissen/awesome-snowkit>
  
-#### 工具
+### 工具
 
 一些常见的工具如 format, hscript 将不在这里列出..
 
@@ -63,7 +67,7 @@ categories: haxelib
 
 * [google closure](https://github.com/back2dos/closure) 优化 JS 代码, 感觉更像是 yuicompressor 的东西
 
-#### 游戏引擎
+### 游戏引擎
 
 haxe LD32游戏示例 : <https://github.com/skial/haxe.io/issues/118>
 
@@ -87,7 +91,7 @@ haxe LD34游戏示例: <http://haxe.io/ld/34/>
   >
   > 没有 flash 平台,没有了多余的类,专注于2D游戏引擎. windows 需要 vs 2013
 
-#### extern
+### extern
 
 这些外部库通常是 js
 
@@ -95,7 +99,7 @@ haxe LD34游戏示例: <http://haxe.io/ld/34/>
 
 * [pixijs-haxe](https://github.com/pixijs/pixi-haxe)
 
-#### UI
+### UI
 
 * [haxeui](https://github.com/ianharrigan/haxeui)
 
@@ -111,17 +115,17 @@ haxe LD34游戏示例: <http://haxe.io/ld/34/>
 
   > 从 demo上看感觉加载慢,而且示例 xml 和相对应的 hx代码挺复杂的,
 
-#### 语言
+### 语言
 
 * [LuaXe](https://github.com/PeyTy/LuaXe) Lua target for Haxe language
 
   > hx-lua 是用于动态解析 lua 代码的, 只适用于 cpp/neko, 而这个库是将 haxe 转换为 lua 代码, 但未
 
-#### 文章
+### 文章
 
-* (C Style for loops)[http://yal.cc/haxe-some-cleaner-c-style-for-loops/] 使用宏实现 C 样式的循环.
 
-#### 未分类
+
+### 未分类
 
 一些未分类的
 	

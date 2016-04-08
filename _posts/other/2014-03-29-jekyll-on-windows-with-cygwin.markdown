@@ -8,7 +8,7 @@ categories: other
 本文档源文件来自: [nathanielstory.com/2013/12/28/jekyll-on-windows-with-cygwin.html](http://nathanielstory.com/2013/12/28/jekyll-on-windows-with-cygwin.html)
 
 
-#### 简介
+### 简介
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Jekyll] 是一个静态网站构建工具可以用来创建各类网站比如像这个博客 (这个站就是用Jekyll生成的).但是不太支持 windows 环境的安装.刚好我以前用 flash alchemy 时安装了 Cygwin 环境. 下面的说明假定您已经安装了Cygwin.
 
@@ -18,7 +18,7 @@ categories: other
 
 <!-- more -->
 
-#### 安装 Jekyll
+### 安装 Jekyll
 
 1. 运行 Cygwin `setup.exe`. 本人 win7x64 装的 32位版本.
 	![setup cygwin](/assets/img/cygwin-setup.png) 
@@ -69,7 +69,6 @@ categories: other
    # 那么运行 cygwin-setup.exe, 将相应的如 gmp-devel 选上,因为编译时需要 devel 后缀的库
    ```
 
-
 6. 测试
  
    ```bash
@@ -80,7 +79,7 @@ categories: other
 <hr class="gh" />
 
 
-#### 常见错误
+### 常见错误
 
 很可能你会遇到下边问题:
 
@@ -114,6 +113,25 @@ jekyll: command not found, 需要添加路径 `export PATH=$HOME/bin:$PATH`
 [Jekyll]:http://jekyllrb.com/
 
 
-#### 存在问题
+### 存在问题
 
-pass
+empty
+
+### cygwin
+
+需要把 cygwin/bin 添加到路径
+
+* 从 DOS 中直接进入 `bash --login`, 但是目录会跳到 /home/USER 下:
+
+  - <http://superuser.com/questions/345964/start-bash-shell-cygwin-with-correct-path-without-changing-directory>
+
+  ```bash
+  set CHERE_INVOKING=1
+  \path\to\bash.exe -l -c command
+  ```
+
+  直接从 DOS 中调用命令, 例: `bash -l -c "sass --help"`
+
+* makefile 中检测 win 系统 `ifeq ($(OS),Windows_NT)`
+
+<br />

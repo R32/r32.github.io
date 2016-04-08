@@ -13,6 +13,12 @@ https://github.com/sindresorhus/awesome
 
 ### Tools
 
+* [c/c++内存泄漏检测](http://wetest.qq.com/cloud/index.php/index/TMM) 腾迅内部开放工具, （情况未知）
+
+* [apache mod_rewrite online tools](http://htaccess.madewithlove.be/) 在线测试 htaccess 规则
+
+* [github Issue management](http://huboard.com/) github issue 管理
+
 * [letsencrypt](https://letsencrypt.org/) 国外一个公共的免费SSL项目, 如果需要免费的SSL证书
 
 * [Tor网络向导](https://bridges.torproject.org/) 需要方Qiang
@@ -74,9 +80,19 @@ https://github.com/sindresorhus/awesome
 
 ### web
 
+[Frontend stuff](https://github.com/moklick/frontend-stuff) 前端资源
+
 [design-essentials](https://github.com/showcases/design-essentials)
 
 这个章节的大多数内容都是用于美化的 CSS 或 Javascript , 大多数似乎在 ie8 中都会报错.
+
+* <http://w3layouts.com/> 网页布局模板
+
+* <https://github.com/jmosbech/StickyTableHeaders> 固定 table 的 表头元素, 使用了Jquery
+
+  > 原理在在原表格上复制建立一个浮动的 th 元素监听window的scroll及resize 事件
+
+* [链接(菜单项)特效](http://tympanus.net/Development/CreativeLinkEffects/)
 
 * [腾迅原型设计 UIDesigner](http://idesign.qq.com/#!index/feed/id/0)
 
@@ -104,7 +120,7 @@ https://github.com/sindresorhus/awesome
 
 * [spectrum](https://github.com/bgrins/spectrum) The No Hassle JavaScript Colorpicker, 颜色选择器,**兼容IE6+**
 
-* **[awesome-d3](https://github.com/wbkd/awesome-d3)**  d3.js 的一些库,而D3.js是当前流行的数据可视化工具
+* [awesome-d3](https://github.com/wbkd/awesome-d3)  d3.js 的一些库,而D3.js是当前流行的数据可视化工具
 
 * [braintree](https://github.com/braintree/braintree-web) 表单加密
 
@@ -152,10 +168,9 @@ https://github.com/sindresorhus/awesome
   >
   > http://usablica.github.com/intro.js/ 可以用来做向导的, ie8 测试没问题,
 
+* [Metro-UI-CSS](https://github.com/olton/Metro-UI-CSS) win8 扁平化风格 CSS框架
 
-* [bootstrap-material-design](https://github.com/FezVrasta/bootstrap-material-design)
-
-  > This Bootstrap theme is an easy way to use the new Material Design guidelines by Google in your Bootstrap 3 based application. Just include the theme right after the Bootstrap CSS and include the javascript at the end of your document, everything will be converted to Material Design (paper) style. http://fezvrasta.github.io/bootstrap-material-design/
+* [bootstrap-material-design](https://github.com/FezVrasta/bootstrap-material-design) Bootstrap theme
 
 * [metro-bootstrap](https://github.com/TalksLab/metro-bootstrap)
 
@@ -173,15 +188,25 @@ https://github.com/sindresorhus/awesome
 
 * [swiper](http://www.swiper.com.cn/) 滑动库,Carousel,主要针对移动端
 
+* <http://ink.sapo.pt/>  HTML5/CSS3 framework 快速布置
+
 ### article
+
+* [15分钟快速入门各种语言](https://github.com/adambard/learnxinyminutes-docs)
+
+* [cmake 中文PDF](http://sewm.pku.edu.cn/src/paradise/reference/CMake%20Practice.pdf) 
+
+* [use-gulp](https://github.com/Platform-CUF/use-gulp) 中文 gulp 收集, 但是 gulp 似乎只适合做 Web 类的构建工具
 
 * [the-art-of-command-line](https://github.com/jlevy/the-art-of-command-line) 正确使用命令行
 
 * [w3school html5](http://www.w3school.com.cn/html5/index.asp)
 
-### resource
+* [CSS 各项属性](http://www.runoob.com/cssref/pr-tab-caption-side.html)
 
-[Frontend stuff](https://github.com/moklick/frontend-stuff) 前端资源
+* [如何调试Chrome的Proxy](http://www.chromium.org/developers/design-documents/network-stack/debugging-net-proxy)
+
+### resource
 
 * [图标下载](http://www.easyicon.net/)
 
@@ -198,6 +223,11 @@ https://github.com/sindresorhus/awesome
 
 
 ### CLib
+
+[C标准头文件](http://stackoverflow.com/questions/2027991/list-of-standard-header-files-in-c-and-c)
+
+<http://en.cppreference.com/w/>
+
 
 * [stb](https://github.com/nothings/stb) stb single-file public domain libraries for C/C++
 

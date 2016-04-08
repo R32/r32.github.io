@@ -62,6 +62,10 @@ haxe -swf out.swc Main.hx
 haxe -as3 outdir -main Main
 ```
 
+#### 调试
+
+在编译时指定 `-D fdb`, 这时 trace 将不再以 Textfiled 的形式输出了
+
 #### 相关命令行参数
 
 用于 haxe 命令行参数
@@ -99,6 +103,10 @@ i:  9    10    10    11    12    13    14  ~  22    23    24    25    26    27  
 通过 `-D` 或相关宏定义的值
 
 ```bash
+# 启用交互式调试的 Flash 内容。它在 SWF 输出中包含调试器标记，并添加额外的调试信息。
+# 这也将把 trace 输出重定向到 flashlog.txt, 而不是 swf 中的 Textfiled
+fdb                    : Enable full flash debug infos for FDB interactive debugging
+
 # 使用 `haxe` 名, 作为 flash 的引导类名, 替换掉默认的 boot_xxx 名, 这项定义将会 自动用于编译成 swc 时
 haxe-boot              : Given the name 'haxe' to the flash boot class instead of a generated name
 
@@ -197,6 +205,10 @@ __in__ (e,f) 		# e in f
 
 __is__(e, t)		# e is t
 
+__has_next__(o, i)	# 见 ds.unsafeStringMap, 这个将会修改 i 的值
+
+__forin__(o, index)	# 复制 UnsafeIntMapValuesIterator 即可用.
+__foreach__(o, index)#
 
 # 对于 flash 平台, 使用 __keys__ 遍历要比使用 Reflect.Fields 要更有效率
 var obj = Lib.current.stage.loaderInfo.parameters;

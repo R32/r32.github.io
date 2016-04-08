@@ -110,6 +110,8 @@ castleDB 保存为一个扩展名为 `.cdb` 的文件, 其实它是一个 JSON �
 
 * **Text**(文本): 字符串文本。 任意文本,目前不允许多行文本.
 
+  > 有个 Localizable 的选项用于本地化(TODO: ??？仅简单标记这个字段, 程序中通过判断 kind == "localizable" 加后加载本地化文件)
+
 * **Boolean**: 可以通过复选框(checkBox)来选择 true 或 false。
 
 * **Integer** 整数, 没有小数
@@ -125,8 +127,8 @@ castleDB 保存为一个扩展名为 `.cdb` 的文件, 其实它是一个 JSON �
 * **Reference**(引用):, 通过 Unique Identifier 引用其行数据
 
   > 引用`Unique Identifier` 或字段名为 `name` 的文本字段.(编辑器将自动提示这些)
-  > 
-  > 内容只能是同一个表,可以是别的表,但是建立后不能修改.
+  >
+  > F4 键将跳转到 引用字段, 而 F3 键则显示 **谁** 引用了这个字段的引用
 
 * **File**(文件): 目标文件或图片的相对或绝对路径
 
@@ -137,6 +139,8 @@ castleDB 保存为一个扩展名为 `.cdb` 的文件, 其实它是一个 JSON �
 * **Tile** 类似于图片,一张图片上存放多个 Tile
    
 * **List** 当类型为 List 将创建一个新的隐藏子表。 [见后边章节描述...](#list-column)
+
+* **Properties** 新增的属性,像是一个可视化的(key/value)的Object类型, 可以方便的通过 UI 输入这些动态值了
    
 * **Custom**(自定义): 自定义类型. [见后边章节描述...](#custom-column)
 
@@ -146,16 +150,16 @@ castleDB 保存为一个扩展名为 `.cdb` 的文件, 其实它是一个 JSON �
 
   ```haxe
   enum Super2 {
-  	A;
-  	B;
-  	C( x : Int );
+      A;
+      B;
+      C( x : Int );
   }
   
   enum Effect2 {
-  	// 构造参数可以添加前缀 `?`, 这意味着参数为可选参数可省略
-  	Poison( time : Float, ?power : Float );
-  	Check( a : Super2 );
-  	Monster( m : monsters );
+      // 构造参数可以添加前缀 `?`, 这意味着参数为可选参数可省略
+      Poison( time : Float, ?power : Float );
+      Check( a : Super2 );
+      Monster( m : monsters );
   }
   
   // custom 类型的构造参数使用下列类型:
@@ -180,8 +184,6 @@ castleDB 保存为一个扩展名为 `.cdb` 的文件, 其实它是一个 JSON �
   编辑器将严格验证 Custom 类型 的输入
 	
 * **Dynamic** 可以输入任意 JSON 数据, 不过手工输入这个字段的数据类型有些麻烦.
-
-  注意区别这个和 List 字段, 相对于Javascript, 如果 List 为 Array, 那么 Dynamic 就是 Object
 
 * **Data/Tile Layer** 包装图层(layer)的数据用于地图编辑器, TODOS
 
@@ -380,56 +382,147 @@ Or(Random(0.1), Fixed) | [3, [1, 0.1], [0]]
 
 ### 创建关卡(Create Level)
 
-当创建一个新表, 将复选框 `Create Level` 选中即可创建一个关卡表(level sheet), IDE 将自动创建 level表所需要字段(以前旧的版本需要自已添加这些字段)。
+在创建一个新表时, 勾选上 `Create Level` 选中即可, IDE 将自动创建 level表所需要字段(以前旧的版本需要自已添加这些字段)。 
 
 之后你可以通过点击"行"最左侧的 `edit` 按钮编辑它们
 
 ### 图层(Layers)
 
-一个 layer 是包了一组信息的字段存储于 level表中，有如下几种 layer:
+一个 layer 是包了一组信息的字段存储于 level表中，有如下几种 layer: 注意参考示例文件
 
-* **Tile Layer** 在创建level表后就可以创建这些层,
+* **Tile Layer** 在创建level表后即可创建, 它有一个 name(Text) 与 data(TileLayer)或其它更多自定义字段如 blending
 
-* **List Layer**
+  - tile layer 相当于游戏里的某一图层, 示例中的 layers 字段即是是一个 Array<Layer>,
+  - 每个 layer 有一个名字以及可以分配到一个tileset
+  - tile layer 有三种不同的模式: Tiles, Group, Object
 
-* **Index Layers**
+* **List Layer** 如果你添加一个 List 到level表, 当这个 List 包含有 Number 类型的 x 和 y 属性时, 这将是 list layer, 将可以以可视化的方式自动填充 x,y. 当每次当点击 map preview(纯色背景板) 时。 
 
-* **Zone Layer**
+  - 示例文件中的 npcs 字段即为 list layer, 比如你需要往游戏里添加 npc 及主角时可以使用这种层
+  - list内可添加额外的属性, 注意: 如果你添加 Reference 引用了另一个表如果其包含有 Tile 或 Image, 这里可以直接放入到地图编辑器中去(将选择最左边的字段, 如果存在多个 tile 或 image)
 
-================
+* **Index Layers** 如果你想用地图编辑器画一些东西并且储存在一个紧凑数组之中, 可以添加Laye类型字段到level表。 作为一些限制你可能不能定义每个单元格的类型, If you are not on the first layer, the first element of your layer (which has 0 index) will not be displayed and will act as a transparent element.
 
-#### Layers
+  - 示例中的 collide 字段, 感觉有点像 list_layer, 只可以在地图编辑器中画数据, 而不可以在表格中修改数据或添加字段
 
-layer 是一个储存了 Level 的信息字段, 主要分为:
+* **Zone Layer** 类似于 list_layer,只是它有额外的 width 和 height 数值属性.在地图编辑器中它将显示为一个区域
 
-* **List Layer:** 列表层,如果你添加一个 List 到你的 Level sheet, 这个 List 包含有 Number 类型的 x 和 y 属性, 这将是 list layer,  可以以可视化的方式自动填充 x,y. 当每次当点击 map preview(纯色背景板) 时, 可以添加额外的属性/列到 List 能够直接输入到编辑器
+  > 示例中的 triggers 字段
 
-* **Index Layers:** 索引层 如果你想要画一些东西储存在一个紧凑数组中, 添加 Layer 类型 column到 level sheet, 作为一些限制你可能不能定义每个单元格的类型, 如果你不是在 first layer, first layer(索引为0) 将不会显示而且被当成 "没有信息" 
+index_layers 和 zone_layer 都是可读的数据可以在 layer 后通过按 **`E`** 直接在 layer 上配置其属性
 
-  - 感觉这里应该是 List<Layer> 类型,而不是 单纯的 Layer
+#### Layer Display
 
-* **Zone Layer** 区域层, 非常像 列表层除了还包含有 Number 属性 width,height, 它将被显示成为 map 区域在 地图编辑器中
+layer 将从引向（reference）的目标取得一些信息
 
-(个人注: 上边三种类型可以创建纯颜色块的2D 地图)
+* 如果 reference 的字段有类型 Image, 将使用这 图片 用于显示
 
-Tips: 添加 layers:List(name:Text, data:Tile Layer)] 列, 可选将会出现 new Layer 按钮
+* 如果 reference 的字段有有类型 Color, 将使用这 颜色 用于显示
 
-##### Layer Display
+* 如果无有效信息, 你可以在编辑器上自定义这个层的颜色
 
-layer 取得一些信息从引用它的目标
+#### Grid and Precise coords
 
-* 如果 reference 有字段类型 Image, 将使用这 图片 用于显示
-
-* 如果 reference 有字段类型 Color, 将使用这 颜色 用于显示
-
-* 如果无有效信息, 你可以在编辑器上自定义层颜色
-
-##### Grid and Precise coords
-
-栅栏与精确坐标, index layers 将总是为 grid-aligned. 其它 layers 可以有更精确的位置, 如果你使用 Float 类型作为位置(x,y)类型,即使这种情况下你仍然可以激活 Lock Grid 选项.
+index_layers 将总是为 grid-aligned. 其它类型 layers 则可以有更精确的位置, 如果使用Float类型代替Int作为位置(x,y)类型, 即使这种情况下你仍然可以激活 Lock Grid 选项.
 
 默认的 grid size 为 16 像素, 可以在 level 选项中修改.
 
+
+#### Layer Compression
+
+在默认时, layer数据并未压缩, 如果你创建过多的 tile/index levels 这将导致最终输出的文件非常大, 你可以开启/关闭(enable/disalbe)压缩这些layers通过 选择/反选 File/Enable Compression. 这将使用 LZ4 压缩算法处理, 因为它的解压非常简单和快速.
+
+#### Common layers options
+
+可以修改如下属性:
+
+* visible: 切换显示隐藏当前图层. 这个选项仅作用于编辑器非保存的 .cdb 文件
+* lock: 锁定防止修改直到解锁
+* alpha: 更改当前图层透明度, 这个数据将会保存到 .cdb 文件中去.
+
+可以在图层tab上"右键"获得如下选项:
+
+* show Only: 将隐藏除当前图层的其它所有图层
+* show all: 恢复所有图层为显示
+* rename: 更改图层名(仅限于tile_layer, 其它图层则通过其相应的字段修改)
+* clear: 清除当图层的所有数据
+* delete: 删除当前图层(限于tile_layer, 其它图层则通过其相应的字段修改)
+
+#### Tile Layers
+
+由 tile_layer 所组成的数据通过单个tileset, tile_layer 有如下属性:
+
+Mode: tile_layer 可工作在三种模式, 模认为 tile, 其它模式后边将详细介绍
+File: 允许更改 tileset 作用于当前 tile layers,
+Size: CDB 默认使用 16x16大小的tile. 可以更改这个数值在各自的 layer, 需要注意的是你需要同样更改 level 的 tile size 通过 Option 菜单
+
+#### Tile Mode
+
+在这个模式下, 你可以选上 tileset 下方的 填充或随机模式
+
+#### Object Mode
+
+Object Mode 通过更复杂的方式存储tiles布局, 当处于Tile Mode时, 图层数据(layer data)由高x宽个tile组成,
+
+为了使用 Object Mode, 你需要先创建Object,在右下拉菜单中选中Object, 然后鼠标选中一个或多个tile然后点+或-(或按O键切换)来选中与取消,
+
+这样就可以将Object放置于tile_layer, Object的存储将依照Y轴排序(即最下方的tile将永远显示在前边挡住上边的), 因此这不像 Tile Mode 一些块能覆盖别的块.
+
+Object 的坐标将以象素为准非 grid 对齐, 当然你仍然可以要求 grid 对齐通过 **`G`** 键,在往图层上添加Object时,
+
+通过 **`F`** 键可以flip(左右调换)对象, 而 **`D`** 键则可以旋转90度每次
+
+Object_Layer 将为一个base64编码的16位值:
+
+`0xFFFF` 标识选区为Object_Layer, 每个被标识的选区将有下边信息:
+
+* `X` 选区的位置X, 单位为像素
+* `Y` 选区的位置Y, 单位为像素
+* `ID` Object的标识符, 它表示这个对象位于 tileset 的位置
+
+所有这三个值可以有其自身的高位(bit set)的设置: 对象的旋转存放于高位的 X 和 Y, 而 flip 则存放在 ID 上(注: 用得着这样省字节??)
+
+#### Ground Mode
+
+这个模式与 tile mode 很相似, 除了你可以配置 Grounds 和 Borders 获得一些自动构建
+
+> Grounds模式中将定义tile的显示顺序, 数值越高则显示在顶层, borders 则是快速配置 tile (IN,OUT)于哪些ground定义的值
+
+你可以尝试在示例中切换到 ground layer, 观察它与 Tile 的差异.
+
+#### Group Mode
+
+为几个连续的tile定义成一个名字, 示例中定义了一些tile动画.
+
+#### Per-tile Properties
+
+预定义 tile 的属性, 所有tileset中的tile 将有共享的属性用于各关卡(level)，而不必每次都在图层中去画, 
+
+可以简单的指定这些值通过 tileProps 字段
+
+例如示例中level表中的 collide 字段它引用了collide表,这将允许我们指定自定义的碰撞(通过点击collide_tile 然后在tileset上操作)
+
+示例中定义了一个 Enumeration类型的 hideHero 字段,也将显示在画板下拉菜单中
+
+#### 地图编辑器中的快捷键
+
+* `右键`, 选择光标下的 tile, (像是从tileset 中选择一样)
+* `Tab` 切换到下一图层
+* `shift+Tab` 切换到前一图层
+* `V` 显示/隐藏当前图层
+* `L` 锁定/解锁当前图层
+* `G` 限定为grid 对齐, 针对一些以像素对齐的对象
+* `I` 显示/隐藏画板(palette)
+* `P` 直接将tile填充到图层
+* `R` 随机填充模式切换(画板下当tile模式时会出现在选项)
+* `+,-` (小键盘), 缩放level
+* `/` (小键盘), 返回默认的缩放大小
+* `E` 直接在图层上修改 list/zone类型层数据
+* `Esc` 清除鼠标选区
+* `space` 按住滚动(像是PS中的小手图标功能)
+* `F` flip(翻转对象, 仅用于tile_object)
+* `D` 旋转对象,(仅用于tile_object)
+* `O` 在画板上快速创建tile_object
 
 ### 代码中调用
 

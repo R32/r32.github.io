@@ -39,7 +39,7 @@ haxelib 用于管理 haxe库,  `haxelib run libname` 可以调用指定库下边
 * 命令行, 注: 很多命令是交互式的, 会提示你如何操作
 
   ```bash		
-  Haxe Library Manager 3.2.0-rc.1 - (c)2006-2015 Haxe Foundation
+  Haxe Library Manager 3.3.0 - (c)2006-2016 Haxe Foundation
     Usage: haxelib [command] [options]
     Basic
       install   : 在线安装指定库, 或 hxml 文件中的所有库
@@ -48,13 +48,7 @@ haxelib 用于管理 haxe库,  `haxelib run libname` 可以调用指定库下边
       remove    : 移除指定库(从磁盘上删除 haxelib 根目录中的库,但不会删除外部的 dev 库)
       list      : 列出指定库或名称相匹配的库(如果指定参数)
       set       : 设定库的版本, 用于多个版本库的选择, 注意:如果通过 haxelib dev 指定了开发版本, 
-	              那么 dev 版本仍优先于指定的版本号
-  	
-    # https://github.com/HaxeFoundation/hxcpp/issues/143
-    # haxe 3.2 new 和 delete 已经更名为 newrepo 以及 deleterepo
-      new       : 创建新的本地仓库, 将在当前目前创建一个 .haxelib 的目录, 当位于这个目录上时,
-	              haxelib 的所有操作将指向这个新建的目录
-      delete    : 删除 new 创建的本地仓库(将从磁盘中), 
+	              那么 dev 版本仍优先于指定的版本号    
     
     Information
       search    : 在线搜询名称相关库, 
@@ -62,8 +56,8 @@ haxelib 用于管理 haxe库,  `haxelib run libname` 可以调用指定库下边
       user      : 列出指定用户的信息及这个用户提交的所有 haxe 库. 
       config    : 打印 haxelib 仓库所在目录(绝对路径)
       path      : 得到指定库的所在路径(绝对路径), 库的版本信息, 及　ndll 库目录(如果有的话)
-  	version   : 当前 haxelib 自身版本
-  	help      : 显示可选列表
+  	  version   : 当前 haxelib 自身版本
+  	  help      : 显示可选列表
     
     Development
       submit    : 提交或更新自已写的 haxe 库到　haxelib 服务器
@@ -71,15 +65,13 @@ haxelib 用于管理 haxe库,  `haxelib run libname` 可以调用指定库下边
       local     : 离线方式安装库, 压缩包名字随意. 例: haxelib local xxx.zip
       dev       : 设置指定目录为库, 常用于 fork 别人的库 例: haxelib dev some dir
       git       : 连接下载 git 版本库, 需要 git 命令支持
+      hg        : use Mercurial (hg) repository as library
     
     Miscellaneous
       setup     : 设置 haxelib 仓库路径(默认为 haxe 根目录的 lib)
-  	
-    # 估计就是上边的被移除了的 new 和 delete
-  	newrepo   : [EXPERIMENTAL] create a new local repository
-  deleterepo: delete the local repository
-      
-  	selfupdate: 更新 haxelib 自身
+      newrepo   : [EXPERIMENTAL] create a new local repository
+      deleterepo: delete the local repository,(与 newrepo 一起)
+      selfupdate: 更新 haxelib 自身
       convertxml: 转换 haxelib.xml 文件为 haxelib.json
       run       : 运行指定类库下的 run.n 文件
       proxy     : 设置 Http 代理.
@@ -88,6 +80,7 @@ haxelib 用于管理 haxe库,  `haxelib run libname` 可以调用指定库下边
       --flat    : do not use --recursive cloning for git
       --always  : answer all questions with yes
       --debug   : run in debug mode
+      --quiet   : print less messages, imply not --debug
       --never   : answer all questions with no
       --global  : force global repo if a local one exists	
   
@@ -186,6 +179,9 @@ nekotools 是一个安装 haxe 时附带的工具,nekotools 很简单只有二�
   
   # 编译代码为 flash 平台的 .swf 文件
   -swf <file>		: compile code to Flash SWF file
+
+  # haxe 3.3
+  -lua <file> : compile code to Lua file
   
   # 解析代码为 flash 平台的 .as3 源码, 指定输出目录 
   -as3 <directory>	: generate AS3 code into target directory
@@ -208,7 +204,10 @@ nekotools 是一个安装 haxe 时附带的工具,nekotools 很简单只有二�
   
   # haxe 3.2 + 编译代码为 python 
   -python <file>		: generate Python code as target file
-  
+ 
+  # haxe 3.3 ????? C语言
+  -hl <file> : compile HL code as target file
+
   # 导出代码API注释内容为 xml 文件
   -xml <file> : generate XML types description
   
@@ -239,7 +238,6 @@ nekotools 是一个安装 haxe 时附带的工具,nekotools 很简单只有二�
   # 添加 swf 库, 文件通常为 swc 格式
   -swf-lib <file> : add the SWF library to the compiled SWF
   
-  # 参见英文描述
   -swf-lib-extern <file> : use the SWF library for type checking
   
   -java-lib <file> : add an external JAR or class directory library	
@@ -353,6 +351,8 @@ haxe --help-defines. 使用 -D 设定, 一些和上边重叠的不会再描述. 
 
 **注意:** 如果你想在 条件编译 或 宏代码 中访问这些定义,应该将 减号(-)替换成 下划线(_)
 
+<http://haxe.org/manual/compiler-usage-flags.html>
+
 ```bash
 # 在 trace 语句中 打印绝对路径
 absolute-path          : Print absolute file path in trace output
@@ -360,9 +360,12 @@ absolute-path          : Print absolute file path in trace output
 # 添加 Scout (aka Monocle) 支持. Since SVN r5429
 advanced-telemetry     : Allow the SWF to be measured with Monocle tool
 
+# 3.3, 估计是用于 DOC 文档的生成
+annotate-source        : Add additional comments to generated source code
+
 # 新的代码优化器, 以精简代码, http://haxe.org/manual/cr-static-analyzer.html
 # 在 haxe 3.3 中默认为打开状态
-analyzer               : Use static analyzer for optimization (experimental)
+# analyzer               : Use static analyzer for optimization
 
 as3                    : Defined when outputing flash9 as3 source code
 
@@ -372,7 +375,8 @@ core-api               : Defined in the core api context
 
 core-api-serialize     : Sets so some generated core api classes be marked 
                          with the Serializable attribute on C#
-
+						
+cppast                 : Generate experimental cpp code
 cppia                  : Generate experimental cpp instruction assembly
 
 dce                    : The current DCE mode
@@ -381,7 +385,7 @@ dce-debug              : Show DCE log
 
 debug                  : Activated when compiling with -debug
 
-# 用来给 IDE 提供语法提示用的., 也就是说 #if display #end 之间的内容是提供给 代码编辑器 用来做一些语法智能提示.
+# 用来给 IDE 提供语法提示用的., 也就是说 #if display #end 之间的内容是提供给代码编辑器
 display                : Activated during completion
 
 dll-export             : GenCPP experimental linking
@@ -389,7 +393,8 @@ dll-export             : GenCPP experimental linking
 dll-import             : GenCPP experimental linking
 
 # 用于导出代码注释为API文档, 为了正确生成文档不会执行任何改动或删除
-doc-gen                : Do not perform any removal/change in order to correctly generate documentation
+doc-gen                : Do not perform any removal/change in order to 
+                         correctly generate documentation
 
 # -D dump=pretty
 dump                   : Dump the complete typed AST for internal debugging
@@ -397,11 +402,16 @@ dump                   : Dump the complete typed AST for internal debugging
 dump-dependencies      : Dump the classes dependencies
 
 dump-ignore-var-ids    : Dump files do not contain variable IDs (helps with
-                          diff)
+                         diff)
+						
+dynamic-interface-closures: Use slow path for interface closures to save space
 
 erase-generics         : Erase generic classes on C#
 
-# 启用交互式调试的 Flash 内容。它在 SWF 输出中包含调试器标记，并添加额外的调试信息。这也将把 trace 输出重定向到 flashlog.txt, 而不是 swf 中的 Textfiled
+fast-cast              : Enables an experimental casts cleanup on C# and Java
+
+# 启用交互式调试的 Flash 内容。它在 SWF 输出中包含调试器标记，并添加额外的调试信息。
+# 这也将把 trace 输出重定向到 flashlog.txt, 而不是 swf 中的 Textfiled
 fdb                    : Enable full flash debug infos for FDB interactive debugging
 
 file-extension         : Output filename extension for cpp source code
@@ -410,7 +420,9 @@ file-extension         : Output filename extension for cpp source code
 flash-strict           : More strict typing for flash target
 
 # 示例参看 http://old.haxe.org/doc/flash/preloader
-flash-use-stage        : Keep the SWF library initial stage. To be used together with -swf-lib. Place objects found on the stage of the SWF lib. (Not to be used together with -swf-header)
+flash-use-stage        : Keep the SWF library initial stage. To be used together with -swf-lib.
+                         Place objects found on the stage of the SWF lib. 
+						(Not to be used together with -swf-header)
 
 force-lib-check        : Force the compiler to check -net-lib and -java-lib 
                          added classes (internal)
@@ -438,24 +450,31 @@ interp                 : The code is compiled to be run with --interp
 java-ver               : <version:5-7> Sets the Java version to be targeted
 
 # 
-jquery-ver             : The jQuery version supported by js.jquery.*. The version is encoded as an interger. e.g. 1.11.3 is encoded as 11103
+jquery-ver             : The jQuery version supported by js.jquery.*. The 
+                         version is encoded as an interger. 
+						 e.g. 1.11.3 is encoded as 11103
 
 # 不使用闭包和 "strict mode" 包装代码输出.
 js-classic             : Don not use a function wrapper and strict mode in JS output
 
 # JS ES5 运行时模式
-js-es5                 : Generate JS for ES5-compliant runtimes
+js-es                  : Generate JS compilant with given ES standard version (default 5)
 
 js-unflatten           : Generate nested objects for packages and types
 
-# 使用更少的对象属性构建类, 例如: 默认情况下会创建的类有时似于 Main.a.b.c   加这个属性后将为 Main_a_b_c 这样就降低了访问对象的深度
+# 使用更少的对象属性构建类, 例如: 默认情况下会创建的类有时似于 Main.a.b.c   
+# 加这个属性后将为 Main_a_b_c 这样就降低了访问对象的深度
 # [注] haxe 3.2 这个已经是默认属性了, 如果想换回以前的默认, 使用 js-unflatten
-# js-flatten             : Generate classes to use fewer object property lookups
+# js-flatten           : Generate classes to use fewer object property lookups
 
 keep-old-output        : Keep old source files in the output directory (for C#/Java)
 
 loop-unroll-max-cost   : Maximum cost (number of expressions * iterations)
                           before loop unrolling is canceled (default 250)
+
+lua-jit                : Enable the jit compiler for lua (version 5.2 only
+
+lua-ver                : The lua version to target
 
 # 参看 haxe --help 中的 --macro
 macro                  : Defined when we compile code in the macro context
@@ -473,6 +492,9 @@ net-ver                : <version:20-45> Sets the .NET version to be targeted
 
 # 更改 flash 网络沙箱模式,  定义后将为 只访问网络, 默认为只访问本地
 network-sandbox        : Use local network sandbox instead of local file access one
+
+# 禁用优化器(haxe 3.3 analyzer 已经是默认打开)
+no-analyzer               : Disable the static analyzer
 
 # 用于 cpp,java,c# 生成代码但是不编译.
 no-compilation         : Disable CPP final compilation
@@ -497,12 +519,17 @@ no-pattern-matching    : Disable pattern matching
 no-root                : GenCS internal
 
 # 被移除了, 估计是使用了 -D analyzer(....) 代替了
-#no-simplify            : Disable simplification filter
+# no-simplify            : Disable simplification filter
 
 # 禁用 swf 压缩
 no-swf-compress        : Disable SWF output compression
 
+# 同 --no-traces
 no-traces              : Disable all trace calls
+
+#
+objc                   : Sets the hxcpp output to objective-c++ classes.
+                         Must be defined for interop
 
 php-prefix             : Compiled with --php-prefix
 
@@ -529,8 +556,8 @@ swf-direct-blit        : Use hardware acceleration to blit graphics
 # flash 硬件加速 第 2 级 - GPU
 swf-gpu                : Use GPU compositing features when drawing graphics
 
-# 移除了与 swf9一起
-#swf-mark               : GenSWF8 internal
+# 已经移除了与 swf9一起
+# swf-mark               : GenSWF8 internal
 
 # 嵌入元数据 xml文件到 swf,以便搜索引擎检索信息, 示例: -D swf-metadata=data.xml 
 # 元数据 xml文件 格式参见 http://www.adobe.com/products/xmp.html
@@ -549,11 +576,6 @@ swf-script-timeout     : Maximum ActionScript processing time before script stuc
 swf-use-doabc          : Use DoAbc swf-tag instead of DoAbcDefine
 
 sys                    : Defined for all system platforms
-
-unity-std-target       : Changes C# source location so that each generated C#
-                         source is relative to the Haxe source location. If the 
-						location is outside the current directory, the value set
-						here will be used.
 
 unsafe                 : Allow unsafe code when targeting C#
 
@@ -598,18 +620,25 @@ vcproj                 : GenCPP internal
 # dot_debug 
 @:analyzer(param)    : Used to configure the static analyzer
 
-@:annotation         : Annotation (@interface) definitions on -java-lib imports will be annotated with this metadata. Has no effect on types compiled by Haxe (java only)
+@:annotation         : Annotation (@interface) definitions on -java-lib 
+                     imports will be annotated with this metadata. Has 
+					 no effect on types compiled by Haxe (java only)
 
 @:arrayAccess        : Allows [] access on an abstract
 
+# 见 https://gist.github.com/skial/c1e35988b853b214da39
+@:astSource          : Filled by the compiler with the parsed expression of
+                      the field
 # 使用宏构建这个类的子类, 而非当前类
-@:autoBuild          : (Build macro call)Extends @:build metadata to all extending and implementing classes
+@:autoBuild          : (Build macro call)Extends @:build metadata to all 
+                       extending and implementing classes
 
 # 当在 Haxe 中声明了一个类(不是extern类)已经存在于 SWF 库, 将会报错. 用这个标记可以覆盖掉 SWF 库的声明.
 @:bind               : Override Swf class declaration (flash only).
 
 # 示例: @:bitmap("myfile.png|jpg|gif") class MyBitmapData extends flash.display.BitmapData {}
-@:bitmap             : (Bitmap file path)Embeds given bitmap data into the class (must extend flash.display.BitmapData) (flash only)
+@:bitmap             : (Bitmap file path)Embeds given bitmap data into 
+                the class (must extend flash.display.BitmapData) (flash only)
 
 @:bridgeProperties   : Creates native property bridges for all Haxe properties
                        in this class. (cs only)
@@ -660,12 +689,14 @@ vcproj                 : GenCPP internal
 @:depend             :  (cpp only)
 
 # 如果一个字段或类, 被添加这个标记, 编译器将在编译时输出警告信息（注:目前仅适用于hxjava,未来可能会扩展到所有平台）
-@:deprecated         : Automatically added by -java-lib on class fields annotated with @Deprecated annotation. Has no effect on types compiled by Haxe.(java only)
-
+@:deprecated         : Automatically added by -java-lib on class fields 
+                       annotated with @Deprecated annotation. 
+					   Has no effect on types compiled by Haxe.(java only)
 # 添加在 abstract 关键字前, 生成类似于常量的集合 http://haxe.org/manual/types-abstract-enum.html
 @:enum               : Defines finite value sets to abstract definitions
 
-@:event              : Automatically added by -net-lib on events. Has no effect on types compiled by Haxe. (cs only)
+@:event              : Automatically added by -net-lib on events. 
+                       Has no effect on types compiled by Haxe. (cs only)
 
 # JS 将类导出到 window对象 下, 如果 window 未定义,则导出到 export对象(nodejs) 下
 @:expose             : (?Name=Class path)Makes the class available on the window object (js only)
@@ -673,26 +704,36 @@ vcproj                 : GenCPP internal
 # 表明这个字段为 外部字段, 比如添加语法提示时可以用	
 @:extern             : Marks the field as extern so it is not generated
 
-# 作用于 enum, 参看 页尾的示例. 个人感觉 haxe 3.1 之后, 由于 enum 的改动,这个元标记似乎被弃用
+# 作用于 enum, 参看 页尾的示例.
 @:fakeEnum           : (Type name)Treat enum as collection of values of the specified type
 
-# 以二进制的形式嵌入 文件 到 swf 内, 例: @:file("a.dat") class MyByteArray extends flash.utils.ByteArray{}
-@:file               : (File path)Includes a given binary file into the target Swf and associates it with the class (must extend flash.utils.ByteArray) (flash only)
-
+# 以二进制的形式嵌入 文件 到 swf 内, 
+# 例: @:file("a.dat") class MyByteArray extends flash.utils.ByteArray{}
+@:file               : (File path)Includes a given binary file into 
+                       the target Swf and associates it with the class 
+                       (must extend flash.utils.ByteArray) (flash only)
+# haxe 3.3 
+@:fileXml            : Include xml attribute snippet in Build.xml entry for
+                       file (cpp only)
 # 防止类被扩展(extends)
 @:final              : Prevents a class from being extended
 
-# 嵌入字体文件. 仅支持 ttf 字体文件, 例: @:font("font/ceri0553.ttf", "a-zA-Z0-9~!@#$%^&*()_+=-][}{.,;\":><") class MyFont extends Font { }
-@:font               : (TTF path,Range String)Embeds the given TrueType font into the class (must extend flash.text.Font)
+# haxe 3.3
+@:fixed              : Delcares an anonymous object to have fixed fields
 
+# 嵌入字体文件. 仅支持 ttf 字体文件, 例: 
+# @:font("font/ceri0553.ttf", "a-zA-Z0-9~!@#$%^&*()_+=-][}{.,;\":><") 
+# class MyFont extends Font { }
+@:font               : (TTF path,Range String)Embeds the given TrueType 
+                       font into the class (must extend flash.text.Font)
 # 用于 abstract 类型 - http://haxe.org/manual/types-abstract-forward.html
 @:forward            : (List of field names)Forwards field access to underlying type
 
 @:forwardStatics     : (List of field names)Forwards static field access to underlying type
 
 # 用于定义 abstract 类, 这个方法必须为 static
-@:from               : Specifies that the field of the abstract is a cast operation from the type identified in the function
-
+@:from               : Specifies that the field of the abstract is a cast 
+                       operation from the type identified in the function
 @:functionCode       :  (cpp only)
 
 @:functionTailCode   :  (cpp only)
@@ -749,8 +790,12 @@ vcproj                 : GenCPP internal
 # 作用于类, 防止当前类和所有子类
 @:keepSub            : Extends @:keep metadata to all implementing and extending classes
 
+# haxe 3.3
+@:luaRequire         : Generate lua module require expression for given extern (lua only)
+
 @:macro              : (deprecated)
 
+# https://github.com/HaxeFoundation/haxe/commit/cddba88af64b740cd09e105ef5abf6929783e8aa
 @:mergeBlock         : Merge the annotated block into the current scope
 
 # 生成相应的 Flash 元数据, 例: @:meta(Event(name="test",type="Foo"))
@@ -814,7 +859,8 @@ vcproj                 : GenCPP internal
 
 # 函数重载, 用于 extern class, 允许同一个方法有不同参数.
 @:overload           : (Function specification (no expression))Allows the field to be called with different argument types
-
+@:phpConstants       : Marks the fields of an TAbstract as php constants,
+                        without $ (php only)
 # Example: var val = @:privateAccess instance.privateFiled
 @:privateAccess      : Allow private access to anything for the annotated expression
 
@@ -827,6 +873,9 @@ vcproj                 : GenCPP internal
 # 将类的所有字段声明为 public, 这样就可以避免给每一个字段都添加 public (since 3.0)
 @:publicFields       : Forces all class fields of inheriting classes to be public
 
+# 关于 side-effect 的解释看 http://www.zhihu.com/question/20068456
+@:pure               : Marks a class field, class or expression as pure
+                       (side-effect free)
 @:pythonImport       : Generates python import statement for extern classes (python only)
                        
 @:readOnly           : Generates a field with the 'readonly' native keyword (cs only)
@@ -935,30 +984,24 @@ lime build flash --connect 6000 --times
 
 #if (haxe_ver > 3.100)
 
-@:enum abstract KeyLocation(Int) {
-	
+@:enum abstract KeyLocation(Int) {	
 	var STANDARD = 0;
 	var LEFT = 1;
 	var RIGHT = 2;
-	var NUM_PAD = 3;
-	
+	var NUM_PAD = 3;	
 }
 
 #else
 
 @:fakeEnum(Int) enum KeyLocation {
-	// fakeEnum 似乎没有办法 设置类似于 start 值
 	STANDARD;
 	LEFT;
 	NUM_PAD;
 	RIGHT;
-	
 }
 #end
 
-// openfl 的源码 能大量的见到 @:fakeEnum(String) .
-// 不知道为什么 去掉 @:fakeEnum(String) 生成的结果也是一样的. (haxe 3.1)
-// 结论是: @:fakeEnum 可以不再使用, 如果需要使用 @:enum abstract 就行了.
+// openfl 的源码 能大量的见到 @:fakeEnum(String)
 @:fakeEnum(String) extern enum Endian {
 	BIG_ENDIAN;
 	LITTLE_ENDIAN;

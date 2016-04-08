@@ -298,15 +298,12 @@ flash + index.n 端:
 ```haxe
 #if neko
 typedef Msg = { n : Int, cl : Int };
-class TestHandler extends tora.Handler<Msg> {
-	
+class TestHandler extends tora.Handler<Msg> {	
 	var cl(default,null):Int;
-
 	public function new(n:Int){
 		super();
 		cl = n;
 	}
-
 	override function onNotify( v : Msg ) {
 		switch(v.n){
 			case 0: tora.Queue.get("test").stop();
@@ -314,33 +311,26 @@ class TestHandler extends tora.Handler<Msg> {
 			default:
 				Sys.println(v.n+"#"+v.cl);
 		}
-	}
-	
+	}	
 	override function onStop() {
 		tora.Queue.get(NAME).notify({n:-1, cl: cl});
 		neko.Web.logMessage("CLIENT: " + cl + " WAS STOPED");
 	}
-
 	public static inline var NAME="test";
 }
 #end
 
 class Test {
-
 	static var persist = new Array();
-
 	static function main() {
 	#if flash
 		var connected:Bool = false;
 		var from = 0, message = 0;
-		
 		var client = Std.random(0x1000000);
 		client += Std.random(0x1000000);
 		client += Std.random(0x1000000);
-
 		var start = null;
 		var t = new haxe.Timer(2000);
-
 		var url = "http://localhost";
 		var p = new tora.Protocol(url);
 		p.addParameter("wait","1");
@@ -370,13 +360,11 @@ class Test {
 			trace(msg);
 		};
 		p.connect();
-
 		start = function() {
 			p.reset();
 			p.addParameter("client", Std.string(client));
 			p.call(url);	
 		};
-
 		flash.Lib.current.stage.addEventListener(flash.events.MouseEvent.CLICK, function(_) {
 			if(connected){
 				trace("start");

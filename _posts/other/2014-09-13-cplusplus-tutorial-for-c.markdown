@@ -188,7 +188,7 @@ int main (){
 }
 ```
 
-如果你使用指针, 看起来应该像这样, (使用指针看起来让函数调用者更清楚的知道会发生了什么, 而引用则有点不明不白的).
+如果你使用指针, 看起来应该像这样.
 
 ```cpp
 using namespace std;
@@ -535,7 +535,7 @@ int _tmain(int argc, _TCHAR* argv[])
 
 #### new delete
 
-C++ 新的关键字. new 将返回一个对应的类型指针, 而 delete 将回收指针指向的内存. 像是 C 中的 malloc 和 free. 由于是关键字的原因,因此编译器能优化 new 和 delete.
+C++ 新的关键字. new 将返回一个对应的类型指针, 而 delete 将回收指针指向的内存. 像是 C 中的 malloc 和 free。 但由于是关键字的原因,因此编译器能优化 new 和 delete.
 
 ```cpp
 using namespace std;
@@ -1130,6 +1130,8 @@ class TriVector: public Vector, public Number{
 其它
 ------
 
+和大多数语言(es-X, c#, java)不一样的是 c++ 的变量传递 **如果没有显示地声明为"引用"则全部按值拷贝进行传递**
+
 * 指针快速索引
 
   ```cpp
@@ -1143,7 +1145,7 @@ class TriVector: public Vector, public Number{
   
   int (*a)[]; 		// pointer to array.
   
-  int *f(); 		// 返回一个int类型指针
+  int *f(); 		// 返回一个int类型指针, 这种风格应该尽量避免，不如传指针为参数
   
   int (*f)(); 		// 函数指针.
   
@@ -1169,7 +1171,7 @@ class TriVector: public Vector, public Number{
   #endif
   ```
 
-* 函数后边跟 const, 表示这个函数不会修改成员变量.
+* 函数后()边跟 const, 表示这个函数不会修改成员变量.
 
   ```cpp
   int current_track() const;
@@ -1269,6 +1271,7 @@ class TriVector: public Vector, public Number{
   ```
 
 * 子类中使用 using 声明引入基类成员 <http://www.cnblogs.com/ustc11wj/archive/2012/08/11/2637316.html>
+
 
 * `operator new` <http://blog.sina.com.cn/s/blog_3c6889fe0100tqe8.html>
 

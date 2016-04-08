@@ -5,25 +5,23 @@ date:	2015-03-09 08:12:18
 categories: haxelib
 ---
 
-<https://underscorediscovery.github.io/flow/>
+flow 是一个基于 nodejs 的项目构建工具, <https://underscorediscovery.github.io/flow/>
 
-flow 是一个项目构建工具,基于nodejs, flow的源码包的 bin 目录下有各平台的 node.exe, 另 `src/flow/tools` 下包含一个nodejs源码的http服务器用于调试web应用(其实haxe也自带一个http服务器)
+> flow的源码包的 bin 目录下有各平台的 node.exe 
+>
+> 另 `src/flow/tools` 下包含一个 nodejs 源码的 http 服务器用于调试 web 应用 (其实haxe也自带一个http服务器)
 
-flow 通过解析一个 json 配置文件来布署应用. 通常这个 json 文件名为 project.flow
+flow 通过解析一个 json 配置文件来布署应用. 通常这个 json 文件名为 project.flow, 顺便提下:
 
-顺便提下:
+* 在 windows 平台 <http://cmder.net/> 是一个出色的 cmd 的替代品
 
- * 在 windows 平台 [cmder](http://cmder.net/) 是一个出色的 cmd 的替代品
-
- * mac/linux [fish](http://fishshell.com/) 同样是一个很好的 shell
+* 对于 mac/linux, <http://fishshell.com/> 同样是一个很好的 shell
 
 <!-- more -->
 
 ### 命令行快捷
 
-由于 `haxelib run flow` 这个命令实在有些长,如果能直接输入 `flow`:
-
-window 平台, 将文件保存为 bat,然后存放于 path 目录.
+由于 `haxelib run flow` 这个命令实在有些长, window 平台, 将文件保存为 bat,然后存放于 path 目录.
 
 ```bat
 @echo off
@@ -39,17 +37,92 @@ haxelib run flow "$@"
 
 ### 基础命令
 
-通过在命令行中输入 `flow usage` 来获取帮助信息. 可以详细到命令,如: `flow usage run` 这和打开项目源码,找到 cmd/run 目录下的 md 文件一样.
+在命令行中输入 `flow usage` 来获取帮助信息. 可以详细到命令,如: `flow usage run` 
 
-* `flow build <target> [--debug]`
+```bash
+command list : 
+    run, launch, build, compile, hooks, clean, package,
+	setup, files, icons, config, upx, info, sync, usage
 
-* `flow run <target> [--debug]`
+options:
+  --version    : 与 flow version 一样
+  --log<level> : 默值的 level 值为 2, 如果调试建议改为 3 或 4
+  --json       : 输出 json 值仅用于特别的command及特别的usage选项
+```
 
-* `flow clean <target>`
+关于 usage 的详细信息可以查看 src/flow/cmd 目录下相应 .md 文件。
 
-* `flow package <target>`
+一些命令(command)依赖于当前目录下的 `project.flow` 文件
 
-如果未指定 `<target>`, 则使用你的当前系统, 例如在 mac 中 `flow build` 表现为 `flow build mac --arch 64`
+* `flow build [target] [--debug]`: 构建,生成 output 和 output.build (依次执行 clean(如果指定), hooks, 和 files)
+
+>* options: 任何 clean, hooks, files 命令的 options 都可用
+>  * --clean 在构建之前先执行 clean  命令
+>  * --output-path <path> 覆盖掉 project.app.output 指定的输出目录
+
+* `flow compile [target] --options`: 编译, 仅生成 output 但不包含 output.build
+
+>* options: --clean 在编译之前先执行 clean .
+
+* `flow files [target] --options`: “复制/模板处理”文件到 output 和 output.build,
+
+>* options:
+>  * --no-build-files 将不会 “复制/模板处理” output.build
+>  * --no-files 将不会 “复制/模板处理” output
+>  * --no-list
+>  * --list-name
+>  * --error-on-missing
+
+* `flow hooks [target] <--options>`: TODOS ???
+
+* `flow icons [target] [--options]`: 如果需要将转换 `project.app.icon` 到 output
+
+* `flow info [target] [--options]`：解析config文件并返回指定平台的信息
+
+>* options: --hxml 仅输出 hxml
+
+* `flow launch [target] [--options]`: 将启动最后成功构建的 app
+
+>* options: 一些针对平台的特别选项, 自行参考 flow usage launch
+>  * --with-files 当仅更新 assets 和 config 时可以不需要编译，直接执行 launch 加上这个参数即可。
+
+* `flow run [target] [--options]` 将依次执行 files, build, launch
+
+>* options: 所有依次执行命令的 options
+
+* `flow package [target] [--options]`: 打包 output 文件夹为压缩文件,默认为 zip
+
+>* options:
+>  * `--archive <tar, zip>` 指定压缩格式
+>  * `--archive-name <target/path/packagename>` 指定打包后的路径及名称
+>  * `--archive-root <subfolder>` 指定压缩包的根目录, 默认情况下 output 下的文件将直接位于(archive)下
+
+* `flow clean [target] --options`: 清除指定目标文件夹,并且不会有任何警告
+
+>* options:
+>  * --all 清除输出文件夹, 例如: (project)/bin 目录下文件将被完全删除
+>  * --clean-build 清除指定目标的输出文件夹下的 build 目录下所有文件
+>  * --clean-outout 清除指定目标的输出文件夹下所有文件
+
+* `flow sync [target] --options` 将执行 files 以及监视文件改变, options 见 files
+
+* `flow config [leaf] [value] [--options]` 只能设置或获得 config 已经定义了的 leaf,
+
+>* 当给定 value 时, leaf 的值将被存储到 `.flow.config.json` 文件中去
+>* 当没有指定 value 时, 仅输出 leaf 当前的 value, 
+>* options: --list 当 leaf 值为 Object 类型时,打印它的所有值
+
+如果未指定 target, 则使用你的当前系统, 例如在 mac 中执行 flow build 则表现为 `flow build mac --arch 64`
+
+#### flow config
+
+对于 flow 的配置文件, 分别有:
+
+* 原始 位于"flow/src/config.json"
+* 用户 对于 win7 很可能位于 "C:\Users\USERNAME\.flow.config.json", 如果没有需要自已新建
+* 项目 当前工作目录下的 "project.flow" 文件
+
+并且这些配置从下往上覆盖, 通常对于一个项目来说 project.flow 是必须的. 一些命令依赖这个文件的配置
 
 ### 编辑器支持
 
@@ -84,8 +157,6 @@ haxelib run flow "$@"
 * `list` 数组,例:`[]`
 
 * `key` 为一对key/value ,例: `name:'value'`
-
-
 
 #### Root nodes
 
@@ -428,12 +499,11 @@ if : {
 	  */
       defines : ['no_sfx', 'no_music'],
 	
-	
 	  /**
-	  key/value 形式的hash列表.
-	
+	  key/value 形式的hash列表. 指定 haxelib
 	  key 应该为 haxelib list 中列出的库, version 为 "*" 时表示为当前版本, 或者指定成 "1.0.0" 的形式.
 	
+	  被依赖的库将会优先读取 .flow 文件, 如果不存在则读取 haxelib.json 文件分析内部的依赖
 	  @type {}, i.e. {depend: "version"}
 	  @default {}
 	  */
@@ -454,57 +524,49 @@ if : {
 
 
 	/**
-	位于project下的files,将复制文件到 output/target/下, i.e bin/web/
+	位于 project 下的 files,将复制文件到 output/target/ 例: bin/web/
+	位于 project/build/下的files 则复制文件到 output/target.build/ 例: bin/web.build/
 	
 	基本格式为: {filereference: "path/source.ext => dest/path/dest.ext"}, 注意 "=>" 符号
 	
-	source: 文件路径必须相对关联(relative)到 project.flow.
-	
-	dest: 目标路径以 output/target/ 为根目录.(位于 project/build/下的files 则以 output/target.build/为根目录)
-	
-	dest 将被创建, 包括目录, 可以被覆盖重写(后边描述如何禁止覆盖)
-	
-	dest 部分为可选, 这时将表现为 `name: "source => source"`
+	source: 源文件位置, 相对于 project.flow 文件
+	dest: 目标位置, 相对于目标文件夹
+	  - 将被创建, 包括目录, 可以被覆盖重写(后边描述如何禁止覆盖)
+	  - 部分为可选, 这时将表现为 `name: "source => source"`
 	
 	@type {}
 	@default {}
 	*/
     files : {
-	  
 	  data : 'data/ => assets/',
-	  
-	  
+	  // 带有 not_listed 参数
+	  howlerjs : { path:'flow/web/lib/howler.min.js => lib/howler.js', not_listed:true }
 	  /**
 	  如需通过模板生成, 则写成这种形式, 模板使用 [handlebars](http://handlebarsjs.com/)
 	  */
       config : {
-		
 		  /**
-		  
 		  @type String
 		  */
           path: 'config.template.json => config.json',
-		
 		  /**
 		  指定的值为 flow文件的根节点(除了if节点),这些节点和自定义节点可以作为模板参数传递
-		
 		  @type Array<String>|String
 		  */
           template:['project']
       },
+	  // example
+	  boot : { path:'flow/boot/SnowApp.hx => haxe/SnowApp.hx', template:['project', 'snow'] }
     }
-
   },
 
   if : {
     ...
   }
-
 }
 ```
 
-### 如何将flow用于自已的项目
-
+### misc
 
 flow源码结构
 
@@ -517,7 +579,7 @@ setup/			# haxelib run flow 的快捷方式,
           
 		  /cmd/		# flow <command>,各命令, 这种方式真是简洁
 		  
-		  /node_modules/	# 不解释
+		  /node_modules/
 		  
 		  /project/		# flow.js 加载 project.js 由 project.js 加载这个目录下所有脚本
 		          /dependencies/
@@ -552,12 +614,5 @@ src/
 
 tests/		# 包含一个 flow.json 的配置样例
 ```
-flow并非只作为 luxe的构建工具,但是...
-
-运行 `haxelib run flow run web` 的步骤:
-
-* 获取 args 并传递给 nodejs的 flow.js
-
-* flow.js 解析 project.flow 和 args
 
 <br />

@@ -17,7 +17,9 @@ categories: other
 
 ### 简单
 
-中文git描述(github项目): http://gitbook.liuhui998.com/index.html
+中文git描述(github项目): <http://gitbook.liuhui998.com/index.html>
+
+另一个人的经验笔记: <http://blog.csdn.net/kangear/article/details/13169395>
 
 #### 克隆
 
@@ -95,6 +97,8 @@ git pull --depth=1 origin master
   ## 如果感觉有什么不对,可用于中断并恢复
   git rebase --abort
   ```
+
+* `git pull` 这个命令执行了 git fetch 和 git merge 二个操作, 方便快速更新.
 
 #### 上传
 
@@ -224,8 +228,103 @@ git submodule add 仓库地址 本地存放路径
 
 ```bash
 git submodule init
-git submodule update
+## git submodule update, 如果不需要历史加上深度会更好.
+git submodule update --depth=1
 ```
+
+有时候不需想拉取所有的 submodule 则可以:
+
+```bash
+git submodule status       # 显示 submodule 信息
+git submodule deinit .     # 反向init, . 表示全部, 
+git submodule deinit path  # 或者指定 status 显示的路径
+git submodule init         # 初使化全部
+git submodule init path    # 初使化单独一个路径(status)
+git submodule update       # 拉取 init 指定的模块
+```
+
+分拆子目录为子模块: `git submodule split` 
+
+```bash
+$ git submodule split [--url submodule_repo_url] submodule_dir \
+    [alternate_dir...]
+```
+
+
+
+
+#### subtree
+
+subtree 是 1.8 之后的新命令, 和 submodule 的区别是: [百度文库](http://wenku.baidu.com/link?url=ola85Z5tIXJpxCjLTk-dcO81ayXLs68_y6dsmXIa0niF8vWlnAtnEEiZTGlzCNk1G_g36UYNHUBpu9oszONFNB54LNzo3rX7W_ULJg-P-eG)
+
+* 仓库 clone 下来不需要 init 和 update
+
+* 不会产生像 .gitmodule 之类的文件
+
+* git submodule 删除起来比较费劲, 以及一些团队协作时的尴尬问题
+
+创建新的远程 subtree, 这个示例比较兼容旧的 git 版本 <https://help.github.com/articles/about-git-subtree-merges/>
+
+* 首先以正常的方式创建一个 repo
+
+  ```bash
+  mkdir test
+  cd test
+  git init
+  touch .gitignore
+  git add .gitignore
+  git commit -m "initial commit"  
+  ```
+
+* 添加新仓库为 subtree
+
+  1 添加新的远程 git URL
+
+  ```
+  $ git remote add -f spoon-knife git@github.com:octocat/Spoon-Knife.git
+  updating spoon-knife
+  warning: no common commins
+  ....
+  ```
+
+  2 合并 spoon-knife 项目到本地Git仓库,(-s ours 表示只 fetch 分支头信息, 但不改变当前分支状态)
+
+  ```bash
+  $ git merge -s ours --no-commit spoon-knife/master
+  Automatic merge went well; stopped before committing as requested
+  ```
+
+  3 创建新目录,这里示例为 spoon-knife , 以及将 spoon-knife 项目的历史复制进去
+
+  ```bash
+  $ git read-tree --prefix=spoon-knife/ -u spoon-knife/master
+  ```
+
+  4 提交更改以保证它们安全
+
+  ```bash
+  $ git commit -m "Subtree meged in spoon-knife"
+  [master fe0ca25] Subtree merged in spoon-knife
+  ```
+
+可以添加数量的任意子项目, Tips: 如果在这个本地repo上创建新克隆, 你需要再次使用 `git remote add` 新子项目添加到新克隆.
+
+**同步更新远程库**
+
+```
+# git pull -s subtree REMOTENAME BRANCHNAME
+$ git pull -s subtree spoon-knife master
+```
+
+#### cherry-pick
+
+将指定的 commit 应用到当前分支:
+
+```bash
+$ git cherry-pick HASH
+```
+
+实际上 GUI 客户端里查看本地所有分支时, 右键指定的 commit 会有 cherry-pick 的选项..
 
 #### 删除历史文件
 
@@ -253,13 +352,6 @@ bb383961a2d13e12d92be5f5e5d37491a90dee66        refs/original/refs/heads/master
 > du -hs  					# linux 以M为单位统计此目录所有文件大小总合
 ```
 
-#### 合并单个Commit
-
-实际 GUI 操作可以完成这项操作
-
-```bash
-
-```
 
 #### 杂项
 

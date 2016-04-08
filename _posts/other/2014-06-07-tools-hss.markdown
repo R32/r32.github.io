@@ -9,7 +9,7 @@ categories: other
 
  [hss](https://github.com/ncannasse/hss) 是一个类似于 less 或 sass 的 动态样式表语言.但是更加轻量及简单. 基于 neko 平台. 最新的 1.4 版本需要自已编译. 编译参考 Makefile 文件. 
 
-由于 flashdevelop 就支持 hss,不需要另外下载 hss 这个工具
+如果打算兼容 IE 这个还算是不错的
  
 <!-- more -->
 
@@ -24,13 +24,6 @@ hss myfile.hss
 # 注意:  目录需要先创建, 目录名必须以斜线 / 结尾
 hss -output dir/ myfile.hss
 ```
-
-
-### 小贴士
-
-由于每次修改 HSS 文件, CSS 文件需要重新生成。如果网站本身自动运行 HSS，当检测到 HSS 文件发生更改的时候，并显示任何出现的错误。
-
- > 备注: 我好像找不到能监控某一文件发生改动的工具.
 
 ### 语法
 
@@ -182,21 +175,13 @@ HSS 源文件的 Rules.nml 文件中列出的整个的 CSS 属性规则，用于
 [CSS 选译器](http://www.w3.org/TR/selectors/#selectors) , [中文 w3school css 选译器](http://www.w3school.com.cn/cssref/css_selectors.asp)
 
 * `E`: 支持
-
 * `E F`: 支持
-
 * `E > F`: 支持
-
 * `E ~ F`: 支持
-
 * `E + F`: 支持
-
 * `DIV.warning`: 支持
-
 * `E #myid`: 支持
-
 * `E:first-child, E:link, E:hover` and other CSS2 and 3 pseudo-classes selectors are supported (except the ones that takes an argument)
-
 * `E[foo], E[foo=value], E[foo|=value], E[foo~=value], E[foo^=value], E[foo$=value], E[foo*=value]`: supported
 
 

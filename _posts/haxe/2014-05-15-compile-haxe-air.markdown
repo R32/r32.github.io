@@ -67,11 +67,6 @@ AIR 应用程序描述符元素: <http://help.adobe.com/zh_CN/air/build/WSfffb01
 </application>
 ```
 
-
-
-
-
-
 ### 创建 swf
 
 先需要编绎成常见的 swf 格式. 细节参看: [编绎haxe](http://haxe.org/doc/compiler)
@@ -79,7 +74,6 @@ AIR 应用程序描述符元素: <http://help.adobe.com/zh_CN/air/build/WSfffb01
 ```bat
 haxe -main Main -swf Main.swf
 ```
-
 
 ### air应用
 
@@ -254,6 +248,51 @@ if(window.runtime){
 * AIRAliases.js 一些快速访问 flash 的端方法
 
 * AIRIntrospector.js 控制台, 用于协助调试基于 HTML 的应用. 引入后,按下 F12 打开. 这个控制台不怎么好用, 比如没有智能提示
+
+#### CSS 兼容性
+
+CSS3 属性前加上 -webkit 前缀大部分都支持， 比如 `display: -webkit-box`;(不支持 flex 或 -webkit-flex)
+
+总得来说调试器非常不好用, 只能在 HTML 元素上添加修改 CSS , 调试器还得自已刷次一次才会更新右面板的值.
+
+CSS 属性 <http://www.runoob.com/cssref/css3-pr-box-ordinal-group.html> , AIR4.0 ~ 21都没有更新过 WebKit
+```css
+/* 只这三个属性就可以完美配置 Layout, 记得把顶层包括 body,html 的高度值设为 100% */
+/* display: flex */
+display: -webkit-box;
+
+/* flex: 1; 给另一个DI以定值,然后这个设 1 就行了, 如果全部相等则设 auto */
+-webkit-box-flex: 1;
+
+/* flex-flow: row|column */
+-webkit-box-orient: horizontal|vertical|inline-axis|block-axis|inherit;
+
+/* 其它 */
+/* 作用于 -webkit-box 上, 像是 ”左中右“ 对齐 http://www.w3school.com.cn/cssref/pr_box-pack.asp */
+-webkit-box-pack: start|end|center|justify
+/* 作用于 -webkit-box 上, 像是 ”上中下“ 对齐, 注意区别 vertical-align */
+-webkit-box-align: start|end|center|baseline|stretch;
+/* 投影, 例: 10px 10px 5px #888888; http://www.w3school.com.cn/tiy/c.asp?f=css_box-shadow&p=7 */
+-webkit-box-shadow: <h-shadow> <v-shadow> [blur] [spread] [color] [inset];
+/* 超出一行是否换行, 相当于 flex-flow: row wrap|nowrap */
+-webkit-box-lines: single|multiple
+/* 子元素的显示顺序, 相当于 order 用于 flex */
+-webkit-box-ordinal-group: 1(integer)
+
+-webkit-box-align: start|end|center|baseline|stretch;
+
+/*timing-function: linear|ease|ease-in|ease-out|ease-in-out|cubic-bezier(n,n,n,n); */
+-webkit-transition: property duration [timing-function] [delay];
+```
+
+Javascript:
+
+```js
+没有 classList 不方便操作 class 属性
+没有 Promise
+有 Blob, 但没有 ArrayBuffer
+一些网页动画想要流畅你需要将 flash 打包成 60 帧
+```
 
 #### 保护源码
 

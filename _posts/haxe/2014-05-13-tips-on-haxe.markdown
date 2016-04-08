@@ -63,6 +63,10 @@ categories: haxe
 	
 * Compiler.keep 的行为发生了改变 https://github.com/HaxeFoundation/haxe/issues/4111
 
+  > 即通过 `--macro keep(pack.Cls)` 不再能防止被 DCE 清除,因为而编译器不再处理已经存在的类 
+  >
+  > 但 haxe 3.3 似乎又改回来了, 又变得可用了
+
 * haxe.ds.Either 二个类型, 这样可以让一个函数返回二种类型
 
   ```haxe
@@ -208,17 +212,17 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
 
   ```haxe
   public static function measure<T>( f : Void -> T, ?pos : PosInfos ) : T {
-  	var t0 = stamp();
-  	var r = f();
-  	Log.trace((stamp() - t0) + "s", pos);
-  	return r;
+      var t0 = stamp();
+      var r = f();
+      Log.trace((stamp() - t0) + "s", pos);
+      return r;
   }
   $type(Timer.measure(function(){
-  	// output: Warning: Void
+  // output: Warning: Void
   }));
   $type(Timer.measure(function(){
-  	return true;
-  	// output: Warning: Bool
+      return true;
+  // output: Warning: Bool
   }));
   ```
 
@@ -227,12 +231,12 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
   ```haxe
   public var id(get,set):Int;
   function get_id():Int{
-  	return 100;
+      return 100;
   }
   function set_id(v:Int):Int{
-  	// do something
-  	// return this.id = v;  // 如果这样做, 则需要加上 @:isVar
-  	return v;               // good
+  //  do something
+  //  return this.id = v;  // 如果这样做, 则需要加上 @:isVar
+      return v;             // good
   }
   ```
 
@@ -246,7 +250,7 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
 
 * haxe.Serializer 将任意值序列化成字符串
 
-  Serializer.run() 除了普通数据或二进制类型,还可以序列化**类实例**,但只能是纯Haxe的类,如果涉及到原生平台方法,将失败.
+  > Serializer.run() 除了普通数据或二进制类型,还可以序列化**类实例**,但只能是纯Haxe的类,如果涉及到原生平台方法,将失败.
  
 * Context.resolvePath 除了检索当前项目的目录之外,包含 Context.getClassPath 返回值的所有路径, 这个路径包括 -lib 库目录(JSON文件 指定的目录)及 　haxe/std 等等.
 
@@ -263,7 +267,7 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
 	
 * flashdevelop -> 项目属性 -> 编译器选项 -> Additional Compiler Options
 
-  > 例如: `--macro openfl.Lib.includeBackend('native')` 如果 native 使双引号将会出错, 而在 hxml 文件中,单双引号无所谓
+  > 例如: `--macro openfl.Lib.includeBackend('native')` 在窗口配置中使用双引号将会出错, 而在 hxml 文件中,单双引号无所谓
   >
   > 如果使用了 openfl 在 flashdevelop 上修改项目属性将不会有任何改变.
 
@@ -285,12 +289,12 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
 
   ```haxe
   @:enum abstract C(Int) {
-  	var X = 0;
-  	var Y = 1;
-  	var Z = 2;
-  	var W = 3;
-  	public static inline function ofInt(i:Int) : C return cast i;
-  	public inline function getIndex() : Int return this;
+      var X = 0;
+      var Y = 1;
+      var Z = 2;
+      var W = 3;
+      public static inline function ofInt(i:Int) : C return cast i;
+      public inline function getIndex() : Int return this;
   }
   ```
 
@@ -526,10 +530,10 @@ class Bind {
 
 * 方法没有方法体(特殊除外),以及方法的参数及返回类型必须是显示声明的
 
-```haxe
+  ```haxe
   extern class Math{
-  	static var PI(default,null) : Float;
-  	static function floor(v:Float):Int;
+      static var PI(default,null) : Float;
+      static function floor(v:Float):Int;
   }
   ```
 
@@ -854,18 +858,17 @@ class Helo{
 
 * 泛型限定 `<T:Foo>`, 将 T 限定为 Foo,
 
-  > 对于 `<T:{prev:T,next:T}>`或 `<K:{ function hashCode():Int;}>` 这样的源码
+  > 对于 `<T:{prev:T,next:T}> 或 <K:{ function hashCode():Int;}>` 这样的源码
   >
-  > 实际上 `{}` 可以看成匿名类型,然后这个类型只要包含 `prev next` 属性 或 `hasCode` 方法就行了, 分析 `haxe.macro.Type.hx` 的 `Ref`
+  > 实际上 `{}` 可以看成匿名类型,然后这个类型只要包含 prev,next 属性 或 hasCode 方法就行了, 分析 haxe.macro.Type.hx 的 Ref
 	
-```haxe
-typedef Ref<T> = {
-	public function get() : T;
-	public function toString() : String;
-}
-
-// 只要一个类型它包含了 get 及 toString ,就可以看成是 Ref
-``` 
+  ```haxe
+  typedef Ref<T> = {
+      public function get() : T;
+      public function toString() : String;
+  }
+  // 只要一个类型它包含了 get 及 toString ,就可以看成是 Ref
+  ``` 
 
 
 
@@ -1044,10 +1047,10 @@ haxe.web.Dispatch.run("/user", new Map<String,String>(), api);
 
   ```haxe
   function doMultiply( d:Dispatch, mod:String, act:String) {
-  	trace("BEFORE");
-  	d.dispatch(this);	// 可以是其它 api 类, 但由于在这里 subDispatch 已经为 ture,
+      trace("BEFORE");
+      d.dispatch(this);	// 可以是其它 api 类, 但由于在这里 subDispatch 已经为 ture,
   						// 因此不会再重复调用 doMultiply, 而是会调用 doDefault
-  	trace("AFTER");
+      trace("AFTER");
   }
   Dispatch.run("/multiply/module/act/1")
   ```
@@ -1124,8 +1127,8 @@ http://old.haxe.org/doc/remoting
   var rtti:String = untyped SomeClass.__rtti;
   var t = new haxe.rtti.XmlParser().processElement( Xml.parse(rtti).firstElement() );
   switch(t){
-  	case TClassdecl(cc):
-  	default:
+      case TClassdecl(cc):
+      default:
   }
   ```
 
