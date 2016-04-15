@@ -396,7 +396,7 @@ dll-import             : GenCPP experimental linking
 doc-gen                : Do not perform any removal/change in order to 
                          correctly generate documentation
 
-# -D dump=pretty
+# -D dump=pretty, dump=record(haxe 3.3)
 dump                   : Dump the complete typed AST for internal debugging
 
 dump-dependencies      : Dump the classes dependencies

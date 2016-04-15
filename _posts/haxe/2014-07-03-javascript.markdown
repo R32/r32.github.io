@@ -44,20 +44,21 @@ categories: haxe
 
 * `jquery-ver`: The jQuery version supported by js.jquery.*. The version is encoded as an interger. e.g. 1.11.3 is encoded as 11103
 
-* `js-es5` 如果你确定代码只在符合这个标准的环境中运行(如node.js或 chrome 扩展),强烈推荐添加这个标记。 
+* ~~js-es5~~ 如果你确定代码只在符合这个标准的环境中运行(如node.js或 chrome 扩展),强烈推荐添加这个标记。 
+
+  - 最新版本使用 `-D js-es` 即默认为 es5, 你也可以定义成 `-D js-es=6` 在未来获得支持
 
   对于一些方法（如 `Array::indexOf`）,haxe使用了兼容各种浏览的实现, 如果定义这个标记,将不会构建这些多余的兼容性代码
 
-* ~~`js-flatten`~~ 平坦模式.  由于 haxe 3.2 中这将是默认行为,应此被移除
+* ~~`js-flatten`~~ 平坦模式. haxe 3.2+ 中这将是默认行为
 
-  使用更少的对象属性构建类, 例如: 默认情况下会创建的类有时似于 Main.a.b.c 加这个属性后将为 Main_a_b_c 这样就降低了访问对象的深度
-	
-* **js-unflatten** 由于 haxe 3.2 已经默认为 js-flatten, 因此想反过来的话... 
-	
-* **`embed-js`** 当调用到相关类时,自动嵌入 haxe 安装包标准库内部的 JS 文件.
+  - **`js-unflatten`** 如果想恢复以前旧的模式的化. 例旧模式： `Main.a.b.c`, 而默认的平模模式为: `Main_a_b_c`
+		
+* ~~embed-js~~ 当调用到相关类时,自动嵌入 haxe 安装包标准库内部的 JS 文件.
 
-  目前只有 `jQuery 1.6.4` 和 `swfObject 1.5` 这二个 since 3.0
+  - 似乎已经被移除了, 在 haxe 3.3+, 旧的版本目前只有 `jQuery 1.6.4` 和 `swfObject 1.5` 这二个 since 3.0
 
+  
 ### Metas
 
 * `@:jsRequire(moduleName,?subModName)` 需要 haxe 3.2+
@@ -198,10 +199,20 @@ extern class 不知从哪个版本开始起允许有函数体(非inline), 这样
 
 ### 浏览器
 
-haxe 的 HTML 相基于 Mozilla 的 WebIDL 自动生成 <https://github.com/HaxeFoundation/html-externs> , 因此在兼容性方面还是推荐使用 JQuery.
+* js.Browser 类下有几个 static field你 可能会经常用到, 比如 window, document, console ....这些
+
+* js.Lib 类下的方法适用于 nodejs/Browser, 比如 nativeThis(), eval(), require()(仅限nodejs)
+
+* js.Selection 用于 textrea 元素, 兼容 IE/Mozilla. 但是这个类并没有获得当前光标位置的方法.
+
+* js.Cookie
+
+* js.RegExp
+
+......
 
 #### HTML DOM
 
-......
+haxe 的 HTML 相基于 Mozilla 的 WebIDL 自动生成 <https://github.com/HaxeFoundation/html-externs> , 因此在兼容性方面还是推荐使用 JQuery.
 
 <br />

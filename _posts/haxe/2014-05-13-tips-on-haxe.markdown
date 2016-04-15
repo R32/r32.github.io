@@ -25,13 +25,15 @@ categories: haxe
 
 注意一些是 Git dev版本
 
+* `-D dump=record`
+
 * `extern clsss` 不知从什么时候起也允许有函数体了, 这样的话更方便JS模块化编程
 
 * [haxe 3.3 支持 extern 的 abstract 类以及 extern @:enum abstract](https://github.com/HaxeFoundation/haxe/issues/4862)
 
 * [haxe 3.3 新的操作符](https://github.com/TiVo/intellij-haxe/issues/375) `||=, &&= 以及 后置!`, 但似乎只适用于 abstract 类中的操作符中载
 
-* [Nicolas 在前二天的直播主要讲的二点](https://groups.google.com/forum/#!topic/haxelang/GaekP1atMwE)
+* <https://groups.google.com/forum/#!topic/haxelang/GaekP1atMwE>
 
   - 新的 meatadata `@:structInit`见下边描述, 以及适用于小型结构的 `inline new`
 

@@ -26,9 +26,9 @@ categories: haxelib
 
 redis 并不只是简单的 key-value 存储,实际应该为"数据结构服务器", 支持各种不同的值。
 
- * binary-safe string, 即不会因为某个字符(如:'\0')而打断字符串
+* binary-safe string, 即不会因为某个字符(如:'\0')而打断字符串
 
- * Lists: 按插入的顺序先后排序的字符串集合.
+* Lists: 按插入的顺序先后排序的字符串集合.
 
   ```bash
   # 基本操作
@@ -38,9 +38,9 @@ redis 并不只是简单的 key-value 存储,实际应该为"数据结构服务�
   LINSERT <KEY> <BEFORE|AFTER> <pivot> <value> # 将 value 插入到 pivot 前/后, 返回 list 长度.
   RPOPLPUSH <src> <dst>    # 原子性. 将 src 中最后一个元素移至 dst 中的第一个, src 可等于 dst
   LRANGE <KEY> <start> <end>   # 显示指定范围, 第一个为0, 最后一个为 -1
-  LTRIM  <KEY> <start> <end>   # 同上, 但是任何这个范围外的将会被移除, 
+  LTRIM  <KEY> <start> <end>   # 同上, 但是任何这个 **范围外** 的将会被移除, 
   LREM   <KEY> <count> <value> # 删除指定数量的值, 如果 count 为负数则从最后往前删除(从右往左)
-                               #如果 count 为 0 则删除**所有**匹配的值
+                               # 如果 count 为 0 则删除**所有**匹配的值
   							
   # http://redis.io/commands/blpop							
   # 可阻塞,类似于 haxe 中的 deque , 对于多个 KEY 值只要第一个(前边的)KEY中有值将会立即返回,而忽略后边的KEY

@@ -9,28 +9,23 @@ categories: haxelib
 
 [castleDB] 是游戏 [evoland 2](http://www.evoland2.com/) 的静态数据编辑器
 
-* 为什么
+* Why
 
   - castleDB 用于 **可视化** 的输入结构化静态的的数据
-
   - 通常存储于 XML 或 JSON 文件中的数据都可以使用这个工具代替,并且做添加和修改
-
   - 比如当你在做一个游戏时, 你可以将所有物品和怪物它们的 名字,描述,逻辑...等等这些属性通过 castleDB 存储
 
 <!-- more -->
 
-* 如何
+* How
 
-  - castleDB 看上去像上一个电子表格编辑器, 但 castleDB 的每一个表格都有对应的"数据模型"
-
-  - 编辑器通过这个"模型" 验证数据,简化用户输入
+  - castleDB 看上去像上一个电子表格编辑器, 但castle的每一个表格都有其相对应的"数据模型"
+  - 编辑器通过这个"模型"验证数据,简化用户输入
 
 * 存储格式
 
-  - castleDB 存储其"数据模型"和"数据行"为一个简单易读的 JSON 文件
-
+  - castle 存储其"数据模型"和"数据行"为一个简单易读的 JSON 文件
   - JSON 文件很容易被其它程序加载使用
-
   - 它能更简单地处理游戏物品以及怪物的各种数据
 
 * 协作
@@ -94,17 +89,14 @@ castleDB 保存为一个扩展名为 `.cdb` 的文件, 其实它是一个 JSON �
 ]		
 ```
 
-* 一个数据库由几个工作表(sheet)组成. 每个工作表为结构化的对象(类似于传统数据库中的表)的集合
-
+* 一个.cdb文件由几个工作表(sheet)组成. 每个工作表为结构化的对象(类似于传统数据库中的表)的集合
 * 每个表包含多个列(columns), 列表示存储数据对象字段(fields)
-
 * 每个列都有一个给定的"类型"表示此列中存储数据的种类
-
-* castleDB 处理列(columns)的重命名,删除及列类型之间的转换
+* castle 处理列(columns)的重命名,删除及列类型之间的转换
 
 ### 列类型
 
-以下为可用的"列"类型:
+下边为可用的"列(字段)"类型:
 
 * **Unique Identifier**(唯一标识符): 作为行数据的唯一标识符, 它允许其它表(sheet)或列(column)引用这一行数据. 唯一标识符必须是有效的代码标识符 `[A-Za-z_][A-Za-z0_9_]*`
 
@@ -448,17 +440,23 @@ index_layers 将总是为 grid-aligned. 其它类型 layers 则可以有更精�
 * clear: 清除当图层的所有数据
 * delete: 删除当前图层(限于tile_layer, 其它图层则通过其相应的字段修改)
 
+Options 菜单:
+
+* Tile Size: 属于level层次的, 修改它将自动修改 props 字希中的 tileSize 属性.
+* X/Y Scroll: 滚动
+* Value Scale: 缩放
+
 #### Tile Layers
 
 由 tile_layer 所组成的数据通过单个tileset, tile_layer 有如下属性:
 
 Mode: tile_layer 可工作在三种模式, 模认为 tile, 其它模式后边将详细介绍
 File: 允许更改 tileset 作用于当前 tile layers,
-Size: CDB 默认使用 16x16大小的tile. 可以更改这个数值在各自的 layer, 需要注意的是你需要同样更改 level 的 tile size 通过 Option 菜单
+Size: CDB 默认使用 16x16大小的tile. 可以更改这个数值在各自的 layer(但是同一张底图不可以有不一样的size), 注意需要同时修改 Options 菜单中的 Tile Size 大小
 
 #### Tile Mode
 
-在这个模式下, 你可以选上 tileset 下方的 填充或随机模式
+在这个模式下, 你可以选上 tileset 下方的填充或随机模式
 
 #### Object Mode
 
@@ -486,9 +484,35 @@ Object_Layer 将为一个base64编码的16位值:
 
 这个模式与 tile mode 很相似, 除了你可以配置 Grounds 和 Borders 获得一些自动构建
 
-> Grounds模式中将定义tile的显示顺序, 数值越高则显示在顶层, borders 则是快速配置 tile (IN,OUT)于哪些ground定义的值
+> 你可以尝试在示例中切换到 ground layer, 观察它与 Tile 的差异.
+>
+> border 能自动将定义为 Ground 类型的 tile 使 border 包起来, 只是没有文档介绍如何做
 
-你可以尝试在示例中切换到 ground layer, 观察它与 Tile 的差异.
+Borders 有 4个模式: (copy from cdb.TileBuilder.hx)
+
+```
+	Corners
+	┌  ─  ┐		0 1 2
+	│  ■  │		3 8 4
+	└  ─  ┘		5 6 7
+
+	Lower Corners
+
+	┌ ┐		9  10
+	└ ┘		11 12
+
+	U Corners
+
+	   ┌ ┐			XX  13  XX
+	┌       ┐		14  XX  15
+	└       ┘
+	   └ ┘			XX  16  XX
+
+	Bottom
+
+	└ - ┘			17 18 19
+```
+
 
 #### Group Mode
 
@@ -514,7 +538,7 @@ Object_Layer 将为一个base64编码的16位值:
 * `G` 限定为grid 对齐, 针对一些以像素对齐的对象
 * `I` 显示/隐藏画板(palette)
 * `P` 直接将tile填充到图层
-* `R` 随机填充模式切换(画板下当tile模式时会出现在选项)
+* `R` 随机tile模式切换(画板下当tile模式时会出现在选项)
 * `+,-` (小键盘), 缩放level
 * `/` (小键盘), 返回默认的缩放大小
 * `E` 直接在图层上修改 list/zone类型层数据
@@ -528,46 +552,80 @@ Object_Layer 将为一个base64编码的16位值:
 
 在 Haxe 中调用. flashdevelop 能很好地提供智能提示,以避免打错字符. 参看 www/index.html 以及 src/test. Test.hx:
 
-```haxe
-import dat.Data;
+Data.hx: 这个类仅只使用宏来解析数据类型,不会加载数据值, 仅提供 sheet name 的智能语法提示.
 
+```haxe
+// Init 名字随意, 
+private typedef Init = haxe.macro.MacroType <[cdb.Module.build("test.cdb")]> ;
+```
+
+如果这行代码放在 Data.hx 下, 那么之后的数据访问都将通过 `Data.xxxxx` 来访问, 如果放在 Other.hx 文件中则通过 `Other.xxxxx` 访问
+
+```haxe
 class Test {	
 	static function main() {
-		#if js
-		dat.Data.load(null);
-		#else
-		dat.Data.load(haxe.Resource.getString("test.cdb"));
-		#end
+		var content: String = .....; // 需要自已将 .cdb 加载进来
+		Data.load(content);
+		// items 为 表名(sheet name), 注意为小写字母开头(工作表不要用大小字母开头命名)
+		// 通过 SheetNameKind 的方式访问可以获得的uid(IDE智能提示)
+		trace(Data.items.get(Data.ItemsKind.Sword).alt.fx);
 		
-		// items 为 表名(sheet name)
-		// sword 所属字段类型为 Unique Identifier 
-		trace(dat.Data.items.get(sword).alt.fx);
-		trace(dat.Data.items.get(sword).alt.test);
-		trace(switch( dat.Data.items.get(herb).fx ) { case Monster(m): m.id; default: null; } );
+		trace(Data.items.get(sword).alt.test);     // 不推荐的方式
 		
-		for( s in dat.Data.monsters.resolve("wolf").skills[0].sub )
-			trace(s);
-		
+		for( s in Data.monsters.resolve("wolf").skills[0].sub )
+			trace(s);	
 		// If the sheet does not have an unique identifier, only the all field is available.
 		// If the sheet has an unique identifier, you can access the all field, but also use get (by id) and resolve (by string). 	
 	}	
 }
 ```
 
-Data.hx: 这个类仅仅只使用宏来解析 数据类型,不会解析数据, 仅提供 sheet name 的智能语法提示.
+对于一个名为 mySheet 的表(sheet，注意表名不要大写字母开头),将自动生成如下类型(IDE智能提示可能需要花些时间解析第一次时):
 
+* MySheetDef：通过JSON解析的原始Ojbect类型
+* MySheet：(因此表名不要大写字母开头) 抽象(抽象即不可访问)类型将允许读取字段以及执行一些转换TODO:（后边再详细描述）
+* MySheetKind：包含 mySheet 中的所有 unique identifier(可以用在 mySheet.get 方法参数, 这三个似乎只有这一个有点用)
 
-```haxe
-package dat;
+#### 类型映射
 
-// Init 名字随意
-// 这里的宏只解析 test.cdb 里的类型并不会解析数据, 数据需要在 运行时 load()
-private typedef Init = haxe.macro.MacroType < [cdb.Module.build("test.cdb")] > ;
-```
+castleDB 中的数据类型对应 haxe 中相应的类型
 
+* Unique Identifier - SheetNameKind(abstract enum)
+* Text - String
+* Boolean - Bool
+* Integer - Int
+* Float - Float
+* Color - Int
+* Enumeration - SheetName_ColumName(abstract enum)
+* Flags - cdb.Types.Flags<SheetName_ColumName> (abstract enum)
+* Reference - TargetSheetName 当访问时将获取引用的对象, 仅能访问其标识符通过 columnNameId field
+* File - String
+* Image - String(只有MD5值， 这时 image 还未加载)
+* Tile - cdb.Types.TilePos(包含 tileset 文件及 size,x/y位置以及可选的 width/height)
+* List - cdb.Types.ArrayRead<SheetName_ColumName>(一个可读的结构数组对象允许 index访问, length,及迭代)
+* Custom - SheetName_ColumName
+* Dynamic - 
+* Data Layer - cdb.Types.Layer<SheetName>
+
+  > 可通过将 Data.sheetName.all 数组传递给 decode 方法来解压
+
+* Tile Layer - cdb.Types.TileLayer
+
+  > 可通过 t.data.decode() 来解码，解压的数据为16位值的数组. 如果这个图层为 tile/ground模式将有 width/height值.如果为object模式将可以看到图层选区数据)
 
 ### 其它
 
 * 修改 columns 时,别按回车键,因为默认为 `delete`
 
-* **重要**: 表名(sheet name)不要以大写字母开头
+#### in heaps
+
+* 首选用宏解析 .cdb 文件.``
+
+  > 这个 .cdb 文件应该存放于 `-D resourcesPath=SOME_PATH` 所定义的目录下, 默认将为项目文件(hxml或hxproj文件所在文件夹)的 res 目录
+
+* 在代码中加载, 如: `Data.load(Res.data.entry.getText());`, 其中 data 为 data.cdb 文件.
+
+* 参考 h2d.CdbLevel.hx 文件, 例: `new CdbLevel(Data.levelData, 0, s2d);`
+
+<br />
+<br />

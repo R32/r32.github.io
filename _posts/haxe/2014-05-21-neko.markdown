@@ -139,7 +139,7 @@ Sys.sleep(3);
 
 #### net.Poll
 
-在单个线程中轮询多个非阻塞 socket, <http://old.haxe.org/api/neko/net/poll>
+在单个线程中轮询多个 **非阻塞** socket, <http://old.haxe.org/api/neko/net/poll>
 
 ```haxe
 class Poll {
@@ -148,12 +148,12 @@ class Poll {
 	
 	function new( n : Int );
 	function events( ?t: Float ):Void;
-
-	// 轮询指定的socket数组并返回其中有效的, 这个类似于 Socket.select, 但没有 Socket.select 那样的连接数量限制
-	function poll( a: Array<Socket>, ?t: Float ): Array<Socket>;
-	
 	// 预置socket数组用于轮询，
 	function prepare( read: Array<Socket>, write: Array<Socket> ):Void;
+
+	// 轮询指定的socket数组并返回其中有效的, 这个类似于 Socket.select, 但没有 Socket.select 那样的连接数量限制
+	// 这个方法像是等于 prepare(a) + events(t)
+	function poll( a: Array<Socket>, ?t: Float ): Array<Socket>;
 }
 // example: copy from tora/Tora.hx
 var changed = false;

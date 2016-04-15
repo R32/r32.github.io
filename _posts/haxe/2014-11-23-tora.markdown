@@ -253,7 +253,8 @@ Api.hx 中的全部为静态方法及静态属性:
 ```haxe
 class Queue<T> {
 	var name(default,null) : String;
-    function addHandler( h : Handler<T> );	// 调用后防止与 Protocol 断开连接,即使 index.n 已经退出. 这样才能实现消息推送。
+	// 调用后防止与客户端断开连接,即使 index.n 已经退出. 这样才能实现消息推送。
+    function addHandler( h : Handler<T> );	
     function notify( message: T ): Void;
     function count(): Int;
     function stop(): Void;
@@ -265,12 +266,14 @@ class Queue<T> {
 
   ```haxe
   // (实验性)交互, 由于服务器端只能获得 params 或 headers,因此对于已经连接的 Protocol
-  p.reset();	// 重置所有请求参数, 但是要注意当出现 disconnect 后重新连接的参数
+  p.reset();	// 重置所有请求参数, 但是要注意当出现 disconnect 时, 需要重新连接.
   m.addHeader("Key1", "Value1"); 
   p.call(url);
   ```
 
  * 另一个 B-client 则直接调用名字相同的 notify, 这时所有调用了 addHandler 将收到消息 `onData(msg)` 
+
+ * 当用于线上服务器时, 可以指定 `tora -config httpd.conf` 并配置好相应的 VirtualHost 二级域名就行了,下边是本地测试用
 
   ```bash
   > tora.exe -unsafe localhost:6667 -config vh.conf
@@ -278,7 +281,7 @@ class Queue<T> {
   [DATE] Starting Tora server on 127.0.0.1:6666 with 32 threads
   ```
 
-  当用于线上服务器时, 可以指定 `tora -config httpd.conf` 并配置好相应的 VirtualHost 二级域名就行了,下边是本地测试用
+  vh.conf 仅用于本地测试
 
   ```xml
   <!-- 把 index.n 置下边指定目录, 注意路径不要加引号, 因为 tora 没处理引号, -->
@@ -400,6 +403,8 @@ class Test {
 }
 ```
 
+需要注意的是 queue 设计是用来接收数据的, 如果打算用它的socket来发送数据, 需要小心重复的 addHandler.
+
 #### Share
 
 **在不同的模块(.n文件)中** 共享永久数据(直至重启tora.exe). 比用数据库共享更为高效和便捷 http://old.haxe.org/doc/neko/tora_share,
@@ -488,6 +493,14 @@ motion-twin tora
 -unsafeTLS <host:port> <cert> <key>     # SSL <本地地址:本地端口> <path/x509_cert> <path/*.key>
 -websocketTLS <host:port> <cert> <key>  # WSS <本地地址:本地端口> <X509证书> <私钥>
 ```
+
+* RedisManager 仅将 SUBSCRIBE/PUBLISH 和 tora.Queue 的 addHandler/notify 连接在了一起
+
+  > 这样其它连接 redis 的程序便能监听/发布消息到 tora, 上边的示例可以用 redis.Queue 代替 tora.Queue 来测试
+  >
+  > 也就是说 redis.Queue 只能作为 tora 的程序而运行.
+
+* WebSocket, ws 在建立之后,不能更改其 header 和 params, 数据将通过 send 发送到服务器
 
 最新改动:
 
