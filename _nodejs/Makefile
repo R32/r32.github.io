@@ -1,5 +1,5 @@
 TARGET_DIR	:=	../
-FILES	:= $(shell find $(TARGET_DIR) -name '*.markdown')
+FILES	:= $(shell find $(TARGET_DIR)_posts/ -name '*.markdown')
 TARGET	:=	$(TARGET_DIR)/pagin_data.js
 SCRIPT	:= paginator.js
 

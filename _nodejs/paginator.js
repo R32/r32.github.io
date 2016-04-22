@@ -20,15 +20,16 @@ function walk(path, pat, exclude){
 
 	!path && (path = './' );
 
-	!exclude && (exclude = ['.git','.gitignore']);
+	!exclude && (exclude = []);
 
 	for(var i = 0; i<len; i+=1){
 
 		fname = list[i];
 
-		if(exclude.indexOf(fname)!== -1){
+		var c = fname.charAt(0);
+		if(c === "_" || c === "." || exclude.indexOf(fname)!== -1) {
 			continue;
-		}	
+		}
 		
 		stat = fs.statSync(path + fname);
 
@@ -74,16 +75,13 @@ var helpers = {
 	},
 
 	/**
-	*	从 jelyll 的 markdown 顶部获阳 YAML 字符串
+	*	简单从 jelyll 的 markdown 顶部获阳 YAML 字符串
 	*@ param url(String) 带目录的的全名
 	*@ return {String} 
 	*/
 	getYAML: function (url){
-		var fstr = fs.readFileSync(url,'utf8');
-		var lp = fstr.indexOf('---') + 3;
-		while(fstr.charAt(lp)  === '-' ){// 检测是否有多的 - 线
-			lp += 1;
-		}
+		var fstr = fs.readFileSync(url,'utf8').replace(/\r\n/g,"\n");
+		var lp = fstr.indexOf('---\n') + 4;
 		var rp;
 		if(lp !== -1){
 			rp = fstr.indexOf('\n---',lp);
@@ -203,7 +201,7 @@ function main(){
 
 	var ot = new Date().getTime();
 
-	var list = walk(path,/markdown$/);
+	var list = walk(path + "_posts/", /markdown$/);
 
 	for(var i = 0,len = list.length ; i < len; i+=1){
 
@@ -226,7 +224,7 @@ function main(){
 		Array.prototype.sort.call(ret[k],helpers.sortByTime);
 	}
 	
-	fs.writeFileSync(path + jsname, JSON.stringify(ret),'utf8' );
+	fs.writeFileSync(path + jsname, JSON.stringify(ret, null, "  "),'utf8' );
 	
 	elapse = new Date().getTime() - ot;
 	
