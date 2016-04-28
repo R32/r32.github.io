@@ -1,0 +1,1478 @@
+---
+
+layout: post
+title:  fuse(原型设计)
+date:   2016-03-12 08:16:22
+categories: other
+
+---
+
+Getting Started: <https://www.fusetools.com/learn/fuse#getting-started>
+
+* 相比 haxe 的一些跨平台UI库,多了一个本地实时预览功能
+* android SDK/NDK设置 <https://www.fusetools.com/learn/guides/preview-and-export-android>
+ 
+<!-- more -->
+
+Note: 这篇文档仅作为个人笔记, 一些地方可能存在误解, 因此不保证内容的正确性。 缺点:
+* 目前似乎不支持使用 system font, 这样导致需要嵌入中文字体会有点大
+* 目前不能播放声音，仔细想想好像手机App（除了游戏）并不需要声音, 而通知有没有声音有系统决定
+
+### 项目结构
+
+在使用 fure 仪表板或命令行创建一个新项目后, 将在目录中可找到二个文件
+
+* [PROJECTNAME.unoproj](https://www.fusetools.com/learn/uno#keyword-uno-project-format-overview) 项目文件
+* MainView.ux 应用的主入口文件, 因为它包括 App 元素。
+
+注: Javascript 文件不需要从 .unoproj 内引用, 可直接在 .ux 文件中导入 
+
+
+### UX Markup
+
+Fuse主要使用 XML 来开发App, 这些 XML 最后将被转换成相应的Uno Class.(Note: 注意属性名带有 `ux:`前缀和普通属性的区别)
+
+ux 标记由以下几种类别:
+
+* App 根节点, 并且一个 app 只能有一个
+  - Theme="Basic|Native|NativeWithFallback":
+
+* 多数 Node 类型, 大多数为 UI Elements
+
+* 修改 Node 的方式:
+  - Gestures(手势)
+  - Triggers(触发器)
+  - Scripts
+  - Visual effects 视角效果
+
+* Styling(样式)
+
+#### AutoBind 
+
+AutoBind 是一个元素属性,控制元素是否自动"连接"到父节点, 默认情况下将为 true, 但如果你想做些特别的可以设为 false
+
+> 当设为 false 时, 这个元素将不会变成其XML父标记的子元素, 实际上它将保持独立对象树, 如果你需要在之后再添加到可视列表这还是有意义的
+
+```xml
+<Panel ux:Name="panel1" >
+  <Panel ux:AutoBind="false" ux:Name="panel2" />
+</Panel>
+```
+
+### 组件
+
+如果元素不包含子元素则可以使用类似于 `<Text Value="Hello World" />` 这样的单闭合样式.
+
+#### Text
+
+`<Text>Hello, World</Text>`
+
+* TextWrapping="Wrap|NoWrap(default)" 是否自动换行
+* Font: 需要添加 ttf 字体
+
+  ```xml
+	 <Font File="Roboto-Medium.ttf" ux:Global="Medium" />
+	 <Font File="Roboto-Light.ttf" ux:Global="Light" />
+	 <StackPanel>
+	   <Text Font="Light">Roboto Light</Text>
+	   <Text Font="Medium">Roboto Medium</Text>
+	   <Text Font="Light">Roboto Light again</Text>
+	 </StackPanel>
+  ```
+* TextColor = "#999|#999999"
+* TextAlignment = "Left(默认)|Conter|Right"
+* FontSize="24" Int
+* LineSpacing="10" Int
+
+**Font**: 见上边示例, 用于导入字体，字体通常用于整个应用, 因此被标记为全局资源 `ux:Global="xxx"`
+
+**Number**: 大多数情况下和 Text 相似, [Format 格式参考-中文](https://msdn.microsoft.com/zh-cn/library/dwhawy9k.aspx?f=255&MSPPError=-2147217396)
+  
+`<Number Value="3.14159265359" Format="F03" />` 将显示为 3.141
+
+
+#### Image
+
+支持 PNG 和 JPEG(in RGB color space)
+
+* File: 本地加载与 ux 相同文件夹,只能是常量, 如果你想使用{变量} 需要创建资源然后使用 Source
+* Url: 以 Http 的形式从网络加载
+* Source: 加载 Resource 类型的图像
+
+  ```xml
+  <FileImageSource ux:Key="pic2" File="Images/Image2.jpg" />
+  <FileImageSource ux:Global="CloseIcon" File="close.png" Density="2" />
+    <StackPanel>
+      <JavaScript>
+        module.exports = {
+          imageResource: "pic2",
+          url: "http://somewhereontheinternet/Cute-Cat.jpg"
+        }
+      </JavaScript>
+      <Image File="Images/Image1.jpg" />
+      <Image Source="{DataToResource imageResource}" />
+      <Image Url="{url}" />
+      <Image Source="CloseIcon" />
+    </StackPanel>
+  ```
+
+* Color="#f00|#ff0000": 将影响图片中白色或接近白色的部分
+* StretchMode: 当图像添加到容器时将尽可能填满容器, 但如果图像并不是用来作为容器的背景部分，因此
+  - Fill: 填充容器中可用区域, 而不一定保持高宽比
+  - PixelPrecise: 使用图像的像素大小为单位来确保图像为crisp， 这意味着不同设备上图像大小不一致，它将忽略容器的大小
+  - PointPrecise: 使用图像的点(Points)大小为单位作为图像大小, 它确保所有设备上图像的大小一致，它将忽略图像容器的大小
+  - PointPrefer-PointPrefer: 拉伸模式将优先获得图像大小,TODO:
+  - Scale9: 九宫格缩放填充,根据 Scale9Margin 定义的值
+  - Uniform: 保持图片的高宽比, 这可能会使图片没有填充整个容器
+  - UniformToFill: 填充整个区域并保持高宽比, 这可能使图片的部分超出容器而不可见
+* StretchDirection: 设置拉伸是拉大还是缩小
+  - Both: 
+  - UpOnly: Only upscale contents(仅放大)
+  - DownOnly: Only downscale contents(仅缩小),有时候子元素大于父元素
+* ContentAlignment: 设置图像在其区域内的对齐方式
+  - Default:
+  - Left:
+  - HorizontalCenter:
+  - Right:
+  - Top:
+  - VerticalCenter:
+  - Bottom:
+  - TopLeft:
+  - TopCenter:
+  - TopRight:
+  - CenterLeft:
+  - Center:
+  - CenterRight:
+  - BottomLeft:
+  - BottomCenter:
+  - BottomRight:
+
+图像资源, 即上边使用 Source 指定图像资源，目前支持以下类型:
+
+* FileImageSource: 单个本地图像文件以及它的屏幕密度(Density)
+* HttpImageSource: 单个http图像以及的它的屏幕密度
+* MultiDensityImageSource: 同一个图像以及多个屏幕密度值
+	
+  ```xml
+  <!-- Fuse 将挑选最适合屏，尊循 StretchMode 的图像资源 -->
+  <Image StretchMode="PointPrefer">
+    <MultiDensityImageSource>
+      <FileImageSource File="Icon.png" Density="1"/>
+      <FileImageSource File="Icon.png@2x.png" Density="2"/>
+    </MultiDensityImageSource>
+  </Image>
+	 
+  <!-- 允许指定从HTTP获取并异步显示的图像 -->
+  <!-- 注意 HTTP 可能需要一些时间来加载, 在加载之前Fuse将不能获得图像的大小,因此需要小心处理 -->
+  <Image>
+    <MultiDensityImageSource>
+      <HttpImageSource Url="{image_url_1x}" Density="1"/>
+      <HttpImageSource Url="{image_url_2x}" Density="2"/>
+    </MultiDensityImageSource>
+  </Image>
+	 
+  <!-- 或者如果你使用固定的屏幕密度,可以直接简单 -->
+  <Image Url="{image_url}" />
+  ```
+
+#### Video
+
+视频显示, 和 Image 一样拥有 Url, StretchMode, StretchDirection, ContentAlignment 
+
+* File="path/to/file.mp4"
+* Volume="0.0~1.0(默认值)"
+* Duration：以秒为单位
+* Position: 以秒为单位
+* IsLooping="false(默认)|true"
+
+有用的触发器可用于 Video
+
+```xml
+<Video>
+  <WhilePlaying />    <!-- Active while the video is playing -->
+  <WhilePaused />     <!-- Active while the video is paused -->
+  <WhileCompleted />  <!-- Active while the video is done playing -->
+  <WhileLoading />    <!-- Active while the video is loading -->
+  <WhileFailed />     <!-- Active if the video failed to load or an error occured -->
+</Video>
+```
+
+有用的操作可用于 Video
+
+```xml
+<Pause />             <!-- Pauses playback, leaving the current position as-is -->
+<Stop />              <!-- Stops playback and returns to the beginning of the video -->
+<Resume />            <!-- Resumes playback from the current position -->
+<PlayTo Progress="..." /> <!-- Plays until the time specified by the Progress property -->
+```
+
+支持的格式依赖各自的平台. 因此你需要了解统一的格式, 下边是一个示例
+
+```xml
+<App Theme="Basic">
+  <DockPanel>
+    <Video ux:Name="video" Dock="Fill" File="fuse_video.mp4" IsLooping="true" StretchMode="UniformToFill">
+      <ProgressAnimation>
+        <Change progressBar.Width="100" />
+      </ProgressAnimation>
+    </Video>
+    <Rectangle ux:Name="progressBar" Dock="Bottom" Fill="#f00" Width="0%" Height="10" />
+    <Grid Dock="Bottom" ColumnCount="2" RowCount="1">
+      <Button Text="Play">
+        <Clicked>
+          <Resume Target="video" />
+        </Clicked>
+      </Button>
+      <Button>
+        <Clicked>
+          <Pause Target="video" />
+        </Clicked>
+      </Button>
+    </Grid>
+  </DockPanel>
+</App>
+```
+
+#### Shapes
+
+包含有 Rectangle 与 Circle,可以有多种填充及描边，这些将会相互层叠，
+* Fill："#f00|#ff0000" 填充的颜色值
+* Width/Height:
+* Color: "#f00|#ff0000|Yellow|Red|Green|Blue|....." 感觉和 Fill 一样, 但
+
+> 注意: 默认情况下将使用"点(Points)"作为单位, 而非像素值, 参考 Element Layer
+
+**Rectangle** 例: `<Rectangle Fill="#f00" Width="50" Height="50" CornerRadius="5" />`
+* CornerRadius: Int, 圆角
+
+**Circle**, 
+* StartAngle/EndAngle 以弧度为单位
+* StartAngleDegrees/EndAngleDegrees 以度为单位
+* LengthAngle/LengthAngleDegrees 相对 StartAngle/StartAngleDegrees 的偏移, 用于代替 EndAngle/EndAngleDegrees
+
+```xml
+<!-- 为什么指定的是 Width/Height 而不是半径值?? -->
+<Circle Fill="#f00" Width="50" Height="50">
+    <Stroke Width="5" Brush="#ff0" />
+</Circle>
+```
+
+**RegularPolygon** 等边多边形: `<RegularPolygon Sides="6" Fill="#000" Width="50" Height="50" />`
+* Sides: Int, 几条边
+
+**Ellipse** 椭圆: `<Ellipse Width="100" Height="50" Fill="#f00" />`
+
+
+除了常用的 Fill="#f00" 属性还可以有
+* LinearGradient
+* ImageFill
+
+```xml
+<StackPanel>
+    <Circle Width="150" Height="150">
+        <ImageFill File="Pictures/Picture1.jpg" />
+    </Circle>
+    <Rectangle Height="150">
+        <LinearGradient StartPoint="0,0" EndPoint="1,0.75">
+            <GradientStop Offset="0" Color="#FC3C47" />
+            <GradientStop Offset="1" Color="#B73070" />
+        </LinearGradient>
+    </Rectangle>
+</StackPanel>
+```
+
+Stroke: 边框
+* Width:
+* Brush: "#f00|#ff0000" 指定描边的颜色值
+* Offset: 正值将边框外移(width/height指定的大小往外移)负数将往内部偏移，
+
+SolidColor: 颜色填充
+
+```xml
+<!-- SolidColor 感觉就等于 Fill -->
+<Rectangle>
+    <SolidColor Color="#f00" />
+	<Stroke Width="5">
+	  <SolidColor Color="#0f0" />
+	</Stroke>
+</Rectangle>
+```
+
+#### Button
+
+Button 外观由 Theme 决定, 将填满分配给它的整个面积, 如果没有指定 Width/Height 时, 大多数元素也是如此
+* Text="Some Text"
+* Clicked="{buttonClick}" 调用 JS 方法（event-trigger）
+
+```xml
+<Button Text="Click me!" ux:Name="button1">
+  <Clicked>
+    <Set button1.Text="Clicked!" />
+  </Clicked>
+</Button>
+```
+
+在 Fuse 中很多元素都可以点击(clickable)和Tab(tappable),因此你可以创建Button的组件类似于:
+
+```xml
+<Rectangle Fill="#309">
+  <Clicked>
+    <DebugAction Message="Rectangle got clicked" />
+  </Clicked>
+</Rectangle>
+```
+
+#### Switch
+
+类似于CSS中的单项选择
+* Value="true|false（默认）"
+* ValueChanged="{switchChanged}" 调用 JS 方法
+
+```xml
+<StackPanel>
+  <Switch>
+    <WhileTrue>
+      <Change rectangle.Width="160" Duration="0.5" Easing="CircularInOut" />
+    </WhileTrue>
+  </Switch>
+  <Rectangle ux:Name="rectangle" Width="70" Height="70" Fill="#909" />
+</StackPanel>
+```
+
+#### Slider
+
+可以配合 ProgressAnimation 动画
+* ValueChanged="{sliderValueChanged}" 调用JS
+* Minimum/Maximum
+```xml
+<StackPanel>
+  <Slider>
+    <ProgressAnimation>
+      <Rotate Target="rectangle" Degrees="90" />
+    </ProgressAnimation>
+  </Slider>
+  <Rectangle ux:Name="rectangle" Width="100" Height="100" Fill="#808" />
+</StackPanel>
+```
+
+请注意这个示例: 当 Slider 的progress值为 1 时,方块将旋转 90度, 而中间的插值 Fuse 将会自动帮你填充在拖动滑块时
+
+#### TextInput and TextEdit
+
+* TextInput： 由 Theme 决定其样式的文本输入
+* TextEdit： 没有样式定义, 其它则完全和 TextInput 一样
+
+示例可以将 TextInput/TextEdit 互换
+
+```xml
+<JavaScript>
+    var valueChanged = function (args) {
+        console.log(args.value);
+    }
+    module.exports = {
+        valueChanged: valueChanged
+    };
+</JavaScript>
+
+<TextInput ValueChanged="{valueChanged}" />
+```
+
+#### ScrollView
+
+用于一些放置一些大小超过可视的内容, 可以配合 ScrollingAnimation 动画
+
+* AllowedScrollDirections="Horizontal|Vertical(默认)|Both" 用于限制滚动方向
+
+```xml
+<ScrollView>
+    <Panel Width="2000" Height="2000" />
+</ScrollView>
+```
+
+#### NativeViewHost
+
+一些 views 仅当为源生组件时才有效, 下边是一个 WebView 的示例:
+
+```xml
+<NativeViewHost>
+  <WebView Url="http://interwebs.com" />
+</NativeViewHost>
+```
+注意: 源生组件永远位于其它组件上边(在显示图层上), 因它你调用 BringToFront/SendToBack 将不会有效.
+
+**GraphicsView**, 当使用 Native 的 Theme 时, 这个是用来添加 Opengl 之类的组件的:
+
+```xml
+<App Theme="Native">
+    <StackPanel>
+        <Button Text="I'm a Native button!" />
+        <GraphicsView>
+            <Button Text="I'm a Fuse button!" />
+        </GraphicsView>
+    </StackPanel>
+</App>
+```
+
+* WebView
+* MapView
+  - MapMarker 子元素,用于添加地图标注
+
+#### UI Elements
+
+一些公共的元素属性 <https://www.fusetools.com/learn/fuse#element>
+
+* HitTestMode: 点击元素时是否可以交互,以及交互规则
+  - None: 不交互
+  - LocalBounds: 基于自身大小
+  - LocalVisual: 基于自身外观（appearance）
+  - LocalBoundsAndChildren: 包含自身及其 子元素
+  - LocalVisualAndChildren: 包含自身及其子元素的外观(appearance)
+
+* ClipToBounds: 当指定为 "true" 时, 其子元素将不会 overflow(如果子元素指定例如 Margin="-100"时)
+
+* Opacity: 0~1.0, 即使指定为 0, 但元素仍然处于 hit test状态
+
+* Layer: 指定元素置于父元素的背影层还是 overflow 层如果不指定 Layer 属性, 那么这个元素将介于 Background 与 Overlay 之间
+  - Background: 展现于显示列表底层
+  - Overlay: 展现于显示列表顶层
+	
+  ```xml
+  <!-- 当没有 Layer="Background", 你将看不到 Hello  -->
+  <Button Text="Hello!">
+    <Rectangle Fill="#931" Layer="Background" />
+  </Button>
+  ```
+* ZOffset: 显示列表顺序，通常元素将按顺序展现。0 为默认的最底层
+
+#### Effects
+
+一些可视效果能添加到大多数组件, 需要 Basic Theme, 而 Native 将有限制
+
+* DropShadow 阴影效果
+  - 例: `<DropShadow Angle="90" Distance="12" Size="20" Spread="0.1" Color="#ff06" />` 颜色值为 RGBA???
+
+* Blur 模糊
+  - 例: `<Text Value="Hello there!"> <Blur Radius="0.9" /> </Text>`
+
+* Desaturate 去色
+  - 例: `<Image File="Pic.jpg"> <Desaturate Amount="0.4" /> </Image>`
+
+* Halftone 像是一个奇怪的的滤镜效果
+  - 例: `<Image File="Pic.jpg"> <Halftone Spacing="0.5" Smoothness="2" Intensity="1" DotTint="0.5" PaperTint="0.2" /> </Image>`
+
+* Mask: 示例: 仅显示 Rectangle, 图像的非 alpha 通道的区域, 感觉就像是加载了一张图片, 如果 Rectangle 的颜色为 #FFF 的话.
+  - Mode = "RGBA(default)|Alpha|Greyscale"
+  - 例: `<Rectangle Width="50" Height="50"> <Mask File="Masks/Flower.png" /> </Rectangle>`
+
+### Layout
+
+Fuse 提供强有力的布局系统在所有平台及设备, 不论是 native 元素还是基于graphics 的元素.
+
+#### Panels
+
+可以包含子UI元素并让它们按照布局规则, 这里有一些不同类型 panels有着各自不同的布局规则
+
+* Panel 最基本布局的类型, 子元素默认将占据整个空间, 如果包含多个子玩素, 则同时显示多个子素(因此可能会有重叠和遮盖)
+结合使用 Alignment,Margin,Padding 在一些情况下将非常有用.
+  - 子元素的显示排列顺序为: "排在前边的元素将显示在顶层"
+  
+  > 对于App的直接子元素,排在后边的将会显示在顶层,并且即使没有重叠, 前边的元素也不会显示)
+
+* StackPanel 子元素表现为堆栈(多个元素将按顺序堆叠), 默认为竖排堆叠. 可以通过 Orientation 属性修改
+  - Orientation="vertical (默认)|Horizontal"
+  - ItemSpacing="10" 二个堆叠元素的间距, 这个区别于子元素的 Margin设置
+
+* Grid: 栅格, 每一行或每一列可以为各自确定的值,或者根据 RowCount 和 ColumnCount 的值来统一调整
+  - RowCount/ColumnCount: 仅指定"行数/列数"
+  - Rows/Columns: 值可以为 Points("10,10,50")，percent("1*,1*,3*" 相当于： "1/5, 1/5, 3/5")
+  - CellSpacing: 单元格之间的间距
+  - 默认情况下, 栅格子元素要么从上往下，要么从左往右。可通过在子元素上添加 Row/Column 来指定子元素的位置
+
+  ```xml
+  <!-- Row/Column 的第一行/列都将从 0 开始 -->
+  <Grid RowCount="1" ColumnCount="2">
+    <Rectangle Row="0" Column="1" Color="Red"/>
+    <Rectangle Row="0" Column="0" Color="Blue"/>
+  </Grid>
+  ```
+
+* WrapPanel: 使其子元素一个接着另一个环绕排列下去。wrap 即换行的意思.
+  - FlowDirection="LeftToRight/RightToLeft" 排列方向
+  - ItemWidth/ItemHeight: 限制子元素的最大宽度/高度
+  - 没有可以指定子元素间隔的属性, 因此只能用子元素的 Margin 来设置.
+
+* DockPanel: 使其子元素dock（钉）在各自指定的位置, 一个在另一个的后边(如果位置相同)
+  - Dock="Left|Top|Right|Bottom|Fill(默认)" Fill 表示将填充所有剩余的空间(如果仅指定了 MinWidth/MinHeight)
+  - **注意:** 对于属性值为Fill的多个子元素, 它们将堆叠在一起而不是像其它值一样一个接一个的层叠。
+
+* Viewbox: 拉伸子元素以适合区域(仅显示最一个子元素, 而前边的子元素将隐藏)
+  - StretchDirection="Both|UpOnly|DownOnly"
+  - StretchMode="Uniform(默认)" 参见 Image 章节
+  - 例: `<Viewbox> <Rectangle Color="#808" Width="200" Height="100" /> </Viewbox>`
+  - 如上示例 rectangle 的宽高比为 2/1, 因此这个比例将会填满整个 ViewboxBox,仍旧保持 2/1的宽和高
+
+**Layout rules**
+
+对于上边的布局其实在底层它们是由普通的 Panel 和 布局相关联（但并不是所有都是这样）
+
+* DockLayout: 放置于 Panel 将使其和 DockPanel 一样
+* ColumnLayout: 将同层的其它元素(即其父元素Panel的所有可视子元素)分隔为列. 可由 ColumnCount 调整宽度。它将尝试保持 ColumnCount 所定义的数量
+* CircleLayout: 将同层的其它元素(即其父元素Panel的所有可视子元素)以圆排列. 
+  - StartAngleDegrees/EndAngleDegrees: 起始及结束的角度值(感觉排列的位置不太对??)
+  - Radius:  0~1.0~out 相对于父元素
+  - ItemSpacingDegrees: 间隔
+
+#### Element Layout
+
+当 Panel 开始布局其子元素, 它将访问所有子元素与布局相关的属性.
+
+* Alignment: 表明子元素相对于其父元素的对齐方式，当一个元素放置于 Panel 中, 可能并不需要将所有空间都给它
+  - 包括的值有: "Left|HorizontalCenter|Right|Top|VerticalCenter|Bottom|TopLeft|TopCenter|TopRight"
+  - 接上边: "CenterLeft|Center|CenterRight|BottomLeft|BottomCenter|BottomRight"
+
+* Visibility：Hide 虽然不可见但仍然占据其空间,而Collapse不可见并且不占用空间
+  - 包括的值为: "Show|Hide|Collapse", 
+
+* Width/Height：结合 Alignment 使用.  元素的 Width/Height仅包括了Stroke(边框)和Padding不包括Margin;
+
+* Margin/Padding: 与其父元素或兄弟元素之间的距离/填充， 如果指定了 Width/Height 则在对齐后再应用 Margin
+  - `<Rectangle Margin="20,30,50,10"/>`: 分别为 左, 上, 右, 下(注意区别CSS属性的顺序)
+  - `<Rectangle Margin="50"/>`: 全部一致
+  - `<Rectangle Margin="50,20"/>`: 左，右 vs 上，下 （同样需要和CSS相区别）
+
+单位: points(点，默认),percent(百分比)和 pixels(像素)
+- 可用于: `MinWidth/MaxWidth/MinHeight/MaxHeight/Offset/Anchor/`
+- 注意: Grid 的 column 和 row 使用其自身的规则
+
+```xml
+Rectangle Width="50"/>     <!-- points -->
+<Rectangle Width="30%"/>    <!-- percent -->
+<Rectangle Width="200px"/>  <!-- pixels -->
+```
+
+* Anchor: 布局锚点. 默认情况下 panel 将使用元素的中心点作为元素的锚点（注意: 这里是一个容易混淆的地方）
+  - 例: `<Rectangle Anchor="0,0"/>` 将使元素的锚点更改为左上角
+
+* X/Y: 绝对定位, 使用绝对定位就应该尽量避免使用其它布局规则(Alignment,Margin)
+
+* TransformOrigin: 指定元素移动,大小，旋转，缩放时的基点
+  - Center(默认)
+  - TopLeft:
+  - Anchor: 根据其 Anchor 属性的值
+  - HorizontalBoxCenter：Simulates the effect of the element being the front-facing side of a cube in 3D space, using the width of the element for determining the depth of the cube. Without the element being in a Viewport this will have no illusion of depth, effectively rendering it useless.
+  - VerticalBoxCenter：与 HorizontalBoxCenter 一样, 只是它使用元素的高度值确定深度
+
+* LayoutMaster: 指定布局相对的元素(如果没有这个属性, 那就相对于父元素布局), 例如当指定对齐时 
+
+  > 查看 当 LayoutMaster 元素发生改变时, LayoutAnimations 动画将被激活 的[示例...](https://www.fusetools.com/learn/fuse#keyword-layoutmaster) 
+
+#### Viewport 
+
+允许执行一些 perspective projection 的3D动画, 有一些的限制, 不可以处理局部的 perspectives
+
+```xml
+<App Theme="Basic">
+    <Viewport Perspective="400">
+        <Panel>
+            <Rectangle Width="200" Height="200" Background="#2ecc71">
+                <Clicked>
+                    <Rotate DegreesX="360" Duration="1.5" Easing="QuadraticInOut" DurationBack="0" />
+                </Clicked>
+            </Rectangle>
+        </Panel>
+    </Viewport>
+</App>
+```
+
+#### Status bars
+
+IOS 和 Andriod 通常会有一个状态栏显示如电池，信号之类的, 在 APP 中状态可以显示或者是不显示
+
+* StatusBarBackground: 填充状态栏边距，在所有设备及平台它将与状态栏有着同样的大小 
+* BottomBarBackground：将和键盘有一样大小（比如在用户输入时,如果不重新调整布局那么输入框很可能会被弹出来的键盘挡住）
+* ClientPanel： 位于 StatusBarBackground 与 BottomBarBackground 之间的
+
+```xml
+<!-- 因此正常的App应该看起来像这样 -->
+<App Theme="Basic">
+  <DockPanel>
+    <StatusBarBackground Dock="Top"/>
+    <ClientPanel>
+    ......
+    </ClientPanel>
+	<BottomBarBackground Dock="Bottom"/>
+  </DockPanel>
+</App>
+```
+
+### Triggers and Animators
+
+Trigger 表现为事件触发, 如用户输入,程序事件. Triggers可以包含Animators和Actions元素用于展现动画和操作元素。
+
+> 动画元素需要放置于 Triggers 元素的下边,如果没有交互或程序触发, 可放置于 WhileEnabled 下
+
+简单示例: 点击住 Panel 时, 旋转 90度:
+
+```xml
+<Panel>
+    <WhilePressed>
+        <Rotate Degrees="90" Duration="0.5" Easing="BounceInOut"/>
+    </WhilePressed>
+</Panel>
+```
+
+* 默认的UX标记元素将为休息(rest)状态, Triggers 将使元素偏离休息状态，每个 Trigger 知道如何反向应用动画回到 rest 状态, 即使中断动画.
+
+* 分离的向前(forward)及回复(backward)动画, 即 rest到动画完成，然后恢复到rest状态可以分离
+
+  为了做到这一点, 需要把 backward 把动画放置于 TriggerAnimation 内, 并且添加 `ux:Binding="BackwardAnimation"`
+
+  ```xml
+  <Panel Background="#f00">
+    <WhilePressed>
+      <Rotate Degrees="90" Duration="0.5" />
+      <TriggerAnimation ux:Binding="BackwardAnimation" >
+        <Rotate Degrees="90" Duration="10" Easing="BounceOut" />
+      </TriggerAnimation>
+    </WhilePressed>
+  </Panel>
+  <!-- BackwardAnimation 是自动右对齐  -->
+  ```
+
+#### Animators
+
+Animators 用来指定和如何使用元素执行动画. 这有三个重要的动画控制属性: 
+* Duration/DurationBack 动画持继时间, 向前及恢复
+* Delay/DelayBack 
+* Easing/EasingBack: Note: 记得添加 In,Out,InOut在每个值上
+  - `Linear|Quadratic|Cubic|Quartic|Sinusoidal|Exponential|Circular|Elastic|Back|Bounce`
+  - 每个 easing 都将有 In,Out,InOut 三种状态。例: CubicIn,CubicOut,CubicInOut
+
+> 动画需要由 trigger 触发, 因此不能直接就放在元素下边, 注意区别 Transforms
+
+属性动画: 通过 Target 来指定元素的属性
+
+* Change  当 trigger 激活时, 暂时将更改的值, 若要永久更改其值，需要使用 Set 动画.
+
+  ```xml
+  <Panel ux:Name="somePanel" Color="Red" />
+ 
+  <Change somePanel.Opacity="0"/>
+  <Change somePanel.Color="Blue" Duration="0.3"/>
+  <Change somePanel.Visibility="Collapsed"/>
+  
+  <!-- 另一种方式 -->
+  <Change Target="somePanel.Opacity" Value="0"/>
+  ```
+  同样可以更改元素的 Width/Height或Margin, 只是这些属性会破坏整体布局,并导致一些性能问题.
+  
+  通常有更有效的方法来做布局方面的动画: LayoutAnimation 和 MultiLayoutPanel
+
+* Cycle 周期性在二个值之间的动画,例如不断闪烁的激光， 你还可以指定 Duration 来控制动画时长
+  - Frequency: 例 0.5即每秒半个周期
+  - 似乎不支持Duration , 以及 Easing 仅支持 Linear???
+  ```xml
+  <Panel>
+      <Translation ux:Name="someTranslation" />
+      <WhilePressed>
+          <Cycle Target="someTranslation.X" Low="-20" High="20" Frequency="2" />
+      </WhilePressed>
+  </Panel>
+  ```
+
+变形动画(Transform animators): 
+
+* Move 移动元素, Move 并不影响布局, 因此元素仅会偏移位置
+
+  ```xml
+  <Move X="50" />
+  <!-- 触发时元素将在 X 方向移动 50点(points) -->
+  <!-- 或者相对于自身或其它元素的大小, 往 X 方向移动自身的一半 -->
+  <Move X="0.5" RelativeTo="Size" />
+  ```
+  RelativeTo 可以设置为:
+  - Local(默认): 在 X 或 Y 方向移动点的量值
+  - Size: 移动的量相当于自身或关联元素的大小. X="1" 将移动 X 方向的整个宽度大小
+  - ParentSize： 和 Size 一样, 但使用父元素作参照
+  - PositionChange: 用于响应 LayoutAnimation 的移动量
+  - WorldPositionChange: 用于响应 LayoutAnimation 的移动量
+  - Keyboard: 相对于键盘大小
+
+  RelativeNode 属性可以让移动相对于另一个元素, 这时 RelativeTo 可接受的值为:
+  - Size: 同上, 但为关联元素的大小
+  - ParentSize: 同上, 但为关联元素的父元素
+  - PositionOffset: 向关联的元素的方向移动, 二个元素位置的差值
+  - TransformOriginOffset: 像 PositionOffset, 但 TODO:
+
+  Move 等效于在元素上添加 Translation 并使用 Change 的动画:
+
+  ```xml
+  <Panel>
+    <WhilePressed>
+      <Move X="100" Duration="0.2"/>
+    </WhilePressed>
+  </Panel>
+  <!-- 等效于 -->
+  <Panel>
+    <Translation ux:Name="someTranslation"/>Transition
+    <WhilePressed>
+      <Change someTranslation.X="100" Duration="0.2"/>
+    </WhilePressed>
+  </Panel>
+  ```
+
+* 缩放, 缩放并不更改元素的实际大小, 因此使 UI 布局不会受影响
+
+  ```xml
+  <Scale Factor="2" Duration="0.4"/>
+  <!-- Factor 将对所有轴同时缩放, 或单独地使用 X,Y,Z轴 -->
+  ```
+  其 RelativeTo 属生可指定为:
+  - SizeChange: 相对于指定元素(RelativeNode)大小 
+  - SizeFactor: 相对于另一个元素(RelativeNode), 如果设为 1， 这个元素将与另一个元素变得一样大小
+
+* 旋转, 前边已经有示例, 可指定: `DegreesX, DegreesY, DegreesZ(等同于Degrees)`, 
+  ```xml
+  <Rotate Degrees="90" Duration="0.5"/>
+  ```
+
+* Resize, 与 LayoutAnimation 一起使用, Resize 将允许动画调整元素大小
+  ```xml
+  <Resize RelativeTo="SizeChange" Duration="0.5" Easing="CircularInOut" />
+  ```
+  RelativeTo 有二个选项:
+  - SizeChange: 在 LayoutAnimation 期间
+  - Size: 指定元素的大小通过(RelativeNode)
+
+* Spin, 周期性自旋, Frequency 给出每秒将要旋转的圈数, 这个非常适合来做 Loading 动画
+
+  ```xml
+  <WhileTrue Value="{isLoading}">
+    <Image ux:Name="img" File="busy.png" />
+    <Spin Target="img" Frequency="1" />
+  </WhileTrue>
+  ```
+
+* Skew, 倾斜, `DegreesX, DegreesY, DegreesXY`
+  ```xml
+  <Skew DegreesX="30" Duration="0.4" />
+  ```
+
+* Attractor 用于给动画添加更自然的运动.(但是这样层层绑定有些太绕了)
+
+  ```xml
+  <Panel ux:Name="somePanel">
+      <Translation ux:Name="someTranslation"/>
+      <Attractor ux:Name="someAttractor" Target="someTranslation.X"/>
+      <WhilePressed>
+          <Change someAttractor.Value="100"/>
+      </WhilePressed>
+  </Panel>
+  ```
+
+* Keyframes 更精确的控制动画, [更多详情...](https://www.fusetools.com/learn/fuse#keyframe-keyframes)
+
+  ```xml
+  <Move RelativeTo="ParentSize">
+      <Keyframe X="10" Time="0.5"/>
+      <Keyframe X="15" Time="1"/>
+      <Keyframe X="5" Time="2"/>
+  </Move>
+  <!-- 或者使用 TimeDelta 代替 Time, TimeDelta 是一个相对于上一帧的时间 -->
+  ```
+
+* Nothing 所有动画都在 Trigger 后共享同一个时间轴直到动画完成并结束, 在某些罕见的情况下你可以有想要人为地延长时间轴,
+从逻辑上来说, 它是一个空白的动画, 迫使动画至少须持继时间轴长度
+  ```xml
+  <Nothing Duration="1" />
+  ```
+
+#### Transforms
+
+所有元素都可以移动, 缩放,旋转, Transforms的先后顺序,将会导致不同的结果， 
+
+> 这个和 Animators 不一样的是, 不可以放在 trigger 下, 也没有 Duration 和 Easing, 并且不会处理恢复及动画插值
+
+* Translation: 移动元素在指定的X,Y,Z方向
+* Scaling: `<Scaling Factor="2"/>`
+* Rotation: `<Rotation Degrees="90"/>`
+* Shear: 错切(特殊性性变换)
+  - 指定 DegreesX和DegreesY 将设置错切在某一轴上
+  - 或指定 Degrees和Vector值设置错切同时用于 X 和 Y 平面, 使用度数或弧度
+
+#### Actions
+
+Actions不具有自动恢复性,及 Duration 属性, 但将具有 AtProgress（形为有些类似于Delay） 介于 0~1 之间的值, 和 Delay 属性
+
+* DebugAction: 将消息输出到调试终端(如果激活), 等效于Uno或JS中的 debug_log 
+  - `<DebugAction Message="Clicked!" />`
+
+* Set： 永久性的更改属性的值， 如果你只是想暂时改变可以使用 Change
+  ```xml
+  <Rectangle ux:Name="rect" Color="#00f" />
+  <Clicked>
+    <Set rect.Color="#f00" />
+	<!-- <Set Target="rect.Color" Value="#f00" />  -->
+  </Clicked> 
+  ```
+
+* Callback 用于 JS(见数据绑定章节)
+  ```xml
+  <JavaScript>
+    var someJSFunction = function () {
+      console.log("some function called");
+    }
+    module.exports = { someJSFunction: someJSFunction };
+  </JavaScript>
+  <Rectangle Width="100" Height="50" Alignment="Center" Fill="Red">
+    <WhilePressed>
+      <Callback Handler="{someJSFunction}"/>
+    </WhilePressed>
+  </Rectangle>
+  ```
+
+* GoForward 使 navigation context 或 WebView 的历史记录"前进"
+  - `<GoForward TargetNode="myNavigation" />`
+
+* GoBack： 使 navigation context 或 WebView 的历史记录"后退"
+  - `<GoBack TargetNode="myWebView" />`
+
+* Toggle: 切换 true 或 false. 如果在 Switch 内将切换其值. 也可用于激活/取消 WhileTrue
+  ```xml
+  <WhileTrue ux:Name="trueTrigger">
+  ...
+  </WhileTrue>
+  <Panel>
+    <Clicked>
+      <Toggle Target="trueTrigger"/>
+    </Clicked>
+  </Panel>
+  ```
+
+* Pulse: 用来即时触发 Timeline ~~WhileTrue, WhileFalse 或 ~~ 
+
+* BringIntoView: 与 ScrollView  一起使用，通过设置其 TargetNode 属性,可以使 ScrollView 滚动到指定位置
+
+* BringToFront: 置于将指定的元素置于其父元素的显示列表顶层。
+
+* TransitionLayout: 创建临时的布局动画，而非真实的布局更改。必需要结合 LayoutAnimation 同时使用。
+
+* NavigateToggle： 目前仅支持在 EdgeNavigation 中，通过设置 EdgeNavigation.Edge 切换其 Target 指向的目标
+
+#### Gestures
+
+属于 trigger
+
+* Clicked 点击.(press 与 release 都在同一个元素上)
+  ```xml
+  <Panel Width="50" Height="50">
+    <Clicked>
+      <Scale Factor="2" Duration="0.2"/>
+    </Clicked>
+  </Panel>
+  ```
+
+* Tapped 轻触. 有些类似于Clicked,(但 press 与 release 几乎在相同的时间)
+
+* DoubleClicked
+
+* DoubleTapped
+
+* WhilePressed 当按住时
+
+* WhileHovering 仅在设备支持时才可用.(手机上会有hover???)
+
+* SwipeGesture 滑动。 需要和其相关元素同时使用才有效果
+  - Direction="Right|Left|Up|Down" 滑动的方向
+  - Edge 用于替代 Direction
+  - HitSize 当有 Edge 属性时可用. 滑动后的区域
+  - Length="100" 滑动的距离与 Direction 一起用
+  - LengthNode 可用于代替 Length. 它将引用到另一个元素之间的距离
+  - Type="Active|Simple(默认)" 在inactive/active这间切换状态 or 仅为简单的触发（相关的元素将根据这个值作一些行为）
+
+SwipeGesture相关元素
+
+* SwipingAnimation 当Type="Active"时, 能保持住Animators后的效果,并且能自动处理以反手势切换回原状态
+
+  ```xml
+  <Panel ux:Name="parentContainer" Margin="40" Background="#ff4800">
+    <Panel Width="60" Height="60" Background="#000" Alignment="Left">
+      <SwipeGesture ux:Name="swipe" Direction="Right" Type="Active" LengthNode="parentContainer" />
+        <SwipingAnimation Source="swipe">
+        <Move X="1" RelativeTo="Size" RelativeNode="parentContainer" />
+      </SwipingAnimation>
+    </Panel>
+  </Panel>
+  ```
+* Swiped 不能保持 Animators 后效果, 类似于简单触发, 如果 Type="Active" 当切换到 inactive 状态时,将需要以反手势切换回 active
+
+  ```xml
+  <Panel Width="100" Height="100">
+    <SwipeGesture ux:Name="swipe" Direction="Up" Length="50" Type="Simple" />
+    <Swiped Source="swipe">
+      <Scale Factor="1.5" Duration="0.4" DurationBack="0.2" />
+    </Swiped>
+  </Panel>
+  ```
+
+* WhileSwipeActive: 
+
+  > TODO: 不知道在形为上和 SwipingAnimation 有什么区别? 因为它也能保持 Animators 后效果，
+  > 如果指定 Duration, 动画效果似乎比 SwipingAnimation 更平滑???
+
+  ```xml
+  <Panel Width="100" Height="100">
+  <SwipeGesture ux:Name="swipe" Direction="Up" Length="50" Type="Active" />
+  <WhileSwipeActive Source="swipe">
+    <Scale Factor="1.5" Duration="0.4" DurationBack="0.2" />
+  </WhileSwipeActive>
+  </Panel>
+  ```
+
+* SetSwipeActive/ToggleSwipeActive 控制 SwipeGesture Type="Active" 时的状态。用于通过其它事件控制手势动画等等
+
+  ```xml
+  <!-- 将下边示例代码添加到上边相位置观察 -->
+  <StackPanel>
+    <Button Text="Close">
+      <Clicked>
+        <SetSwipeActive Target="swipe" Value="false" />
+      </Clicked>
+    </Button>
+    <Button Text="Toggle">
+      <Clicked>
+        <ToggleSwipeActive Target="swipe" />
+      </Clicked>
+    </Button>
+  </StackPanel>
+  ```
+
+#### Data triggers
+
+当数据的值发生改变时触发
+
+* WhileTrue
+* WhileFalse
+
+#### Native triggers
+
+* Platform
+
+  ```xml
+  <Panel>
+    <Android>
+      <Panel Background="#f00" Alignment="Center" Width="150" Height="150"/>
+    </Android>
+    <iOS>
+      <Panel Background="#00f" Alignment="Center" Width="150" Height="150"/>
+    </iOS>
+  </Panel>
+  ```
+
+* WhileKeyboardVisible 当键盘显示时触发
+
+* TextInputActionTriggered 当按下"回车键"时触发,而不是任意按键
+
+  ```xml
+  <!-- 这个示例展示了如何隐藏键盘,当输入完成后 -->
+  <TextInput>
+    <TextInputActionTriggered>
+      <ReleaseFocus />
+    </TextInputActionTriggered>
+  </TextInput>
+  ```
+
+* OnBackButton 当用户按了手机或模拟器的 "返回" 键时
+
+* OnKeyPress 当按定的键按下时, [所有可用按键...](https://www.fusetools.com/learn/reference/uno/platform/key)
+
+  ```xml
+  <Panel>
+  <Rectangle ux:Name="rect" Layer="Background" Color="#F00" />
+    <OnKeyPress Key="MenuButton">
+      <Change rect.Color="#00F" Duration="0.2" />
+    </OnKeyPress>
+  </Panel>
+  ```
+
+#### Native actions
+
+Fuse 提供一些当调用系统的动作, 例如: 拨打电话或振动设备
+
+**Fuse.Launcher** 
+
+> 注意: 确保在 .unoproj 文件中的添加 Fuse.Launcher 到 packages 下.
+
+* LaunchUri 请求系统打开指定的Uri
+  - 例: `<LaunchUri Uri="https://www.fusetools.com" />`
+
+* LaunchEmail 启动默认邮件应用
+  - To: 例: `<LaunchEmail To="contact@fusetools.com" />`
+  - CarbonCopy: 抄送
+  - BlindCarbonCopy: 密送
+  - Subject
+  - Message
+
+* LaunchMaps 启动默认的地图应用
+  - 例: `<LaunchMaps Latitude="35.673813" Longitude="-36.780810" />`
+
+* Call 打电话给指定号码
+  - 例: `<Call Number="123 45 678" />`
+
+* Vibrate 振动设备(注: IOS 将忽略指定的 Duration 属性)
+  - 例: `<Vibrate Duration="0.8" />`
+
+#### State groups
+
+State groups 允许定义完全的自定义状态用于自定义事件
+
+* State： StageGroup 中的一个某一种状态
+* StateGroup [这个自已看示例](https://www.fusetools.com/learn/fuse#state)
+
+#### User events
+
+User events 用于在组件之间传递消息. 可发送以及接收在 UX,Uno 和 JavaScript 中.
+
+> 你需要同样看这些文档 [FuseJS UserEvents from JavaScript](https://www.fusetools.com/learn/fusejs#keyword-userevents-js)
+
+* UserEvent 将附加到节点所在父元素, 只有所有这个父元素下的节点可以 raise 以及 handle 这个事件.
+  - Note: 确保在 .unoproj 文件中添加了 "Fuse.UserEvents"
+
+* RaiseUserEvent 触发事件,通过 UX
+  - 传递参数通过 UserEventArg
+
+* OnUserEvent 监听事件,默认情况下仅监听其祖先节点的事件, 如果需要监听任意处事件, 可设置 Filter 属性为 Global.
+
+  ```xml
+  <App>
+    <UserEvent Name="MyEvent"/>
+	<!-- ... -->
+    <Button>
+      <Clicked>
+        <RaiseUserEvent Name="MyEvent">
+		  <UserEventArg Name="message" StringValue="Hello from UX!" />
+		</RaiseUserEvent>
+      </Clicked>
+    </Button>
+	<!-- 监听事件 -->
+	<OnUserEvent Name="MyEvent">
+	
+	</OnUserEvent>
+	<OnUserEvent Name="MyEvent" Handler="{myHandler}" />
+  ```
+
+
+#### Viewport triggers
+
+当屏幕发生改变时(横屏,竖屏)
+
+* WhileWindowLandscape: 当横屏时(当app视角的width大于height时)
+
+  ```xml
+  <App ux:Name="app" Theme="Basic" Background="#FFF">
+       <WhileWindowLandscape>
+           <Change app.ClearColor="0,0,1,1" Duration="1" />
+       </WhileWindowLandscape>
+  </App>
+  ```
+
+* WhileWindowPortrait: 当竖屏时(宽度小于或等于高度)
+* WhileWindowSize: 当app视角大小符合下边三种时:
+  - GreaterThan="width,height"
+  - LessThan="width,height"
+  - EqualTo="width,height"
+  
+  ```xml
+  <Panel>
+    <SolidColor ux:Name="coloredPanel" Color="#F00" />
+    <WhileWindowSize GreaterThan="400,400">
+      <Change coloredPanel.Color="#0F0" Duration=".5"/>
+    </WhileWindowSize>
+  </Panel>
+  ```
+
+#### Control triggers
+
+* WhileEnabled 当包含它的元素的 IsEnabled(表示是否交互和事件或动画) 值为 true 时,(默认都为true)
+* WhileDisabled
+
+#### Focus triggers and actions
+
+* WhileFocused 当包含它的元素获得焦点时
+* WhileNotFocused
+* WhileFocusWithin 当包含它的元素的子节点获得焦点时
+
+actions
+
+* GiveFocus： 将焦点给包含它的元素
+* ReleaseFocus 移除当前焦点元素
+
+#### WebView-specific triggers & actions
+
+* PageBeginLoading： 触发一次, 当 WebView 开始加载 content
+* WhilePageLoading： 当 WebView 的 Url 更改，并用保持这个状态直到 content 加载完成
+
+  ```xml
+  <NativeViewHost>
+    <WebView Url="http://fusetools.com">
+      <PageBeginLoading>
+        <DebugAction Message="Page began to load!"/>
+      </PageBeginLoading>
+    </WebView>
+  </NativeViewHost>
+  ```
+* PageLoaded: 触发一次, 当 WebView完全加载完 URL 的内容
+
+actions
+
+* Reload: 让 WebView 重新加载
+  - `<Reload TargetNode="myWebView" />`
+* LoadUrl: 指定加载 Url
+  - `<LoadUrl TargetNode="myWebView" Url="http://mypage.com" />`
+* LoadHtml: 使用 WebView 加载直接 Html元素
+
+  ```xml
+  <LoadHtml TargetNode="myWebView" BaseUrl="http://my.domain">
+    <HTML>
+        <![CDATA[
+        <h1>Boom!</h1>
+        ]]>
+    </HTML>
+  </LoadHtml>
+  ```
+
+* EvaluateJS: 执行有一些限制的任意JS于当前加载环境。
+
+  ```xml
+  <EvaluateJS Handler="{onPageLoaded}">
+    var result = {
+      url : document.location.href
+    };
+    return result;
+  </EvaluateJS>
+  ```
+  [Reading the result value](https://www.fusetools.com/learn/fuse#evaluatejs)
+
+  由于仅能从JS中返回字符串值, 因此在接收返回值时你可能需要用到 JSON 相关的方法
+
+  如果你没有返回任何值, 返回值将默认为 "null"
+
+
+#### Special Animations
+
+Animations 将会自动帮你处理插值, 以及一些恢复
+
+* LayoutAnimation: 布局变化时触发, 
+* AddingAnimation: 当元素添加到可视列表时, **注意**: 设置动画的初使值，因为元素的默认值为动画的最终值
+* RemovingAnimation: 当元素从可视列表中移除时
+* ActivatingAnimation: 当Page(见navigation)激活时
+* DeactivatingAnimation: 
+* ScrollingAnimation: ScrollView 滚动时动画
+  - From:
+  - To:
+
+* PullToReload: 非常容易地创建 "pull to relaod" 交互
+* WhileScrollable: 当 ScrollView 的指定方向可以滚动时，根据 ScrollDirections 的参数
+  - ScrollDirections="All|Both|Down|Horizontal|Left|Right|Up|Vertical"
+* ProgressAnimation: 当 slider 元素滑块移动时, 值将总是从 0~1
+* Timeline: 将多个动画组合在一起的不错方法
+  - TargetProgress="0~1"
+
+### Data Binding
+
+通过 Observable 绑定到 UX, 不可以绑定Object的子值（如果需要这样做需要将所有子值都变成Observable）,
+
+### Resources
+
+* `ux:Global` 创建全局资源，比如字体, 颜色, 声音（目前还不能播放声音）
+
+  ```xml
+  <Font File="HelveticaNeue-MediumCondensed.ttf" ux:Global="Helvetica" />
+  ......
+  <Text Font="Helvetica">Hello, yes, this is text.</Text>
+  ```
+
+* `ux:Key` 创建动态资源
+  - string
+  - bool  - true or false
+  - float - 1, 0.2 , .2
+  - float2 - "1,1"
+  - float3 - "1,0.2,1"
+  - float4 - "1,1,1,3.2"
+
+  ```xml
+  <string ux:Key="WelcomeMessage" ux:Value="Hello World!">
+  ......
+  <Text Value="{Resource WelcomeMessage}" />
+  ```
+
+* 使用 StateGroup 的方式来实现本地化
+
+### Creating custom UI components
+
+<https://www.fusetools.com/learn/fuse#creating-custom-ui-components>
+
+* `ux:Class` 用于样式化元素: 这其实相当于 `public class Header: Text{...}`
+
+  ```xml
+  <Text ux:Class="Header" FontSize="22" />
+  ......
+  <Header>Welcome</Header>
+  ```
+* `ux:Property`:当自定义样式时如果需要, 可用来自定义属性
+ - 注意如何在元素中调用自定义的属性, `this` 将指向根节点的 `ux:Class`。
+ - 如果你需要传递 Observable 或 Array 类型的属性， 使用 `object` 类型
+
+* `ux:InnerClass`： 参考官网示例, 可以在 InnerClass 定义的内部访问其所在域的 ux:Name 的元素
+
+* `ux:Include`: 在当前行插入 UX 文件
+
+### Navigation
+
+用于在多个页面(Panel)之间切换, 一些概念:
+
+```xml
+<Panel>
+  <Panel Background="Red"/>
+  <Panel Background="Blue"/>
+  <Panel Background="Green"/>
+</Panel>
+```
+
+上边的示例只会显示 Red,仅显示第一个, 后边的将被隐藏。 需要注意的是 App 下的元素将显只示最后一个而前边的被删除(重写了)
+
+为了通过手势来实现在 Panel 之间切换, 需要做三件事:
+
+* 一个 Navigation 行为
+* 一个 SwipeNavigate 行为
+* EnteringAnimation 以及 ExitingAnimation
+  - 如果你使用 Change 来触发动画, 那么只有 EnteringAnimation 也可以, 因为 Change 能自动恢复
+  - 但你使用 Set 触发, 则提供需要二个(比如你弹出一个菜单, 并不想它自已马上回去)
+
+```xml
+<Panel>
+  <Panel ux:Class="NavPanel">
+    <EnteringAnimation>    <!-- 当开始动画时,即从右往左拖时 -->
+      <Move X="-1" RelativeTo="ParentSize"/>
+    </EnteringAnimation>
+    <ExitingAnimation>
+      <Move X="1" RelativeTo="ParentSize" Duration="0.5"/>
+    </ExitingAnimation>
+  </Panel>
+  <LinearNavigation />                   <!-- 一个 Navigation 行为 -->
+  <SwipeNavigate SwipeDirection="Left"/> <!-- 一个 SwipeNavigate 行为 -->
+  <NavPanel Background="Red"/>
+  <NavPanel Background="Blue"/>
+  <NavPanel Background="Green"/>
+</Panel>
+```
+
+当 Panel 包含了 Navigation 行为， 那么它的所有直接子元素将为导航页面(Page)。 
+
+#### Page 
+
+基本和 Panel 一样, 除了带一个属性 Title(这个属性其实就像个名字而已), 
+  
+> 个人注: Page + PageControl + PageIndicator 是 Fuse 提供的一个使用了 LinearNavigation 的页面， 而其它 navigation type 需要自已定义它们的形为
+
+**PageControl** 页面导航控制
+* InactiveState 控制子元素的 Visibility 及 IsEnabled 状态当其在屏幕不可见时
+  - Collapsed(默认): 设置 Visibility="Collapsed", 因此不活动的Page将不可见以及不计算其布局
+  - Disabled: 设置 IsEnabled="false" 不活动的page将可见, 但不可交互
+  - Unchanged: 不活动的page保持原样(as-is)。
+* Transition="Standard(默认)|None": 控制转换。 标准的 sliding 动画 or 无动画(使用这项实现自已的动画)
+* Interaction="Swipe(默认)|None": 触发动作。 手势 or 不直接交互(使用这项实现自已的导航控制/手势)
+* Active="NAME" 指定NAME为活动page, 这样就能自定义上边的 None 了.
+
+  ```xml
+  <!-- 相比上边的示例, 这一个是不是简单多了? -->
+  <PageControl>
+    <Panel Background="Red"/>
+    <Panel Background="Blue"/>
+  </PageControl>
+  ```
+
+**PageIndicator** 小圆点组件(通常手势切换页面时都会有这个小圆点组件,显示当前第几页, 以及总共的页数)
+
+```xml
+<DockPanel>
+  <PageControl ux:Name="pageControl">
+    <Page Background="Red"/>
+    <Page Background="Blue"/>
+    <Page Background="Green"/>
+    <Page Background="Yellow"/>
+  </PageControl>
+  <PageIndicator Navigation="pageControl" Dock="Bottom" Alignment="Center">
+    <Circle ux:Generate="Factory" ux:Binding="DotFactory"
+              Fill="Teal" Margin="5" Width="20" Height="20">
+      <ActivatingAnimation>
+        <Scale Factor="1.3"/>
+      </ActivatingAnimation>
+    </Circle>
+  </PageIndicator>
+</DockPanel>
+```
+
+注意这个示例中使用的 `ux:Generate="Factory" ux:Binding="DotFactory"`
+
+**{Page} Binding** 语法 `{Page res_name}` 将允许关联资源到当前活动的页面, 它仅从当前活动页面(Page)元素中查找资源而不是节点，见下边示例，
+
+```xml
+<DockPanel>
+  <Panel Navigation="myNav" Dock="Top" Height="100" Background="Teal">
+    <Text Value="{Page title}" FontSize="22" Alignment="Center"/>
+  </Panel>
+  <PageControl ux:Name="myNav">
+    <Page Background="Red">
+      <string ux:Key="title" ux:Value="First page"/> <!-- 被引用的资源 -->
+    </Page>
+    <Page Background="Green">
+      <string ux:Key="title" ux:Value="Second page"/>
+    </Page>
+  </PageControl>
+</DockPanel>
+```
+* 属性: Navigation: 见下边示例的 Panel，将其指定为 PageControl 的名字即可在切换 Page 时随之更改内容, 像是一个随着 Page 变换而更改资源的 {Resource res_name} 一样
+* 资源通过有各 Page 元素下使用 `ux:Key="TILE NAME"` 来定义
+* 这个特性可以创建有趣的 PageIndicator, 我们可以使用图片代替前边的圆形
+
+Fuse 提供的 Page 元素相前的定义就上边这些, 下边是自定义的内容
+
+#### Navigation types
+
+通过指定 Navigation 的 `Active="panel_name"` 属性来激活
+
+* LinearNavigation
+
+* DirectNavigation: 页面切换之间没有动画
+
+* HierarchicalNavigation: 直接从主页面切换到各相关子页，而不像 LinearNavigation 需要一个一个按顺序来， 可以使用 NavigateTo, GoBack, GoForward, 和 WhileCanGoForward 进行一些控制
+
+* EdgeNavigator: 用于从侧栏切换出菜单（示例有些复杂, 例如从左侧切出半个屏幕宽度的页面作为菜单）
+  - 它的第一个Panel子元素为菜单, 可以设置 panel 的 Edge="Left|Right|Top|Bottom", 并注意相应的高宽值。
+  - 它的第二个Panel子元素为正常页面, 通这个页面的交互, 调出第一个Panel作为菜单，或者设置 HitTestMode 属性
+  - 看上去 EdgeNavigator 类似于 Page 一样是一个已经定义好的东西， 因此不需要指定 EnteringAnimation 监听ActivatingAnimation 事件就行了
+
+* EdgeNavigation：虽然大多数时候 EdgeNavigator(推荐使用)就能工作得很好, 但如果想要自定义一些导航动画,或更多的自定义
+  - EdgeNavigator/EdgeNavigation 元素里边没有 ExitingAnimation, 因此 WhileInExitState 也没有
+
+  ```xml
+  <App Theme="Basic">
+    <Panel>
+      <EdgeNavigation ux:Name="Nav" />
+        <Panel ux:Name="menu" Width="150" Background="#0F0" Edge="Left" Alignment="Left">
+          <EnteringAnimation>
+            <Move X="-1" RelativeTo="Size" />
+          </EnteringAnimation>
+          <ActivatingAnimation>
+            <Change main.X="150" />
+          </ActivatingAnimation>
+        </Panel>
+        <Panel Background="#F00">
+          <Translation ux:Name="main" />
+          <Text Value="Hello World" Alignment="Center" TextColor="#fff" />
+          <Clicked>
+            <NavigateToggle Target="menu" />
+          </Clicked>
+        </Panel>
+    </Panel>
+  </App>
+  ```
+
+#### Controlling navigation
+
+控制导航，通过设置 NavigationContext 属性来指定指定 
+
+* GoBack
+* GoForward
+  - WhileCanGoForward 当可以 GoForward 时
+* NavigateTo 导航到指定页面
+* EnteringAnimation: 定义如何切换页面, 元素内应该包含 enter 触发后动画应该到达的值(依赖于 Navigation Type)
+* ExitingAnimation: 定义如何切换页面, 元素内应该包含 exit 触发后动画应该到达的值
+* ActivatingAnimation 当激活页面时的动画,即在 enter或exit 动画执行前就触发
+* WhileActive/WhileInactive 当页面为活动状态时(即动画完成后)/当页面处于非活动状态时(即使初使化也会根据页面的状态而触发)
+  - Threshold="0~1.0" 这个值是当与动画的进度匹配时即激活(因此默认为 1， 当设为 0.5时动画运行到一半时即触发)
+* WhileInEnterState: 与 WhileActive 类似， 当 EnteringAnimation 完成后
+* WhileInExitState: 与 WhileInactive 类似，当 ExitingAnimation 完成后
+
+  容易混乱的地方: 对于 LinearNavigation 来说, 第一个页面不会有 ExitingAnimation 和 WhileInExitState, 而最后一个页面则不会有 EnteringAnimation 和 WhileInEnterState, 通常把页面拖到左边为 enter, 而从右边退出为 exit
+
+  enter/exit-Animation 与页面的"活动与非活动"是没有关系的. 它的依赖于不同的 Navigation Type.
+
+* WhileNavigating: 和页面是同层元素,当二个页面切换时立即触发, 而不是等到动画结束。
+
+* SwipeNavigate: 用于将手势与导航相关联,EdgeNavigator在内部即使用了这个.
+  - SwipeDirection="Down|Right|Left|Up" 指定方向
+  - SwipeEnds="Closed(默认)|Open|Short" 即用户往一个方向拉完所有页面后, 还可以拖动的空白, 如果想要这种效果选 Short 就好(如果有个事件就好了, 这样可以知道已经拉到页面底部或顶部了,然后执行 Ajax 操作)
+  - VelocityThreshold  设定手势的速率最小值即可切换
+
+
+
+### Physics
+
+* Draggable 包含它的元素将可以移动
+* WhileDragging 与 Draggable 为同层元素, 当拖动时
+* PointAttractor 力场器, 像是磁铁一样的东西, 比如你要拖动元素丢到某一处时，或实现拖动删除时 
+  - Radius 范围
+  - Strength 强度, 更的的值将把范围内的吸过来(如果多个PointAttractor)
+  - Offset="X,Y,?" float3, 位置相对于其容器(父元素)
+  - Exclusive="true|false" 除排
+
+**Force field triggers**
+
+定义一个元素是否受到力场的作用， 这个需要下载并参考示例, 将下边这些元素添加到需要被力场作用的Panel元素下
+
+* 公共属性
+  - ForceField="PointAttractor_NAME"： 激活力场
+* EnteredForceField 进入力场范围
+  - Threshold="0.0~1.0": 在哪个点触发 handler
+  - Handler="{js_handler}":
+* ExitedForceField
+* InForceFieldAnimation
+
+### LayoutAnimation and MultiLayoutPanel
+
+当一个元素的布局属性如 Width,Hight或Margin(参阅layout properties)发生变化或元素位置在显示列表的位置发生变化时,LayoutAnimation 将会被触发。
+
+当使用 Change 来更改布局属性时, 计算大的 UX 文件布局是非常耗时的,  这很容易导致明显的帧数下降. 
+
+因此 Fuse 提供了 LayoutAnimation 来代替使用 Change 的动画. 可以使用 Set 来代替 Change
+
+```xml
+<Panel>
+  <Panel ux:Name="panel" Width="50" Height="50" Background="Teal">
+    <LayoutAnimation>
+      <Resize X="1" Y="1" RelativeTo="LayoutChange" Duration="0.5"/>
+        <Move X="1" Y="1" RelativeTo="LayoutChange" Duration="0.5"/>
+    </LayoutAnimation>
+    <Clicked>
+      <Set panel.Width="200"/>
+      <Set panel.Height="300"/>
+    </Clicked>
+  </Panel>
+</Panel>
+<!-- 另一个示例 -->
+<Panel>
+    <Panel ux:Name="panel" Width="50" Height="50" Background="Teal" Alignment="Center">
+        <LayoutAnimation>
+            <Move X="1" Y="1" RelativeTo="LayoutChange" Duration="0.5"/>
+        </LayoutAnimation>
+        <Clicked>
+            <Set panel.Alignment="BottomRight"/>
+        </Clicked>
+    </Panel>
+</Panel>
+``` 
+
+**MultiLayoutPanel** 允许在不同的布局之间移动元素. 这将允许在不同的显示列表之间移动元素,
+
+* Placeholder: 用于在可视树(显示列表)中引用其它元素，它本身就是一个元素并且有它自已的布局属性
+
+。。。。。。
+
+### misc
+
+--empty--
+
+<br />
+<br />
