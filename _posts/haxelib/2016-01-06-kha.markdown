@@ -1,0 +1,105 @@
+---
+
+layout: post
+title:  kha
+date:   2016-01-06 06:56:32
+categories: haxelib
+
+---
+
+安装参考 <https://github.com/KTXSoftware/Kha/wiki/Getting-Started> 
+
+* 这里选择了 Git clone --depth=1 的方式克隆
+
+* **--recursive**: `git submodule update --init --recursive`
+
+ > 因为一个Kore 的子目录下还有个 submodule, 更新 submodule 时好像也能指定 --depth=1
+
+* 手动创建一个名为 kha.bat 的文件保存在 PATH 所在路径, 需要 `nodejs v4.0` 作为编译工具
+
+  ```bat
+  @echo off
+  node <kha-path>\make %*
+  ```
+
+<!-- more -->
+
+当然你也可以选择下载定制好了的 vscode <http://kha.tech/download>, 只是我一点不习惯用这个
+
+### Intro
+
+* 新建空项目: `kha --init`
+* 编译: `kha html5`
+* 这时 build 目录下将创建相关的项目
+  > 注: .hxproj 默认使用了 kha/Tools/haxe/haxe.exe 作为编译器, 你可以在"属性-SDK里清除这项"
+  >
+  > 由于上边 submodule 并没有更新 haxe 和 khacpp
+
+### Command
+
+kha.bat
+
+```bat
+kha <target> [options]
+::e.g: kha html5
+```
+
+#### khafile.js
+
+<https://github.com/KTXSoftware/Kha/wiki/khafile.js>
+
+* 设置 assets 目录: 例:  `project.addAssets("Assets/**");`
+
+* 设置源码目录: 例: `project.addSources('Sources');`
+  - 允许多个源码目录设置, 相当于 `-cp Sources`
+* 添加lib到项目: 例: `project.addLibrary('Kha2D');`
+  - lib 应该在项目的根文件夹或者为 haxelib
+
+* 设置 shader 目录: 例: `project.addShaders('Sources/Shaders/**');`
+
+* 设置Compiler Flag: 例: `project.addDefine('debug_collisions');`
+  > TODO:这个示例有些奇怪, 并非属于 haxe 的
+
+* 设置初使化窗口大小,针对 flash 和 html5, 例:
+  ```js
+  project.windowOptions.width = 1366;
+  project.windowOptions.height = 768;
+  ```
+
+* flash平台选项,例: (但是kha使用的agal版本需要 flash player 16.0 以上)
+  ```js
+  project.targetOptions.flash.swfVersion = 11.6;
+  project.targetOptions.flash.framerate = 42;
+  project.targetOptions.flash.stageBackground = 'ff0000';
+  ```
+
+* android-native 目标选项,例:
+  ```js
+  project.targetOptions.android_native.package = 'com.example.app';
+  project.targetOptions.android_native.screenOrientation = 'portrait';
+  ```
+
+* android（Java）目标选项,例:
+  ```js
+  project.targetOptions.android.package = 'com.example.app';
+  project.targetOptions.android.screenOrientation = 'portrait';
+  ```
+
+#### kravur.exe
+
+<https://github.com/KTXSoftware/Kha/wiki/Kravur-%28Adding-fonts%29>
+
+例: `kha/Tools/kravur/kravur.exe myfont.ttf 12 myfont12.kravur`, 
+
+### 相关链接
+
+一些参考手册: <https://github.com/triplefox/khaguide/tree/master/markdown>
+
+使用Kha的引擎：
+* [KhaPunk:](https://bitbucket.org/stalei/khapunk) Kha 版的 haxepunk/flashpunk 2D游戏框架
+* [Cycles:](https://github.com/luboslenco/cyclesgame) 3D 游戏引擎，与 Blender 整合
+* [Komponent2D:](https://github.com/Marc010/Komponent2D) 基于组件(component)的游戏引擎
+* [Kha2D:](https://github.com/KTXSoftware/Kha2D) 简单的2D引擎
+
+
+<br />
