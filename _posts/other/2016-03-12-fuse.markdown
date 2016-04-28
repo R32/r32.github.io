@@ -345,6 +345,7 @@ Button 外观由 Theme 决定, 将填满分配给它的整个面积, 如果没�
 可以配合 ProgressAnimation 动画
 * ValueChanged="{sliderValueChanged}" 调用JS
 * Minimum/Maximum
+
 ```xml
 <StackPanel>
   <Slider>
@@ -672,6 +673,7 @@ Animators 用来指定和如何使用元素执行动画. 这有三个重要的�
 * Cycle 周期性在二个值之间的动画,例如不断闪烁的激光， 你还可以指定 Duration 来控制动画时长
   - Frequency: 例 0.5即每秒半个周期
   - 似乎不支持Duration , 以及 Easing 仅支持 Linear???
+
   ```xml
   <Panel>
       <Translation ux:Name="someTranslation" />
@@ -733,11 +735,13 @@ Animators 用来指定和如何使用元素执行动画. 这有三个重要的�
   - SizeFactor: 相对于另一个元素(RelativeNode), 如果设为 1， 这个元素将与另一个元素变得一样大小
 
 * 旋转, 前边已经有示例, 可指定: `DegreesX, DegreesY, DegreesZ(等同于Degrees)`, 
+
   ```xml
   <Rotate Degrees="90" Duration="0.5"/>
   ```
 
 * Resize, 与 LayoutAnimation 一起使用, Resize 将允许动画调整元素大小
+
   ```xml
   <Resize RelativeTo="SizeChange" Duration="0.5" Easing="CircularInOut" />
   ```
@@ -755,6 +759,7 @@ Animators 用来指定和如何使用元素执行动画. 这有三个重要的�
   ```
 
 * Skew, 倾斜, `DegreesX, DegreesY, DegreesXY`
+
   ```xml
   <Skew DegreesX="30" Duration="0.4" />
   ```
@@ -784,6 +789,7 @@ Animators 用来指定和如何使用元素执行动画. 这有三个重要的�
 
 * Nothing 所有动画都在 Trigger 后共享同一个时间轴直到动画完成并结束, 在某些罕见的情况下你可以有想要人为地延长时间轴,
 从逻辑上来说, 它是一个空白的动画, 迫使动画至少须持继时间轴长度
+
   ```xml
   <Nothing Duration="1" />
   ```
@@ -809,6 +815,7 @@ Actions不具有自动恢复性,及 Duration 属性, 但将具有 AtProgress（�
   - `<DebugAction Message="Clicked!" />`
 
 * Set： 永久性的更改属性的值， 如果你只是想暂时改变可以使用 Change
+
   ```xml
   <Rectangle ux:Name="rect" Color="#00f" />
   <Clicked>
@@ -818,6 +825,7 @@ Actions不具有自动恢复性,及 Duration 属性, 但将具有 AtProgress（�
   ```
 
 * Callback 用于 JS(见数据绑定章节)
+
   ```xml
   <JavaScript>
     var someJSFunction = function () {
@@ -839,6 +847,7 @@ Actions不具有自动恢复性,及 Duration 属性, 但将具有 AtProgress（�
   - `<GoBack TargetNode="myWebView" />`
 
 * Toggle: 切换 true 或 false. 如果在 Switch 内将切换其值. 也可用于激活/取消 WhileTrue
+
   ```xml
   <WhileTrue ux:Name="trueTrigger">
   ...
@@ -865,6 +874,7 @@ Actions不具有自动恢复性,及 Duration 属性, 但将具有 AtProgress（�
 属于 trigger
 
 * Clicked 点击.(press 与 release 都在同一个元素上)
+
   ```xml
   <Panel Width="50" Height="50">
     <Clicked>
