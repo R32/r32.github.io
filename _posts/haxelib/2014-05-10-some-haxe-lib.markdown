@@ -29,6 +29,8 @@ categories: haxelib
 
 <!-- more -->
 
+* [VerletKha](https://github.com/Devination/VerletKha) A simple 2D Verlet physics engine written in Haxe and Kha.
+
 * [hxinflate](https://github.com/proletariatgames/hxinflate) 相对于Haxe自带的序列化库增加了更多的特性
 
   - Doc: http://proletariat.com/news/2015/07/01/hxinflate-new-open-source-haxe-serialization-library/

@@ -47,6 +47,8 @@ https://github.com/sindresorhus/awesome
 
   > 一个在线工具用于将 文本转换为 Acsii art 的在工具,
 
+* <https://www.captionbot.ai/> 一个非常智能有趣的的在线网页图片识别, 类似于微软的那个颜龄检测
+
 <!-- more -->
 
 * **[web-bundle](https://github.com/haxorplatform/web-bundle)** Tool to pack binary files into a PNG image.
@@ -69,6 +71,7 @@ https://github.com/sindresorhus/awesome
   font-style: normal;
   }
   ```
+* [IE8~IE11虚拟机调试下载-需要虚拟机客户端](https://developer.microsoft.com/en-us/microsoft-edge/tools/vms/windows/)
 
 * Socket 调试工具
   - tcpdump
@@ -86,7 +89,9 @@ https://github.com/sindresorhus/awesome
 
 这个章节的大多数内容都是用于美化的 CSS 或 Javascript , 大多数似乎在 ie8 中都会报错.
 
-* <http://w3layouts.com/> 网页布局模板
+* <http://w3layouts.com/> **NOTE** 网页布局模板
+
+* <http://www.iwan0.com/> 一个前端资源的网站导航, 中文
 
 * <https://github.com/jmosbech/StickyTableHeaders> 固定 table 的 表头元素, 使用了Jquery
 
@@ -226,8 +231,9 @@ https://github.com/sindresorhus/awesome
 
 [C标准头文件](http://stackoverflow.com/questions/2027991/list-of-standard-header-files-in-c-and-c)
 
-<http://en.cppreference.com/w/>
+c++参考手册: <http://en.cppreference.com/w/>
 
+* [nuklear](https://github.com/vurtun/nuklear) A small ANSI C gui toolkit
 
 * [stb](https://github.com/nothings/stb) stb single-file public domain libraries for C/C++
 
