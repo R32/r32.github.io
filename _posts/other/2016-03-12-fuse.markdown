@@ -14,7 +14,8 @@ Getting Started: <https://www.fusetools.com/learn/fuse#getting-started>
  
 <!-- more -->
 
-Note: 这篇文档仅作为个人笔记, 一些地方可能存在误解, 因此不保证内容的正确性。 缺点:
+Note: 这篇文档仅作为个人笔记, 一些地方可能存在误解, 因此不保证内容的正确性， 缺点：
+
 * 目前似乎不支持使用 system font, 这样导致需要嵌入中文字体会有点大
 * 目前不能播放声音，仔细想想好像手机App（除了游戏）并不需要声音, 而通知有没有声音有系统决定
 
@@ -35,7 +36,7 @@ Fuse主要使用 XML 来开发App, 这些 XML 最后将被转换成相应的Uno 
 ux 标记由以下几种类别:
 
 * App 根节点, 并且一个 app 只能有一个
-  - Theme="Basic|Native|NativeWithFallback":
+  - Theme="Basic\|Native\|NativeWithFallback":
 
 * 多数 Node 类型, 大多数为 UI Elements
 
@@ -67,7 +68,7 @@ AutoBind 是一个元素属性,控制元素是否自动"连接"到父节点, 默
 
 `<Text>Hello, World</Text>`
 
-* TextWrapping="Wrap|NoWrap(default)" 是否自动换行
+* TextWrapping="Wrap\|NoWrap(default)" 是否自动换行
 * Font: 需要添加 ttf 字体
 
   ```xml
@@ -79,8 +80,8 @@ AutoBind 是一个元素属性,控制元素是否自动"连接"到父节点, 默
 	   <Text Font="Light">Roboto Light again</Text>
 	 </StackPanel>
   ```
-* TextColor = "#999|#999999"
-* TextAlignment = "Left(默认)|Conter|Right"
+* TextColor = "#999\|#999999"
+* TextAlignment = "Left(默认)\|Conter\|Right"
 * FontSize="24" Int
 * LineSpacing="10" Int
 
@@ -116,7 +117,7 @@ AutoBind 是一个元素属性,控制元素是否自动"连接"到父节点, 默
     </StackPanel>
   ```
 
-* Color="#f00|#ff0000": 将影响图片中白色或接近白色的部分
+* Color="#f00\|#ff0000": 将影响图片中白色或接近白色的部分
 * StretchMode: 当图像添加到容器时将尽可能填满容器, 但如果图像并不是用来作为容器的背景部分，因此
   - Fill: 填充容器中可用区域, 而不一定保持高宽比
   - PixelPrecise: 使用图像的像素大小为单位来确保图像为crisp， 这意味着不同设备上图像大小不一致，它将忽略容器的大小
@@ -183,7 +184,7 @@ AutoBind 是一个元素属性,控制元素是否自动"连接"到父节点, 默
 * Volume="0.0~1.0(默认值)"
 * Duration：以秒为单位
 * Position: 以秒为单位
-* IsLooping="false(默认)|true"
+* IsLooping="false(默认)\|true"
 
 有用的触发器可用于 Video
 
@@ -236,9 +237,9 @@ AutoBind 是一个元素属性,控制元素是否自动"连接"到父节点, 默
 #### Shapes
 
 包含有 Rectangle 与 Circle,可以有多种填充及描边，这些将会相互层叠，
-* Fill："#f00|#ff0000" 填充的颜色值
+* Fill："#f00\|#ff0000" 填充的颜色值
 * Width/Height:
-* Color: "#f00|#ff0000|Yellow|Red|Green|Blue|....." 感觉和 Fill 一样, 但
+* Color: "#f00\|#ff0000\|Yellow\|Red\|Green\|Blue\|....." 感觉和 Fill 一样, 但
 
 > 注意: 默认情况下将使用"点(Points)"作为单位, 而非像素值, 参考 Element Layer
 
@@ -283,7 +284,7 @@ AutoBind 是一个元素属性,控制元素是否自动"连接"到父节点, 默
 
 Stroke: 边框
 * Width:
-* Brush: "#f00|#ff0000" 指定描边的颜色值
+* Brush: "#f00\|#ff0000" 指定描边的颜色值
 * Offset: 正值将边框外移(width/height指定的大小往外移)负数将往内部偏移，
 
 SolidColor: 颜色填充
@@ -325,7 +326,7 @@ Button 外观由 Theme 决定, 将填满分配给它的整个面积, 如果没�
 #### Switch
 
 类似于CSS中的单项选择
-* Value="true|false（默认）"
+* Value="true\|false（默认）"
 * ValueChanged="{switchChanged}" 调用 JS 方法
 
 ```xml
@@ -381,7 +382,7 @@ Button 外观由 Theme 决定, 将填满分配给它的整个面积, 如果没�
 
 用于一些放置一些大小超过可视的内容, 可以配合 ScrollingAnimation 动画
 
-* AllowedScrollDirections="Horizontal|Vertical(默认)|Both" 用于限制滚动方向
+* AllowedScrollDirections="Horizontal\|Vertical(默认)\|Both" 用于限制滚动方向
 
 ```xml
 <ScrollView>
@@ -461,7 +462,7 @@ Button 外观由 Theme 决定, 将填满分配给它的整个面积, 如果没�
   - 例: `<Image File="Pic.jpg"> <Halftone Spacing="0.5" Smoothness="2" Intensity="1" DotTint="0.5" PaperTint="0.2" /> </Image>`
 
 * Mask: 示例: 仅显示 Rectangle, 图像的非 alpha 通道的区域, 感觉就像是加载了一张图片, 如果 Rectangle 的颜色为 #FFF 的话.
-  - Mode = "RGBA(default)|Alpha|Greyscale"
+  - Mode = "RGBA(default)\|Alpha\|Greyscale"
   - 例: `<Rectangle Width="50" Height="50"> <Mask File="Masks/Flower.png" /> </Rectangle>`
 
 ### Layout
@@ -479,7 +480,7 @@ Fuse 提供强有力的布局系统在所有平台及设备, 不论是 native �
   > 对于App的直接子元素,排在后边的将会显示在顶层,并且即使没有重叠, 前边的元素也不会显示)
 
 * StackPanel 子元素表现为堆栈(多个元素将按顺序堆叠), 默认为竖排堆叠. 可以通过 Orientation 属性修改
-  - Orientation="vertical (默认)|Horizontal"
+  - Orientation="vertical (默认)\|Horizontal"
   - ItemSpacing="10" 二个堆叠元素的间距, 这个区别于子元素的 Margin设置
 
 * Grid: 栅格, 每一行或每一列可以为各自确定的值,或者根据 RowCount 和 ColumnCount 的值来统一调整
@@ -502,11 +503,11 @@ Fuse 提供强有力的布局系统在所有平台及设备, 不论是 native �
   - 没有可以指定子元素间隔的属性, 因此只能用子元素的 Margin 来设置.
 
 * DockPanel: 使其子元素dock（钉）在各自指定的位置, 一个在另一个的后边(如果位置相同)
-  - Dock="Left|Top|Right|Bottom|Fill(默认)" Fill 表示将填充所有剩余的空间(如果仅指定了 MinWidth/MinHeight)
+  - Dock="Left\|Top\|Right\|Bottom\|Fill(默认)" Fill 表示将填充所有剩余的空间(如果仅指定了 MinWidth/MinHeight)
   - **注意:** 对于属性值为Fill的多个子元素, 它们将堆叠在一起而不是像其它值一样一个接一个的层叠。
 
 * Viewbox: 拉伸子元素以适合区域(仅显示最一个子元素, 而前边的子元素将隐藏)
-  - StretchDirection="Both|UpOnly|DownOnly"
+  - StretchDirection="Both\|UpOnly\|DownOnly"
   - StretchMode="Uniform(默认)" 参见 Image 章节
   - 例: `<Viewbox> <Rectangle Color="#808" Width="200" Height="100" /> </Viewbox>`
   - 如上示例 rectangle 的宽高比为 2/1, 因此这个比例将会填满整个 ViewboxBox,仍旧保持 2/1的宽和高
@@ -527,11 +528,11 @@ Fuse 提供强有力的布局系统在所有平台及设备, 不论是 native �
 当 Panel 开始布局其子元素, 它将访问所有子元素与布局相关的属性.
 
 * Alignment: 表明子元素相对于其父元素的对齐方式，当一个元素放置于 Panel 中, 可能并不需要将所有空间都给它
-  - 包括的值有: "Left|HorizontalCenter|Right|Top|VerticalCenter|Bottom|TopLeft|TopCenter|TopRight"
-  - 接上边: "CenterLeft|Center|CenterRight|BottomLeft|BottomCenter|BottomRight"
+  - 包括的值有: "Left\|HorizontalCenter\|Right\|Top\|VerticalCenter\|Bottom\|TopLeft\|TopCenter\|TopRight"
+  - 接上边: "CenterLeft\|Center\|CenterRight\|BottomLeft\|BottomCenter\|BottomRight"
 
 * Visibility：Hide 虽然不可见但仍然占据其空间,而Collapse不可见并且不占用空间
-  - 包括的值为: "Show|Hide|Collapse", 
+  - 包括的值为: "Show\|Hide\|Collapse", 
 
 * Width/Height：结合 Alignment 使用.  元素的 Width/Height仅包括了Stroke(边框)和Padding不包括Margin;
 
@@ -645,7 +646,7 @@ Animators 用来指定和如何使用元素执行动画. 这有三个重要的�
 * Duration/DurationBack 动画持继时间, 向前及恢复
 * Delay/DelayBack 
 * Easing/EasingBack: Note: 记得添加 In,Out,InOut在每个值上
-  - `Linear|Quadratic|Cubic|Quartic|Sinusoidal|Exponential|Circular|Elastic|Back|Bounce`
+  - `Linear\|Quadratic\|Cubic\|Quartic\|Sinusoidal\|Exponential\|Circular\|Elastic\|Back\|Bounce`
   - 每个 easing 都将有 In,Out,InOut 三种状态。例: CubicIn,CubicOut,CubicInOut
 
 > 动画需要由 trigger 触发, 因此不能直接就放在元素下边, 注意区别 Transforms
@@ -883,12 +884,12 @@ Actions不具有自动恢复性,及 Duration 属性, 但将具有 AtProgress（�
 * WhileHovering 仅在设备支持时才可用.(手机上会有hover???)
 
 * SwipeGesture 滑动。 需要和其相关元素同时使用才有效果
-  - Direction="Right|Left|Up|Down" 滑动的方向
+  - Direction="Right\|Left\|Up\|Down" 滑动的方向
   - Edge 用于替代 Direction
   - HitSize 当有 Edge 属性时可用. 滑动后的区域
   - Length="100" 滑动的距离与 Direction 一起用
   - LengthNode 可用于代替 Length. 它将引用到另一个元素之间的距离
-  - Type="Active|Simple(默认)" 在inactive/active这间切换状态 or 仅为简单的触发（相关的元素将根据这个值作一些行为）
+  - Type="Active\|Simple(默认)" 在inactive/active这间切换状态 or 仅为简单的触发（相关的元素将根据这个值作一些行为）
 
 SwipeGesture相关元素
 
@@ -1173,7 +1174,7 @@ Animations 将会自动帮你处理插值, 以及一些恢复
 
 * PullToReload: 非常容易地创建 "pull to relaod" 交互
 * WhileScrollable: 当 ScrollView 的指定方向可以滚动时，根据 ScrollDirections 的参数
-  - ScrollDirections="All|Both|Down|Horizontal|Left|Right|Up|Vertical"
+  - ScrollDirections="All\|Both\|Down\|Horizontal\|Left\|Right\|Up\|Vertical"
 * ProgressAnimation: 当 slider 元素滑块移动时, 值将总是从 0~1
 * Timeline: 将多个动画组合在一起的不错方法
   - TargetProgress="0~1"
@@ -1280,8 +1281,8 @@ Animations 将会自动帮你处理插值, 以及一些恢复
   - Collapsed(默认): 设置 Visibility="Collapsed", 因此不活动的Page将不可见以及不计算其布局
   - Disabled: 设置 IsEnabled="false" 不活动的page将可见, 但不可交互
   - Unchanged: 不活动的page保持原样(as-is)。
-* Transition="Standard(默认)|None": 控制转换。 标准的 sliding 动画 or 无动画(使用这项实现自已的动画)
-* Interaction="Swipe(默认)|None": 触发动作。 手势 or 不直接交互(使用这项实现自已的导航控制/手势)
+* Transition="Standard(默认)\|None": 控制转换。 标准的 sliding 动画 or 无动画(使用这项实现自已的动画)
+* Interaction="Swipe(默认)\|None": 触发动作。 手势 or 不直接交互(使用这项实现自已的导航控制/手势)
 * Active="NAME" 指定NAME为活动page, 这样就能自定义上边的 None 了.
 
   ```xml
@@ -1349,7 +1350,7 @@ Fuse 提供的 Page 元素相前的定义就上边这些, 下边是自定义的�
 * HierarchicalNavigation: 直接从主页面切换到各相关子页，而不像 LinearNavigation 需要一个一个按顺序来， 可以使用 NavigateTo, GoBack, GoForward, 和 WhileCanGoForward 进行一些控制
 
 * EdgeNavigator: 用于从侧栏切换出菜单（示例有些复杂, 例如从左侧切出半个屏幕宽度的页面作为菜单）
-  - 它的第一个Panel子元素为菜单, 可以设置 panel 的 Edge="Left|Right|Top|Bottom", 并注意相应的高宽值。
+  - 它的第一个Panel子元素为菜单, 可以设置 panel 的 Edge="Left\|Right\|Top\|Bottom", 并注意相应的高宽值。
   - 它的第二个Panel子元素为正常页面, 通这个页面的交互, 调出第一个Panel作为菜单，或者设置 HitTestMode 属性
   - 看上去 EdgeNavigator 类似于 Page 一样是一个已经定义好的东西， 因此不需要指定 EnteringAnimation 监听ActivatingAnimation 事件就行了
 
@@ -1402,8 +1403,8 @@ Fuse 提供的 Page 元素相前的定义就上边这些, 下边是自定义的�
 * WhileNavigating: 和页面是同层元素,当二个页面切换时立即触发, 而不是等到动画结束。
 
 * SwipeNavigate: 用于将手势与导航相关联,EdgeNavigator在内部即使用了这个.
-  - SwipeDirection="Down|Right|Left|Up" 指定方向
-  - SwipeEnds="Closed(默认)|Open|Short" 即用户往一个方向拉完所有页面后, 还可以拖动的空白, 如果想要这种效果选 Short 就好(如果有个事件就好了, 这样可以知道已经拉到页面底部或顶部了,然后执行 Ajax 操作)
+  - SwipeDirection="Down\|Right\|Left\|Up" 指定方向
+  - SwipeEnds="Closed(默认)\|Open\|Short" 即用户往一个方向拉完所有页面后, 还可以拖动的空白, 如果想要这种效果选 Short 就好(如果有个事件就好了, 这样可以知道已经拉到页面底部或顶部了,然后执行 Ajax 操作)
   - VelocityThreshold  设定手势的速率最小值即可切换
 
 
@@ -1416,7 +1417,7 @@ Fuse 提供的 Page 元素相前的定义就上边这些, 下边是自定义的�
   - Radius 范围
   - Strength 强度, 更的的值将把范围内的吸过来(如果多个PointAttractor)
   - Offset="X,Y,?" float3, 位置相对于其容器(父元素)
-  - Exclusive="true|false" 除排
+  - Exclusive="true\|false" 除排
 
 **Force field triggers**
 
