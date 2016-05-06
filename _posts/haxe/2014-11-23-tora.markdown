@@ -481,7 +481,9 @@ class App {
 
 <br />
 
+* 给 Api._ 这个字段添加 `@:keep` 被防止 `-dce full` 清除(已经提交PR)
 
+* 加载模块时, 需要使用 Module.readPath, 因为其它方法可能由于 Web.cacheModule 的原因而只运行一次
 
 motion-twin tora
 ------

@@ -19,6 +19,17 @@ categories: haxe
 
 <!-- more -->
 
+### 命令行
+
+```bash
+neko [options] file.n
+
+# options必须要放在 file 前边
+options: -interp  关闭 jit再执行
+         -stats   执行状态（性能）
+		 -version 显示当前 neko 版本退出
+```
+
 ### 黑魔法
 
 <http://old.haxe.org/doc/advanced/magic#neko-magic>
@@ -366,3 +377,52 @@ var regexp_new = $loader.loadprim("regexp@regexp_new",1);
 空
 <br />
 <br />
+
+nekoml
+------
+
+nekoml.exe 用于编译 nml 代码
+
+```bash
+NekoML Compiler v2.0.0 - (c)2005-2012 Motion-Twin
+ Usage : nekoml [options] files...
+ Options :
+  -p <path> : additional file search path
+  -v : verbose mode
+  -n : generate intermediate .neko files(同时输出 .neko 源码)
+  -pack <file> : build module packages
+  -use <file> : use this module package
+  -nostd : disable std lib
+```
+
+nekoc.exe 用于连接各模块(nekoml编译出来的文件会有多个 .n 文件)
+
+```bash
+Neko Compiler v2.0.0 - (c)2005-2012 Motion-Twin
+ Usage : neko [options] files...
+ Options :
+  -d <file> : dump bytecode（将 .n 文件解压为 .dump 文件(JIT汇编码???)）
+  -z <file> : make bytecode release（???移除一些调试信息?）
+  -p <file> : parse and print neko source
+  -doc <file> : make documentation
+  -o <dir> : set output directory
+  -console : run the console（进入到一个奇怪的控制台, 不知用来做什么）
+  -link <file> : link bytecodes files（注意第一个文件为输出文件， 第二个为主入口文件就可以了）
+  -v : verbose mode
+  -version : set the bytecode version
+```
+
+基础语法 <http://nekovm.org/doc/nekoml>
+
+库及API <https://github.com/HaxeFoundation/neko/tree/master/src/core>
+
+一些区别
+
+* 没有 return 和 ocaml 一样
+* 参数或返回值可以使用 `i:int` 这样的语法来显示明确类型
+* 和 ocaml 一样, int 的值无法自动隐式地转换成 float.
+
+<br />
+<br />
+
+

@@ -896,6 +896,7 @@ vcproj                 : GenCPP internal
 # 编译器添加 rtti 信息, 可以通过 haxe.rtti.Rtti.getRtti 检索这些信息 
 @:rtti               : Adds runtime type informations (since 3.2)
 
+# 个人猜测,通过查看 jQuery 的最后二个示例方法上, 估计是用来将 inline 保留到运行时的
 @:runtime            : ?
 
 # 表明 abstract 类型为运行时类型, 通常用于包装各平台底层类型

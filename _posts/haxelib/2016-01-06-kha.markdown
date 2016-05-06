@@ -31,6 +31,7 @@ categories: haxelib
 * 新建空项目: `kha --init`
 * 编译: `kha html5`
 * 这时 build 目录下将创建相关的项目
+
   > 注: .hxproj 默认使用了 kha/Tools/haxe/haxe.exe 作为编译器, 你可以在"属性-SDK里清除这项"
   >
   > 由于上边 submodule 并没有更新 haxe 和 khacpp
@@ -58,15 +59,18 @@ kha <target> [options]
 * 设置 shader 目录: 例: `project.addShaders('Sources/Shaders/**');`
 
 * 设置Compiler Flag: 例: `project.addDefine('debug_collisions');`
+
   > TODO:这个示例有些奇怪, 并非属于 haxe 的
 
 * 设置初使化窗口大小,针对 flash 和 html5, 例:
+
   ```js
   project.windowOptions.width = 1366;
   project.windowOptions.height = 768;
   ```
 
 * flash平台选项,例: (但是kha使用的agal版本需要 flash player 16.0 以上)
+
   ```js
   project.targetOptions.flash.swfVersion = 11.6;
   project.targetOptions.flash.framerate = 42;
@@ -74,12 +78,14 @@ kha <target> [options]
   ```
 
 * android-native 目标选项,例:
+
   ```js
   project.targetOptions.android_native.package = 'com.example.app';
   project.targetOptions.android_native.screenOrientation = 'portrait';
   ```
 
 * android（Java）目标选项,例:
+
   ```js
   project.targetOptions.android.package = 'com.example.app';
   project.targetOptions.android.screenOrientation = 'portrait';
@@ -96,6 +102,7 @@ kha <target> [options]
 一些参考手册: <https://github.com/triplefox/khaguide/tree/master/markdown>
 
 使用Kha的引擎：
+
 * [KhaPunk:](https://bitbucket.org/stalei/khapunk) Kha 版的 haxepunk/flashpunk 2D游戏框架
 * [Cycles:](https://github.com/luboslenco/cyclesgame) 3D 游戏引擎，与 Blender 整合
 * [Komponent2D:](https://github.com/Marc010/Komponent2D) 基于组件(component)的游戏引擎

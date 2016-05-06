@@ -19,13 +19,14 @@ categories: haxe
 
 * **Tips:** 在编译时其实可以不用指定 `-main` 参数, 这样的程序将没有入口像是一个库, 例: `haxe -js lib.js Lib`
 
+* 当 `-dce std` 时, 使用 import 可能会使最终输出文件变得很大(使用某一个类一个方法时,可以直接用全名), 因此你可能需要关闭 IDE 的自动导入（Generate Imports）
+  
+
 <!-- more -->
 
 ### 最新改动
 
 注意一些是 Git dev版本
-
-* `-D dump=record`
 
 * `extern clsss` 不知从什么时候起也允许有函数体了, 这样的话更方便JS模块化编程
 
@@ -457,6 +458,8 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
 * 缩进 - `Coding Style Type`: **BracesOnLine**, (个人喜好)将 `{` 放在行尾,而不是另起一行
 
 * 缩进 - `Comment Block Indenting`: **NotIndented**, (个人喜好) 注释换行时的 `*` 不缩进
+
+* HaxeContext - `Generate Imports`: 关闭自动导入(import)
 
 
 ### 遇见的一些错误

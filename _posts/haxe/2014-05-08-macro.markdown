@@ -293,6 +293,7 @@ macro 关键字后可以接任意 haxe 表达式 <http://haxe.org/manual/macro-r
 
 * `$v{} : Dynamic -> Expr` 这个经常会用到. e.g: `return macro $v{"hello world"}`
 
+* [最新支持 $tp](https://github.com/HaxeFoundation/haxe/commit/5411d122d03ed7c604c4afc559e9f0c8dbd1c8a4)
 
 ```haxe
 var complexType = macro :hxd.res.Loader;

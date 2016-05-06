@@ -67,7 +67,7 @@ categories: haxelib
 
   - 文档在这: http://old.haxe.org/com/libs/mtwin
 
-* [google closure](https://github.com/back2dos/closure) 优化 JS 代码, 感觉更像是 yuicompressor 的东西
+* [google closure](https://github.com/back2dos/closure) 在编译JS后顺便做压缩成 min 文件
 
 ### 游戏引擎
 
