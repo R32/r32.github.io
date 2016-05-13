@@ -200,6 +200,7 @@ https://github.com/sindresorhus/awesome
 * [15分钟快速入门各种语言](https://github.com/adambard/learnxinyminutes-docs)
 
 * [cmake 中文PDF](http://sewm.pku.edu.cn/src/paradise/reference/CMake%20Practice.pdf) 
+  - <https://cmake.org/Wiki/CMake_Useful_Variables>
 
 * [use-gulp](https://github.com/Platform-CUF/use-gulp) 中文 gulp 收集, 但是 gulp 似乎只适合做 Web 类的构建工具
 
@@ -208,6 +209,7 @@ https://github.com/sindresorhus/awesome
 * [w3school html5](http://www.w3school.com.cn/html5/index.asp)
 
 * [CSS 各项属性](http://www.runoob.com/cssref/pr-tab-caption-side.html)
+  - <http://www.runoob.com/>
 
 * [如何调试Chrome的Proxy](http://www.chromium.org/developers/design-documents/network-stack/debugging-net-proxy)
 
@@ -246,5 +248,7 @@ c++参考手册: <http://en.cppreference.com/w/>
 * [libuv](https://github.com/libuv/libuv) Cross-platform asychronous I/O  <http://libuv.org/>
 
 * [imgui](https://github.com/ocornut/imgui) c++ 的一个 GUI库,挺有意思的
+
+### 其它
 
 <br />

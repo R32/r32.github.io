@@ -209,6 +209,10 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
 
 下边的一些内容也许并不适合于 haxe 的最新版
 
+* `Context.getPosInfos` 这个方法可以轻松获得相对应的文件路径(这样就可以根据这个路径获得相对应的固定path)
+  - 如 [closure 中的...](https://github.com/back2dos/closure/blob/master/src/closure/Compiler.hx)
+  - 但是这个仅适用于将这个库作源码, 如果做成了App(.exe或.n)还是得用 haxelib path 来定位
+
 * 当在 `build.hxml` 文件中使用 `--each` 时, 需要注意 `haxe {前} build.hxml {后}` 前后的位置是否有受到 `--each` 的影响
 
 * 泛形, 返回类型或者Void, 参考 haxe.Time 的 measure 方法源码如下: 

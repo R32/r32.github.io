@@ -9,8 +9,13 @@ categories: other
 
  [hss](https://github.com/ncannasse/hss) 是一个类似于 less 或 sass 的 动态样式表语言.但是更加轻量及简单. 基于 neko 平台. 最新的 1.4 版本需要自已编译. 编译参考 Makefile 文件. 
 
-如果打算兼容 IE 这个还算是不错的
- 
+如果打算兼容 IE 这个还算是不错的, 一些文件监控工具:
+
+* linux - inotifywatch (cygwin 中没有这个命令)
+* win - ???
+  - subline text 3 下, 选择目录,在目录顶层放置 Makefile 是个不错的方法
+* mac - fswatch
+
 <!-- more -->
 
 ### 使用方法

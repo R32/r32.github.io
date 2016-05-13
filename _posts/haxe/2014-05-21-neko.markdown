@@ -418,9 +418,40 @@ Neko Compiler v2.0.0 - (c)2005-2012 Motion-Twin
 
 一些区别
 
+* 和 ocaml 一样除了数组内的值可变或声明为 ref, var 的值都不可变
 * 没有 return 和 ocaml 一样
 * 参数或返回值可以使用 `i:int` 这样的语法来显示明确类型
 * 和 ocaml 一样, int 的值无法自动隐式地转换成 float.
+* match 表达式中的 `[< NN; NNN >]` 为 stram 类型, 通常会在 Parse 文件的地方看到这种表达式
+* 运算符, 不支持三元运算符
+* 变量或方法名不可以用大写字母开头
+* 正则如果需要 options 需要自已从 neko("") 中调用
+* 变量可以通过 var 重新定义, 但普通变量不能更改其值
+
+  ```
+  ===/!==/==/!=    # 
+  ||/&&            # 条件, 左右边必须为 bool
+  or/and/xor       # 整数位运算,好像没有按位取反(not) ??
+  >>/<</>>>        # 位移
+  ```
+
+```js
+var list = [1; 2; 3; 4; 5]; //
+var wl = &[1; 2; 3; 4; 5];  // ref list
+
+100::list;
+100::*wl;            // 但是这样 wl 的值并没有改变
+wl := 100 :: *wl;
+//list = 100 :: list // 错误, 感觉这蛮怪异的.和 ocaml 比起来
+// 在底层 &(ref) 相当于把这个值放到 [] 中去, 例: var s = &"abc" => $array("abc")
+
+// 对比二个是否为同一个对象
+print([1] == [1])  // (int list)true
+print([1] === [1]) // false
+
+// 注意这种多变量赋值为形式为 Tuple
+var a:int, b:int, c:bool = (1, 2, false);
+```
 
 <br />
 <br />

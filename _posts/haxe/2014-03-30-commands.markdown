@@ -276,7 +276,7 @@ nekotools 是一个安装 haxe 时附带的工具,nekotools 很简单只有二�
   # 用于 单个hxml文件(或单条CLI命令)的多目标编译, 在 --each 之前的参数将用于所有 --next
   --each
   
-  # 这个命令是给 (代码编辑器)IDE 用的, 用于给 IDE 提供 语法智能提示
+  # 通用给IDE 用的, 用于给 IDE 提供 语法智能提示. 例: haxe --display Main.hx@33
   # http://haxe.org/manual/cr-completion-overview.html
   --display	: display code tips
   

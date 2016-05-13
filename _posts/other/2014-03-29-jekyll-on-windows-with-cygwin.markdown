@@ -124,6 +124,7 @@ empty
 * 从 DOS 中直接进入 `bash --login`, 但是目录会跳到 /home/USER 下:
 
   - <http://superuser.com/questions/345964/start-bash-shell-cygwin-with-correct-path-without-changing-directory>
+  - 因为如果将 cygwin/bin 添加到路径,那么一些方法会优先使用 DOS 下的如果没有 login, 如 find
 
   ```bash
   set CHERE_INVOKING=1
@@ -132,6 +133,17 @@ empty
 
   直接从 DOS 中调用命令, 例: `bash -l -c "sass --help"`
 
-* makefile 中检测 win 系统 `ifeq ($(OS),Windows_NT)`
+* makefile 中检测 win 系统, 但这个无法区分是在 DOS 还是 BASH 下, 
+
+  - 目前没有办法检测 DOS/BASH 和 bash -login， 因此不要在 makefile 中使用 `$(shell find)` 就可以
+
+  ```makefile
+  # ifeq ($(OS),Windows_NT), 全返回 Windows_NT,
+
+  # OSTYPE 不属于环境变量, 只是bash的临时变量, 但无法引用
+
+  # 这个同样不会有正确的结果, DOS 和 bash 以及 bash -login 下全返回 "cygwin"
+  SYS   := $(shell echo $${OSTYPE})
+  ```
 
 <br />

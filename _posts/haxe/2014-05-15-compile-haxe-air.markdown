@@ -261,7 +261,7 @@ CSS 属性 <http://www.runoob.com/cssref/css3-pr-box-ordinal-group.html> , AIR4.
 /* display: flex */
 display: -webkit-box;
 
-/* flex: 1; 给另一个DI以定值,然后这个设 1 就行了, 如果全部相等则设 auto */
+/* flex: 1; 给另一个DIV以定值,然后这个设 1 就行了 */
 -webkit-box-flex: 1;
 
 /* flex-flow: row|column */
