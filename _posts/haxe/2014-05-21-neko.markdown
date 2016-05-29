@@ -70,7 +70,7 @@ public static function nekoToHaxe( v : Dynamic ) : Dynamic;
 // 转换 haxe 值为等效的 neko 值. 用于将unwrap的 String 和 Arrays 的对象型式转换成neko的raw值型式
 public static function haxeToNeko( v : Dynamic ) : Dynamic;
 
-//返回一个对象包含所有编译了(import导入了或者其它引入方式)的packages和classes, 
+//返回一个对象包含所有编译了(import导入了或者其它引入方式)的packages和classes,
 //例: Lib.getClasses().Main, 返回 Main.hx 类（Class<Main>）
 //例: Reflect.fields(Lib.getClasses().pkg), [@Some,Some], 如果是包则带有 @的是成员,而另一个则是静态.
 //当你需要初使化一堆 SPOD 表时可能会用到这个方法, 而不需要一个一个的指定
@@ -91,18 +91,18 @@ public inline static function bytesReference( s : String ) : haxe.io.Bytes;
 
   ```haxe
   var t1 = Thread.create(fn);
-  t1.sendMessage(Thread.current());	
-  
+  t1.sendMessage(Thread.current());
+
   function fn(){
   	var main:Thread = Thread.readMessage(true);
   	//......
   }
   ```
 
-* `readMessage(block = true):Dynamic` 读取 sendMessage 传递的变量 
+* `readMessage(block = true):Dynamic` 读取 sendMessage 传递的变量
 
 
-#### vm.Deque 
+#### vm.Deque
 
 **重要:** `pop(block)` 当 block 为 true, 将为阻塞模式, 也就是说调用 pop(true) 时, 当没有元素可用于pop( *类似于调用空数组的pop方法* ), 将阻塞当前进程直至有元素可以弹出. 用于多线程编程.
 
@@ -123,7 +123,7 @@ Sys.sleep(1)
 
 #### vm.Lock
 
-`wait(?sec)`用于阻塞进程.直到已经到了指定时间或者其它进程调用了 `release()`. 示例显示了 wait 的时间已过而退出 阻塞, 
+`wait(?sec)`用于阻塞进程.直到已经到了指定时间或者其它进程调用了 `release()`. 示例显示了 wait 的时间已过而退出 阻塞,
 
 ```haxe
 var lk = new Lock();
@@ -156,7 +156,7 @@ Sys.sleep(3);
 class Poll {
 	var readIndexes: ArrayAccess<Int>;	// 如果指定的索引不存在则会返回 -1
 	var writeIndexes: ArrayAccess<Int>;
-	
+
 	function new( n : Int );
 	function events( ?t: Float ):Void;
 	// 预置socket数组用于轮询，
@@ -190,10 +190,10 @@ while(true){
 Loader(加载器) 可以用于动态(运行时)地从 NDLL 库中加载 primitives(调用代码的胶水函数).
 
 Loader 可以用于动态地加载其它 neko 模块(`.n`文件)，
-默认的 Loader 首先在其 cache(inst.getCache) 中查找, 
+默认的 Loader 首先在其 cache(inst.getCache) 中查找,
 然后在路径(inst.getPath)和当前路径查找指定的名称,从路径中查找的模块会被立刻执行
 
-Loader 可用于沙箱安全。当模块已经加载到指定的 loader， 
+Loader 可用于沙箱安全。当模块已经加载到指定的 loader，
 这个 loader可以管理被加载的模块安全通过过滤哪些 primitives 可以被加载
 
 > 通常通过 `Loader.local()` 获得当前 neko Loader(加载器), 然后 `loader.getCache()` 取得这个 loader 下的所有模块, 例如: `app.n => [Module Object]`
@@ -217,11 +217,13 @@ Neko 虚拟机的可执行文件, 一个 Module 对应一个 `.n` 文件
 
 * `static readPath(name:String, path:Array<String>, l:Loder):Module`: 在指定的路径(path)中加载指定模块(name),初使化的模块还没有执行。
 
-* `static readGlobalsNames(i:Input):Array<String>`: 
+* `static readGlobalsNames(i:Input):Array<String>`:
 
 一些成员方法: 这些方法不需要过多的关注,
 
-* `execute():Dynamic`: 一个模块可以被执行多次, 每次都会初使化。 注意: 这个方法 **并非** 返回 Sys.exit(i) 的值, 因为被加载的模块如果调用了 Sys.exit 则所有的模块将退出, 即不会再执行后边的任何代码. 
+* `execute():Dynamic`: 一个模块可以被执行多次, 每次都会初使化。 注意: 这个方法 **并非** 返回 Sys.exit(i) 的值, 因为被加载的模块如果调用了 Sys.exit 则所有的模块将退出, 即不会再执行后边的任何代码.
+
+  - 对于 haxe 编译的 neko 来说, 将返回 main 函数的返回值.
 
 * `getExports():Map<String,Dynamic> `, `exportsTable():Dynamic` 二个方法, 前者通过 Reflect 将后者的返回用 Map 进行了包装。除了`__module`字段, 其它所有字段需要在 **执行后** 才有值
 
@@ -231,7 +233,7 @@ Neko 虚拟机的可执行文件, 一个 Module 对应一个 `.n` 文件
 
   - `__unserialize` ??? 对应为一个函数,似乎不用理会
 
-* `globalsCount():Int, setGlobal(n:Int, v:Dynamic):Void, getGlobal(n:Int):Dynamic`: int 值分别对应组成neko Module的每个元素(字符串, 函数......等等)
+* `globalsCount():Int, setGlobal(n:Int, v:Dynamic):Void, getGlobal(n:Int):Dynamic`: int 值分别对应组成neko Module的每个元素(字符串, 函数......等等) 似乎和 neko 的数据结构有关.
 
 
 ### std.ndll
@@ -296,7 +298,7 @@ neko 中的值可以是下列之一:
 
 - Null: 特殊值 `null` 用于未初使化的变量
 - 整数, 常见的十进制形式(123或-12)或十六进制形式(0x1A2B)
-- 浮点数, 
+- 浮点数,
 - 布尔值: 由二个小写的 `true` 与 `false`
 - 字符串: 双引号包车的字符串(例: "foo", "hello,\nworld!")。neko 字符串是可变的,意味着可以修改它们。
 - 数组: 索引从 0 开始的整数索引表。
@@ -342,7 +344,7 @@ neko 中的值可以是下列之一:
   // 处理 this
   var f = function() { $print(this) };
   f = $closure(f,55);
-  f(); // prints 55	
+  f(); // prints 55
   ```
 
 * `$apply`, 可以直接调用函数， 如果函数需要额外的参数将推迟到获得更多参数.
@@ -351,7 +353,7 @@ neko 中的值可以是下列之一:
   var f = function(x,y) { return x + y };
   f(1,2);
   $apply(f,1)(2); // equivalent
-  $apply(f,1,2); // equivalent	
+  $apply(f,1,2); // equivalent
   ```
 .....
 
@@ -389,9 +391,9 @@ NekoML Compiler v2.0.0 - (c)2005-2012 Motion-Twin
  Options :
   -p <path> : additional file search path
   -v : verbose mode
-  -n : generate intermediate .neko files(同时输出 .neko 源码)
-  -pack <file> : build module packages
-  -use <file> : use this module package
+  -n : generate intermediate .neko files  # 只输出 .neko 代码
+  -pack <file> : build module packages    # ???
+  -use <file> : use this module package   # ???
   -nostd : disable std lib
 ```
 
@@ -429,7 +431,7 @@ Neko Compiler v2.0.0 - (c)2005-2012 Motion-Twin
 * 变量可以通过 var 重新定义, 但普通变量不能更改其值
 
   ```
-  ===/!==/==/!=    # 
+  ===/!==/==/!=    #
   ||/&&            # 条件, 左右边必须为 bool
   or/and/xor       # 整数位运算,好像没有按位取反(not) ??
   >>/<</>>>        # 位移
@@ -455,5 +457,3 @@ var a:int, b:int, c:bool = (1, 2, false);
 
 <br />
 <br />
-
-

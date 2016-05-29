@@ -388,6 +388,10 @@ debug                  : Activated when compiling with -debug
 # 用来给 IDE 提供语法提示用的., 也就是说 #if display #end 之间的内容是提供给代码编辑器
 display                : Activated during completion
 
+# haxe 3.3+
+display-stdin             : Read the contents of a file specified in --display
+                            from standard input
+
 dll-export             : GenCPP experimental linking
 
 dll-import             : GenCPP experimental linking
@@ -514,6 +518,7 @@ no-macro-cache         : Disable macro context caching
 # 同 --no-opt
 no-opt                 : Disable optimizations
 
+# 
 no-pattern-matching    : Disable pattern matching
 
 no-root                : GenCS internal
@@ -539,7 +544,8 @@ replace-files          : GenCommon internal
 
 scriptable             : GenCPP internal
 
-shallow-expose         : Expose types to surrounding scope of Haxe generated closure without writing to window object
+shallow-expose         : Expose types to surrounding scope of Haxe generated 
+                         closure without writing to window object
 
 source-map-content     : Include the hx sources as part of the JS source map
 

@@ -11,7 +11,7 @@ Getting Started: <https://www.fusetools.com/learn/fuse#getting-started>
 
 * 相比 haxe 的一些跨平台UI库,多了一个本地实时预览功能
 * android SDK/NDK设置 <https://www.fusetools.com/learn/guides/preview-and-export-android>
- 
+
 <!-- more -->
 
 Note: 这篇文档仅作为个人笔记, 一些地方可能存在误解, 因此不保证内容的正确性， 缺点：
@@ -26,7 +26,7 @@ Note: 这篇文档仅作为个人笔记, 一些地方可能存在误解, 因此�
 * [PROJECTNAME.unoproj](https://www.fusetools.com/learn/uno#keyword-uno-project-format-overview) 项目文件
 * MainView.ux 应用的主入口文件, 因为它包括 App 元素。
 
-注: Javascript 文件不需要从 .unoproj 内引用, 可直接在 .ux 文件中导入 
+注: Javascript 文件不需要从 .unoproj 内引用, 可直接在 .ux 文件中导入
 
 
 ### UX Markup
@@ -48,7 +48,7 @@ ux 标记由以下几种类别:
 
 * Styling(样式)
 
-#### AutoBind 
+#### AutoBind
 
 AutoBind 是一个元素属性,控制元素是否自动"连接"到父节点, 默认情况下将为 true, 但如果你想做些特别的可以设为 false
 
@@ -88,7 +88,7 @@ AutoBind 是一个元素属性,控制元素是否自动"连接"到父节点, 默
 **Font**: 见上边示例, 用于导入字体，字体通常用于整个应用, 因此被标记为全局资源 `ux:Global="xxx"`
 
 **Number**: 大多数情况下和 Text 相似, [Format 格式参考-中文](https://msdn.microsoft.com/zh-cn/library/dwhawy9k.aspx?f=255&MSPPError=-2147217396)
-  
+
 `<Number Value="3.14159265359" Format="F03" />` 将显示为 3.141
 
 
@@ -127,7 +127,7 @@ AutoBind 是一个元素属性,控制元素是否自动"连接"到父节点, 默
   - Uniform: 保持图片的高宽比, 这可能会使图片没有填充整个容器
   - UniformToFill: 填充整个区域并保持高宽比, 这可能使图片的部分超出容器而不可见
 * StretchDirection: 设置拉伸是拉大还是缩小
-  - Both: 
+  - Both:
   - UpOnly: Only upscale contents(仅放大)
   - DownOnly: Only downscale contents(仅缩小),有时候子元素大于父元素
 * ContentAlignment: 设置图像在其区域内的对齐方式
@@ -153,7 +153,7 @@ AutoBind 是一个元素属性,控制元素是否自动"连接"到父节点, 默
 * FileImageSource: 单个本地图像文件以及它的屏幕密度(Density)
 * HttpImageSource: 单个http图像以及的它的屏幕密度
 * MultiDensityImageSource: 同一个图像以及多个屏幕密度值
-	
+
   ```xml
   <!-- Fuse 将挑选最适合屏，尊循 StretchMode 的图像资源 -->
   <Image StretchMode="PointPrefer">
@@ -162,7 +162,7 @@ AutoBind 是一个元素属性,控制元素是否自动"连接"到父节点, 默
       <FileImageSource File="Icon.png@2x.png" Density="2"/>
     </MultiDensityImageSource>
   </Image>
-	 
+
   <!-- 允许指定从HTTP获取并异步显示的图像 -->
   <!-- 注意 HTTP 可能需要一些时间来加载, 在加载之前Fuse将不能获得图像的大小,因此需要小心处理 -->
   <Image>
@@ -171,14 +171,14 @@ AutoBind 是一个元素属性,控制元素是否自动"连接"到父节点, 默
       <HttpImageSource Url="{image_url_2x}" Density="2"/>
     </MultiDensityImageSource>
   </Image>
-	 
+
   <!-- 或者如果你使用固定的屏幕密度,可以直接简单 -->
   <Image Url="{image_url}" />
   ```
 
 #### Video
 
-视频显示, 和 Image 一样拥有 Url, StretchMode, StretchDirection, ContentAlignment 
+视频显示, 和 Image 一样拥有 Url, StretchMode, StretchDirection, ContentAlignment
 
 * File="path/to/file.mp4"
 * Volume="0.0~1.0(默认值)"
@@ -246,7 +246,7 @@ AutoBind 是一个元素属性,控制元素是否自动"连接"到父节点, 默
 **Rectangle** 例: `<Rectangle Fill="#f00" Width="50" Height="50" CornerRadius="5" />`
 * CornerRadius: Int, 圆角
 
-**Circle**, 
+**Circle**,
 * StartAngle/EndAngle 以弧度为单位
 * StartAngleDegrees/EndAngleDegrees 以度为单位
 * LengthAngle/LengthAngleDegrees 相对 StartAngle/StartAngleDegrees 的偏移, 用于代替 EndAngle/EndAngleDegrees
@@ -437,7 +437,7 @@ Button 外观由 Theme 决定, 将填满分配给它的整个面积, 如果没�
 * Layer: 指定元素置于父元素的背影层还是 overflow 层如果不指定 Layer 属性, 那么这个元素将介于 Background 与 Overlay 之间
   - Background: 展现于显示列表底层
   - Overlay: 展现于显示列表顶层
-	
+
   ```xml
   <!-- 当没有 Layer="Background", 你将看不到 Hello  -->
   <Button Text="Hello!">
@@ -477,7 +477,7 @@ Fuse 提供强有力的布局系统在所有平台及设备, 不论是 native �
 * Panel 最基本布局的类型, 子元素默认将占据整个空间, 如果包含多个子玩素, 则同时显示多个子素(因此可能会有重叠和遮盖)
 结合使用 Alignment,Margin,Padding 在一些情况下将非常有用.
   - 子元素的显示排列顺序为: "排在前边的元素将显示在顶层"
-  
+
   > 对于App的直接子元素,排在后边的将会显示在顶层,并且即使没有重叠, 前边的元素也不会显示)
 
 * StackPanel 子元素表现为堆栈(多个元素将按顺序堆叠), 默认为竖排堆叠. 可以通过 Orientation 属性修改
@@ -519,7 +519,7 @@ Fuse 提供强有力的布局系统在所有平台及设备, 不论是 native �
 
 * DockLayout: 放置于 Panel 将使其和 DockPanel 一样
 * ColumnLayout: 将同层的其它元素(即其父元素Panel的所有可视子元素)分隔为列. 可由 ColumnCount 调整宽度。它将尝试保持 ColumnCount 所定义的数量
-* CircleLayout: 将同层的其它元素(即其父元素Panel的所有可视子元素)以圆排列. 
+* CircleLayout: 将同层的其它元素(即其父元素Panel的所有可视子元素)以圆排列.
   - StartAngleDegrees/EndAngleDegrees: 起始及结束的角度值(感觉排列的位置不太对??)
   - Radius:  0~1.0~out 相对于父元素
   - ItemSpacingDegrees: 间隔
@@ -533,7 +533,7 @@ Fuse 提供强有力的布局系统在所有平台及设备, 不论是 native �
   - 接上边: "CenterLeft\|Center\|CenterRight\|BottomLeft\|BottomCenter\|BottomRight"
 
 * Visibility：Hide 虽然不可见但仍然占据其空间,而Collapse不可见并且不占用空间
-  - 包括的值为: "Show\|Hide\|Collapse", 
+  - 包括的值为: "Show\|Hide\|Collapse",
 
 * Width/Height：结合 Alignment 使用.  元素的 Width/Height仅包括了Stroke(边框)和Padding不包括Margin;
 
@@ -564,11 +564,11 @@ Rectangle Width="50"/>     <!-- points -->
   - HorizontalBoxCenter：Simulates the effect of the element being the front-facing side of a cube in 3D space, using the width of the element for determining the depth of the cube. Without the element being in a Viewport this will have no illusion of depth, effectively rendering it useless.
   - VerticalBoxCenter：与 HorizontalBoxCenter 一样, 只是它使用元素的高度值确定深度
 
-* LayoutMaster: 指定布局相对的元素(如果没有这个属性, 那就相对于父元素布局), 例如当指定对齐时 
+* LayoutMaster: 指定布局相对的元素(如果没有这个属性, 那就相对于父元素布局), 例如当指定对齐时
 
-  > 查看 当 LayoutMaster 元素发生改变时, LayoutAnimations 动画将被激活 的[示例...](https://www.fusetools.com/learn/fuse#keyword-layoutmaster) 
+  > 查看 当 LayoutMaster 元素发生改变时, LayoutAnimations 动画将被激活 的[示例...](https://www.fusetools.com/learn/fuse#keyword-layoutmaster)
 
-#### Viewport 
+#### Viewport
 
 允许执行一些 perspective projection 的3D动画, 有一些的限制, 不可以处理局部的 perspectives
 
@@ -590,7 +590,7 @@ Rectangle Width="50"/>     <!-- points -->
 
 IOS 和 Andriod 通常会有一个状态栏显示如电池，信号之类的, 在 APP 中状态可以显示或者是不显示
 
-* StatusBarBackground: 填充状态栏边距，在所有设备及平台它将与状态栏有着同样的大小 
+* StatusBarBackground: 填充状态栏边距，在所有设备及平台它将与状态栏有着同样的大小
 * BottomBarBackground：将和键盘有一样大小（比如在用户输入时,如果不重新调整布局那么输入框很可能会被弹出来的键盘挡住）
 * ClientPanel： 位于 StatusBarBackground 与 BottomBarBackground 之间的
 
@@ -643,9 +643,9 @@ Trigger 表现为事件触发, 如用户输入,程序事件. Triggers可以包�
 
 #### Animators
 
-Animators 用来指定和如何使用元素执行动画. 这有三个重要的动画控制属性: 
+Animators 用来指定和如何使用元素执行动画. 这有三个重要的动画控制属性:
 * Duration/DurationBack 动画持继时间, 向前及恢复
-* Delay/DelayBack 
+* Delay/DelayBack
 * Easing/EasingBack: Note: 记得添加 In,Out,InOut在每个值上
   - `Linear\|Quadratic\|Cubic\|Quartic\|Sinusoidal\|Exponential\|Circular\|Elastic\|Back\|Bounce`
   - 每个 easing 都将有 In,Out,InOut 三种状态。例: CubicIn,CubicOut,CubicInOut
@@ -658,16 +658,16 @@ Animators 用来指定和如何使用元素执行动画. 这有三个重要的�
 
   ```xml
   <Panel ux:Name="somePanel" Color="Red" />
- 
+
   <Change somePanel.Opacity="0"/>
   <Change somePanel.Color="Blue" Duration="0.3"/>
   <Change somePanel.Visibility="Collapsed"/>
-  
+
   <!-- 另一种方式 -->
   <Change Target="somePanel.Opacity" Value="0"/>
   ```
   同样可以更改元素的 Width/Height或Margin, 只是这些属性会破坏整体布局,并导致一些性能问题.
-  
+
   通常有更有效的方法来做布局方面的动画: LayoutAnimation 和 MultiLayoutPanel
 
 * Cycle 周期性在二个值之间的动画,例如不断闪烁的激光， 你还可以指定 Duration 来控制动画时长
@@ -683,7 +683,7 @@ Animators 用来指定和如何使用元素执行动画. 这有三个重要的�
   </Panel>
   ```
 
-变形动画(Transform animators): 
+变形动画(Transform animators):
 
 * Move 移动元素, Move 并不影响布局, 因此元素仅会偏移位置
 
@@ -731,10 +731,10 @@ Animators 用来指定和如何使用元素执行动画. 这有三个重要的�
   <!-- Factor 将对所有轴同时缩放, 或单独地使用 X,Y,Z轴 -->
   ```
   其 RelativeTo 属生可指定为:
-  - SizeChange: 相对于指定元素(RelativeNode)大小 
+  - SizeChange: 相对于指定元素(RelativeNode)大小
   - SizeFactor: 相对于另一个元素(RelativeNode), 如果设为 1， 这个元素将与另一个元素变得一样大小
 
-* 旋转, 前边已经有示例, 可指定: `DegreesX, DegreesY, DegreesZ(等同于Degrees)`, 
+* 旋转, 前边已经有示例, 可指定: `DegreesX, DegreesY, DegreesZ(等同于Degrees)`,
 
   ```xml
   <Rotate Degrees="90" Duration="0.5"/>
@@ -796,7 +796,7 @@ Animators 用来指定和如何使用元素执行动画. 这有三个重要的�
 
 #### Transforms
 
-所有元素都可以移动, 缩放,旋转, Transforms的先后顺序,将会导致不同的结果， 
+所有元素都可以移动, 缩放,旋转, Transforms的先后顺序,将会导致不同的结果，
 
 > 这个和 Animators 不一样的是, 不可以放在 trigger 下, 也没有 Duration 和 Easing, 并且不会处理恢复及动画插值
 
@@ -811,7 +811,7 @@ Animators 用来指定和如何使用元素执行动画. 这有三个重要的�
 
 Actions不具有自动恢复性,及 Duration 属性, 但将具有 AtProgress（形为有些类似于Delay） 介于 0~1 之间的值, 和 Delay 属性
 
-* DebugAction: 将消息输出到调试终端(如果激活), 等效于Uno或JS中的 debug_log 
+* DebugAction: 将消息输出到调试终端(如果激活), 等效于Uno或JS中的 debug_log
   - `<DebugAction Message="Clicked!" />`
 
 * Set： 永久性的更改属性的值， 如果你只是想暂时改变可以使用 Change
@@ -821,7 +821,7 @@ Actions不具有自动恢复性,及 Duration 属性, 但将具有 AtProgress（�
   <Clicked>
     <Set rect.Color="#f00" />
 	<!-- <Set Target="rect.Color" Value="#f00" />  -->
-  </Clicked> 
+  </Clicked>
   ```
 
 * Callback 用于 JS(见数据绑定章节)
@@ -859,7 +859,7 @@ Actions不具有自动恢复性,及 Duration 属性, 但将具有 AtProgress（�
   </Panel>
   ```
 
-* Pulse: 用来即时触发 Timeline ~~WhileTrue, WhileFalse 或 ~~ 
+* Pulse: 用来即时触发 Timeline ~~WhileTrue, WhileFalse 或 ~~
 
 * BringIntoView: 与 ScrollView  一起使用，通过设置其 TargetNode 属性,可以使 ScrollView 滚动到指定位置
 
@@ -926,7 +926,7 @@ SwipeGesture相关元素
   </Panel>
   ```
 
-* WhileSwipeActive: 
+* WhileSwipeActive:
 
   > TODO: 不知道在形为上和 SwipingAnimation 有什么区别? 因为它也能保持 Animators 后效果，
   > 如果指定 Duration, 动画效果似乎比 SwipingAnimation 更平滑???
@@ -1010,7 +1010,7 @@ SwipeGesture相关元素
 
 Fuse 提供一些当调用系统的动作, 例如: 拨打电话或振动设备
 
-**Fuse.Launcher** 
+**Fuse.Launcher**
 
 > 注意: 确保在 .unoproj 文件中的添加 Fuse.Launcher 到 packages 下.
 
@@ -1067,7 +1067,7 @@ User events 用于在组件之间传递消息. 可发送以及接收在 UX,Uno �
     </Button>
 	<!-- 监听事件 -->
 	<OnUserEvent Name="MyEvent">
-	
+
 	</OnUserEvent>
 	<OnUserEvent Name="MyEvent" Handler="{myHandler}" />
   ```
@@ -1092,7 +1092,7 @@ User events 用于在组件之间传递消息. 可发送以及接收在 UX,Uno �
   - GreaterThan="width,height"
   - LessThan="width,height"
   - EqualTo="width,height"
-  
+
   ```xml
   <Panel>
     <SolidColor ux:Name="coloredPanel" Color="#F00" />
@@ -1173,11 +1173,11 @@ actions
 
 Animations 将会自动帮你处理插值, 以及一些恢复
 
-* LayoutAnimation: 布局变化时触发, 
+* LayoutAnimation: 布局变化时触发,
 * AddingAnimation: 当元素添加到可视列表时, **注意**: 设置动画的初使值，因为元素的默认值为动画的最终值
 * RemovingAnimation: 当元素从可视列表中移除时
 * ActivatingAnimation: 当Page(见navigation)激活时
-* DeactivatingAnimation: 
+* DeactivatingAnimation:
 * ScrollingAnimation: ScrollView 滚动时动画
   - From:
   - To:
@@ -1278,12 +1278,12 @@ Animations 将会自动帮你处理插值, 以及一些恢复
 </Panel>
 ```
 
-当 Panel 包含了 Navigation 行为， 那么它的所有直接子元素将为导航页面(Page)。 
+当 Panel 包含了 Navigation 行为， 那么它的所有直接子元素将为导航页面(Page)。
 
-#### Page 
+#### Page
 
-基本和 Panel 一样, 除了带一个属性 Title(这个属性其实就像个名字而已), 
-  
+基本和 Panel 一样, 除了带一个属性 Title(这个属性其实就像个名字而已),
+
 > 个人注: Page + PageControl + PageIndicator 是 Fuse 提供的一个使用了 LinearNavigation 的页面， 而其它 navigation type 需要自已定义它们的形为
 
 **PageControl** 页面导航控制
@@ -1392,7 +1392,7 @@ Fuse 提供的 Page 元素相前的定义就上边这些, 下边是自定义的�
 
 #### Controlling navigation
 
-控制导航，通过设置 NavigationContext 属性来指定指定 
+控制导航，通过设置 NavigationContext 属性来指定指定
 
 * GoBack
 * GoForward
@@ -1423,7 +1423,7 @@ Fuse 提供的 Page 元素相前的定义就上边这些, 下边是自定义的�
 
 * Draggable 包含它的元素将可以移动
 * WhileDragging 与 Draggable 为同层元素, 当拖动时
-* PointAttractor 力场器, 像是磁铁一样的东西, 比如你要拖动元素丢到某一处时，或实现拖动删除时 
+* PointAttractor 力场器, 像是磁铁一样的东西, 比如你要拖动元素丢到某一处时，或实现拖动删除时
   - Radius 范围
   - Strength 强度, 更的的值将把范围内的吸过来(如果多个PointAttractor)
   - Offset="X,Y,?" float3, 位置相对于其容器(父元素)
@@ -1445,7 +1445,7 @@ Fuse 提供的 Page 元素相前的定义就上边这些, 下边是自定义的�
 
 当一个元素的布局属性如 Width,Hight或Margin(参阅layout properties)发生变化或元素位置在显示列表的位置发生变化时,LayoutAnimation 将会被触发。
 
-当使用 Change 来更改布局属性时, 计算大的 UX 文件布局是非常耗时的,  这很容易导致明显的帧数下降. 
+当使用 Change 来更改布局属性时, 计算大的 UX 文件布局是非常耗时的,  这很容易导致明显的帧数下降.
 
 因此 Fuse 提供了 LayoutAnimation 来代替使用 Change 的动画. 可以使用 Set 来代替 Change
 
@@ -1473,7 +1473,7 @@ Fuse 提供的 Page 元素相前的定义就上边这些, 下边是自定义的�
         </Clicked>
     </Panel>
 </Panel>
-``` 
+```
 
 **MultiLayoutPanel** 允许在不同的布局之间移动元素. 这将允许在不同的显示列表之间移动元素,
 

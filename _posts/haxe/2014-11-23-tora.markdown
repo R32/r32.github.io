@@ -48,7 +48,7 @@ tora.n 命令行参数:
 # 下边二个选项需要同时使用
 -unsafe <host:port>	# 打开一个端口，允许直接连接到 Tora 服务器. 而不是通过 apache/nginx 代理
 					# 用于 flash 客户端与 tora 连接, 注意使用正确的 server_name + index.n(参看-config)
-					
+
 -config	<fiel>		# 解析一个 conf 配置文件，寻找 VirtualHosts， 用来配合 -unsafe 参数
 
 # 说明仅适用于 tora,只支持 DocumentRoot 和 ServerName 二个子元素
@@ -103,15 +103,15 @@ nginx -s quit
 location ~ \.n$ {
   fastcgi_pass 127.0.0.1:6666;
   fastcgi_index index.n;
-  fastcgi_param SCRIPT_FILENAME  $document_root$fastcgi_script_name; 
-  
+  fastcgi_param SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+
   fastcgi_param DOCUMENT_URI $document_uri;
   fastcgi_param REMOTE_ADDR $remote_addr;
   fastcgi_param QUERY_STRING q=$uri&$query_string;
   fastcgi_param SERVER_NAME $server_name;
-  fastcgi_param REQUEST_METHOD $request_method;		
+  fastcgi_param REQUEST_METHOD $request_method;
   fastcgi_param CONTENT_TYPE $content_type;
-  fastcgi_param CONTENT_LENGTH $content_length;			
+  fastcgi_param CONTENT_LENGTH $content_length;
   fastcgi_param REMOTE_PORT $remote_port;
   fastcgi_param SERVER_ADDR $server_addr;
   fastcgi_param SERVER_PORT $server_port;
@@ -148,7 +148,7 @@ location /templo {
   # 下边二行可以在 apache 服务器中运行普通的 .n 程序, 被注释掉是因为后边使用了 tora 作代替
   # LoadModule neko_module "C:/HaxeToolkit/neko/mod_neko2.ndll"
   # AddHandler neko-handler .n
-  
+
   # 使用 tora, mod_tora2.ndll 和 mod_tora.ndll 的差别参见上边
   LoadModule tora_module "C:/HaxeToolkit/neko/mod_tora2.ndll"
   AddHandler tora-handler .n
@@ -199,7 +199,7 @@ Api.hx 中的全部为静态方法及静态属性:
 
 * `getInfos():Infos;` 获得一些信息, 其实差不多就是打开 tora_admin.n 时所看到的内容
 
-* `command(cmd:String, ?param:String):Dynamic`; 控制 tora.exe 的一些行为 
+* `command(cmd:String, ?param:String):Dynamic`; 控制 tora.exe 的一些行为
 
   ```bash
   # 所有命令如果有输出, 都是直接以 Sys.print 的方式输出, 并不返回任何值
@@ -230,7 +230,7 @@ Api.hx 中的全部为静态方法及静态属性:
 
 * 在启动 tora 服务器时需要指定 -unsafe 和 -config 参数
 
-* 服务器端的 index.n 像正常的网页一样用 print 输出, 
+* 服务器端的 index.n 像正常的网页一样用 print 输出,
 
 * flash 端只能通过 addHeader或addParameter 传递请求头或传递参数, index.n 可以通过 Web.getClientHeader/Web.getParams 之类的方法 获得数据
 
@@ -254,7 +254,7 @@ Api.hx 中的全部为静态方法及静态属性:
 class Queue<T> {
 	var name(default,null) : String;
 	// 调用后防止与客户端断开连接,即使 index.n 已经退出. 这样才能实现消息推送。
-    function addHandler( h : Handler<T> );	
+    function addHandler( h : Handler<T> );
     function notify( message: T ): Void;
     function count(): Int;
     function stop(): Void;
@@ -262,16 +262,16 @@ class Queue<T> {
 }
 ```
 
-* A-client 通过 addHandler 监听服务器消息推送（Socket 长连接）, 
+* A-client 通过 addHandler 监听服务器消息推送（Socket 长连接）,
 
   ```haxe
   // (实验性)交互, 由于服务器端只能获得 params 或 headers,因此对于已经连接的 Protocol
   p.reset();	// 重置所有请求参数, 但是要注意当出现 disconnect 时, 需要重新连接.
-  m.addHeader("Key1", "Value1"); 
+  m.addHeader("Key1", "Value1");
   p.call(url);
   ```
 
- * 另一个 B-client 则直接调用名字相同的 notify, 这时所有调用了 addHandler 将收到消息 `onData(msg)` 
+ * 另一个 B-client 则直接调用名字相同的 notify, 这时所有调用了 addHandler 将收到消息 `onData(msg)`
 
  * 当用于线上服务器时, 可以指定 `tora -config httpd.conf` 并配置好相应的 VirtualHost 二级域名就行了,下边是本地测试用
 
@@ -286,22 +286,22 @@ class Queue<T> {
   ```xml
   <!-- 把 index.n 置下边指定目录, 注意路径不要加引号, 因为 tora 没处理引号, -->
   <!-- 注意这是本地测试因此不要把下边配置添加入到 httpd.conf 中去, 随便建一个文件如 vh.conf 就好 -->
-  <VirtualHost>  
-      DocumentRoot /Apache22/htdocs/unsafe 
+  <VirtualHost>
+      DocumentRoot /Apache22/htdocs/unsafe
       ServerName localhost
   </VirtualHost>
   ```
-  
+
 * 细节: tora 解析 -config 文件后, 将生成一个 `ServerName|ServerAlias => DocumentRoot` 的 map,
-  
-  > 当 flash 通过 socket 连接过去时, socket.connect 的主机参数(host) 将作为 ServerName 然后获得 DocumentRoot 即 index.n 的正确位置 
+
+  > 当 flash 通过 socket 连接过去时, socket.connect 的主机参数(host) 将作为 ServerName 然后获得 DocumentRoot 即 index.n 的正确位置
 
 flash + index.n 端:
 
 ```haxe
 #if neko
 typedef Msg = { n : Int, cl : Int };
-class TestHandler extends tora.Handler<Msg> {	
+class TestHandler extends tora.Handler<Msg> {
 	var cl(default,null):Int;
 	public function new(n:Int){
 		super();
@@ -314,7 +314,7 @@ class TestHandler extends tora.Handler<Msg> {
 			default:
 				Sys.println(v.n+"#"+v.cl);
 		}
-	}	
+	}
 	override function onStop() {
 		tora.Queue.get(NAME).notify({n:-1, cl: cl});
 		neko.Web.logMessage("CLIENT: " + cl + " WAS STOPED");
@@ -349,13 +349,13 @@ class Test {
 		p.onData = function(msg) {
 			var type = msg.substr(0, 4);
 			switch(type){
-				case "WAIT": 
+				case "WAIT":
 					if (connected == false) connected = true;
 					t.run = function() {
 						trace("CLIENT: " + client + " LastFROM: " + from + " LastMsg:" + message);
 					};
 				case "SEND":
-				case "STOP":			
+				case "STOP":
 				default:
 					from = Std.parseInt(msg.split("#")[1]);
 					message = Std.parseInt(msg.split("#")[0]);
@@ -366,7 +366,7 @@ class Test {
 		start = function() {
 			p.reset();
 			p.addParameter("client", Std.string(client));
-			p.call(url);	
+			p.call(url);
 		};
 		flash.Lib.current.stage.addEventListener(flash.events.MouseEvent.CLICK, function(_) {
 			if(connected){
@@ -421,7 +421,7 @@ class Test {
 
 * `free()` 删除这个 name 所对应的共享的数据，需要在获得锁的状态下调用
 
-* **重要:** Share 支持的字段数据类型有限,参看 `Persist::processType` 对数据的解析, 例如不支持 Map, 并不不支持 rtti 在 abstract 类上
+* **重要:** Share 支持的字段数据类型有限,参看 `Persist::processType` 对数据的解析, 例如不支持 Map(注: 但这个很容易修改,只要将StringMap 或 IntMap 加在 Hash/IntHash的地方即可), 并且不支持 rtti 在 abstract 类上
 
 
 需要注意是， 不能保证数据的并发访问, 一个对锁定的数据进行修改的线程可能导致另一个读取没有锁定数据的线程崩溃, 这需要你来保证适当的原子性, （？？？每个对 `Share::get` 方法都传入 true 为参数）
@@ -432,7 +432,7 @@ class Test {
 
 * 也许可以用 Web.cacheModule 缓存已经打开的数据库连接, 这样即使多个数据库连接存在也没关系
 
-example: 
+example:
 
 ```haxe
 @:rtti
@@ -448,17 +448,17 @@ App
 
 ```haxe
 class App {
-   
+
     static var share    = new tora.Share<MyClass>( "test", function() {
         return new MyClass();
     }, MyClass);
-   
+
     static function main() {
         var a:MyClass    = share.get( true );
         a.content.push(5);
         Sys.println("App "+a.content);
         share.set(a); //have to set if persist is enabled, otherwise the change will be lost.
-        share.commit();       
+        share.commit();
     }
 }
 ```

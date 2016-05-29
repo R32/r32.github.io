@@ -1,7 +1,7 @@
 ---
 
 layout: post
-title:  sublime text 3 
+title:  sublime text 3
 date:   2016-03-03 07:31:26
 categories: other
 
@@ -43,7 +43,7 @@ categories: other
 * Completion Rules.tmPreferences XML文件描述自动补齐, 不过感觉非常不成熟, 至少没有达到我想要的
   - 你可能需要设置 auto_complete_triggers 自动补齐的触发条件, 比如是 "." 还是html文件的 "<" 符号
 
-  > 感觉还非常不成熟, 仅适合定义顶层的关键字或全局的东西, 因为多种 scope 混在了一起, 
+  > 感觉还非常不成熟, 仅适合定义顶层的关键字或全局的东西, 因为多种 scope 混在了一起,
   > 因为没法定义 INHIBIT_WORD_COMPLETIONS(排除收集文档的词) 和 INHIBIT_EXPLICIT_COMPLETIONS(排除从Completion定义的自动补齐)
   >
   > 因此你可以在 gist 上搜一下 on_query_completions 的 python 文件
@@ -72,11 +72,48 @@ categories: other
 
 ### project
 
-<https://github.com/guillermooo/sublime-undocs/blob/sublime-text-3/source/reference/build_systems/configuration.rst>
+ * [`.sublime-build`](https://github.com/guillermooo/sublime-undocs/blob/sublime-text-3/source/reference/build_systems/configuration.rst) 构建系统, 但好像只有一个命令可用,不适合那些先编译再链接的, variants 还要自已一个一个选择
+
+ * .sublime-project, 通过 `Project -> Save Project as`, 应该保存于单独的目录下, 因它还会生一些缓存文件和 .sublime-workspace
 
 ### 其它
 
-打包插件到 package control <https://packagecontrol.io/docs/creating_package_files>
+提交插件到 package control <https://packagecontrol.io/docs/submitting_a_package>
+
+* 鼓励改善现有的包而不是重造轮子
+* 名称不得包含有或者与 "sublime" 相似  , 以及:
+  - 驼峰式,可以使用空格
+  - [A-Za-z][A-Za-z0-9 ]+
+* 使用 github/BitBucket托管。 (因为另一个可选择的自行托管太麻烦,需要 SSL)
+* 通过在 github 上创建 tag 用于表示更新, 标签名称必须是 major.minor.patch, 例: 1.0.0
+  - 基于 fork 的更新控制已经被弃用..
+* 检查repo:
+  - 删除 所有 .pyc 文件.
+  - 删除 package-metadata.json
+  - 检查文件名, 它应该符合 windows 的文件/目录名称
+  - 如果包括可执行文件或共享库, 需要添加 .no-sublime-package 文件于仓库根目录
+* 将 repo 提交到 Defalt Channel 检测
+  - fork [Package Control Channel](https://github.com/wbond/package_control_channel), 并 clone 至本地
+  - 使用 sublime 进入目录, 添加 package info 在 repository 目录下选相对应的文件
+
+  ```json
+  {
+    "name": "neko nml",
+    "details": "https://github.com/wbond/sublime_alignment",
+	"labels": ["nekoml", "nml", "nekovm"]
+    "releases": [
+      {
+        "sublime_text": ">=3103",
+        "tags": true
+      }
+    ]
+   }
+  ```
+
+  - 在 sublime 上安装 ChannelRepositoryTools 插件执行测试
+  - Pull Request
+
+Tips: 你可以在 pull Request 列表里看别人修改提交了些什么类容.
 
 #### python
 

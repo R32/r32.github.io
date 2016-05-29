@@ -195,7 +195,7 @@ git pull --depth=1 origin master
   git bisect reset
   
   # 更多参考 http://gitbook.liuhui998.com/5_4.html
- ```
+  ```
 
 * 将改动做成补丁
 
@@ -249,8 +249,6 @@ git submodule update       # 拉取 init 指定的模块
 $ git submodule split [--url submodule_repo_url] submodule_dir \
     [alternate_dir...]
 ```
-
-
 
 
 #### subtree
