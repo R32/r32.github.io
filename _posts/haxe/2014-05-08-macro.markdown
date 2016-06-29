@@ -32,7 +32,7 @@ trace("other");
 
 // 还可以检测 flash player 版本
 #if flash11_4
-trace("flash player version >= 11.4"); // 如果目标为flash,且指定的编译版本大于等于 FP11.4 
+trace("flash player version >= 11.4"); // 如果目标为flash,且指定的编译版本大于等于 FP11.4
 #end
 
 // 使用运算符检测
@@ -60,9 +60,9 @@ trace("haxe version > 3.1");
 
 * **重要:** 任意编译标志(haxe-defines)将替换成名字相同的 条件标识符, 如果带 减(-)号,将会 **同时** 生成另一个 带 下划线(_)的标识符
 
-  > **请注意:** `-D some-flag` 将会产生 `some-flag` 和 `some_flag` 二个条件标识符. 
+  > **请注意:** `-D some-flag` 将会产生 `some-flag` 和 `some_flag` 二个条件标识符.
   >
-  > 但是 `#if` 或 `#elseif` 却**只能识别**带下划线的那一个. 
+  > 但是 `#if` 或 `#elseif` 却**只能识别**带下划线的那一个.
   >
   > 减号那个需要用引号括起来, 而用引号括起来的标识符却又不能使用一些运算符.
   >
@@ -87,7 +87,7 @@ trace("haxe version > 3.1");
 
 `@:require(Compiler Flag [,"custom error message" ])`
 
-如果没有满足 `@:require` 之后的条件标识符, 类名可以访问, 但是 类的所有字段(包括static类型)都不可访问. 
+如果没有满足 `@:require` 之后的条件标识符, 类名可以访问, 但是 类的所有字段(包括static类型)都不可访问.
 
 ```haxe
 @:require(haxe_ver>3.1)
@@ -189,18 +189,18 @@ haxe 宏分为三种类型:
   ```haxe
   // trace( tut_param('456') );	=> trace('123456');
   macro public static function tut_param(param:Expr) {
-  
-  	var str:String = "123"; 
-  	        
+
+  	var str:String = "123";
+
   	return macro $v{str} + $param;
   }
-  
+
   // 这有个复杂的示例:
   // trace( repeat(10,5) )	=>		[10,10,10,10,10]
   macro public static function repeat(e : Expr, eN : Expr) {
   	return macro [for( x in 0...$eN ) $e];
   }
-  
+
   // Tips: 在宏函数体中获得 Expr 的值
   // getValue("hello");	then val = 'hello';
   macro public static function getValue(ep:Expr){
@@ -212,7 +212,7 @@ haxe 宏分为三种类型:
 * 处理文件.
 
   这只是一个从文件中解析数据的示例.
-  
+
   或者你可以通过 template 以及 haxe.io.File 来动态将文件数据写成一个 class
 
   ```xml
@@ -228,7 +228,7 @@ haxe 宏分为三种类型:
   </data>
   </root>
   ```
-  
+
   haxe code:
 
   ```haxe
@@ -237,37 +237,37 @@ haxe 宏分为三种类型:
   	var content = sys.io.File.getContent( Context.resolvePath(name) );
   	var xml = Xml.parse(content);
   	var fast = new haxe.xml.Fast(xml.firstElement());
-          
+
   	var ret = new Array<Dynamic>();
-      
+
   	for (data in fast.nodes.data) {
   		if (data.att.lang == 'zh') {
   			for (user in data.nodes.user) {
-  				var obj:Dynamic<String> = { };    
-  				for (k in user.x.attributes()) {                        
+  				var obj:Dynamic<String> = { };
+  				for (k in user.x.attributes()) {
   					Reflect.setField(obj, k, user.att.resolve(k));
   				}
   			ret.push(obj);
   			}
-  		}    
+  		}
   	}
   	return macro $v{ret};
-  }	
+  }
   ```
 
 * 使用 Context.parseInlineString 用于解析字符串代码, 多数ui库,都使用这个方法来预处理 xml 配置文件
 
   这个方法有一定的局限性,通常使用类似的匿名函数，不可以包含 class 这些.
 
-	
+
   ```haxe
   //example: trace(tut_parse());  => {width => 800, lang => zh-CH, note => 测试, sprite => [object Sprite]}
   macro public static function tut_parse() {
-  	var str = "测试";    // Tip:在单引号字符串中,可以使用 ${变量} 来引用一些变量, 
+  	var str = "测试";    // Tip:在单引号字符串中,可以使用 ${变量} 来引用一些变量,
   	var code:String = '
   		function() {
   			var map = new haxe.ds.StringMap<Dynamic>();
-  			map.set("note","${str}"); 
+  			map.set("note","${str}");
   			map.set("width", Lib.current.stage.stageWidth);
   			map.set("lang", flash.system.Capabilities.language);
   			map.set("sprite", new flash.display.Sprite());
@@ -283,7 +283,13 @@ macro 关键字后可以接任意 haxe 表达式 <http://haxe.org/manual/macro-r
 
 * `${} 或 $e{}: Expr -> Expr`
 
-* `$a{} : Expr -> Array<Expr>` 用于把数量未确定的参数传递给函数, 示例见 Promhx 库的 Promise.when
+* `$a{} : Expr -> Array<Expr>` 用于把数量未确定的参数传递给函数, 示例见 Promhx 库的 Promise.when 或 JQueryHelper
+
+  ```hx
+  static macro function foo(args: Array<haxe.macro.Expr>){
+      return macro trace($a{args});
+  }
+  ```
 
 * `$b{} : Array<Expr> -> Expr` 构建**块表达式**
 
@@ -293,19 +299,19 @@ macro 关键字后可以接任意 haxe 表达式 <http://haxe.org/manual/macro-r
 
 * `$v{} : Dynamic -> Expr` 这个经常会用到. e.g: `return macro $v{"hello world"}`
 
-* [最新支持 $tp](https://github.com/HaxeFoundation/haxe/commit/5411d122d03ed7c604c4afc559e9f0c8dbd1c8a4)
+* [最新支持 $tp, 使得泛型创建更容易](https://github.com/HaxeFoundation/haxe/commit/5411d122d03ed7c604c4afc559e9f0c8dbd1c8a4)
 
 ```haxe
 var complexType = macro :hxd.res.Loader;
-	
+
 var method = macro {
 	return flash.Lib.current.stage;
 }
 ```
- 
+
 haxe 3.1+
 
-* 字段名 {$name : 1} 
+* 字段名 {$name : 1}
 
 * 函数名 function $name(){}
 
@@ -334,13 +340,13 @@ class Main {
 
 通过宏的方式动态构建 `class` 或 `enum`. **注意: @:build 或@:autoBuild 调用的方法没有添加 macro**
 
-需要理解 AST,以前了解 haxe.macro 包中的所有类. [新参考](http://haxe.org/manual/macro-type-building.html) [参考](http://old.haxe.org/manual/macros/build) 
+需要理解 AST,以前了解 haxe.macro 包中的所有类. [新参考](http://haxe.org/manual/macro-type-building.html) [参考](http://old.haxe.org/manual/macros/build)
 
 build宏函数 与 普通的宏函数不一样的地方:
 
 * 返回的类型不是 `Expr` ,而是 `Array<Field>`. (`haxe/macro/Expr.hx` 文件中定义了 `Field`)
 
-* build 宏函数内部的 macro.Context **没有** getLocalMethid 和 getLocalVars. 
+* build 宏函数内部的 macro.Context **没有** getLocalMethid 和 getLocalVars.
 
 * build 宏函数内部的 macro.Context **有** getBuildFields()
 
@@ -358,10 +364,10 @@ public static function buildMIN(){
 	var pos = Context.currentPos();
 	fields.push({
 		name : "MIN",
-		access : [APublic,AStatic,AInline],	 
-		
+		access : [APublic,AStatic,AInline],
+
 		//下行的第一个参数也可以用 FVar(TPath({name:"Int" ,pack:[]})
-		//kind : FVar(TPath({name:"StdTypes", pack:[], params:[], sub:"Int" }), {expr: EConst(CInt("200")), pos: pos }), 
+		//kind : FVar(TPath({name:"StdTypes", pack:[], params:[], sub:"Int" }), {expr: EConst(CInt("200")), pos: pos }),
 		//kind : FVar(Context.toComplexType(Context.getType("Int")), Context.makeExpr(200,pos))	// Context类有一些方法
 		kind: FVar(macro :Int, macro 200),	// 使用 macro 让一切变得简单
 		pos : pos
@@ -389,7 +395,7 @@ Context.getType("Void");
 和 `:build` 的区别:
 
 * 返回类型为 `ComplexType`, 而不是 `Array<Field>`, 返回值将
-	
+
   ```haxe
   // Main.hx
   class Main{
@@ -400,8 +406,8 @@ Context.getType("Void");
   		// 或者 通过 defineModule 构建一个模块,最后返回 null 值. 这样的话 Some 相当于一个空类
   	}
   }
-  
-  
+
+
   // Some.hx
   @:genericBuild(Some.gen())
   class Some{
@@ -415,21 +421,21 @@ Context.getType("Void");
 
 上边示例的都是都过 static 的方式调用 宏方法, 当宏方法为成员方法时, 第一个参数将由编译器自动填充为 `this`
 
-* 限制: haxe 3.2 注意当宏方法为成员方法(非static)时, 
+* 限制: haxe 3.2 注意当宏方法为成员方法(非static)时,
 
 * 限制: 不能在同一个相同文件中调用这个宏方法。 如: 在 Foo.hx 定义的成员宏方法，不可以在 Foo.hx 中调用.
 
 * 在以链式的方法调用它时, 注意它能会返回 null 值,
 
   ```haxe
-  
+
   class Main{
   	public static function main(){
   		var f = new Foo();
   		f.test();
   	}
   }
-  
+
   // Foo.hx
   #if macro
   	import haxe.macro.Expr;
@@ -475,7 +481,7 @@ addNativeLib(name:String):Void
 //　允许访问指定的包, 例如: 默认情况下当目标平台为 neko 时, 不允许访问 flash 包下的API., 参见 openfl 编译选项
 allowPackage(v:String):Void
 
-// 像 haxe 编译参数 -D  
+// 像 haxe 编译参数 -D
 define(flag:String, value:String = null):Void
 
 // Exclude a given class or a complete package from being generated
@@ -510,15 +516,15 @@ includeFile(fileName:Dynamic):Dynamic;
 
 /**
 	重要: haxe 3.2 改动 https://github.com/HaxeFoundation/haxe/issues/4111
-	- 最新的改动导致 这个命令似乎失去了作用, 但 @:keep 没变, 对于些文档构建请使用 include 
-	
+	- 最新的改动导致 这个命令似乎失去了作用, 但 @:keep 没变, 对于些文档构建请使用 include
+
 	防止 包 或类 或字段 被 -dce 编译参数删除, 参见  命令行编译参数 的 @:keep 元标记
-	 
+
 	这个标记经常被以 @:keep 的形式添加到 类或静态字段上
-	
+
 @param path			包,模块或 子类型
 @param paths		包,模块或 子类型 数组, 就是 path 参数的数组形式,
-@param recursive	如果为 true, 将归递包含 sub-packages 针对 paths	
+@param recursive	如果为 true, 将归递包含 sub-packages 针对 paths
 */
 keep(path:String = null, paths:Array<String> = null, recursive:Bool = true):Void
 
@@ -550,7 +556,7 @@ class Test{
 	public static function(){
 		trace("Context");
 		Um.some();
-	}	
+	}
 }
 
 class Um{
@@ -574,13 +580,13 @@ function currentPos():Position
 // 定义新模块, 也就是像在一个 hx 文件中写几个类或定义. 通常来说 defineType 就够用了.
 defineModule(modulePath:String, types:Array<TypeDefinition>, imports:Array<ImportExpr> = null, usings:Array<TypePath> = null):Void
 
-// 定义一个类型 ,示例见: heaps 游戏引擎 hxd.res.FileTree.hx 
+// 定义一个类型 ,示例见: heaps 游戏引擎 hxd.res.FileTree.hx
 defineType(t:TypeDefinition):Void
 
 // 检测是否存在一个 -D 定义
 function defined(s:String):Bool
 
-// 检测 -D 定义的值, 如果仅定义标记,那么默认为 字符串 1, 
+// 检测 -D 定义的值, 如果仅定义标记,那么默认为 字符串 1,
 definedValue(key:String):String
 
 // 抛出编译错误, 并中断当前宏调用
@@ -598,7 +604,7 @@ follow(t:Type, once:Bool = null):Type
 // 用于 宏构建 @:build 或 @:autoBuild 所在上下文
 getBuildFields():Array<Field>
 
-// 得到编译时类全部路径,包括调用的 haxelib 所在路径, -cp 包含的路径, 甚至包含调用了 haxe 标准库下的 std及各目标平台的 _std 目录路径 
+// 得到编译时类全部路径,包括调用的 haxelib 所在路径, -cp 包含的路径, 甚至包含调用了 haxe 标准库下的 std及各目标平台的 _std 目录路径
 getClassPath():Array<String>
 
 // Returns the constructor arguments that are used to construct the current @:genericBuild class, if available.
@@ -608,7 +614,7 @@ getConstructorArguments():Null<Array<Expr>>
 // haxe 3.2+ 得到所有 -D 的定义
 getDefines():Map<String, String>
 
-// 
+//
 getExpectedType():Null<Type>
 
 // 得到上下文所在 类名
@@ -639,7 +645,7 @@ getLocalVars():Map<String, Type>
 // 得到指定模块名(hx源码文件名,但不包含文件扩展名)所定义的类型数组
 getModule(name:String):Array<Type>
 
-// 得到上下文所在位置信息, 
+// 得到上下文所在位置信息,
 // Tips: 通过这个方法可以得到一个 上下文所在的文件路径, 在自定义库中加载资源很方便.
 getPosInfos(p:Position):{min:Int, max:Int, file:String}
 
@@ -674,7 +680,7 @@ onGenerate(callback:Array<Type> -> Void):Void
 //配合 registerModuleReuseCall 一起使用
 onMacroContextReused(callb:Void -> Bool):Void
 
-// 
+//
 onTypeNotFound(callback:String -> TypeDefinition):Void
 
 // 解析字符串代码, 实际上经常用 parseInlineString 代替这个方法
@@ -688,7 +694,7 @@ parseInlineString(expr:String, pos:Position):Expr
 registerModuleDependency(modulePath:String, externFile:String):Void
 
 // Add a macro call to perform in case the module is reused by the compilation cache.
-// you can add a specific macro action to be made in case a given cached module is reused in later compilations by using Context.registerModuleReuseCall 
+// you can add a specific macro action to be made in case a given cached module is reused in later compilations by using Context.registerModuleReuseCall
 // please note that the macro call is a string that can only contain constant data (it is executed in a similar way as --macro command line parameter)
 // `std/sys/db/RecordMacros.hx` 有个示例, 感觉就像是帮你写了一个 `--macro Cls.build()` 的编译参数， 但奇怪的要如何执行第一次宏调用了???
 registerModuleReuseCall(modulePath:String, macroCall:String):Void
@@ -697,7 +703,7 @@ registerModuleReuseCall(modulePath:String, macroCall:String):Void
 // 对于 windows 平台会将 /path/to/file 这种 unix 斜线路径转成 windows 系统能识别的反斜线.
 resolvePath(file:String):String
 
-// 
+//
 signature(v:Dynamic):String
 
 // 根据指定类型创建复杂类型 , 参看 makeExpr
@@ -729,7 +735,7 @@ warning(msg:String, pos:Position):Void
   macro static function foo(e : Array<Expr>):Expr{
   // ...
   }
-  ``` 
+  ```
 
 * 更可读
 
@@ -764,33 +770,33 @@ warning(msg:String, pos:Position):Void
   ```haxe
   using haxe.macro.TypeTools;
   //....
-  var t = Context.typeof(macro null); // TMono(<mono>)    
+  var t = Context.typeof(macro null); // TMono(<mono>)
   var ts = Context.typeof(macro "foo"); //TInst(String,[])
   Context.unify(t, ts);
   trace(t); // TMono(<mono>)
   trace(t.follow()); //TInst(String,[])
   ```
-  
+
    * 在函数构建函数中的值对比, getLocalClass
-  
+
   ```haxe
   // file:/// a/b/Test.hx
   package a.b;
-  
+
   class Test{}
   // getLocalModule() => a.b.Test
   // getLocalClass().toString() => a.b.Test
   // getLocalClass().get().name => Test
   // getLocalClass().get().module => a.b.Test
   // getLocalClass().get().pack => [a,b]
-  
+
   // Foo 类同样在 Test.hx 文件中
   calss Foo{}
   // getLocalModule() => a.b.Test
   // getLocalClass().toString() => a.b.Foo
   // getLocalClass().get().name => Foo
   // getLocalClass().get().module => a.b.Test
-  // getLocalClass().get().pack => [a,b] 
+  // getLocalClass().get().pack => [a,b]
   ```
 
 <br />

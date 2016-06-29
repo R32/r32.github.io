@@ -1,0 +1,36 @@
+---
+
+layout: post
+title:  hxparse
+date:   2016-03-02 09:21:33
+categories: haxelib
+
+---
+
+和编译原理相关的, 感觉好像完全照着 nekoml 中的 Lexer, LexerEngine 设计的, 因为各种名称都非常相似, 或者标准的 Lexer/Parse 就是这样子
+
+* <https://github.com/Simn/hxparse>
+
+* 另外就是同作者的 hxArgs 库其实和 ocaml 中的 Args 也非常相似, 只是更简单。
+
+<!-- more -->
+
+
+### Intro
+
+应该从哪开始了???
+
+总的来说 Lexer rules 对应的 actions 的类型是什么, 那么 Parse 将匹配相应的类型, 可以使用 stream expr 匹配.
+
+* `implements hxparse.RuleBuilder`: 用于 Lexer 类, 宏自动转换 `@:rule, @:mapping, @:ruleHelpe`, 细节查看 wiki
+
+* `implements hxparse.ParserBuilder`: 用于 Parse 类,宏将自动转换 `switch stream{}` 注意不要有小括号(感觉直接调用 macro parse(switch stream {}); 更好些) 
+
+### Misc
+
+
+
+
+
+
+<br />

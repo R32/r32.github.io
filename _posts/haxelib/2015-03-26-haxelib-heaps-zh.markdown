@@ -64,7 +64,7 @@ class Main extends hxd.App {
 
 * 如果编译为 flash, 确保 flash 版本至少为 11.8(-swf-version 11.8)
 
-现在你应该能编译和显示示例: 一个旋转的红色正方形. 
+现在你应该能编译和显示示例: 一个旋转的红色正方形.
 
 一些其它 2d/3D 的示例在 example 文件夹里可以找到.
 
@@ -78,7 +78,7 @@ class Main extends hxd.App {
 
 In-Memory Bitmap 内存中的位图
 
-* Bitmap(hxd.Bitmap) 一张图片存储于内存,你可以修改或访问其中的某个像素, 在 heaps 中显示这张图片之前需要先转换成纹理(Texture) 
+* Bitmap(hxd.Bitmap) 一张图片存储于内存,你可以修改或访问其中的某个像素, 在 heaps 中显示这张图片之前需要先转换成纹理(Texture)
 
 * Texture(h3d.mat.Texture) 一张分配到显存(GPU memrory)的图片, 你不能访问或修改其中的的某个像素,但是可以用于显示 2D图片或 3D 模型
 
@@ -100,16 +100,16 @@ class Main extends hxd.App {
 	override function init() {
 		// 使用颜色值分配一个 Texture 并返回一个 100x100 大小的 Tile
 		var tile = h2d.Tile.fromColor(0xFF0000, 100, 100);
-		
+
 		// 创建 Bitmap sprite, 用于展现 Tile
 		// 第二个参数表示创建后将添加到 2D Scene(s2d)
 		bmp = new h2d.Bitmap(tile, s2d);
-		
+
 		// 修改 Bitmap sprite 的显示位置
 		bmp.x = s2d.width * 0.5;
 		bmp.y = s2d.height * 0.5;
 	}
-	
+
 	// 这个方法在每一帧将会被调用
 	override function update(dt:Float) {
 		// 增加 Bitmap sprite 的旋转值, 每次　0.1　弧度
@@ -156,11 +156,11 @@ Sprite 还包含有其它方法和属性, 详细可以访问 h2d.Sprite API
 
 * alpha: 透明度. 取值范转为 0~1.0.
 
-* color: 
+* color:
 
 * blendMode: 混合模式
 
-  - alpha(默认值): 绘制 自身像素的 alpha 值 应用于背景, 不透明的像素将擦除背影,完全透明将被忽略. 
+  - alpha(默认值): 绘制 自身像素的 alpha 值 应用于背景, 不透明的像素将擦除背影,完全透明将被忽略.
 
   - None: 禁用背景混合. alpha 通道将被忽略(注: 就是自身不再存在透明,即使设置了透明度). 这提供了最佳的显示性能用于大的背景.
 

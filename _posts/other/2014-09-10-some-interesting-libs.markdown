@@ -141,7 +141,7 @@ https://github.com/sindresorhus/awesome
 
 * [google material-design-lite](https://github.com/google/material-design-lite) CSS 前端设计
 
-* [Primer](https://github.com/primer/primer) Github 官方的 CSS 前端设计, 感觉 Component 很少, 
+* [Primer](https://github.com/primer/primer) Github 官方的 CSS 前端设计, 感觉 Component 很少,
 
   - 几个颜色值 http://primercss.io/colors/
 
@@ -149,10 +149,8 @@ https://github.com/sindresorhus/awesome
 
 * **[holder](https://github.com/imsky/holder)** 生成图像占位符
 
-* [Font-Awesome](https://github.com/FortAwesome/Font-Awesome/) 矢量图标字体
 
-  > <http://fortawesome.github.io/Font-Awesome/examples/>
-	
+
 * [angular.js](https://github.com/angular/angular.js) 用于经常需要修改及更新的数据 [中文文档](http://www.apjs.net/)
 
 * [KaTeX](https://github.com/Khan/KaTeX) 用于在网页中展示数学公式.
@@ -169,7 +167,7 @@ https://github.com/sindresorhus/awesome
 
 * **[intro.js](https://github.com/usablica/intro.js)**
 
-  > A better way for new feature introduction and step-by-step users guide for your website and project. 
+  > A better way for new feature introduction and step-by-step users guide for your website and project.
   >
   > http://usablica.github.com/intro.js/ 可以用来做向导的, ie8 测试没问题,
 
@@ -199,7 +197,9 @@ https://github.com/sindresorhus/awesome
 
 * [15分钟快速入门各种语言](https://github.com/adambard/learnxinyminutes-docs)
 
-* [cmake 中文PDF](http://sewm.pku.edu.cn/src/paradise/reference/CMake%20Practice.pdf) 
+  - <https://learnxinyminutes.com>
+
+* [cmake 中文PDF](http://sewm.pku.edu.cn/src/paradise/reference/CMake%20Practice.pdf)
   - <https://cmake.org/Wiki/CMake_Useful_Variables>
 
 * [use-gulp](https://github.com/Platform-CUF/use-gulp) 中文 gulp 收集, 但是 gulp 似乎只适合做 Web 类的构建工具
@@ -216,6 +216,10 @@ https://github.com/sindresorhus/awesome
 ### resource
 
 * [图标下载](http://www.easyicon.net/)
+
+* [Font-Awesome](https://github.com/FortAwesome/Font-Awesome/) 矢量图标字体
+
+  > <http://fortawesome.github.io/Font-Awesome/examples/>
 
 
 ### misc
@@ -250,5 +254,15 @@ c++参考手册: <http://en.cppreference.com/w/>
 * [imgui](https://github.com/ocornut/imgui) c++ 的一个 GUI库,挺有意思的
 
 ### 其它
+
+像素游戏中文字体选择, 使用 fontbuild 构建 bitmap-font, 由于像素类游戏经常需要放大几倍，因此需要选择更小字号的字体, 通常为 10 号
+
+* (**推荐**)Hippopo美化版宋体(或北大中文论坛-超宋体), 8,10,11,12号点阵字体, [更多描述...](http://bbs.tgbus.com/thread-401219-1-1.html)
+  - TTC字符（估计一些只能处理ttf的软件识别不了,对于fontbuild可以改扩展名即可）,  版权情况未知, 它是由修改了 winXP 宋体而来,
+* [zpix](https://github.com/SolidZORO/zpix-pixel-font) 12号点阵字体, 商业项目需要购买授权, 导出10号字体时不如 DroidSansFallback,但标点符号比它清楚
+* 微软系统自带的mingliu字体，8号字， 未测试
+* DroidSansFallback ,Free. 相对来说也很不错, 即使是 10 号字体,虽然有变型, 但可以接受,
+* 幼圆, 当导出为 10 号字体时就是英文字符分散得太开.英文字符及字母表现也不太好
+* 华文细黑(STXihei), 10号字体不错, 标点符号也显示得非常清楚,字体较 Droid 稍长(这是简体中文版Microsoft Office一起分发的字体)
 
 <br />

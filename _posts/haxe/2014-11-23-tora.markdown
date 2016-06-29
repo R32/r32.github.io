@@ -14,6 +14,8 @@ Tora 是一个基于 neko 的单进程多线程服务器应用程序，用来作
 
 * tora.n 处理之后并返送回处理结果给 Apache/nginx.
 
+* 更新: haxe 3.3 RC 后, neko 同时更新到了 2.1.0, apache 仅支持 2.4(如需2.2 需自行手动编译)
+
 <!-- more -->
 
 * **Tips**: 需要使用 `Web.cacheModule` 才能在请求阻塞时另开线程启动同一个模块, 但这种情形下将会开启多个实例, 多实例的情形静态变量的值...参看下边提到的 issue
@@ -166,6 +168,19 @@ httpd.conf 启用日志调试:
 ```conf
 RewriteLog "/path/to/file.log"
 RewriteLogLevel 9	# 0 代表关闭, 9 代表开启最大 debug 输出
+```
+
+.htaccess: 下边这个似乎和在网上搜到的 rewrite 规则并不太一样..
+
+```conf
+<FilesMatch "^([_a-z0-9A-Z-])+$">
+	RewriteEngine On
+	RewriteRule (.*) /index.n
+</FilesMatch>
+
+<FilesMatch "^file$">
+	RewriteEngine Off
+</FilesMatch>
 ```
 
 ### 启动

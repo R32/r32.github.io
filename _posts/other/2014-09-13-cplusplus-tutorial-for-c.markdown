@@ -11,7 +11,7 @@ categories: other
 
 <!-- more -->
 
-#### 头文件引用
+### 头文件引用
 
 C++ 的 `#include` 在引用头文件时, 不需要添加头文件扩展名 `.h`, 当 **引用标准 C 库时,需要以字母 c 开头**. C++ 的一些标准库需要添加命名空间 `using namespace std`
 
@@ -24,14 +24,14 @@ int main (){
    double a;
    a = 1.2;
    a = sin (a);
-   cout << a << endl;	
+   cout << a << endl;
    return 0;
 }
 ```
 
 对于引用 C 库, 个人还是更喜欢使用 C 的方式,即 `#include <math.h>`;
 
-#### 输入和输出
+### 输入和输出
 
 从键盘输入和输出到屏幕可以使用 流操作 ` cout <<` 和 `cin >>`:
 
@@ -119,19 +119,19 @@ int main (){
    }
    cout << "A table of numbers:" << endl;
    for (i = 0; i <= 4; i++){
-      cout << setw(3) << i << setw(5) << i * i * i << endl; 	// setw 有点像 \t 
+      cout << setw(3) << i << setw(5) << i * i * i << endl; 	// setw 有点像 \t
    }
    return 0;
 }
 ```
 
 
-#### 变量声明及作用域
+### 变量声明及作用域
 
 变量可以在代码的任意位置声明,大括号或 for 循环中都属于局部变量. 其实目前 C 是一样的.
 
 
-#### 引用全局同名变量
+### 引用全局同名变量
 
 ```cpp
 using namespace std;
@@ -146,7 +146,7 @@ int main (){
 ```
 
 
-#### 引用
+### 引用
 
 ```cpp
 using namespace std;
@@ -180,7 +180,7 @@ int main (){
    double k, m;
    k = 3;
    m = 4;
-   
+
    change (k, m);
 
    cout << k << ", " << m << endl;			// Displays 100, 4.
@@ -211,7 +211,7 @@ int main (){
 }
 ```
 
-引用用于函数返回值, 看上去可以做为链式调用, 
+引用用于函数返回值, 看上去可以做为链式调用,
 
 当然指针也能做到这一点,但是指针的链式返回值需要加前缀`*`,对于访问成员可以使用 `->`
 
@@ -229,7 +229,7 @@ int main (){
    cout << "m: " << m << endl;       // Displays  7
    cout << endl;
 
-   biggest (k, m) = 10;			// 指针版本: (*(biggest (&k, &m))) = 10; 
+   biggest (k, m) = 10;			// 指针版本: (*(biggest (&k, &m))) = 10;
 
    cout << "k: " << k << endl;       // Displays  3
    cout << "m: " << m << endl;       // Displays 10
@@ -244,7 +244,7 @@ int main (){
 }
 ```
 
-#### 命名空间
+### 命名空间
 
 使用 `::` 访问各命名空间下, 例如: `std::cout << "Hello" << std::endl`
 
@@ -271,7 +271,7 @@ int main (){
 }
 ```
 
-#### 内联替换
+### 内联替换
 
 inline 内联替换,常用于对性能有要求的小代码块,或常在宏替换中出现.
 
@@ -290,7 +290,7 @@ int main (){
 }
 ```
 
-#### 捕获异常
+### 捕获异常
 
 try,catch,throw
 
@@ -311,16 +311,16 @@ int main (){
       cout << "Result is: " << result << endl;
       b = result + 1;
    } catch (const char * message){
-	 
+
    }
    cout << "b contains: " << b << endl;
    return 0;
 }
 ```
 
-#### 默认参数
+### 默认参数
 
-可以为函数定义默认参数. 
+可以为函数定义默认参数.
 
 ```cpp
 using namespace std;
@@ -348,7 +348,7 @@ double test (double a, double b){
 }
 ```
 
-#### 函数重载
+### 函数重载
 
 C++ 的一个重要特性. 对于同名函数或方法,只要参数或返回值不一致, 将会自动重载. 其实就是编译器帮你改名了而已.
 
@@ -372,7 +372,7 @@ int main (){
 }
 ```
 
-#### 操作符重载
+### 操作符重载
 
 OPERATOR OVERLOADING, 注意: 操作符重载使用代码理解难度加大, http://www.4p8.com/eric.brasseur/cppcen.html#l8
 
@@ -407,19 +407,19 @@ int main (){
    m = 3.1415927 * k;        // 重载 *
 
    cout << "(" << m.x << ", " << m.y << ")" << endl;
-   
+
    count << m << endl;	     // 重载 <<
    return 0;
 }
 ```
 
 
-#### 模板
+### 模板
 
-对于 C++ 的函数重载, 你当然不会想要为每个类型都写一个同名方法, 不知道是否应该叫做 **泛型**,或者 C++ 依靠模板实现泛型, 
+对于 C++ 的函数重载, 你当然不会想要为每个类型都写一个同名方法, 不知道是否应该叫做 **泛型**,或者 C++ 依靠模板实现泛型,
 
 ```cpp
-template <class T> 
+template <class T>
 T minimum (T a, T b){
    T r;
    r = a;
@@ -458,82 +458,82 @@ T1 minimum (T1 a, T2 b){
 类模板: 原文 http://blog.csdn.net/richerg85/article/details/7565870
 
 ```cpp
-//类模板,模板定义中class和typename是没有什么区别的  
-//模板的声明和定义只能在全局、命名空间或者类范围内进行。  
-template<class T1,class T2>   
-class A  
-{  
-public:  
-    void f(T1 a, T2 b);  
-};  
-template<class T1,class T2> void A<T1,T2>::f(T1 a,T2 b)  
-{  
-    cout << "class A------>T1:" << a <<";T2:" << b << endl;  
-}  
-//定义类模板的默认类型形参，默认类型形参不适用于函数模板。  
-template<typename T3, typename T4=int>//T4是默认模板类型形参  
-class B  
-{  
-private:  
-    T3 t3;  
-    T4 t4;  
-public:  
-    B(T3 a, T4 b);   
-    void show();  
-};  
-template<class T3,class T4> B<T3,T4>::B(T3 a, T4 b):t3(a),t4(b){}  
-//template<class T3,class T4=int> B<T3,T4>::B(T3 a, T4 b):t3(a),t4(b){},这样是错误的，  
-//在类模板外部定义带有默认类型的形参时，在template的形参表中默认值应该省略  
-template<class T3,class T4> void B<T3,T4>::show()  
-{  
-    cout << "class B------>T3:" << t3 <<";T4:" << t4 << endl;  
-}  
-  
-//非类型模板参数。  
-//非类型形参只能是整型、指针和引用，像double,string,string **这样的类型是不允许的，但是double &,double *对象的引用或指针是正确的。  
-template<class T5,int a>   
-class C  
-{  
-private:  
-    T5 max[a];  
-public:  
-    void cshow()  
-    {  
-        cout << "class C------>T5:" << typeid(T5).name()<< endl;  
-    }  
-};  
-int _tmain(int argc, _TCHAR* argv[])  
-{  
-    //基本模板类测试  
-    A<int,int> a1;  
-    a1.f(2,3);  
-    A<int,char> a2;  
-    a2.f(2,'a');  
-    A<string,int> a3;  
-    a3.f("hello word!",5);  
-  
-    //带有默认类型形参的模板类  
-    B<char,char> b1('a','b');  
-    b1.show();  
-    B<string,string> b2("你好","测试中......");  
-    b2.show();  
-    B<int,char> b3(25,'F');  
-    b3.show();  
-  
-    //非类型模板参数  
-    const int i = 5;  
-    C<int,i> c1;  
-    c1.cshow();  
-    //int j = 5;  
-    //C<int,j> c2; //错误，调用非类型模板形参的实参必须是常量表达式  
-    C<char,i> c2;  
-    c2.cshow();  
-    return 0;  
-} 
+//类模板,模板定义中class和typename是没有什么区别的
+//模板的声明和定义只能在全局、命名空间或者类范围内进行。
+template<class T1,class T2>
+class A
+{
+public:
+    void f(T1 a, T2 b);
+};
+template<class T1,class T2> void A<T1,T2>::f(T1 a,T2 b)
+{
+    cout << "class A------>T1:" << a <<";T2:" << b << endl;
+}
+//定义类模板的默认类型形参，默认类型形参不适用于函数模板。
+template<typename T3, typename T4=int>//T4是默认模板类型形参
+class B
+{
+private:
+    T3 t3;
+    T4 t4;
+public:
+    B(T3 a, T4 b);
+    void show();
+};
+template<class T3,class T4> B<T3,T4>::B(T3 a, T4 b):t3(a),t4(b){}
+//template<class T3,class T4=int> B<T3,T4>::B(T3 a, T4 b):t3(a),t4(b){},这样是错误的，
+//在类模板外部定义带有默认类型的形参时，在template的形参表中默认值应该省略
+template<class T3,class T4> void B<T3,T4>::show()
+{
+    cout << "class B------>T3:" << t3 <<";T4:" << t4 << endl;
+}
+
+//非类型模板参数。
+//非类型形参只能是整型、指针和引用，像double,string,string **这样的类型是不允许的，但是double &,double *对象的引用或指针是正确的。
+template<class T5,int a>
+class C
+{
+private:
+    T5 max[a];
+public:
+    void cshow()
+    {
+        cout << "class C------>T5:" << typeid(T5).name()<< endl;
+    }
+};
+int _tmain(int argc, _TCHAR* argv[])
+{
+    //基本模板类测试
+    A<int,int> a1;
+    a1.f(2,3);
+    A<int,char> a2;
+    a2.f(2,'a');
+    A<string,int> a3;
+    a3.f("hello word!",5);
+
+    //带有默认类型形参的模板类
+    B<char,char> b1('a','b');
+    b1.show();
+    B<string,string> b2("你好","测试中......");
+    b2.show();
+    B<int,char> b3(25,'F');
+    b3.show();
+
+    //非类型模板参数
+    const int i = 5;
+    C<int,i> c1;
+    c1.cshow();
+    //int j = 5;
+    //C<int,j> c2; //错误，调用非类型模板形参的实参必须是常量表达式
+    C<char,i> c2;
+    c2.cshow();
+    return 0;
+}
 ```
 
 
-#### new delete
+### new delete
 
 C++ 新的关键字. new 将返回一个对应的类型指针, 而 delete 将回收指针指向的内存. 像是 C 中的 malloc 和 free。 但由于是关键字的原因,因此编译器能优化 new 和 delete.
 
@@ -543,14 +543,14 @@ using namespace std;
 #include <cstring>
 
 int main (){
-   double *d;                     
-   d = new double; 
-   *d = 45.3; 
+   double *d;
+   d = new double;
+   *d = 45.3;
    cout << "Type a number: ";
    cin >> *d;
    *d = *d + 5;
    cout << "Result: " << *d << endl;
-   delete d;     
+   delete d;
    d = new double[15];   // 相当于 d = (double *) malloc(sizeof(double) * 15);
    d[0] = 4456;
    d[1] = d[0] + 567;
@@ -572,7 +572,7 @@ int main (){
 }
 ```
 
-对于new double[n]之后,对于 delete 是否需要加上括号 `[]`: 
+对于new double[n]之后,对于 delete 是否需要加上括号 `[]`:
 
 
 > 《深度探索C++对象模型》P259的描述，“寻找数组维度给delete运算符的效率带来极大的影响，所以才导致这样的妥协：
@@ -587,7 +587,7 @@ int main (){
 
 
 
-#### 结构体
+### 结构体
 
 在标准 C中, struct 只能包含数据(定义函数指针也是蛮麻烦的).在 c++ 中, 可以包含 函数. 在 C++ 中, struct 其实和 class 区别不大.
 
@@ -610,7 +610,7 @@ int main (){
    vector a = {x:5,y:6};		// vs 2013 初使化报错,  vector a = {5, 6}; 通过
    cout << "The surface of a: " << a.surface() << endl;
    a.x = 7;
-   cout << "The surface of a: " << a.surface() << endl;		
+   cout << "The surface of a: " << a.surface() << endl;
    return 0;
 }
 ```
@@ -653,7 +653,7 @@ int main (){
 }
 ```
 
-#### 构造函数和析构函数:
+### 构造函数和析构函数:
 
 注意构造函数不允许有返回值.
 
@@ -716,7 +716,7 @@ public:
    ~array (){
       delete [] data;
    }
-	
+
    double &operator [] (int i){
       if (i < 0 || i >= size){
          cerr << endl << "Out of bounds" << endl;
@@ -737,7 +737,7 @@ int main (){
 }
 ```
 
-#### 值复制和复制引用
+### 值复制和复制引用
 
 主要是使用 操作符重截
 
@@ -782,27 +782,27 @@ person compute_person (person h){
 int main (){
    person p;
    cout << p.name << ", age " << p.age << endl << endl; // output: no name, age 0
-   
+
    person k ("John", 56);
    cout << k.name << ", age " << k.age << endl << endl; // output: John, age 56
-   
+
    p = k;						// 重载, 引用赋值
    cout << p.name << ", age " << p.age << endl << endl; // output: John, age 56
-   
+
    p = person ("Bob", 10);
    cout << p.name << ", age " << p.age << endl << endl; // output: Bob, age 10
-   
-   
+
+
    modify_person (p);			// 只是引用,不是构造函数复制也不是赋值重载
 
    cout << p.name << ", age " << p.age << endl << endl; // output: Bob, age 17
-   
-   // COPY CONSTRUCTOR 将被调用,然后产生一个新的 person 对象, 
+
+   // COPY CONSTRUCTOR 将被调用,然后产生一个新的 person 对象,
    // 函数体中修改其值并返回, 由于 赋值 = 已经重载, 因此返回的是引用
    k = compute_person (p);
 
    cout << p.name << ", age " << p.age << endl << endl; // output: Bob, age 17
-   
+
    cout << k.name << ", age " << k.age << endl << endl; // output: Bob, age 24
    return 0;
 }
@@ -810,14 +810,14 @@ int main (){
 
 COPY CONSTRUCTOR 允许你的程序创建基于实例的副本,为 key method.
 
-上边所有示例中, 这些方法定义于 class 的声明处(即定义在头文件处),将使它们自动转为 inline. 
+上边所有示例中, 这些方法定义于 class 的声明处(即定义在头文件处),将使它们自动转为 inline.
 
 The copy constructor allows your program to make copies of instances when doing calculations. It is a key method.
 
 In all the examples above, the methods are defined inside the class definition. That automatically makes them inline methods
 
 
-#### 方法体位置
+### 方法体位置
 
 如果一个方法不可以为 inline,或你不想成为 inline, 或你想保持类定义的最小信息,你仅需要把方法体放在类声明的外部.(或分开放置于.h及.cpp)
 
@@ -844,9 +844,9 @@ double vector::surface()	 // 方法体放置于类声明外部,避免 inline
 ```
 
 
-#### 头文件和源文件
+### 头文件和源文件
 
-大型项目中因为常常要把源码编译成 `.lib|.a|.so|` 库文件, 所以需要写成 .h 和 .cpp的形式, 
+大型项目中因为常常要把源码编译成 `.lib|.a|.so|` 库文件, 所以需要写成 .h 和 .cpp的形式,
 
 vector.h
 
@@ -877,11 +877,7 @@ double vector::surface(){
 }
 ```
 
-#### this
-
-当在类方法体中应该使用 `this->` 来引用当前实例
-
-#### 静态字段
+### 静态字段
 
 C++ 中 **静态成员变量不能在类声明处初始化**,只能在外部初使化.在初始化值时也必须加上类型. 通过 className::fieldName 双冒号形式访问静态字段.
 
@@ -907,9 +903,9 @@ public:
 int Vector::count = 0; // 外部初使化, 并且加上类型, 这里是 int
 ```
 
-#### 派生和继承 
+### 派生和继承
 
-DERIVED and INHERITS, 
+DERIVED and INHERITS,
 
 ```cpp
 using namespace std;
@@ -935,7 +931,7 @@ public:
 	double surface(){
 		return x * y;
 	}
-	
+
 	double sum(){
 		return x + y;
 	}
@@ -950,7 +946,7 @@ public:
 									// Vector 构造函数将在 TriVector 构造函数之前被调用, 类似于 super(a,b)
 									// 同样使用冒号 :.
 	}
-	
+
 	TriVector(Vector a){			// 当出现赋值 trivector = vector 时.将自动调用这个方法. 值复制
 		x = a.x;
 		y = a.y;
@@ -960,11 +956,11 @@ public:
 	double module(){				// 重定义 module 方法, 不需要写 override 关键字
 		return sqrt(x*x + y*y + z*z);
 	}
-	
+
 	double sum(){
 		return Vector::sum() + z;	// override, 由于 C++ 允许多继承, 所以其它语言的 super.method 的方式为这样.
 	}
-	
+
 	double volume(){
 		return this->surface() * z;
 	}
@@ -974,20 +970,20 @@ public:
 int main(int argc, const char ** argv){
 	Vector v(4,5);
 	TriVector t(1,2,3);
-	
+
 	cout << "Surface of v: " << v.surface() << endl;
 	cout << "Volume of t: " << t.volume() << endl;
-	
+
 	TriVector t2;
 	t2 = v;			// 值复制, 自动调用 TriVector(Vector a) 方法, 做一些值修改
 					// TriVector(Vector a) 必须要自已写.
-	
+
 	Vector v2;
 	v2 = t;			// 值复制, z 值将会被自动丢弃
 					// 编译器自动调用类似于 Vector(TriVector t),的方法, 不用自已实现
-					
+
 	cout << "Surface of t2: " << t2.surface() << endl;
-	cout << "Surface of v2: " << v2.surface() << endl;	
+	cout << "Surface of v2: " << v2.surface() << endl;
 	return 0;
 }
 ```
@@ -1005,7 +1001,7 @@ void F() override;		//错误：函数F没有重写基类任何虚函数
 }；
 ```
 
-#### 虚函数
+### 虚函数
 
 如下示例, 当一个 Vector 的指针指向 TriVector实例时, 当调用 module()时,指向的将是 Vector 的方法
 
@@ -1014,7 +1010,7 @@ int main(int argc, const char ** argv){
 	TriVector t(1,2,3);
 
 	Vector *r = &t; // Vector指针, 但是指向 TriVector 的实例,
-	
+
 	cout << "module of r: " << r->module() << endl;		// output: 2.23607
 	cout << "module of t: " << t.module() << endl;		// output: 3.74166
 	return 0;
@@ -1023,7 +1019,7 @@ int main(int argc, const char ** argv){
 
 因此, 在上边示例中,如果 Vector 类的 module 加上 **virtual** 关键字,同样的示例 那么结果就不一样了:
 
-```cpp	
+```cpp
 	virtual double module(){
    		return sqrt(x*x + y*y);
 	}
@@ -1032,10 +1028,10 @@ int main(int argc, const char ** argv){
 
 	TriVector t(1,2,3);
 	Vector *r =  &t; // Vector指针, 但是指向 TriVector 的实例,
-	
+
 	cout << "module of r: " << r->module() << endl;		// output: 3.74166
-	cout << "module of t: " << t.module() << endl;		// output: 3.74166	
-``` 
+	cout << "module of t: " << t.module() << endl;		// output: 3.74166
+```
 
 结论: C++ 通过 virtual 来实现类似于 其它语言称为 Interface 的东西.
 
@@ -1090,7 +1086,7 @@ int main(int argc, const char ** argv){
 }
 ```
 
-#### 访问控制
+### 访问控制
 
 * public: 公共
 
@@ -1108,18 +1104,18 @@ int main(int argc, const char ** argv){
 | protected 继承  | protected  | protected |  不可见  |
 | private 继承    | private    | private   |  不可见  |
 
- 
 
-#### 多重继承
 
-用逗号 , 分隔就好了. 大多数语言只能单个继承(因为它们能实现多个接口). 
+### 多重继承
+
+用逗号 , 分隔就好了. 大多数语言只能单个继承(因为它们能实现多个接口).
 
 ```cpp
 // 省略基类
 
 class TriVector: public Vector, public Number{
 	TriVector(double a, double b, double c): Vector(a,b),Number(c){
-		
+
 	}
 }
 ```
@@ -1136,19 +1132,19 @@ class TriVector: public Vector, public Number{
 
   ```cpp
   int const *n; 	// 指针可变,指向的值不可变
-  
+
   int	*const m; 	// 指针不可变,指向的值可变
-  
+
   const int const *mn;
-  
+
   int *a[]; 		// array of pointers. 英文的意思更清楚
-  
+
   int (*a)[]; 		// pointer to array.
-  
+
   int *f(); 		// 返回一个int类型指针, 这种风格应该尽量避免，不如传指针为参数
-  
+
   int (*f)(); 		// 函数指针.
-  
+
   // 多唯数组指针对应
   int x[10][20];
   int(*px)[20];
@@ -1163,9 +1159,9 @@ class TriVector: public Vector, public Number{
   #ifdef __cplusplus
   	extern "C" { // extern C 修饰变量和函数按照 C 语言方式编译和连接;
   #endif
-  
+
   	void gme_clear_playlist( Music_Emu* );
-  	 	
+
   #ifdef __cplusplus
   	}	// extern C 结尾
   #endif
@@ -1192,8 +1188,8 @@ class TriVector: public Vector, public Number{
   	double y;
   	const double PI;
   	Vector(): x(1.0), y(1.0), PI(3.1415926){
-  	
-  	}	
+
+  	}
   };
   ```
 
@@ -1202,7 +1198,7 @@ class TriVector: public Vector, public Number{
   > 相对于 C 的 static 声明来说, 可以在匿名的空间里面声明很多变量和函数,这样可以省去了对每个变量和函数添加static声明.
   >
   > 实质上匿名空间的功能跟static声明是一样的
-	
+
 * define 中的 `#` 和 `##`
 
   `#` 在宏展开时会将 `#` 后边的参数替换成字符串
@@ -1227,7 +1223,7 @@ class TriVector: public Vector, public Number{
   ```
 
 * 关键字扩展
-  
+
   - MSVC - `__declspec` <http://www.cnblogs.com/ylhome/archive/2010/07/10/1774770.html>
 
   - 其它　- `__attribute__` 自已搜
@@ -1248,7 +1244,7 @@ class TriVector: public Vector, public Number{
     #endif
   #endif
   ```
-	
+
 * `explicit` 用来修饰类的构造函数,防止隐式转换 <http://www.educity.cn/develop/461209.html>
 
 * 三规则, 其中第二条,可以在第一条加explicit防止显示赋值
@@ -1257,14 +1253,14 @@ class TriVector: public Vector, public Number{
   // 1. copy constructor
   person(const person& that) : name(that.name), age(that.age){
   }
-  
+
   // 2. copy assignment operator
   person& operator=(const person& that){
   	name = that.name;
   	age = that.age;
   	return *this;
   }
-  
+
   // 3. destructor
   ~person(){
   }
@@ -1272,16 +1268,30 @@ class TriVector: public Vector, public Number{
 
 * 子类中使用 using 声明引入基类成员 <http://www.cnblogs.com/ustc11wj/archive/2012/08/11/2637316.html>
 
-
 * `operator new` <http://blog.sina.com.cn/s/blog_3c6889fe0100tqe8.html>
 
+* little endian
 
-	
-#### c11
+  ```cpp
+  int n = 1;
+  // little endian if true
+  if(*(char *)&n == 1) {...}
 
-c11 新特性 <http://blog.csdn.net/doctorsc/article/details/6777849>
+  // 注意那个是 字母 l 而不是数字 1,  检测时 if(ENDIANNESS == 'l')
+  static union { char c[4]; unsigned long mylong; } endian_test = {'l', '?', '?', 'b'};
+  #define ENDIANNESS ((char)endian_test.mylong)
+  ```
+
+运行时检测: 因为编译的机器未必和运行它的机器相同. 因此 除非在一些操作方法强制要使用 little endian 或 big endian, 否则 readByte 将要快于 readInt32, 这解释了为什么有时候 byte to byte 要更快.
+
+c++11
+------
+
+[c++11 新特性](http://blog.csdn.net/doctorsc/article/details/6777849)
 
 <http://zh.cppreference.com/w/cpp/utility>
+
+[C++11 中的线程、锁和条件变量](http://blog.jobbole.com/44409/)
 
 * 关键字 nullptr, 取代 NULL, 0
 
@@ -1298,14 +1308,14 @@ c11 新特性 <http://blog.csdn.net/doctorsc/article/details/6777849>
   #endif
   ```
 
-* std::`move(container) | (InIt_begin, InIt_end, OutIt_Dest)` 避免值的多次复制, 
+* std::`move(container) | (InIt_begin, InIt_end, OutIt_Dest)` 避免值的多次复制,
 
   - 由于STL是传值赋值,感觉这似乎是让人不要使用指针而用 move. 但是 move 的左右值很难使用.
 
   ```cpp
   string tmp = "hello world";
   string str = move(tmp); // 这里 tmp 的内容消失了而转移到了 str 上.
-  
+
   // && 表示传给它的变量将是一个临时变量(即可废弃的变量)
   // 感觉 move 的使用非常复杂， 各种左右值
   string &&foo(string &&s){
@@ -1314,25 +1324,7 @@ c11 新特性 <http://blog.csdn.net/doctorsc/article/details/6777849>
   string str2 = foo(move(str));	// 加上 move 将参数提升至 &&
   ```
 
-#### little endian
-
-
-```cpp
-int n = 1;
-// little endian if true
-if(*(char *)&n == 1) {...}
-
-// 注意那个是 字母 l 而不是数字 1,  检测时 if(ENDIANNESS == 'l')
-static union { char c[4]; unsigned long mylong; } endian_test = {'l', '?', '?', 'b'};
-#define ENDIANNESS ((char)endian_test.mylong)
-```
-
-运行时检测: 因为编译的机器未必和运行它的机器相同. 因此 除非在一些操作方法强制要使用 little endian 或 big endian, 否则 readByte 将要快于 readInt32, 这解释了为什么有时候 byte to byte 要更快.
-
-STL
-------
-
-* copy(src_start,src_end, dst_start) 参数全是 iterator 类型, 
+* copy(src_start,src_end, dst_start) 参数全是 iterator 类型,
 
   - 其它API都很好找, http://classfoo.com/ccby/article/tZTzs
 
@@ -1347,31 +1339,31 @@ STL
   > const_cast, reinterpret_cast
   >
   > 小圆括号`()`: 可以替换除 dynamic_cast 之外的三种转型
-	
+
 * pair<T1,T2>
 
-* tuple (c++ 11) 
+* tuple (c++ 11)
 
   ```cpp
   #include <tuple>
   #include <iostream>
   #include <string>
   #include <stdexcept>
-   
+
   std::tuple<double, char, std::string> get_student(int id){
       if (id == 0) return std::make_tuple(3.8, 'A', "Lisa Simpson");
       if (id == 1) return std::make_tuple(2.9, 'C', "Milhouse Van Houten");
       if (id == 2) return std::make_tuple(1.7, 'D', "Ralph Wiggum");
       throw std::invalid_argument("id");
   }
-   
+
   int main(){
       auto student0 = get_student(0);
       std::cout << "ID: 0, "
                 << "GPA: " << std::get<0>(student0) << ", "
                 << "grade: " << std::get<1>(student0) << ", "
                 << "name: " << std::get<2>(student0) << '\n';
-   
+
       double gpa1;
       char grade1;
       std::string name1;
@@ -1383,11 +1375,33 @@ STL
   }
   ```
 
+### 头文件
+
+一些头文件, 大多数情况下我只在 msvc 2013 下
+
+<http://www.cplusplus.com/reference/>
+
+#### chrono
+
+用于计算 time 相关的表达式, 并且提供了几个工具类和函数。 只要看几个示例就能明白它们的形为
+
+* Durations: 二个时间之间的跨度，
+  - 已经定义好了的有 `hours/minutes/seconds/milliseconds/microseconds/nanoseconds`
+
+* Time points: 用于表示一个时间点
+
+* Clocks: 一组框架可将 time_point 和真实时间相关联（下边4个结构提供的方法都一样）
+  - system_clock： 系统级别的实时时钟
+  - steady_clock： 特别设计用于计算时间间隔
+  - high_resolution_clock: 高精度, 最短刻度线时钟。 它可能是 system_clock或steady_clock的别名
+  - monotonic_clock: MSVC 专用???
+
+
 ### container
 
 <http://wenku.baidu.com/view/34698d68561252d380eb6e87.html>
 
-所有容器都是 value 的语意而非 reference, 容器执行插入元素的操作时, 内部实施拷贝动作. 
+所有容器都是 value 的语意而非 reference, 容器执行插入元素的操作时, 内部实施拷贝动作.
 因此 STL容器内存储的元素必须能够被拷贝(必须提供拷贝构造函数)
 
 每个容器都提供可通回迭代器的函数
@@ -1402,7 +1416,7 @@ STL
 
 * `.size()` 容器元素数量
 
-* `.capacity()` 返回分配的内存容量,以 type 为单位而不是字节, 
+* `.capacity()` 返回分配的内存容量,以 type 为单位而不是字节,
 
   - **重要:** 当这个值发生改变意味着内存已经发生改变,已经重新分配了内存,数据也复制到了内存新块, 因此前边的 iterator 将全失效
 
@@ -1469,6 +1483,26 @@ STL
 
 在STL定义的容器中，string，vector与deque提供了随机访问迭代器，list、set、multiset、map、multimap提供了双向迭代器。
 
+```cpp
+string str("how you doing!");
+// 常规
+for(auto begin = str.begin(); begin != str.end(); begin++){
+}
+
+// 基于范围的for循环
+for(auto c:str){
+    cout << c << endl;
+}
+
+// for_each, 使用 lmaba 表达式, 位于 algorithm 头文件
+for_each(str.begin(), str.end(), [](char c){});
+
+// for each 可用于 CRL 库的对象, 也可用于 STL, 至少在 MSVC 中可以这样
+for each(auto c in str){}
+for each(auto c in L"C# String"){}
+```
+
+
 #### string
 
 <http://www.cplusplus.com/reference/string/string/string/>
@@ -1530,10 +1564,10 @@ VC中 通常一个string的capacity要大于size,(而有的编译器不会多分
   ```cpp
   list<int> L1 = {1, 2, 3, 4};
   list<int> L2 = {10, 20, 30};
-  auto it = ++L1.begin();		
+  auto it = ++L1.begin();
   L1.splice (it, L2);		// L1: 1 10 20 30 2 3 4
   						// 迭代器 "it" 依然指向数字  2 (第5个元素)
-  						// L2 为空, 	
+  						// L2 为空,
   L2.splice(L2.begin(), L1, it);				// 重载, 只切取一个元素
   						// L1: 1 10 20 30 3 4
   						// L2: 2
@@ -1556,7 +1590,7 @@ Set的作用就是排序。每个元素的值不能直接被改变,它的每个�
 
   ```cpp
   set<int> s = { 1, 2, 3, 4, 5, 6, 7 , 8 };
-  
+
   s.erase(s.lower_bound(3), s.upper_bound(6));	// lower(3) 返回的 it 指向 3
   												// 而 upper(6) 返回的则指向 6 的下一个 7
   for (auto it = s.begin(); it != s.end(); it++){
@@ -1568,7 +1602,7 @@ Set的作用就是排序。每个元素的值不能直接被改变,它的每个�
 
 key 唯一性, 或者选择 multimap,支持多key. **自动将数据排序** 如果不需要排序则使用 unordered_map
 
-* 初使化 map<int, int> m = 
+* 初使化 map<int, int> m =
 
 * 插入
 
@@ -1607,6 +1641,8 @@ LIFO(Last-in first-out),类似于数组, 默认的容器为 deque. 提供的方�
 * 没有迭代器
 
 <br />
+
+
 
 boost
 --------

@@ -28,7 +28,7 @@ categories: haxe
 
   ```haxe
   var s:String = untyped __js__("Navigator.plugin[\"Shockwave Flash\"]");
-  
+
   // 由于 js 的 {} 并没有其独立作用域，因此 __js__ 内部可以随意写局部变量
   var a = 1, b = 2;
   untyped __js__("var c = a+b");
@@ -60,54 +60,54 @@ categories: haxe
 * ~~`js-flatten`~~ 平坦模式. haxe 3.2+ 中这将是默认行为
 
   - **`js-unflatten`** 如果想恢复以前旧的模式的化. 例旧模式： `Main.a.b.c`, 而默认的平模模式为: `Main_a_b_c`
-		
+
 * ~~embed-js~~ 已经被移除, 你可以使用 [includeFile](#includeFile) 方法来嵌入想要的文件
-  
+
 ### Metas
 
 * `@:jsRequire(moduleName,?subModName)` 需要 haxe 3.2+, 在 nodejs 中经常会用到
-	
+
   > 在 haxe 3.13 时 使用诸如 `@:native("(require('fs'))") extern class Fs{}` 这样很不美观.
   >
   > 因此 haxe 3.2+ 添加了这个新的元标记,
-	
+
   ```haxe
   @:jsRequire("fs")
   extern class Fooo {}
   // 导出JS为: var Fooo = require("fs");
-  
-  
+
+
   @:jsRequire("http", "Server")
   extern class Barr{}
   // 导出JS为: var Barr = require("http").Server;
   ```
-	
+
 * **`@:expose(?Name=Class path)`** 将类或静态方法接到全局对象下（即成为一个全局范围的变量）
-  - 注意和 `@:native`(用来更改输出类名或字段名) 相区别, 	
+  - 注意和 `@:native`(用来更改输出类名或字段名) 相区别,
 
 * `@:initPackage` 用来初使化 包及路径 (仅限于 javascript) 注:在 haxe 3.2 中好像已经没作用了.似乎被移除.
 
   > 因为 haxe 并不会为 extern class 创建相应包对象, 例: 在 extern class 中当源码声明为 `package js;` 时, 添加 这个元标记将会创建 `js = {}`
-	
+
 * `@:runtime` (since 2.10) 未知, 但是现在的版本移除了 js only 的限制
 
 * **`@:selfCall`** 调用自身, 由于 javascript 没有构造函数, 在写 extern class 时会遇到一些问题
-	
+
   ```haxe
   @:jsRequire("myapp")
   extern class MyApp {
       @:selfCall function new();
       @:selfCall function run():Void;
   }
-  
+
   class Main {
       static function main() {
   		var app = new MyApp();
   		app.run();
   	}
-  }	
+  }
   ```
-	
+
   将构建成为:
 
   ```js
@@ -121,10 +121,10 @@ categories: haxe
   	Main.main();
   })();
   ```
-                     
+
 ### extern class
 
-由于 Javascript **上下文** 的随意性, 并没有好的工具能自动创建 extern class, 所以需要自已手动为这些外部 JS 文件写 extern class 声明. 
+由于 Javascript **上下文** 的随意性, 并没有好的工具能自动创建 extern class, 所以需要自已手动为这些外部 JS 文件写 extern class 声明.
 
 * 从 webidl 文件获得一些类型参考 <https://github.com/mozilla/gecko-dev/tree/master/dom/webidl>
   - 实际 HF 有自动解析 webidl 为 extern clsss 的工具, 只是我没成功过 <https://github.com/HaxeFoundation/html-externs>
@@ -139,7 +139,7 @@ extern class JQueryHelper {
 	public static inline function J( html : String ) : JQuery {
 		return new JQuery(html);
 	}
-}	
+}
 ```
 
 如果觉得创建 extern 类太麻烦, 可以像下边这样, 但是没有智能语法提示:
@@ -155,7 +155,7 @@ class Main {
 
 #### call/apply
 
-当把一个 extern class 方法作为函数参数传递时, haxe 自动绑定 this 的作用域, 
+当把一个 extern class 方法作为函数参数传递时, haxe 自动绑定 this 的作用域,
 在编译后代码类似于 `func.call($bind(func,context))`， 这样将导致 call/apply 失效. 因此解决方法为
 
 * 可以把方法声明定义成变量形式， 例: `var func:Void-Void`
@@ -195,7 +195,7 @@ haxe -main Main -js bin/main.js --macro includeFile("projDir/path/to/file.js")
 
 * 不要把成员函数作为参数传递, 除非你将它指定成变量形式.(因为 haxe 会自作多情地绑定上下文, 但很多时候并不需要这样)
 
-* 使用 `@:native("native_name")` 来指定真实名字, （比如当外部类使用了相同名字的静态方法和成员方法时, 这在 haxe 中是不允许的） 
+* 使用 `@:native("native_name")` 来指定真实名字, （比如当外部类使用了相同名字的静态方法和成员方法时, 这在 haxe 中是不允许的）
   - 如果用在字段名上, 如果你需要的是全局的则可以指定为 inline 方法或 getter, 参考: js.Lib.undefined
 
 * `@:selfCall` 上边已经描述,但是由于 haxe 也会帮 extern clss 绑定上下文会导致一些不方便。
@@ -207,9 +207,9 @@ haxe -main Main -js bin/main.js --macro includeFile("projDir/path/to/file.js")
   		D3.call(zoom);
       }
   }
-  
+
   @:remove interface Callable{}
-  
+
   extern class D3{
   	public static function call(func:Callable):Void;
   }
@@ -220,7 +220,7 @@ haxe -main Main -js bin/main.js --macro includeFile("projDir/path/to/file.js")
 
 * `@:callable` 可以加在 abstruct 类上, 使得这个类实例可以为调用 [参考...](https://github.com/HaxeFoundation/haxe/issues/3218)
 
-* 使继承类的返回链式， TODO: 
+* 使继承类的返回链式， TODO:
 
 ### 模块化编程
 

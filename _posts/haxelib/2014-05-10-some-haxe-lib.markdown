@@ -20,12 +20,14 @@ categories: haxelib
 * [如何优化你的 haxe 代码](https://github.com/delahee/haxe.opt)
 
 * <https://github.com/anissen/awesome-snowkit>
- 
+
+* [Cross-platform, cross-system game emulator](https://github.com/retrio)
+
 ### 工具
 
 一些常见的工具如 format, hscript 将不在这里列出..
 
-* **[hxBitcoin](https://github.com/cbatson/hxBitcoin)** the Bitcoin, cryptocurrency and cryptography library for Haxe 
+* **[hxBitcoin](https://github.com/cbatson/hxBitcoin)** the Bitcoin, cryptocurrency and cryptography library for Haxe
 
 <!-- more -->
 
@@ -49,21 +51,21 @@ categories: haxelib
 
 * [unifill](https://github.com/mandel59/unifill) Shim your code to support Unicode across all platforms.
 
-* **[dox](https://github.com/dpeek/dox)** API 文档生成	
-					
+* **[dox](https://github.com/dpeek/dox)** API 文档生成
+
 * [TileCraft](https://github.com/yupswing/TileCraft) Haxe/OpenFL 2.5D Modeling Tool (WIP)
 
 * [differ](https://github.com/underscorediscovery/differ) A Separating Axis Theorom collision library for haxe
 
   > 2D ONLY, COLLISION ONLY. No physics here. By design :)
-	
+
 * [HxScout](https://github.com/jcward/hxScout) A free cross-platform Scout alternative, written in Haxe/OpenFL
-	
+
 * [libnoise](https://github.com/memilian/libnoise) This is a haxe port of libnoise, the coherent noise library. The port is almost complete, only the gradient and noise2D utilities are missing.
 
 * ~~[swhx](https://github.com/filt3rek/swhx)~~ 将 swf 嵌入到 exe,但是这个库已经太旧了, 不如使用 AIR
 
-* [mtwin](http://lib.haxe.org/p/mtwin/)  基于neko的各种用于 Web 的工具库, 
+* [mtwin](http://lib.haxe.org/p/mtwin/)  基于neko的各种用于 Web 的工具库,
 
   - 文档在这: http://old.haxe.org/com/libs/mtwin
 
@@ -86,8 +88,8 @@ haxe LD34游戏示例: <http://haxe.io/ld/34/>
 * [haxeflixel](https://github.com/haxeflixel) 基于 openfl, 全位图游戏引擎, 文档非常完善
 
 * [haxepunk](https://github.com/HaxePunk)  基于 openfl, 全位图游戏引擎 更简单, 像是个人维护的项目
-	
-* [luxe](https://github.com/underscorediscovery/luxe) 
+
+* [luxe](https://github.com/underscorediscovery/luxe)
 
   > for deploying games on Mac, Windows, Linux, Android, iOS and WebGL
   >
@@ -110,7 +112,7 @@ haxe LD34游戏示例: <http://haxe.io/ld/34/>
 * **[stablexui](https://github.com/RealyUniqueName/StablexUI)**
 
   > 基于 xml 配置布局和 skin, 简单,高效 移动UI首选
-	
+
 * [jive](https://github.com/ngrebenshikov/jive) A crossplatform UI framework for Haxe
 
   - [jive-chart](https://github.com/ngrebenshikov/jive-chart) A chart library for Jive UI
@@ -130,16 +132,16 @@ haxe LD34游戏示例: <http://haxe.io/ld/34/>
 ### 未分类
 
 一些未分类的
-	
+
 * **[openfl-bitfive](https://github.com/YellowAfterlife/openfl-bitfive)** readme 上写着比 openfl 默认的 **html5后端** 更好.
 
 * [mcli](https://github.com/waneck/mcli)  to easily create CLI applications [中文说明]({% post_url 2014-07-06-haxelib-mcli %})
-			
+
 * [hxargs](https://github.com/Simn/hxargs) 简单创建 CLI 程序, 帮助写在自定义的元标签 `@doc` 上.
 
 * [Cocktail](https://github.com/silexlabs/Cocktail)
 
-  > 解析 简单的 HTML/CSS,并生成各平台,个人感觉这个更像是一个 UI库.	
+  > 解析 简单的 HTML/CSS,并生成各平台,个人感觉这个更像是一个 UI库.
 
 * [msignal](https://github.com/massiveinteractive/msignal)
 
@@ -150,26 +152,26 @@ haxe LD34游戏示例: <http://haxe.io/ld/34/>
 * [mloader](https://github.com/massiveinteractive/mloader)
 
   > A cross platform Haxe library for loading resources with utilities for queueing and caching requests. Supports AVM2, JavaScript, Neko and C++
-	
-* [structural](https://github.com/underscorediscovery/structural) An unencumbered, generic haxe data structures library. 
 
-* [cleversort](https://github.com/jasononeil/cleversort) Haxe macro for helping to sort arrays based on multiple properties with a very simple syntax 
+* [structural](https://github.com/underscorediscovery/structural) An unencumbered, generic haxe data structures library.
+
+* [cleversort](https://github.com/jasononeil/cleversort) Haxe macro for helping to sort arrays based on multiple properties with a very simple syntax
 
 * [cereal](https://github.com/submain/cereal) Haxe serialization library for XML,将 haxe 的类序列化为 xml 字符串
 
 * [casahx](https://github.com/andyli/casahx) 有一些 utils 的工具类,如 StringUtils, 但并不是所有类都是跨平台的
 
-* [thx.core](https://github.com/fponticelli/thx.core) 
+* [thx.core](https://github.com/fponticelli/thx.core)
 
   ```
   Set		:  A Set is a list of unique values.
-  
+
   Tuple	:  A Tuple is a value containing multiple values of potentially different types.
   ```
 
 <hr />
 
-* [tink_core](https://github.com/haxetink/tink_core) 
+* [tink_core](https://github.com/haxetink/tink_core)
 
   ```
   # 包含几个轻量级工具库. 源码都简单.
@@ -185,7 +187,7 @@ haxe LD34游戏示例: <http://haxe.io/ld/34/>
   Ref		:	感觉没必要. 这个类使用 Vector 的第一个元素存储值.来达到引用效果.
   Noise	:	表示空,用于表示一个类型, 示例: 当你操作成功却不需要做任何事情时
   			function writeToFile(content:String):Outcome<Noise, IoError>;
-  Callback	:	abstract Callback<T>(Null<T->Void>) from (T->Void) {}	
+  Callback	:	abstract Callback<T>(Null<T->Void>) from (T->Void) {}
   CallbackLink:	abstract CallbackLink(Null<Void->Void>){}
   CallbackList:	abstract CallbackList<T>(Array<Cell<T>>){}
   ```
@@ -203,7 +205,7 @@ haxe LD34游戏示例: <http://haxe.io/ld/34/>
   - Error management
 
   > 提供许多运行时方法用于错误管理, 如 catchError, errorThen, errorPipe, 参见源码注释
-  >	
+  >
   > 通过定义 -D PromhxExposeErrors 可以避免回调方法内部的 throw 被内部捕获, 这个定义能用于调试一些特殊行为
 
   - Event Loop Management
@@ -254,9 +256,9 @@ haxe LD34游戏示例: <http://haxe.io/ld/34/>
   s.detachStream(s2);
   ds.resolve(1);
   ```
-	
-  - Bound Deferreds: As of v 1.08 promhx includes a "DeferredPromise" and "DeferredStream" option. 
-	
+
+  - Bound Deferreds: As of v 1.08 promhx includes a "DeferredPromise" and "DeferredStream" option.
+
   ```haxe
   static function main() {
   	// 声明 Deferred,  which is the writable interface
@@ -267,7 +269,7 @@ haxe LD34游戏示例: <http://haxe.io/ld/34/>
   	// 简单: 当 value 有效时传递 promise ,  Stream 同样
   	p1.then(function(x) { trace("delivered " + x); } );
   	// 传递多个 promises 当它们全部有效时.
-  	// "then" 方法必须匹配　参数类型 及 参数数量 根据 "when" 的参数		
+  	// "then" 方法必须匹配　参数类型 及 参数数量 根据 "when" 的参数
   	var dp2 = new Deferred<Int>();
   	var p2 = dp2.promise();
   	Promise.when(p1, p2).then(function(x, y) { trace(x + y); } );
@@ -285,7 +287,7 @@ haxe LD34游戏示例: <http://haxe.io/ld/34/>
   	// "then" 的返回值是另一个 Promise实例, 因此可以　链式调用
   	// TODO: 不知道这种 可无返回值的函数是如何定义的 Unknown<0>
   	Promise.when(p1, p2).then(function(x, y) { return x + y; } ).then(function(x) { trace(x); } );
-  
+
   	var dp3 = new Deferred<String>();
   	var p3 = dp3.promise();
   	// pipe 方法让你能手动指示新的 Promise 实例用于链式调用
@@ -303,9 +305,9 @@ haxe LD34游戏示例: <http://haxe.io/ld/34/>
   	// Stream 同样类似
   	Promise.when(p1, p2).then(function(x, y) { throw "an error"; return "hello"; } )
   		.then(function(x) { trace(x + " world!"); } )
-  		.catchError(function(x) { 
+  		.catchError(function(x) {
   			try{
-  				throw(x);	
+  				throw(x);
   			}catch(e:String){
   				trace('caught a string: ' + e);
   			}catch(e:Dynamic){
@@ -320,7 +322,7 @@ haxe LD34游戏示例: <http://haxe.io/ld/34/>
   	// 检测 是否已经处理(resolve),(因为 Promise 只能 resolve 一次)
   	trace(p1.isResolved());
   	// 检测　是否 挂起(pending) 操作于下一次循环
-  	// 有时候　promise 并没有完成 resolve, 
+  	// 有时候　promise 并没有完成 resolve,
   	// 这个发生在 promise 延迟执行(on flash, js) 或处于更新其它 promise 中. TODO: 未理解
   	trace(p1.isPending());
 

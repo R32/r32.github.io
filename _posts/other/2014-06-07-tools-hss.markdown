@@ -7,7 +7,7 @@ categories: other
 
 ---
 
- [hss](https://github.com/ncannasse/hss) 是一个类似于 less 或 sass 的 动态样式表语言.但是更加轻量及简单. 基于 neko 平台. 最新的 1.4 版本需要自已编译. 编译参考 Makefile 文件. 
+ [hss](https://github.com/ncannasse/hss) 是一个类似于 less 或 sass 的 动态样式表语言.但是更加轻量及简单. 基于 neko 平台. 最新的 1.4 版本需要自已编译. 编译参考 Makefile 文件.
 
 如果打算兼容 IE 这个还算是不错的, 一些文件监控工具:
 
@@ -48,9 +48,6 @@ pre {
 myfile.hss:3: Unexpected '}' maybe missing ;
 ```
 
-
-
-
 #### 属性变量
 
 HSS 可以将属性变量添加到 CSS 语法, 变量是很好的方式, 特别在修改颜色值时.
@@ -67,9 +64,6 @@ body {
 }
 ```
 
-
-
-
 #### 块变量
 
 块变量是非常有用的用于共享一些无关规则之间的"行为"。他们可以用来提高 CSS 文件的组织的方式，使它更容易测试的样式更改。
@@ -83,10 +77,9 @@ pre {
 }
 ```
 
-
-
-
 #### 块嵌套
+
+更新: 添加了 `&` 操作符， 像 scss/less 一样.
 
 ```bash
 .faq {
@@ -166,13 +159,9 @@ HSS 还强制一些好的 CSS 做法
 background: [color] [url] [repeat] [scroll|fixed] [horiz.] [vert.]
 ```
 
-
-
 #### CSS 规则
 
 HSS 源文件的 Rules.nml 文件中列出的整个的 CSS 属性规则，用于检查属性值的正确性。你可能想要为您自己的需要对其进行修改。
-
-
 
 
 #### 选译器
@@ -253,7 +242,7 @@ var scale = 3;
 
 * background : linear-gradient(#color1,#color2) : 支持所有浏览器, 包括 IE6-8 **New in 1.4**
 
-* hss-width and hss-height: 将生成width和height，将减去 padding 和 border 的值.
+* **note**: hss-width and hss-height: 将生成width和height，将减去 padding 和 border 的值.
 
 * @include('some css string'): 添加 css 字符串. either at the top level or instead of an attribute, this will include raw CSS string in the output, prefixed with the hierarchy classes if any **New in 1.4**
 

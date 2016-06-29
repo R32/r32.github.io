@@ -8,7 +8,7 @@ categories: haxelib
 ---
 
 haxe 标准库的 Date 类不能处理时区(timezone), 返回的总是当前时区,相对于 Flash或JS, haxe 的 Date 没有 相关的 UTC 方法.
-**而 Datetime 的方法全部都是通过时区(UTC)方法**. 
+**而 Datetime 的方法全部都是通过时区(UTC)方法**.
 
 datetime 的源码地址为: <https://github.com/RealyUniqueName/DateTime>
 
@@ -31,91 +31,19 @@ datetime 的源码地址为: <https://github.com/RealyUniqueName/DateTime>
 
 #### 重要
 
-除了主动调用 local(), 需要记住 DateTime 的方法全部是基于 **通用时区**
+就是这个类容易和标准库带的 Date 类的时间值混淆, 因为虽然 `now().getTime()` 返回的时间戳值一至,
 
-* 因此: 如果你打算获得一个本地时间应该用: DateTime.local 而不是 DateTime.now.
-   
-* 在与标准库的 Date 比较 时间戳时, 先调用 DateTime::utc, 使时区一致
+但是 DateTime 库的 toString, getHour 等等这些方法却没有切换为本地时间.
 
+* 标准库的时间戳值同样以 UTC 为准, 但是在调用方法时会自动转换成本地时间, 包括接受参数
 
-### 示例
+* 如果你使用 JS/AS3 的话, 那个这个库的方法和带 UTC 前缀的方法返回的值一致
 
-```haxe
-var utc = DateTime.fromString('2014-09-19 01:37:45');
-//or
-var utc : DateTime = '2014-09-19 01:37:45';
-//or
-var utc = DateTime.fromTime(1411090665);
-//or
-var utc : DateTime = 1411090665;
-//or
-var utc = DateTime.make(2014, 9, 19, 1, 37, 45);
-//or
-var utc = DateTime.fromDate( Date.make(2014, 9, 19, 1, 37, 45) );
-//or
-var utc : DateTime = Date.make(2014, 9, 19, 1, 37, 45);
+  > 如: `dt.getHour() == date.getUTCHours() && dt.getTime() == date.getTime()`
 
-trace( utc.format('%F %T') );    // 2014-09-19 01:37:45
-trace( utc.getYear() );          // 2014
-trace( utc.isLeapYear() );       // false
-trace( utc.getTime() );          // 1411090665
-trace( utc.getMonth() );         // 9
-trace( utc.getDay() );           // 19
-trace( utc.getHour() );          // 1
-trace( utc.getMinute() );        // 37
-trace( utc.getSecond() );        // 45
-trace( utc.getWeekDay() );       // 5
+* 示例: `DT.local().utc().getTime() == Date.now().getTime()`
 
-//find last Sunday of current month
-trace( utc.getWeekDayNum(Sunday, -1) ); // 2014-09-28 00:00:00
-
-//find DateTime of May in current year
-var may : DateTime = utc.monthStart(5);
-trace( may ); // 2014-05-01 00:00:00
-
-//snap to the beginning of current month
-utc.snap( Month(Down) );            // 2014-10-01 00:00:00
-//snap to next year
-utc.snap( Year(Up) );               // 2015-01-01 00:00:00
-//find next Monday
-utc.snap( Week(Up, Monday) );
-//find nearest Wednesday
-utc.snap( Week(Nearest, Wednesday) );
-
-trace( utc.add(Year(1)) );       // 2014-09-19 -> 2015-09-19
-trace( utc + Year(1) );          // 2014-09-19 -> 2015-09-19
-
-trace( utc.add(Day(4)) );        // 2014-09-19 -> 2014-09-23
-trace( utc += Day(4) );          // 2014-09-19 -> 2014-09-23
-
-trace( utc.add(Minute(10)) );    // 01:37:45 -> 01:47:45
-trace( utc + Minute(10) );       // 01:37:45 -> 01:47:45
-
-trace( utc.add(Second(-40)) );   // 01:37:45 -> 01:37:05
-trace( utc - Second(40) );       // 01:37:45 -> 01:37:05
-
-trace( utc.add(Week(3)) );       // 2014-09-19 -> 2014-10-10
-trace( utc + Week(3) );          // 2014-09-19 -> 2014-10-10
-
-trace( utc.snap(Year(Down)) );           // 2014-01-01 00:00:00
-trace( utc.snap(Year(Up)) );             // 2015-01-01 00:00:00
-trace( utc.snap(Year(Nearest)) );        // 2015-01-01 00:00:00
-trace( utc.snap(Week(Up, Wednesday)) );  // 2014-09-24 00:00:00
-
-var utc2 : DateTime = '2015-11-19 01:37:45';
-var dti  : DateTimeInterval = utc2 - utc;
-trace( dti.toString() );                    // (1y, 2m)
-trace( utc + dti );                         // 2015-11-19 01:37:45
-
-//assuming your timezone has +4:00 offset
-// 个人注: 由于 3.0 的改动, local() 已经为静态方法, 下行将不可用.
-trace (utc.local());    // 2014-09-19 05:37:45
-
-var tz = Timezone.local();
-trace( tz.getName() );                  // Europe/Moscow
-trace( tz.at(utc) );                    // 2014-09-19 05:37:45
-trace( tz.format(utc, '%F %T %z %Z') ); // 2014-09-19 05:37:45 +0400 MSK
-```
+因此结论是如果使用了 DateTime 则不要使用标准库的 Date了,反之亦然。 否则容易混淆, 特别是你比较二个日期的值时
 
 ### API
 
@@ -167,7 +95,7 @@ Datetime 使用 IANA timezone database用于处理 时区  <http://www.iana.org/
 
 * Changed TZdata file format (reduced from 2.5Mb to 116Kb)
 
-* Added script for 'semi-automatic' TZdata updates: haxelib run datetime 
+* Added script for 'semi-automatic' TZdata updates: haxelib run datetime
 
 
 为避免混乱下边是一些参数一致的示例:
@@ -175,9 +103,13 @@ Datetime 使用 IANA timezone database用于处理 时区  <http://www.iana.org/
 ```
 new Date:		2014-04-15 01:01:01 getTime: 1397494861	getHours: 1
 DateTime.make:	2014-04-15 01:01:01	getTime: 1397523661	getHour: 1
+// 说明标准库把输入值当成本地时间, 因此时间戳自动转换为相应的 UTC 时区
+// 而 DT 库永远都是以 UTC 为基准不进行任何转换
 
 Date.now:		2015-04-06 11:32:43 getTime: 1428291163	getHours: 11
 DateTime.now:	2015-04-06 03:32:43	getTime: 1428291163	getHour: 3
+// 标准库返回本地时区的Date值, 但时间戳则自转转换为 UTC 的, 在调用方法时也会自动处进时区
+// 以 UTC 以基础, 不转换
 
 Date.fromString:	2014-04-15 01:01:01 getTime: 1397494861	getHours: 1
 DateTime.fromString:2014-04-15 01:01:01	getTime: 1397523661	getHour: 1

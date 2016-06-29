@@ -17,34 +17,34 @@ categories: haxe
 
 AIR 应用程序描述符元素: <http://help.adobe.com/zh_CN/air/build/WSfffb011ac560372f2fea1812938a6e463-8000.html>
 
-[官网参考](http://help.adobe.com/en_US/air/build/WS144092a96ffef7cc4c0afd1212601c9a36f-8000.html) 示例: 
+[官网参考](http://help.adobe.com/en_US/air/build/WS144092a96ffef7cc4c0afd1212601c9a36f-8000.html) 示例:
 
 
 ```xml
-<?xml version="1.0" encoding="utf-8" ?> 
-<application xmlns="http://ns.adobe.com/air/application/3.0"> 
-    <id>example.HelloWorld</id> 
-    <versionNumber>1.0.1</versionNumber> 
-    <filename>Hello World</filename> 
-    <name>Example Co. AIR Hello World</name> 
-     <description> 
-        <text xml:lang="en">This is an example.</text> 
-        <text xml:lang="fr">C'est un exemple.</text> 
-        <text xml:lang="es">Esto es un ejemplo.</text> 
-    </description> 
-    <copyright>Copyright (c) 2010 Example Co.</copyright> 
-    <initialWindow> 
-        <title>Hello World</title> 
-        <content> 
-            HelloWorld.swf 
-        </content> 
-    </initialWindow>  
-    <icon> 
-        <image16x16>icons/smallIcon.png</image16x16> 
-        <image32x32>icons/mediumIcon.png</image32x32> 
-        <image48x48>icons/bigIcon.png</image48x48> 
-        <image128x128>icons/biggerIcon.png</image128x128>  
-    </icon> 
+<?xml version="1.0" encoding="utf-8" ?>
+<application xmlns="http://ns.adobe.com/air/application/3.0">
+    <id>example.HelloWorld</id>
+    <versionNumber>1.0.1</versionNumber>
+    <filename>Hello World</filename>
+    <name>Example Co. AIR Hello World</name>
+     <description>
+        <text xml:lang="en">This is an example.</text>
+        <text xml:lang="fr">C'est un exemple.</text>
+        <text xml:lang="es">Esto es un ejemplo.</text>
+    </description>
+    <copyright>Copyright (c) 2010 Example Co.</copyright>
+    <initialWindow>
+        <title>Hello World</title>
+        <content>
+            HelloWorld.swf
+        </content>
+    </initialWindow>
+    <icon>
+        <image16x16>icons/smallIcon.png</image16x16>
+        <image32x32>icons/mediumIcon.png</image32x32>
+        <image48x48>icons/bigIcon.png</image48x48>
+        <image128x128>icons/biggerIcon.png</image128x128>
+    </icon>
 </application>
 ```
 
@@ -135,13 +135,13 @@ adt -package %OPTIONS% %SIGNING_OPTIONS% %OUTPUT% %APP_XML% %APP_DIR%
 参考: <http://help.adobe.com/zh_CN/air/build/WSfffb011ac560372f709e16db131e43659b9-8000.html>
 
 ```bash
-# 签名文件参考上小节的 
-adt -package 
-    -keystore ..\cert.p12 -storetype pkcs12 
-    -target bundle 
-    myApp 
-    myApp-app.xml 
-    myApp.swf icons resources	
+# 签名文件参考上小节的
+adt -package
+    -keystore ..\cert.p12 -storetype pkcs12
+    -target bundle
+    myApp
+    myApp-app.xml
+    myApp.swf icons resources
 ```
 
 ### 命令行
@@ -157,17 +157,17 @@ adl [-runtime runtime-directory]	# 指定运行库目录, 如果未指定,则使
     [-pubid publisher-id]	# 从 AIR 1.5.3 开始,不需要也不应该使用此参数
     [-nodebug]				# 关闭调试支持.(但是trace仍然输出到控制台(mm.cfg))
     [-atlogin]				# 测试应用程序在用户登录时才可执行
-    
+
 	[-profile profileName]	# 指定的配置文件对应用程序进行调试, desktop || extendedDesktop || mobileDevice
-   
+
 	[-screensize value]		# 当设为 mobileDevice时, 模拟屏幕大小......
-    
+
 	[-extdir extension-directory]	# 运行时的本机扩展(ANE)目录......
-    
+
 	application.xml			# 应用描述符文件
-    
+
 	[root-directory]		# 应用根目录, 如果未指定，则使用 application.xml 的所在目录
-    
+
 	[-- arguments]			# 在 “--” 之后显示的任何字符串均作为命令行参数传递到应用
 ```
 
@@ -180,7 +180,7 @@ ADT 是一个 Java程序, 用于开发 AIR 应用程序的多用途命令行工�
 * 将 AIR 应用程序打包为本机安装程序。
 
   例如：在 Windows 上打包为 .exe 安装程序文件，在 iOS 上打包为 .ipa，或者在 Android 上打包为 .apk
-	
+
 * 将本机扩展打包为 AIR 本机扩展 (ANE) 文件
 
 * 1)使用数字证书对 AIR 应用程序签名, 2)更改（迁移）用于应用程序更新的数字签名, 3)创建自签名的数字代码签名证书
@@ -206,7 +206,7 @@ import flash.html.HTMLLoader;
 import flash.net.URLRequest;
 
 class Main {
-	
+
 	static function main() {
 		var stage = Lib.current.stage;
 		stage.scaleMode = StageScaleMode.NO_SCALE;
@@ -216,12 +216,12 @@ class Main {
         var urlReq = new URLRequest("http://html5test.com/");
 		html.width = stage.stageWidth;
 		html.height = stage.stageHeight;
-		html.load(urlReq); 
+		html.load(urlReq);
 		Lib.current.addChild(html);
-		
+
 		// 在js如何调用flash中的方法, 在 HTMLLoader 有一个 window 属性, 只要把方法附加上去就行了.
 		html.window.console = { log: haxe.Log.trace };
-		
+
 		// 反过来, 如果在 flash 中想要调用 js 的方法同样是通过 html.window 属性,但是注意加载的顺序. 参看一些事件.
 		haxe.Log.trace("from flash: " + html.window.navigator.userAgent);
 	}
@@ -233,11 +233,11 @@ index.html 中的相关代码. 如果需要从 js 中创建 flash 的数据类�
 ```js
 if(window.runtime){
 	console.log("after flash trace");	// 注意: air并不支持 console, 这个 console 是 上边的函数绑定.
-	
+
 	// 在 js 中直接创建 byteArray 对象,需要引入 AIRAliases.js,以方便调用.
 	var ba = new air.ByteArray();
 	ba.writeByte(60);
-		
+
 	ba.position = 0;
 	console.log(ba.readByte());
 }
@@ -279,8 +279,6 @@ display: -webkit-box;
 /* 子元素的显示顺序, 相当于 order 用于 flex */
 -webkit-box-ordinal-group: 1(integer)
 
--webkit-box-align: start|end|center|baseline|stretch;
-
 /*timing-function: linear|ease|ease-in|ease-out|ease-in-out|cubic-bezier(n,n,n,n); */
 -webkit-transition: property duration [timing-function] [delay];
 ```
@@ -302,7 +300,7 @@ Javascript:
 
 ```
 The method I use will allow you encrpyt most of your source code using a key that is unique to every computer.
- 
+
 The initial download of my software is a simple air app that does not contain the actual program. It is more like a shell that first retreaves a list of the clients mac addresses and the user entered activation code that is created at time of purchase. This is sent to server and logged.  The activation code is saved to a file client side.  At the server the mac address and activation key are used to create the encryption key.  The bulk of the program code is then encrypted using that key, then divided into parts and sent back to the client.
 The client puts the parts back together and saves the encrypted file.
 At runtime the shell finds the mac address list and the activation key, then using same method as server gets the encryption key and decrypts the program file. Run simple check to make sure it loaded. For encyption i found an aes method that works in php and javascript.
@@ -312,9 +310,9 @@ var loader = air.HTMLLoader.createRootWindow(true, options, true, windowBounds);
 loader.cacheResponse=false;
 loader.placeLoadStringContentInApplicationSandbox=true;
 loader.loadString(page);
- 
+
 This method makes it very difficult to copy to another computer although since I wrote it i know there are some weeknesses in the security but to make it harder i obv. the shell code. It at least keeps most from pirating.
- 
+
 However there are issues with this that I have found.
 First i was using networkInfo to get the list of mac address but this failed in a test windows XP computer.  When the wireless was off it did not return the MAC.  I was not able to recreate this in VISTA or 7.  Not sure if it could happen.  Was not tested on a mac computer.  To fix this (at least for windows).  I wrote a simple bat file that gets the MAC list, then converted it to an exe which is included.  This does force you to create native installers.  call the exe with this
 
@@ -328,10 +326,10 @@ process.addEventListener(air.ProgressEvent.STANDARD_ERROR_DATA, onErrorData);
 process.addEventListener(air.NativeProcessExitEvent.EXIT, onExit);
 process.addEventListener(air.IOErrorEvent.STANDARD_OUTPUT_IO_ERROR, onIOError);
 process.addEventListener(air.IOErrorEvent.STANDARD_ERROR_IO_ERROR, onIOError);
- 
+
 put the list  together in the onOutputData event using array.push
 and continue on the onExit event
- 
+
 using the findmac.exe will return the same info every time (that i know of)
 beware thought that using the native install will break the standard application update process so you will have to write your own.  my updates are processed the same way as above.
 This is contents of the .bat file to get the mac list
@@ -341,7 +339,7 @@ SET MAC=
 SET Media=Connected
 FOR /F "Tokens=1-2 Delims=:" %%a in ('ipconfig /all^| FIND "Physical Address"') do @echo %%b
 ENDLOCAL
- 
+
 using this method makes it simple to implement at try before you by method.  at runtime if no activation code get try me version from server instead of full version.
 ```
 
