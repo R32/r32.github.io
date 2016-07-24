@@ -31,6 +31,10 @@ categories: haxelib
 
 <!-- more -->
 
+* [AABBTree 碰撞检测](https://github.com/azrafe7/hxAABBTree)
+
+* [hxmidilib](https://github.com/OIIOIIOI/hxmidilib) Haxe port of newgonzo's as3midilib for working with MIDI 似乎未完成
+
 * [VerletKha](https://github.com/Devination/VerletKha) A simple 2D Verlet physics engine written in Haxe and Kha.
 
 * [hxinflate](https://github.com/proletariatgames/hxinflate) 相对于Haxe自带的序列化库增加了更多的特性
@@ -71,6 +75,8 @@ categories: haxelib
 
 * [google closure](https://github.com/back2dos/closure) 在编译JS后顺便做压缩成 min 文件
 
+* [doctest 测试框架](https://github.com/vegardit/haxe-doctest) 在注释上写单元测试, 看上去挺不错.
+
 ### 游戏引擎
 
 haxe LD32游戏示例 : <https://github.com/skial/haxe.io/issues/118>
@@ -102,6 +108,12 @@ haxe LD34游戏示例: <http://haxe.io/ld/34/>
 * [chrome.extension](https://github.com/tong/chrome.extension)
 
 * [pixijs-haxe](https://github.com/pixijs/pixi-haxe)
+
+* [mithril-hx](https://github.com/ciscoheat/mithril-hx) JS MVC framework, 看上去挺不错.
+
+  - [js 源项目录](https://github.com/lhorie/mithril.js)
+
+  - [mithril 中文文档](https://justjavac.gitbooks.io/mithriljs/content/content/getting-started.html)
 
 ### UI
 

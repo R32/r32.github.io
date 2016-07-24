@@ -195,6 +195,8 @@ https://github.com/sindresorhus/awesome
 
 ### article
 
+* [ZeroMQ 中文](https://github.com/anjuke/zguide-cn) 一套用于快速构建的套接字组件
+
 * [15分钟快速入门各种语言](https://github.com/adambard/learnxinyminutes-docs)
 
   - <https://learnxinyminutes.com>
@@ -213,6 +215,8 @@ https://github.com/sindresorhus/awesome
 
 * [如何调试Chrome的Proxy](http://www.chromium.org/developers/design-documents/network-stack/debugging-net-proxy)
 
+* [awesome-javascript - 中文](https://github.com/rwson/awesome-javascript-cn)
+
 ### resource
 
 * [图标下载](http://www.easyicon.net/)
@@ -223,6 +227,8 @@ https://github.com/sindresorhus/awesome
 
 
 ### misc
+
+* [Webqq 机器人](https://github.com/sjdy521/Mojo-Webqq)
 
 * [pomelo](https://github.com/NetEase/pomelo) A fast,scalable,distributed game server framework for Node.js
 

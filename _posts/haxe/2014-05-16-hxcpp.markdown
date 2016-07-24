@@ -17,35 +17,19 @@ categories: haxe
 
 这里主要记录一些和 hxcpp 相关的东西, 由于我没有找到 hxcpp 的相关文档, 因此不保证内容的正确性.
 
-需要安装 [haxelib hxcpp](https://github.com/HaxeFoundation/hxcpp)。　
-
-### Hello World
-
-```haxe
-class Main{
-	public function new(){
-		trace("Hello World!");
-	}
-	public static function main(){
-		new Main();
-	}
-}
-```
-
-hxcpp 会自动根据平台选择不同的 C++编译器. 任意平吧上编译命令为: `haxe -main Main -cpp cpp`, 或者强制通过例如 `-D android` 来选择相应的编译器
 
 <!-- more -->
-
 
 ### 编译
 
 * 编译器配置,找到并修改 `user/.hxcpp_config.xml`, 比如 win7 中这个文件通常在 `C:\Users\MYNAME\` 下, 通常只在使用 andorid 或一些指定平台时才要配置这个.
 
-  如果这个文件缺失, hxcpp 将会从 toolchain 目录下自动复制 example.hxcpp_config 
+  如果这个文件缺失, hxcpp 将会从 toolchain 目录下自动复制 example.hxcpp_config
 
-* ~~ 实际上你可以在 neko 中快速开发及测试,因为 cpp 和 neko 的 API 基本一致,等到将要 release 时再以 hxcpp 编译 ~~
+* TIPS: 目前可以用 `-D cppia` 来调试, 实际上目前可以指定编译目标为 cppia, 但是 IDE 似乎并不支持
 
-  - 目前可以用 `-D cppia` 来调试
+  > 下边附录部分有关于如何使用 cppia 的介绍
+
 
 #### hxcpp-debugger
 
@@ -59,20 +43,20 @@ hxcpp 会自动根据平台选择不同的 C++编译器. 任意平吧上编译�
   ```haxe
   // __cpp__ 后边的 字符串不支持　字符串连接变量, 只是直接常量字符串
   untyped __cpp__('printf("hello world!")');
-  
+
   // 使用下边方法传递变量到 __cpp__
   // 但是如果使用了传参数,很容易就出错在多行时.
   inline private static function setInt(bytes:haxe.io.BytesData, addr:Int, x:Int){
   	untyped __cpp__("*((int *) ({0}->GetBase() + {1})) = {2}",bytes,addr,x);
   }
-  
-  // 实际上可以直接使用 CPP 的变量, 但只可以是函数的参数变量, 不可以为函数体内部的局部变量, 
+
+  // 实际上可以直接使用 CPP 的变量, 但只可以是函数的参数变量, 不可以为函数体内部的局部变量,
   public function setFade(start_msec:Int){
-  	untyped __cpp__("gme_set_fade(start_msec);");	// 	直接引用函数参数变量, 
+  	untyped __cpp__("gme_set_fade(start_msec);");	// 	直接引用函数参数变量,
   }
   ```
 
-* `__global__` 参看 `\haxe\std\cpp\_std\Std.hx` 源码.
+* `__global__` 直接调用cpp的全局函数等等, 参考 cpp.Lib
 
 
 #### Metas
@@ -88,7 +72,7 @@ In order to [improve support for interacting](http://haxe.1354130.n2.nabble.com/
 # 嵌入 xml 到 build.xml, 文件格式参看下边 buildXml
 @:buildXml				# Specify xml data to be injected into Build.xml
 
-# 附加于 类 上. 代码注入于 namespace 的前边
+# 附加于cpp文件上. 代码注入于 namespace 的前边
 @:cppFileCode			# Inject code into top of cpp file
 
 # 附加于 类 上.. 在 .cpp 文件中头部添加　头文件引用, 注意: 只能添加一个
@@ -104,9 +88,9 @@ In order to [improve support for interacting](http://haxe.1354130.n2.nabble.com/
 # 注入代码到 函数开始处
 @:functionCode			# Inject code into top of function - eg, whole implementation.
 
-# 注入代码到 函数结尾处, 在 return 之前. 
+# 注入代码到 函数结尾处, 在 return 之前.
 # 注: 由于 haxe 转换成的 cpp 用 {} 包围形成了闭包, 因此无法访问函数内部定义的局部变量, 但是可以访问函数的参数
-@:functionTailCode 		# Inject code into end of function 
+@:functionTailCode 		# Inject code into end of function
 
 # 注入 cpp 代码到 头文件(.h) Class 的内部 - 用于声明　成员变量或成员方法 例如: @:headerClassCode("int a,b")
 @:headerClassCode		# Code to be injected into the generated class, in the header
@@ -125,15 +109,18 @@ In order to [improve support for interacting](http://haxe.1354130.n2.nabble.com/
 # TODO
 @:nativeProperty 		# Use native properties which will execute even with dynamic usage
 
+# TODO: 估计是用于将 haxe 的类导出为外部类给 C++ 调用, 通常你可能需要使用 -D static_link 来定义为静态链接库
+@:nativeGen				#
+
 # 编译的cpp代码中不包含有类似于 HX_STACK_LINE...这些调试用的代码, 只用于字段或方法(但是好像无法作用于构造函数),
-@:noStack				# 
+@:noStack				#
 
 @:nonVirtual         	# Declares function to be non-virtual in cpp (cpp only)
 
 # @:sourceFile("path/file.cpp") - 用于 external class,路径以当前 hx 文件所在为当前目录,参考 hxcpp/test/native 目录
 @:sourceFile			# Source code filename for external class
 
-# 重要: 用于 extern 类, 
+# 重要: 用于 extern 类,
 @:structAccess			# Marks an extern class as using struct access('.') not pointer('->')
 
 # 如果你不需要使用 Reflect 来动态查找类上的成员, 则可以加上这个标记
@@ -159,7 +146,7 @@ In order to [improve support for interacting](http://haxe.1354130.n2.nabble.com/
 
 另一个调用外部 sdl 源码的示例: <https://gist.github.com/nadako/c8aec20c2a7751348f91>
 
-参看 `hxcpp\test\native`, 重要的是： 
+参看 `hxcpp\test\native`, 重要的是：
 
 * 无法以 new 的方式来创建外部 cpp 类, 因为它返回的是一个指针, 只能用　静态方法创建
 
@@ -182,7 +169,7 @@ In order to [improve support for interacting](http://haxe.1354130.n2.nabble.com/
 一些 haxe 变量转换到 cpp 之后, 可以参考 `hxcpp/include/hxcpp.h` 下的一些头文件查看一些定义:
 
 ```
-HAXE    |    CPP    
+HAXE    |    CPP
 --------+-----------
 Int         int
 Float       float    #ifdef HXCPP_FLOAT32
@@ -190,7 +177,7 @@ Float       float    #ifdef HXCPP_FLOAT32
 Bool        bool
 
 ####         namespace cpp
-cpp.Int8       signed char   
+cpp.Int8       signed char
 cpp.UInt8      unsigned char
 cpp.Char       char
 cpp.Int16      signed short
@@ -202,7 +189,7 @@ cpp.Float32    float
 cpp.Float64    double
 ```
 
-只有上边几种类型是不需要转换的, 但上边只有数据基本类型,  其它 Array, String 都需要做一些转换. 
+只有上边几种类型是不需要转换的, 但上边只有数据基本类型,  其它 Array, String 都需要做一些转换.
 
 * **cpp.NativeArray** C 语言中所描述的数组, 即同类型连续排列的内存引用
   - hxarray.(`__unsafe_get, __unsafe_set, __get, __set`) 带 unsafe 的方法没有做边界检测.
@@ -216,11 +203,11 @@ cpp.Float64    double
  * **cpp.NativeString**, 转换成 `char*` 也可以调用 `var cstr:ConstPointer<Char> = untyped hxstr.__s`
 
   ```haxe
-  using cpp.NativeString;  
+  using cpp.NativeString;
   //......
-  var str:String = "haxeString2CString";  
+  var str:String = "haxeString2CString";
   // 编译为 ::cpp::Pointer< ::cpp::Char > cstr = ::cpp::Pointer< ::cpp::Char >(::cpp::Pointer_obj::fromPointer(str.__s));
-  var cstr:ConstPointer<Char> = str.c_str();  
+  var cstr:ConstPointer<Char> = str.c_str();
   str = cstr.fromPointer();
   // .__s 这个成员变量在　neko 平台也适用.
   var cstr2:ConstPointer<Char> = untyped str.__s;
@@ -234,7 +221,7 @@ build.xml 用来配置 hxcpp 如何编译　haxe 源码。查看 `hxcpp/tools/hx
 ```haxe
 // 不需要理会这段代码
 var mDefines:StringMap<String>;			// 通过 "-D" 的定义和 "环境变量" 和 <set /><unset /> 设定的值
-var mCurrentIncludeFile:String;			// 
+var mCurrentIncludeFile:String;			//
 var mIncludePath:Array<String>;			//
 
 var mCompiler:Compiler;					// 将 .cpp.c 等源文件编译到 .o 中间文件. <compiler>
@@ -275,7 +262,7 @@ var m32:Bool;				// -D HXCPP_M32
 `${var}` 支持下边前缀: [第 1572 行: function substitute(str:String...]
 
 ```bash
-haxelib:		- 返回haxelib库所在路径.  ${haxelib:hxcpp} => `G:\...` 
+haxelib:		- 返回haxelib库所在路径.  ${haxelib:hxcpp} => `G:\...`
 
 # 示例: <flag value='-DHXCPP_API_LEVEL=${removeQuotes:hxcpp_api_level}' />
 removeQuotes:	- 去除变量返回值的双引号
@@ -293,12 +280,12 @@ dir:			- ??? 和 dospath 一样, 只是多了检测
 <set name="" value="" />		<!-- 设置变量 name=value, 在其它元素中通过 ${name} 来引用 value 的值　-->
 								<!-- 可用于变量条件检测, 示例 -->
 	<set name="someMsg" value="Hello world!" />
-	<echo value="${someMsg}" if="someMsg" />  								
+	<echo value="${someMsg}" if="someMsg" />
 
 <unset name="" />				<!-- 移除变量 或 haxe -D -->
 
 <!-- hxcpp编译设置, 细节查看 Setup.hx -->
-<setup name="androidNdk|blackberry|msvc|mingw|emscripten" />				
+<setup name="androidNdk|blackberry|msvc|mingw|emscripten" />
 
 <echo value="" />				<!-- log -->
 <error value="" />				<!-- error, 将中断编译 -->
@@ -323,19 +310,19 @@ dir:			- ??? 和 dospath 一样, 只是多了检测
 <pleaseUpdateHxcppTool version="1" />	<!-- Int类型. 如果 hxcpp.n 小于某个版本,将出错误. 这个值似乎很久没用了 -->
 
 <!-- 文件组,id 为文件组标识符, 用于被其它元素引用, 同 id 的文件组, 后边的将覆盖前边的  -->
-<files id="__main__">														
+<files id="__main__">
   <compilerflag value="-Iinclude" />	<!-- 文件分组编译参数 -->
   <file name="src/__main__.cpp" />		<!-- 分组内的文件 -->
     <depend name="include/Main.h" />	<!-- 所依剌的头文件,位于 file 元素内部只能有 name 属性  -->
 	<depend name="include/other.h" />
   </file>
-  
+
   <depend name="path/file.h" />			<!-- 依赖另一个文件,　注意 depend 属性要么是 name 或 files -->
   <depend files="id" />					<!-- 依赖另一个文件组内的所有 depend.has.name 元素  -->
 
   <!-- TODO:  fxc.exe /nologo /T %profile% %file% /Vn %variable% /Fh %target% -->
-  <hlsl name="path/tofile.fx" profile="" variable="" target="" />	
-										
+  <hlsl name="path/tofile.fx" profile="" variable="" target="" />
+
   <options name="Options.txt"/>			<!-- TODO: 不明确,反正都是 Options.txt -->
   <precompiledheader name="" dir="" />  <!-- 预编译头文件,name:文件名, dir:目录  -->
 
@@ -351,7 +338,7 @@ dir:			- ??? 和 dospath 一样, 只是多了检测
  <flag value="" />						<!-- 编译器参数,用于所有 .c .cpp .m .mm -->
  <flag value="-Dsome=value" />
  <flag value="-I${HXCPP}/include" />
- 
+
  <cflag value="" />				<!-- 仅用于 .c 的编译参数 -->
  <cppflag value="" />			<!-- 仅用于 .cpp 或 .c++ 的编译参数 -->
  <objcflag value="" />			<!-- 仅用于 .m(object-c) 的编译参数 -->
@@ -364,7 +351,7 @@ dir:			- ??? 和 dospath 一样, 只是多了检测
  <getversion value="some.exe" /><!-- TODO: 一个输出一些字符到 stderr　的工具命令,输出的字符将通过 md5 计算  -->
  <ext value="" />				<!-- 输出　扩展名, 默认为 .o -->
  <include name="" />			<!-- 导入另一个 xml, 覆盖到当前 -->
- <section unless=""></section>	
+ <section unless=""></section>
 </compiler>
 
 
@@ -395,17 +382,17 @@ dir:			- ??? 和 dospath 一样, 只是多了检测
 
   <lib name="libm.so" if="demo" />	<!-- 依赖的链接库 -->
   <lib name="-llog" if="demo"/>
-  <lib name="${dll_import_link}" if="dll_import_link" />	
-  
+  <lib name="${dll_import_link}" if="dll_import_link" />
+
   <libdir name="obj/lib" />			<!-- 依赖的链接库的文件夹 -->
 
   <fromfile value="@" />			<!-- 如果为 @,所有.obj　将以清单的形式写入到 all_objs. 默认为 @ -->
 									<!-- windows 需要这个 @ 符号 -->
-									
+
   <ext value=".dll" />				<!-- 输出扩展名, .exe,.dll,"",.so -->
   <outflag value="-out:" />			<!-- 输出参数: windows通常是 -out:,而非windows通常为 -o -->
 
-  <prefix value="" />			<!-- 输出文件名前缀 -->	
+  <prefix value="" />			<!-- 输出文件名前缀 -->
   <ranlib name="" />			<!-- 命令工具,用于更新静态库的符号索引表,似乎只适用于 gcc 编译器 -->
   <recreate value="1" />		<!-- 是否删除输出重新建立, 留空为 false,否则为 true.  -->
   <expandAr value="" />			<!-- 解开 .a 库文件为多个 .o, 留空为 false,否则为 true.-->
@@ -413,7 +400,7 @@ dir:			- ??? 和 dospath 一样, 只是多了检测
 </linker>
 
 <!-- linker 示例 -->
-<linker id="exe" exe="link.exe" unless="winrt">	
+<linker id="exe" exe="link.exe" unless="winrt">
   <fromfile value="@"/>
   <flag value="-nologo"/>
   <flag value="-machine:${MACHINE}"/>
@@ -427,11 +414,11 @@ dir:			- ??? 和 dospath 一样, 只是多了检测
 </linker>
 
 <!-- 预链接器, 似乎根本没使用过这个. 子元素参考 linker -->
-<prelinker id="" exe="">		
-  <exe name="" />				
-  <flag value="" />		
-  <outflag value="" />			
-  <expandAr value="" />			
+<prelinker id="" exe="">
+  <exe name="" />
+  <flag value="" />
+  <outflag value="" />
+  <expandAr value="" />
   <fromfile value="" />
   <section></section>
 </prelinker>
@@ -450,7 +437,7 @@ dir:			- ??? 和 dospath 一样, 只是多了检测
   <dir name="" />				<!-- (好像没用), 当调用 target.clean 时被将删除的目录 -->
   <outdir name="path/to/" />	<!-- 最终输出文件存放目录 -->
   <builddir name="" />			<!-- 设置编译时的当前目录, 目录必须存在. 之后所有相对目录以这个为基准 -->
-  <ext value="" />				<!-- 输出扩展名, 如果指定将覆盖 linker 的设定 --> 
+  <ext value="" />				<!-- 输出扩展名, 如果指定将覆盖 linker 的设定 -->
   <files id="__main__" />		<!-- 选择需要编译的文件分组, 不同 id 表示不同分组 -->
   <section></section>
 </target>
@@ -462,6 +449,11 @@ dir:			- ??? 和 dospath 一样, 只是多了检测
 
 **重要** 由于 XML 先后顺序的原因,你只能引用或覆盖 `finish-setup.xml` 和 `haxe-target.xml` 定义的变量和元素
 
+<br />
+
+附录
+------
+
 ### CFFI
 
 先将外部的 C/C++ 库编译成 lib.ndll 用于在　haxe 代码中调用. hxcpp包源码的 test 中有一个 cffi 的示例.
@@ -470,112 +462,33 @@ dir:			- ??? 和 dospath 一样, 只是多了检测
 
 ### cppia
 
-这是最近的一个新特性, cppia 能快速编译为 c++ 代码运行速度比 neko 更快（需要先编译得到 cppia.exe(双击`hxcpp/project/compile-cppia.hxml` 就行了)
+需要先编译得到 cppia.exe, windows 下直接双击 `hxcpp/project/compile-cppia.hxml` 就行了
 
- * 编译 cppia 后,其实得到一个 `Host.exe` 的文件就可以用于运行 cppia 脚本.
+> 编译 cppia 后,其实得到一个 `Host.exe` 的文件就可以用于运行 cppia 脚本.
 
 ```bash
 -cpp out.cppia	# 定义为一个文件名称,而不是目录
--D cppia		# 
+-D cppia		#
 -main Main
 -cp src
 -cmd haxelib run hxcpp out.cppia
 ```
 
-这样可以快速地调试 cpp 代码, 这种脚本的性能好像不怎么样.
+这样可以快速地调试 cpp 代码, 但这种脚本的性能好像不怎么样.
 
 ### Defines
 
 <http://haxe.org/manual/target-cpp-defines.html>
 
+一些定义你可以在 `hxcpp/toolchain` 目录下的 xml 文件中找到.
+
 ```bash
-HAXE_OUTPUT_FILE		# 指定输出文件名称, 因为 -cpp bin 指定的是个目录
+HAXE_OUTPUT_FILE      # 指定输出文件名称, 因为 -cpp bin 指定的是个目录
 
-ANDROID_HOST
-ANDROID_NDK_DIR
-ANDROID_NDK_ROOT
-BINDIR
-DEVELOPER_DIR
-HXCPP
-HXCPP_32
-HXCPP_COMPILE_CACHE
-HXCPP_COMPILE_THREADS
-HXCPP_CONFIG
-HXCPP_CYGWIN
-HXCPP_DEPENDS_OK
-HXCPP_EXIT_ON_ERROR
-HXCPP_FORCE_PDB_SERVER
-HXCPP_M32
-HXCPP_M64
-HXCPP_ARMV6
-HXCPP_ARMV7
-HXCPP_ARMV7S
-HXCPP_ARM64
-HXCPP_X86
-HXCPP_MINGW
-HXCPP_MSVC
-HXCPP_MSVC_CUSTOM
-HXCPP_MSVC_VER
-HXCPP_NO_COLOR
-HXCPP_NO_COLOUR
-HXCPP_VERBOSE
-HXCPP_WINXP_COMPAT
-HXCPP_API_LEVEL
-HXCPP_DEBUG_LINK
-DHXCPP_STACK_TRACE
-HXCPP_STACK_LINE
-HXCPP_CHECK_POINTER
-HXCPP_DEBUGGER
-HXCPP_CPP11
-HXCPP_STRICT_CASTS
-HXCPP_VISIT_ALLOCS
-HXCPP_WINXP_COMPAT
-HXCPP_OPTIMIZE_FOR_SIZE
-IPHONE_VER
-LEGACY_MACOSX_SDK
-LEGACY_XCODE_LOCATION
-MACOSX_VER
-MSVC_VER
-NDKV
-NO_AUTO_MSVC
-PLATFORM
-QNX_HOST
-QNX_TARGET
-TOOLCHAIN_VERSION
-USE_GCC_FILETYPES
-USE_PRECOMPILED_HEADERS
-android
-apple
-blackberry
-cygwin
-dll_import
-dll_import_include
-dll_import_link
-emcc
-emscripten
-gph
-hardfp
-haxe_ver
-ios
-iphone
-iphoneos
-iphonesim
-linux
-linux_host
-mac_host
-macos
-mingw
-rpi
-simulator
-tizen
-toolchain
-webos
-windows
-windows_host
-winrt
-xcompile
+static_link           # 生成成静态库, 而不是 exe 文件
+
+no_console            # 没有控制台窗口, 例如如果你使用 SDL 来分创建窗口的话
 ```
-
 
 <br />
 <br />
