@@ -20,7 +20,8 @@ categories: haxe
 * **Tips:** 在编译时其实可以不用指定 `-main` 参数, 这样的程序将没有入口像是一个库, 例: `haxe -js lib.js Lib`
 
 * 当 `-dce std` 时, 使用 import 可能会使最终输出文件变得很大(使用某一个类一个方法时,可以直接用全名), 因此你可能需要关闭 IDE 的自动导入（Generate Imports）
-  
+
+* 如果一个 .n 是以 haxelib run 来运行的, 那么可以通过检测环境变量 `HAXELIB_RUN` 的值是否为字符串 "1", 因为 haxelib run 运行时会把"当前路径"作为最后一个参数传递给 Sys.args()。 [更多细节...](http://lib.haxe.org/documentation/using-haxelib/#run)
 
 <!-- more -->
 
@@ -63,10 +64,10 @@ categories: haxe
   > https://github.com/HaxeFoundation/haxe/issues/1138
   >
   > 这样引用默认的包大概是为了可以先将 import.hx 中的包先编译成中间文件??? 不过haxe目前并没有编译成中间文件的东西,所以先不理会这个
-	
+
 * Compiler.keep 的行为发生了改变 https://github.com/HaxeFoundation/haxe/issues/4111
 
-  > 即通过 `--macro keep(pack.Cls)` 不再能防止被 DCE 清除,因为而编译器不再处理已经存在的类 
+  > 即通过 `--macro keep(pack.Cls)` 不再能防止被 DCE 清除,因为而编译器不再处理已经存在的类
   >
   > 但 haxe 3.3 似乎又改回来了, 又变得可用了
 
@@ -85,17 +86,17 @@ categories: haxe
   }
   ```
 
-* 处理 extern 类 haxe.extern.EitherType; 和  haxe.extern.Rest;	
+* 处理 extern 类 haxe.extern.EitherType; 和  haxe.extern.Rest;
 
   ```haxe
   import haxe.extern.Rest;
   import haxe.extern.EitherType;
-  
+
   extern class MyExtern {
   	static function f1(s:String, r:Rest<Int>):Void;
   	static function f2(e:EitherType<Int, String>):Void;
   }
-  
+
   class Main {
   	static function main() {
   	MyExtern.f1("foo", 1, 2, 3); // use 1, 2, 3 as rest argument
@@ -116,25 +117,25 @@ categories: haxe
 
   ```haxe
   var onclick : haxe.Constraints.Function;
-  
-  // 但是这个就不好理解了, 
+
+  // 但是这个就不好理解了,
   abstract Event<T:Function>(String) from String to String {}
-  
+
   enum Flat {
   	A;
   	B;
   }
-  
+
   enum NotFlat {
   	F(s:String);
   }
-  
+
   class Test {
   	static function main() {
   		test(A); // ok
   		test(F("foo")); // Constraint check failure for test.T
   	}
-  
+
   	static function test<T:haxe.Constraints.FlatEnum>(t:T) { }
   }
   ```
@@ -145,27 +146,27 @@ categories: haxe
   private class A {
   	public function new() {}
   }
-  
+
   @:generic
   private class B<T:haxe.Constraints.Constructible<Void->Void>> extends A {
   }
-  
+
   class Issue4457 extends Test
   {
-  
+
   	public function test()
   	{
   		new B<A>();
   	}
-  
+
   }
   ```
-  
+
   - `interface IMap<K,V>`
 
 
-	
-#### typedef 对性能的影响 
+
+#### typedef 对性能的影响
 
 <https://github.com/HaxeFoundation/haxe/tree/development/tests/benchs/mandelbrot>
 
@@ -215,7 +216,7 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
 
 * 当在 `build.hxml` 文件中使用 `--each` 时, 需要注意 `haxe {前} build.hxml {后}` 前后的位置是否有受到 `--each` 的影响
 
-* 泛形, 返回类型或者Void, 参考 haxe.Time 的 measure 方法源码如下: 
+* 泛形, 返回类型或者Void, 参考 haxe.Time 的 measure 方法源码如下:
 
   ```haxe
   public static function measure<T>( f : Void -> T, ?pos : PosInfos ) : T {
@@ -258,7 +259,7 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
 * haxe.Serializer 将任意值序列化成字符串
 
   > Serializer.run() 除了普通数据或二进制类型,还可以序列化**类实例**,但只能是纯Haxe的类,如果涉及到原生平台方法,将失败.
- 
+
 * Context.resolvePath 除了检索当前项目的目录之外,包含 Context.getClassPath 返回值的所有路径, 这个路径包括 -lib 库目录(JSON文件 指定的目录)及 　haxe/std 等等.
 
 * 尽量在 `getter/setter` 的方法前添加 `inline` 关键字,如果这些方法不复杂的话.
@@ -266,12 +267,12 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
 * `std` , 例如:当你写一个 叫 Math 的类时,可以通过 std.Math 调用标准的 Math
 
 * `typedef SString<Const> = String`. <http://haxe.org/manual/macro-generic-build.html#const-type-parameter>
-	
+
   ```haxe
   //这行在 sys.db.Type.hx 文件中.于是可以有如下定义
   var name:SString<10>; // SQL VARCHAR(10)
   ```
-	
+
 * flashdevelop -> 项目属性 -> 编译器选项 -> Additional Compiler Options
 
   > 例如: `--macro openfl.Lib.includeBackend('native')` 在窗口配置中使用双引号将会出错, 而在 hxml 文件中,单双引号无所谓
@@ -281,7 +282,7 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
 * openfl 的 neko 或 cpp 其实可以不带显示窗口的.
 
   参考 `lime-tools`. `helpers.IconHelper` 中调用 `SVG`
-	
+
 * 函数可选参数, 自动的参数顺序
 
   ```haxe
@@ -316,7 +317,7 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
 * `__this__`  仅适用于 js 或 as , **慎用**
 
   > 在 haxe 中即使是局部方法, this 的指向永远为其所在的类,而一些如 JS 或 AS 平台却不是这样. __this__ 必须接在 untyped 之后, 以表式目标平台类的 this, 可以将下列代码编译成 JS,以区别不同之处.
-	
+
   ```haxe
   class Foo {
   	var value:String;
@@ -324,17 +325,17 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
   		value = "ffffffffffff";
   		var obj1 = { callb: function() { trace(this); } };
   		var obj2 = { callb: function() { trace(untyped __this__); } };
-  			
+
   		obj1.callb(); // [object Foo]
   		obj2.callb(); // [object global]
   	}
-  	static function main() {		
+  	static function main() {
   		new Foo();
   	}
   }
   ```
 
-* **初使化静态变量**  `static function __init__(){}`; 
+* **初使化静态变量**  `static function __init__(){}`;
 
   ```haxe
   //注意 和 区分直接赋值的先后顺序.
@@ -344,7 +345,7 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
   		value = "init func";
   	}
   	public function new() {
-  		trace(value);	
+  		trace(value);
   	}
   	public static function main(){
   		new Foo(); // output: var , 说明 __init__ 的赋值比直接赋值要早.
@@ -365,11 +366,11 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
   	return v
   }
   ```
-		
+
 * `Std.int`: 包括 Math.round,Math.floor,Math.ceil 在处理较大数字时, 将超出Int界限
 
   > haxe 中 Int(基本上所有平台都是32位) 类型表示的数字范围有限,因此一些库使用 Float(IEEE 64-bit) 来代替
-  >	
+  >
   > 对于大的数字,这时应该使用 `Math.ffloor(v:Float):Float` 或 `Math.fceil(v:Float):Float` 来代替上边方法.
   >
   > 正确: `(untyped Math.ffloor(Date.UTC(1900, 0, 31)) / 1000)` 先转换成 float 再除 1000
@@ -391,11 +392,11 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
   > Sys.command 可以执行 dos 命令如 `dir`　和 一些 (WIN + R)可以运行的CLI命令, 而 sys.io.Process 只能运行后者.
   >(注意: 不要运行 cmd 这个命令避免陷入死循环)
   >
-  > Sys.command 返回 0 表示程序以 exit(0) 的方式正常退出, 非 0 值一般意味着出错, 
+  > Sys.command 返回 0 表示程序以 exit(0) 的方式正常退出, 非 0 值一般意味着出错,
   >
   > 如果需要获得 CLI 程序的输出值(stdout \| stderr) 则应该使用 sys.io.Process. 这二个都会等待 CLI程序**完全运行结束**（我只用 nodejs 的 setTimeout 测试过）.
 
-* stdout 
+* stdout
 
   - "\b"(ascii:08 BS) 为退格, "\b" 在 haxe 中会报错.
 
@@ -479,10 +480,10 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
   ```xml
   <!-- 加入下边这一行将能正常运行 -->
   <haxeflag name="-dce full" />
-  
+
   <!-- optional 可选 -->
   <haxedef name="NAPE_RELEASE_BUILD" />
-  
+
   <!-- 对于 `haxeflixel` 的 demo 如果添加了 `-dce full`,则需要添加下行 -->
   <!-- 注意下行的 PlayState 为 flixel-demo 示例中的一个类 -->
   <haxeflag name="--macro keep(null,['PlayState','flixel.system.FlxAssets','flixel.system.ui','flixel.ui'])" />
@@ -505,7 +506,7 @@ function foo(a:Int, b:Int):Int{
 }
 
 // 这个函数将返回一个函数,类型为 Void->Int;
-foo.bind(10,20);	
+foo.bind(10,20);
 
 // 上边 bind 相当于
 inline function warp():Int{
@@ -514,14 +515,14 @@ inline function warp():Int{
 ```
 
 有时候我们只想固定其中一个值, 则可以使用下划线 `_` 来作为填充值
-	
-```haxe	
+
+```haxe
 class Bind {
 	static public function main() {
 		var map = new Map<Int,String>();
 		var f = map.set.bind(_, "12");
 		$type(map.set); // Int -> String -> Void
-		$type(f); // Int -> Void    
+		$type(f); // Int -> Void
 		f(1);
 		f(2);
 		f(3);
@@ -570,7 +571,7 @@ extern class Array<T> implements ArrayAccess<T> extends ArrayImpl {
 	}
 	public inline function toString() : String {
 		return ArrayImpl.toString(this);
-	}	
+	}
 }
 ```
 
@@ -631,11 +632,11 @@ $type(json);	// Unknown<0>(即:Monomorphs)
   var i : Int = c.phone; // ok : use Dynamic
   var c : String = c.country; // ERROR
   // c.country is an Int because of Dynamic<Int>
-  
+
   // 参考 haxe.xml.Fast.hx 文件
   // 可以实现接口的 resolve 方法,当访问属性时会自动转接到 resolve 上.
   ```
-  
+
 ### 正则表达式
 
 Haxe has built-in support for [**regular expressions**](http://haxe.org/manual/std-regex.html).
@@ -644,7 +645,7 @@ Haxe has built-in support for [**regular expressions**](http://haxe.org/manual/s
 
 使用 `using` 代替 `import` 导入类, haxe 会自动识别被 using 导入类的所有静态方法的第一个参数类型.
 
-通过静态扩展使得 代码：`x.f4().f3().f2().f1()` 比 `f1(f2(f3(f4(x))))` 更直观, 
+通过静态扩展使得 代码：`x.f4().f3().f2().f1()` 比 `f1(f2(f3(f4(x))))` 更直观,
 
 ```haxe
 using Main.IntExtender;
@@ -697,7 +698,7 @@ function foo<T>(eu:Enum<T>):Void {} // foo(Lang);
 > 参考 `format` 库的和 `data.hx` 以及 下边的 `switch`
 
 对于 `EnumValue` 类型的数据
- 
+
 > `EnumValue` 包含有 :`getName(),getIndex(),getParameters(),equals()`,来自 `haxe.EnumValueTools`.
 
 
@@ -708,7 +709,7 @@ function foo<T>(eu:Enum<T>):Void {} // foo(Lang);
 挺复杂的.参考: [Pattern Matching](http://haxe.org/manual/lf-pattern-matching.html), 如果你了解 Ocaml 或其它函数式编程的话, 那么对 Pattern Matching 应该很熟悉.
 
 > 匹配总是从顶部到底部. _ 匹配任何字符，所以case _： 相当于 default:
-	
+
 ```haxe
 enum Tree<T> {
 	Leaf(v:T);
@@ -727,9 +728,9 @@ var match = switch(myTree) {
 	// matches anything
 	case _: "3";
 }
-trace(match); // 2	
+trace(match); // 2
 
-	
+
 // Variable capture
 var myTree = Node(Leaf("foo"), Node(Leaf("bar"), Leaf("foobar")));
 var name = switch(myTree) {
@@ -762,7 +763,7 @@ var match = switch(myArray) {
 trace(match); // 1
 
 
-// Or patterns  
+// Or patterns
 // 注: 不知道 | 与 , 的区别会有什么不一样,至少 生成的 js 代码是一样的.其它未测
 var match = switch(7) {
     case 4 | 1: "0";
@@ -842,8 +843,8 @@ class Main {
 但是 如果使用 as3hx 转换 AS3 的源码时,就会经常碰到这样的代码.
 
 ```haxe
-class Helo{	
-	// Class<Dynamic> 
+class Helo{
+	// Class<Dynamic>
 	var t:Class<Dynamic>; //需要指定 Class 类型,比如 Class<Helo>
 	public function new(){
 		t = Helo;
@@ -859,10 +860,10 @@ class Helo{
 
 ### 泛型
 
-* [泛型 (Type Parameters)](http://haxe.org/ref/type_params)  
+* [泛型 (Type Parameters)](http://haxe.org/ref/type_params)
 
-* [高级类型(Type Advanced)](http://haxe.org/ref/type_advanced) 
- 
+* [高级类型(Type Advanced)](http://haxe.org/ref/type_advanced)
+
 * **有些时候** 需要在使用了`<T>` 的类中,要添加前缀 `@:generic`,比如使用了 `new T()` 这样的代码.
 
 * 泛型限定 `<T:Foo>`, 将 T 限定为 Foo,
@@ -870,14 +871,14 @@ class Helo{
   > 对于 `<T:{prev:T,next:T}> 或 <K:{ function hashCode():Int;}>` 这样的源码
   >
   > 实际上 `{}` 可以看成匿名类型,然后这个类型只要包含 prev,next 属性 或 hasCode 方法就行了, 分析 haxe.macro.Type.hx 的 Ref
-	
+
   ```haxe
   typedef Ref<T> = {
       public function get() : T;
       public function toString() : String;
   }
   // 只要一个类型它包含了 get 及 toString ,就可以看成是 Ref
-  ``` 
+  ```
 
 
 
@@ -888,16 +889,16 @@ class Helo{
 
 [全部内建元数据]({% post_url 2014-03-30-commands %})
 
-除了编译器内建的, haxe 允许自定义元数据, 格式为 `@` 字符作前缀(编译器内建的以 `@:` 为前缀, 当然你也能定义以 `@:` 作前缀的元数据, 这只是规范,　并没有强制要求). 例: `@some`. 可以通过 haxe.rtti.Meta 在运行时访问这些元数据内容, 
+除了编译器内建的, haxe 允许自定义元数据, 格式为 `@` 字符作前缀(编译器内建的以 `@:` 为前缀, 当然你也能定义以 `@:` 作前缀的元数据, 这只是规范,　并没有强制要求). 例: `@some`. 可以通过 haxe.rtti.Meta 在运行时访问这些元数据内容,
 
 ```haxe
 #if !macro @:build(Foo.build()) #end
 @author("Nicolas") @debug class MyClass {
 	@values( -1, 100) var x:Int;
-	
+
 	@hehe
 	static var inst:MyClass;
-	
+
 	static function main(){
 		// 运行时(rtti)访问这些自定义元数据, 只能访问自定义的, 不能访问 haxe-metas
 		var t = haxe.rtti.Meta.getType(MyClass);	// {author: [Nicolas], debug: null}
@@ -911,20 +912,20 @@ class Helo{
 class Foo {
 	macro public static function build():Array<haxe.macro.Expr.Field>{
 		var fields = haxe.macro.Context.getBuildFields();
-		
+
 		var t = haxe.macro.Context.getLocalClass().get();
 		// 取得 标记于 class 上的元标签, 除了自定义的元标签, 还能取得 haxe-metas, 如 @:require(flash)
-		trace(t.meta.get()); 
-		
+		trace(t.meta.get());
+
 		// 取得一个数组包含所有 静态字段, 通过遍历数组, 然后调用 meta.get() 获得 元标签定义
 		var s = t.statics.get();
-		
+
 		// 取得一个数组包含所有 实例字段, 通过遍历数组, 然后调用 meta.get() 获得 元标签定义
-		var f = t.fields.get();	
-		
+		var f = t.fields.get();
+
 		//return fields;	如果需要修改则返回这个
 		return null; // 返回 null 不作任何修改.
-	}	
+	}
 }
 ```
 
@@ -958,7 +959,7 @@ typedef Window = {
 	@:optional var height:Int;
 	function exit():Void;
 }
-	
+
 // 类似于 JSON 形参一样,
 typedef Window = {
 	x:Float,
@@ -967,8 +968,8 @@ typedef Window = {
 	?height:Int,
 	exit:Void->Void
 }
-var w:Window = {x:0,y:0};	
-``` 
+var w:Window = {x:0,y:0};
+```
 
 ### abstract
 
@@ -978,7 +979,7 @@ abstract 用于抽象化数据结构,用于包装底层类型, 其行为更像�
 >
 > 从示例中可以看到,和 `typedef` 的区别是抽象类型是要有原形(小括号Int)的,并且 `abstract` 可以有方法体,和一些类型写类型转换规则
 >
-> 在 abstract 语法内 的 static 成员方法,不需要 using, 见 [abstract-selective-functions](http://haxe.org/manual/types-abstract-selective-functions.html) 这一点对运算符重载很重要, 
+> 在 abstract 语法内 的 static 成员方法,不需要 using, 见 [abstract-selective-functions](http://haxe.org/manual/types-abstract-selective-functions.html) 这一点对运算符重载很重要,
 >
 > 因为运算符重载有时需要添加 `@:commutative` 来交换二个操作数的位置,就 **必须** 使用 static 类型的方法重载.
 
@@ -1051,7 +1052,7 @@ haxe.web.Dispatch.run("/user", new Map<String,String>(), api);
   ```
 
   当使用 Dispatch 作类型时, 各种 mod, act 参数都可以省略(或者加上也没关系), 因为都可以从这个参数中获取
-	
+
 * `d.dispatch(api)` Sub Dispatch(感觉没有实际应用的意义)
 
   ```haxe
@@ -1160,7 +1161,7 @@ q = [4,null]
 
 input或output 默认都是阻塞类型的,
 
-* `setTimeout(timeout:Float):Void` 设置超时, 
+* `setTimeout(timeout:Float):Void` 设置超时,
 
 适用于服务器端:
 

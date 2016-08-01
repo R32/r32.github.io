@@ -1,0 +1,805 @@
+---
+
+layout: post
+title:  mithril 笔记
+date:   2016-04-17 09:17:21
+categories: other
+
+---
+
+mithril 是一个轻量级浏览器 Javascript MVC 框架 - 一个将「数据」应用到「模板」的工具，并且支持 virtual dom 智能差异化更新。
+
+* [getting started](http://mithril.js.org/getting-started.html)
+
+* [mithril.js](https://github.com/lhorie/mithril.js)
+
+* [mithril-hx](https://github.com/ciscoheat/mithril-hx) 如果使用 haxe 这已经有一个 extern 库, 但是个人感觉不太好
+
+* [IE 相关的兼容性处理](http://mithril.js.org/tools.html#internet-explorer-compatibility)
+
+<!-- more -->
+
+### Core
+
+<http://mithril.js.org/mithril.html>
+
+#### m
+
+用于创建虚拟元素(virtual elements), 虚拟元素可以使用 m.render 直接展现，语法细节可参考原文档...
+
+* 当定义 style 的子属性时应该参考 [mozilla CSS Properties Reference](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Properties_Reference)
+
+  ```js
+  m("div", {style: {textAlign: "center"}}); // <div style="text-align:center;"></div>
+  m("div", {style: {cssFloat: "left"}});    // <div style="float:left;"></div>
+  ```
+
+* 默认情况下 mithril 将会自动转义 HTML 文本字符串
+
+  ```js
+  m("div", "&times;") // <div>&amp;times;</div>
+  ```
+
+  因此可以通过使用 m.trust 防止转义
+
+  ```js
+  m("div", m.trust("&times;")) // <div>&times;</div>
+  ```
+
+* 真实DOM元素, 通过定义一个非 HTML 标准的名为 config 属性(Attribute), 这个特别属性的值为将一个方法，在 DOM 元素创建后将被调用
+
+  config 方法的签名为: `function(node: DOMElement, isInited: Bool, context: Object, cached: VirtualElement): Void;`
+
+  ```js
+  function draw(node, isInited, context, cached) {
+    if (isInited) return;
+    var ctx = node.getContext("2d");
+	// do somethins...
+
+    // node 为标准的 DOM 浏览器对象
+
+    // isInited 如果为 false 则表示"重建", 否则仅为局部差异更新
+
+	// context 可以用来保存一些变量, 如果 isInited 为 false, 那么它将是一个新的以及空的对象.
+
+    // cached 通常我们不需要理会它(如果忽略掉一些扩展属性, 它其实为 view 的返回值)
+
+	// 内部的 this 将指向新的 VirtualElement(即 view 返回的值), 它和 cached 并不是同一个对象
+	// 但是 this 将会和 cached 进行比较以确认是否需要"重建"或仅"局部差异更新"
+  }
+
+  var view =  m("canvas", {config: draw});
+  m.render(document.body, view); // 创建 canvas 元素, isInited 为 `false`
+  m.render(document.body, view); // 由于使用智能差异更新, isInited 为 `true`
+  ```
+
+  常见的方式是将 config 属性与 m.route 方法相结合
+
+  ```js
+  m("a[href='query']", {config: m.route}, "Dashboard");
+  // <a href="http://localhost/index.html?query">Dashboard</a>
+
+  m("a[href='query']", "Dashboard");
+  // 不带 route, 则为 <a href="query">Dashboard</a>
+  ```
+
+  「析构函数」: 如果给第三个参数 context 参数添加了名为 onunload 方法...
+
+  「局部刷新」: 配合 m.route , 并设置第三个参数 `context.retain = true`...
+
+  config 属性应该使用 m.render 来展现, 否则 isInit 参数永远为 false. 即总是重新创建元素
+
+* 可创建 SVG 元素(浏览器必须支持 SVG)
+
+* focus 处理, 给同级多个元素添加 key 属性以保持各自的独立性, key 的值必须在同层下唯一只能是字符串或数字
+
+  > 实际上由于 virtual DOM 的差异算法有一个弱点: 例如当从列表 shift 一个元素时很可能会将会导致重建,
+  而不是局部差异化更新, 还有一个副作用就是将导致 focus 不正确
+  >
+  > 幸运的是, mithril 能够很好的处理它们， **即添加 key 属性**...
+
+  对于 config 内各参数的细节可以参考 <http://mithril.js.org/mithril.html#signature> 往下相关的部分
+
+* component 的快捷方式，当 `m()` 的第一个参数类型为 component 时.
+
+附录: 由于差异化智能更新, 因此元素的重新创建发生在:
+
+* 元素名称的更改
+* 元素 attr 属性的增减(除了id属性值, 如果仅修改Attr属性的值则不算), 这一条需要特别小心
+* 元素 id 值的更改
+* context.retain 设置为 false。 参见上边关于特殊的 config 属性的描述
+
+#### component
+
+在 mithril 中, component 是一个包含有 view 和 controller(可选) 方法的对象
+
+> 还在就是在这篇文档中, 单独的 component 表示「组件」, 而 m.component 才表示「方法」
+
+```js
+var model = {count: 0}
+
+var c = {
+    controller: function() {
+        return {
+            increment: function() {
+                //这是一个极简化的示例, 因为值的修改通常是调用 m.prop 返回的方法
+                model.count++
+            }
+        }
+    },
+    view: function(ctrl) {
+        return m("a[href=javascript:;]", {
+            onclick: ctrl.increment //view calls controller method on click
+        }, "Count: " + model.count)
+    }
+}
+
+m.mount(document.body, c) // 当你点击 链接时, 值将会自动增加
+// 如果你将 mount 更改为 rener , 则 model 的值虽然会改变, 但是却不会自动更新到真实元素上
+```
+
+有三种方式可以展现 component
+
+* m.route: 适用于如果构建的 app 具有多个页面
+* m.mount: 适用于如果你的 app 仅有一个页面.
+* m.render: 如果你希望自已掌握重绘, 或者你想取消自动重绘时
+
+在展现 component 时, controller 方法只会被调用一次, 随后在重绘时只有 view 方法被重复调用.
+而 controller 的返回时将总是作为 view 的第一个参数.
+
+**controller 可以作为对象的构造函数**
+
+参考上边的示例, 实际上在 mithril 的内部先会执行 new c.controller() 以获得一个对象,
+如果这个 controller 没有返回任何值的话, 那个这个新实例将作为 ctrl 传递给 view 方法
+
+```js
+var c = {
+    controller: function(data) {
+        this.greeting = "Hello"
+    },
+    view: function(ctrl) {
+        return m("h1", ctrl.greeting)
+    }
+}
+
+**Note:** 如上示例 c.controller 内部的 this 并不等于 c, 这一点非常重要。 而 c.view 内部的
+this 则是正常地指向 c.
+
+> TODO: 由于这个原因在 haxe 中非常不好处理 this 的指向， 因为 haxe 会自动绑定 this, 因为估计是写不出 extern 类
+
+m.mount(document.body, c) // <h1>Hello</h1>
+```
+
+实际上这是 component 推荐的构建方式，
+
+**关于 view 方法**
+
+view 方法在被调用时并不会创建 DOM 树, 而只是返回纯 JS 数据结构。 在内部, mithril 检测这个数据结构
+前后的更改, 称为虚拟DOM差异比较。
+
+每天需要重绘时，将会再次运行 view 方法，它的返回值将和上一次的返回值进行差异比较
+
+**参数化**
+
+用于返回一个符合接口标准的 component
+
+```js
+var org = {
+    controller: function(args, extras) {
+        return {greeting: "Hello"}
+    },
+    view: function(ctrl, args, extras) {
+        return m("h1", ctrl.greeting + " " + args.name + " " + extras)
+    }
+}
+
+var c = m.component(org, {name: "world"}, "this is a test")
+// org 中的 controller 和 view 方法都将会收到额外的参数， 即 args = {name: "world"},
+// extras = "this is a test"
+
+// c 将为一个标准的 component 类型, 参考 mithril-hx 中 interface Module{} 的定义
+m.render(document.body, c);
+```
+
+Note: m.component 的第一个额外参数类型应该为 Object，上边的示例为 {name: "world"}， 而其它
+的额外参数类型则可以随意
+
+**Nesting components**
+
+在组件的 view 方法中可以包含另一个组件
+
+```js
+var org = {
+    controller: function(args) {
+        return {greeting: args.message}
+    },
+    view: function(ctrl) {
+        return m("h2", ctrl.greeting)
+    }
+}
+var app = {
+    view: function() {
+        return m("div.app", [
+            m("h1", "My App"),
+            m.component(org, {message: "Hello"}) //嵌套
+        ])
+    }
+}
+
+m.mount(document.body, app)
+```
+
+**onunload**
+
+当 controller 返回的值包括 onunload 方法时, 那么这个方法将在下列情形发生时调用:
+
+* 当 m.mount 更新 component 时(即使是同一个component)
+* 当 m.route 的路由发生改变时
+* 当给 m.mount 传递 null 卸载时， 注: 这时 event.preventDefault 将不起作用
+
+> onunload 的 event 仅包含一个 preventDefault 方法, 除此之外无任何其它属性,
+
+```js
+var c = {
+    controller: function() {
+        return {
+            onunload: function(event) {
+				console.log("unload")
+            }
+        }
+    },
+    view: function() {
+        return m("div", "test")
+    }
+};
+
+m.mount(document.body, c);
+m.mount(document.body, null); // 卸载
+```
+
+**Nesting components 中的异步**
+
+由于 controller 可以调用 model 的方法, 因此可以将 嵌套component 进行封装。 当 component 没有嵌套时,
+mithril 将等待所有的异步完成时才会展现:
+
+```hx
+var c:Component = {
+	controller: function(){
+		ctrl.data = js.Lib.global.m.request({url: "delay.n"});
+		// 这里假设 delay.n 假会返回一个 JSON 字符串为 "{c: "hello world"}"
+	},
+
+	view: function(ctrl){
+		// JSON 字符串会自动转换为 Object
+		return js.Lib.global.m("h1", ctrl.data().c);
+	}
+};
+js.Lib.global.m.mount(js.Browser.document.body, c);  // 重要: 不要使用 render
+// 实际上只有当异步完成后, 才会调用 view 方法,
+```
+
+但是当出现嵌套时, mithril 首先会展现根元素(如果根元素带有异步则先等待根元素的异步完成), 然后带有异步的子元素会被一个 `<placeholder>` 所代替直到子元素的异步完成时才会将 `<placeholder>` 替换为正常的元素.
+
+
+个人注: 这里的异步仅限于 m.request 方法, 如果你在 controller 使用自定义的 m.deferred, 你应该使用先 m.startComputation, 在 resolve 之后再调用 m.endComputation, 这样才会重绘
+
+**限制和注意事项**
+
+当你使用 components 你将不可以在「模板」中使用 mithril 的重绘方法(m.startComputation / m.endComputation 和 m.redraw)
+
+此外, 也不可以在「模板」中调用 m.request 方法。 这样做将触发另一个重绘而导致无限循环。
+
+> TODO: 这里所说的模板是指通过 m() 构建虚拟DOM???
+
+在嵌套使用 components 时需要注意以下几点:
+
+1. 嵌套的 component 必须返回 virtual dom, 或者另一个 component。 而其它值将出错
+
+2. 嵌套的 component 不可以在 controller 构造函数内改变 m.redraw.strategy.(但是
+可以在事件监听器中改动)。建议使用 context.retain 标志
+
+3. 不要执行下边操作:
+
+  ```js
+  var c = {
+    view : function(){
+      return someCondition ? m("a") : m("b")
+    }
+  }
+  ```
+
+4. 如果 components 的根元素在第一次展现时为 subtree, 则结果不确定
+
+
+**退出自动重绘**
+
+使用 m.render 展现 component 即可.
+
+#### mount
+
+m.mount 仅接受 component 为其参数, 而 m.render 可以直接使用 `m()` 的返回值作参数.
+如果 component 对象包含有 controller 方法, 则 m.mount 的返回值为 `new x.controller()`, 否则返回一个空函数
+
+当通过 `m()` 绑定的任意事件被触发并完成后，m.mount 将自动重绘,
+
+如果你想要在不同的页面之间 loading 以及 unloading components, 可以考虑使用 m.route 来代替这个方法
+
+如果你想要取消 m.mount 的自动重绘, 调用 m.render 即可
+
+**关于双向绑定**
+
+由于直接修改 model 的数据并不会自动重绘, 但是可以在事件上修改 model 的值, 然后由 m.mount 自动重绘。
+
+#### prop
+
+这是一个工厂方法， 它返回一个 `getter/setter` 函数, 以方便将数据(model)和视图(view)进行绑定。
+
+```js
+var name = m.prop("John");
+name();        // 返回 "John"
+name("Mary");  // 将值更改为 "Mary"
+```
+
+与 withAttr 一起使用, 当 UI 的值改变时, data 的值将会自动更新:
+
+```js
+var data = m.prop("John");
+var view = m("input[type=text]", {onchange: m.withAttr("value", data), value: data()});
+m.render(document.body, view);
+            // 在HTML页面上更改输入框的值...
+data();     // 将返回输入框更改后的值, 这时 UI 与 data 值一致
+
+// data("Tom") 注意: 手动修改 data 的值并不会触发重绘(即值不会更新到UI), 因为事实上 view 中的
+// input.value 已经是定值了( data()返回的字符串, 如果不使用 withAttr 也没必要使用 prop 方法了 )
+```
+
+可以直接把 `getter/setter` 传递给 JSON.stringify 序列化成 JSON 字符串, 以便交互
+
+```js
+var data = {foo: m.prop("bar")};
+JSON.stringify(data); // '{"foo": "bar"}'
+```
+
+与 m.request, m.deferred 一起使用用于异步刷新数据（需要使用 mount 来展现）
+
+```js
+var users = m.prop([]);
+var error = m.prop("");
+m.request({method: "GET", url: "/users"})
+ . then(users, error);
+// 如果成功, users 将被填充, 否则错误信息将填充到 error 中去
+// 假设服务器应答的数据为: `[{name: "John"}, {name: "Mary"}]`
+```
+
+#### withAttr
+
+工厂函数, 它返回一个事件处理方法
+
+```js
+document.onclick = m.withAttr("title", function(value){
+	// 这个 value 就等于 document.title 的值
+	console.log(value);
+})
+
+// 大多数情况下它和 m.prop 属性一起使用
+var data = m.prop("John");
+var view = m("input[type=text]", {onchange: m.withAttr("value", data), value: data()});
+m.render(document.body, view);
+// 当你想要获得值是只要调用
+data()
+```
+
+### Routing
+
+#### route
+
+route 是一个系统, 允许创建单页应用(SPA,Single-Page-Applications), 可以在页面之间跳转却不刷新浏览器.
+
+此方法有四个功能不同的重载(overload)
+
+* `m.route(rootElement, defaultRoute, routes)` 定义 URL 及其各自的组件(component)
+
+  > defaultRoute 表示当 routes 列表里匹配不了时将转跳到这个， 因此这个值必须在 routes 参数里存在，
+  > 有些类似于指定 routes 中的哪一项为 switch 的 default 开关
+
+* `m.route(path)`: 重定向到另一个 route
+* `m.route()`: 返回一个字符串为当前 route
+* `m.route(element_A)`: 作用于链接元素 A, an extension to link elements that unobtrusively(悄悄地) abstracts away the routing mode???
+
+  > TODO: 估计与 `m("a[href='/dashboard/alicesmith']", {config: m.route})` 的形为一样.
+
+
+**定义路由**
+
+定义各路由，需要指定 host DOM元素
+
+```js
+m.route(document.body, "/", {
+	"/": Home,
+	"/login": Login,
+	"/about": About
+});
+// 注: Home, Login, About 分别是 component.
+// 个人注: 当使用 pathname 时, 默认的路径最好为 "/", 而其它使用空字符串 "" 似乎更美观
+// TODO: 如何使用 pathname 时要让服务器如何重定向了???
+```
+
+**路由参数**, 通过添加冒号(`:`)作为前缀
+
+```js
+var Dash = {
+	controller : function(){
+		this.id = m.route.param("uid");
+	},
+	view: function(ctrl){
+		return m("span", ctrl.id);
+	}
+};
+
+m.route(ma, "/", {
+	"/": {view: function(){return m("h2", "Home"); }},
+	"/dash/:uid": Dash    // 注意这行 uid 前的 冒号
+});
+```
+
+
+**路由可变参数**, 通过添加省略号`...`到路由参数
+
+```js
+m.route(document.body, "/files/pictures/pic1.jpg", {
+    "/files/:file...": gallery
+});
+
+m.route.param("file") // === "pictures/pic1.jpg"
+
+m.route(document.body, "/blog/2014/01/20/articles", {
+    "/blog/:date.../articles": articleList
+});
+
+m.route.param("date") // === "2014/01/20"
+```
+
+需要注意的是由于参数的可变, 你需要定义更细节的路由以防止可变参数匹配所有
+
+```js
+m.route(document.body, "/blog/archive/2014", {
+    "/blog/:date...": Component1, //for the default path in the line above, this route matches first!
+    "/blog/archive/:year": Component2
+});
+
+m.route.param("date") // === "archive/2014"
+```
+
+**路由中的 querystring**
+
+除了路由参数后, m.route.param 还可以获得 querystring 的值
+
+```js
+m.route("/grid?sortby=date&dir=desc");
+m.route.param("sortby"); // "date"
+m.route.param("dir");    // "desc"
+```
+
+**路由清理**, 当路由发生改变时你可以做一些如解除事件绑定或其它的动作, 实际上前边已经描述过:
+
+```js
+var Home = {
+    controller: function() {
+        return {
+            onunload: function() {
+                console.log("unloading home component");
+            }
+        };
+    },
+    view: function() {
+        return m("div", "Home")
+    }
+}
+```
+
+**m.route.mode** 分别取值为:
+
+* "search" 默认. 使用 querystring 模式. IE8 中使得页面总是会刷新
+* "hash"
+* "pathname" 需要服务器 url rewrite 支持,IE8 中使得页面总是会刷新
+
+**m.route.buildQueryString/parseQueryString**
+
+二个工具方法, 用于方便处理 querystring
+
+```js
+m.route.buildQueryString({a:1, b:2}); // "a=1&b=2"
+m.route.parseQueryString("a=1&b=2");  // {a:1, b:2}
+```
+
+### Data
+
+#### request
+
+这是一个简化了的 Ajax 方法, 默认情况下它假设服务器响应的数据为 JSON 字符串,
+
+m.request 将返回一个 m.Promise 对象(参考 m.deferred), 当 Ajax 完成后将会为它填充数据.
+
+```js
+var data = m.request(url: "/some/data");
+// 当 ajax 完成后可以简单调用 data() 获得 Object 对象(自动解析 JSON 为 Object)
+// 通常你会在 controller 方法中调用 m.request, 然后在 view 方法中直接调用 data() 即可获得数据
+// 因为 view 方法只在 ajax 完成后展现(使用 mount 或 route)
+// 当然你也可以像 Promise 那样使用它, 如: data.then(function(obj){})
+```
+
+prop 属性直接用于 promise.then 函数
+
+```js
+var data = m.prop([]);
+m.request({url: "/some/data"}).then(data).then(function(obj){});
+// 这种方式看上去有些多余
+```
+
+转换为类实例， 通过添加 type 属性(个人感觉好像多余)
+
+```js
+function User(data){
+  this.name = data.name
+}
+m.request({url: "/user", type: User})
+```
+
+更多参数:
+
+```js
+m.request({
+	url: "/some/data"  //
+	method: "GET",     // 默认的 HTTP 方式
+	unwrapSuccess: function(obj){
+		return obj     // 实际上 obj 已经是 JSON.parse 过的对象了,
+	},
+	unwrapError: function(obj){
+		return obj
+	},
+    //
+	data: SomeData,
+	serialize: function(data){
+	// 如何序列化 data 数据, 当 POST 传数据时默认为 JSON.stringify
+	// 原文档上有个 HTML5 拖拽文件上传的示例
+	   return ...
+	},
+	deserialize: function(value){
+	// 接受一个响应字符串为参数, 用于处理服务器响应数据, 默认时就等于 JSON.parse
+		return value
+	},
+	//
+	extract: function(xhr){
+		return xhr.responseText
+	},
+	// 更详细的xhr请求
+	config: function(xhr){
+		xhr.setRequestHeader("Content-Type", "application/json");
+	},
+
+    // 如果这个参数全等为 true，则这个 request 不会调用 startComputation/endComputation
+	// 当值为 true 时, 通常会和 initialValue 一起使用, 即当 request 没有完成时, 使用 initialValue 的值
+	// 去展现 view, 而不是等待 request 结束
+	background: false
+})
+
+// 正常的话整个流程是 extract -> deserialize -> unwrapSuccess -> then
+
+// config 选项还可用于中止 XHR 请求
+var transport = m.prop();
+m.request({method: "POST", url: "/foo", config: transport});
+transport().abort();
+
+// background 为 true 的简单示例
+var c = {
+	controller : function(){
+		// 假设 delay.n 返回 {"c": "hello world"}
+		this.users = m.request({url: "delay.n", background: true, initialValue: {c: "init value"}});
+		// 由于并不会自动重绘, 因此需要你自已主动调用 redraw 方法
+		this.users.then(function(){m.redraw()});
+	},
+	view : function(ctrl){
+		return m("h2", ctrl.users().c)
+	}
+}
+m.mount(document.body, c)
+```
+
+**自定义请求被拒绝**
+
+只要在 extract 函数中 `throw` 一个就可以了, 之后可以在 promise.catch 中获得这个抛出的值
+
+
+**使用 JSONP**
+
+首先添加参数 `{dataType: "jsonp"}`, 而不是使用 method.
+
+其实你不需要添加 callback=xxx 的 GET 参数, mithril 会自动给 callback 附加一个随机值
+
+> 只是 callback 这只是个约定, 有些服务器并不会按照这个来响应数据
+
+> 因为 JSONP 其实是就使用 script 加载一个 JS 脚本, 它的回调是由脚本来调用.
+
+由于一些服务器并不按照约定回调, 因此可以指定 {callbackKey: "callback", callbackName: "random_name"} 代替默认的
+
+JSONP 所接受的参数和正常的 XHR 并不一样, 你可以参考原文档的方法签名
+
+
+#### deferred
+
+这是 mithril 中的一个底层方法， 形为与 jQuery.Deferred 类似，但是它们所提供的 API 并不一致
+
+```js
+var df = m.deferred();
+
+df.promise.then(function(a){console.log(a)})
+
+df.resolve("mithril")
+
+// jQuery
+var jf = $.Deferred()
+
+jf.promise().then(function(a){console.log(a)}) // Note: promise()
+
+jf.resolve("jQuery")
+```
+
+实际上 mithril 的 Promise 是一个 prop 属性. 当 resolve 之后, 调用 promise() 将直接返回结果, 或者像上边一样使用 `then/catch` 来获取值.
+
+另外如果需要与第三方异步库整合的话，建议参考原档, 因为很简单...
+
+**同步执行**
+
+这是 mithril 的 Promise 区别于 html5 的 Promise 的一个地方:
+
+```js
+var deferred = m.deferred()
+deferred.promise.then(function() {
+    console.log(1)
+})
+deferred.resolve("value")
+console.log(2)
+
+// html5 中的 Promise
+new Promise(function(resolve,x){
+  resolve(1)
+}).then(function(a){console.log(a)})
+console.log(2)
+```
+
+在上边的示例中 mithril 将先输出 1, 然后再输出 2, 而下边的则是先输出 2, 然后才是 1, 这是因为如果需要像标准的 Promise 一样,
+需要引入一入 setImmediate 的库, 这个而库的代码量并不小. 实际上这种微小差异是可以忽略的.
+
+
+#### sync
+
+这个方法类似于 html5 的 Promise.all, 用于等待多个 m.Promise 的完成
+
+```js
+var greetAsync = function(delay) {
+    var deferred = m.deferred();
+    setTimeout(function() {
+        deferred.resolve("hello");
+    }, delay);
+    return deferred.promise;
+};
+
+m.sync([
+    greetAsync(1000),
+    greetAsync(1500)
+]).then(function(args) {
+    console.log(args); // ["hello", "hello"]
+});
+```
+
+### HTML
+
+#### trust
+
+默认情况下 mithril 将会自动转义 HTML 文本字符串，这个方法用来防止对字符串进行转义, 参见 Core 中的 m 方法那一章节
+
+### Rendering
+
+#### render
+
+用于将 virtual dom 或 component 展现到指定DOM元素内部. 这是一个比较底层的方法。
+
+注意: 如果 component 中的 controller 中使用了异步方法（如 m.request({url: "some/data"})）, 则不应该使用 render
+
+**subtree**
+
+假如 view() 返回一个为 `{subtree: "retain"}` 的对象, 则 mithril 将会停止重绘这个节点
+
+#### redraw
+
+重新展现 view, 用于 m.mount 或 m.route， 调用这个方法会立即重绘, 因此需要小心某些 null 值会导错的错误
+
+如果你是使用第三方库开发异步展现, 你可以尝试使用 startComputation/endComputation, 而不直接调用这个方法
+
+**重绘的策略**
+
+可以更改 prop 属性 m.redraw.strategy 的值为 "all|diff|none", 新策略仅用于下一次重绘。
+默认情况下, 当构建 controller 之前, mithril 会设置这个置为 "all" , 在触发事件之前则会设它的值为 "diff"，
+当重绘后, mithril 将重置值为 "all" 或者 "diff", 具体取决于 route 的更改.abort
+
+例如: 只有在用户按下"回车"时才重绘:
+
+```js
+var saved = false
+function save(e) {
+   if (e.keyCode == 13) {
+       //this causes a redraw, since event handlers active auto-redrawing by default
+       saved = true
+   }
+   else {
+       //we don't care about other keys, so don't redraw
+       m.redraw.strategy("none")
+   }
+}
+
+//view
+var c = {
+	view : function() {
+		return m("div", [
+			m("button[type=button]", {onkeypress: save}, "Save"),
+			saved ? "Saved" : ""
+		])
+	}
+}
+m.mount(document.body, c)
+```
+
+#### startComputation/endComputation
+
+这二个方法其实非常简单, 它的原理只是使用了一个计数器, 当这个计数器为 0 时则调用 redraw.
+
+一般情况下你可以在 ajax 发送时调用 startComputation, 在收到 ajax 数据时调用 endComputation 以重绘DOM.
+
+* 实际上 m.request 已经自动帮你调用了这二个方法了, 因此你不必再重复调用了
+
+* 使用这二个方法时, 不要使用 render 来展现
+
+<br />
+
+
+haxe 规范
+------
+
+感觉 mithril-hx 对一些方法处理的并不太好. 这里我自已写了一些编译后代码更接近源生JS的代码
+
+
+Component:
+
+```haxe
+import js.Lib.nativeThis in ctrl;  // Note:
+
+typedef Component = {
+	@:optional var controller: haxe.Constraints.Function;
+	var view: haxe.Constraints.Function;
+}
+
+class Main{
+    static function main() {
+		var c:Component = {
+			controller: function(){
+				ctrl.value = "this is a test"; // ctrl == this == new controller()
+				ctrl.color = "red";
+				ctrl.onunload = function(){
+					trace(ctrl);
+				}
+			},
+
+			view: function(ctrl){
+				return js.Lib.global.m("h1",{style: {color: ctrl.color}}, ctrl.value);
+			}
+		};
+		js.Lib.global.m.render(js.Browser.document.body, c);
+    }
+}
+```
+
+TODO: 感觉这样的代非常不好读, 但是似乎又没有其它的方法好处理, 假如在 controller 中出现 this 估计错误都不好检察。
+
+虽然可以从 controller 返回一个 Object, 但是感觉这种方式又不被推荐， 或者我们需要一个宏来检测 controller 是否有 this 关键字存在
+
+<br />
