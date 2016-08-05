@@ -148,29 +148,24 @@ int main (){
 
 ### 引用
 
+引用必须在声明时就确定其引用的变量， 因此引用不可变。
+
 ```cpp
 using namespace std;
 #include <iostream>
 
 int main (){
    double a = 3.1415927;
-
-   double &b = a;                           // 定义 b 为引用.
-
+   double &b = a;    // <--
    b = 89;
-   cout << "a contains: " << a << endl;     // Displays 89.
+   cout << "a contains: " << a << endl;
    return 0;
 }
 ```
 
-定义引用 `double &b = a` 像是指针 `double *b = &a;`. 但是 b 不可以像指针那样随意改变,因此如果尝试引用另一个变量如 `&b = c` 将报错.
-
-因此引用像是传统的 `type *const varname` 之类的固定指针.
-
-引用可以用来函数参数以修改传送的参数值
+引用可以用来函数参数以修改传送的参数值，有一个缺点就是调用带引用参数的函数时形为不明确，不像 C# 那样传递参数为引用时必须加 ref（或者我们可以定义一个空）
 
 ```cpp
-// 注意参数 r 前加的.
 void change (double &r, double s){
    r = 100;
    s = 200;
@@ -180,10 +175,8 @@ int main (){
    double k, m;
    k = 3;
    m = 4;
-
    change (k, m);
-
-   cout << k << ", " << m << endl;			// Displays 100, 4.
+   cout << k << ", " << m << endl;  // Displays 100, 4.
    return 0;
 }
 ```
@@ -211,36 +204,12 @@ int main (){
 }
 ```
 
-引用用于函数返回值, 看上去可以做为链式调用,
-
-当然指针也能做到这一点,但是指针的链式返回值需要加前缀`*`,对于访问成员可以使用 `->`
-
+对于从函数中返回引用， 实际上根本没必要这样做， 因为你不能返回局部引用，只能返回引用参数，这样做就没有意义了
 
 ```cpp
-double &biggest (double &r, double &s){		// 指针版本：double *biggest (double *r, double *s)
-   if (r > s) return r;						// 指针版本：if (*r > *s) return r;
+double &biggest (double &r, double &s){
+   if (r > s) return r;
    else       return s;
-}
-
-int main (){
-   double k = 3;
-   double m = 7;
-   cout << "k: " << k << endl;       // Displays  3
-   cout << "m: " << m << endl;       // Displays  7
-   cout << endl;
-
-   biggest (k, m) = 10;			// 指针版本: (*(biggest (&k, &m))) = 10;
-
-   cout << "k: " << k << endl;       // Displays  3
-   cout << "m: " << m << endl;       // Displays 10
-   cout << endl;
-
-   biggest (k, m) ++;			// 指针版本: (*(biggest (&k, &m))) ++;
-
-   cout << "k: " << k << endl;       // Displays  3
-   cout << "m: " << m << endl;       // Displays 11
-   cout << endl;
-   return 0;
 }
 ```
 
@@ -937,28 +906,28 @@ public:
 	}
 };
 
-class TriVector: public Vector{		// TriVector 从 Vector 派生而来, 使用冒号 :.
+class TriVector: public Vector{     // TriVector 从 Vector 派生而来, 使用冒号 :.
 public:
 	double z;	// 增加成员属性
 
 	TriVector(double a = 0, double b = 0, double c = 0):Vector(a,b){
 		z = c;
-									// Vector 构造函数将在 TriVector 构造函数之前被调用, 类似于 super(a,b)
-									// 同样使用冒号 :.
+                                    // Vector 构造函数将在 TriVector 构造函数之前被调用, 类似于 super(a,b)
+                                    // 同样使用冒号 :.
 	}
 
-	TriVector(Vector a){			// 当出现赋值 trivector = vector 时.将自动调用这个方法. 值复制
+	TriVector(Vector& a){			// 当出现赋值 trivector = vector 时.将自动调用这个方法. 值复制
 		x = a.x;
 		y = a.y;
 		z = 0;
 	}
 
-	double module(){				// 重定义 module 方法, 不需要写 override 关键字
+	double module(){                // 重定义 module 方法, 不需要写 override 关键字
 		return sqrt(x*x + y*y + z*z);
 	}
 
 	double sum(){
-		return Vector::sum() + z;	// override, 由于 C++ 允许多继承, 所以其它语言的 super.method 的方式为这样.
+		return Vector::sum() + z;   // override, 由于 C++ 允许多继承, 所以其它语言的 super.method 的方式为这样.
 	}
 
 	double volume(){
@@ -975,12 +944,11 @@ int main(int argc, const char ** argv){
 	cout << "Volume of t: " << t.volume() << endl;
 
 	TriVector t2;
-	t2 = v;			// 值复制, 自动调用 TriVector(Vector a) 方法, 做一些值修改
-					// TriVector(Vector a) 必须要自已写.
+	t2 = v;	     // 值复制, 自动调用 TriVector(Vector& a) 方法, 做一些值修改
 
 	Vector v2;
-	v2 = t;			// 值复制, z 值将会被自动丢弃
-					// 编译器自动调用类似于 Vector(TriVector t),的方法, 不用自已实现
+	v2 = t;      // 值复制, z 值将会被自动丢弃
+                 // 编译器自动调用类似于 Vector(TriVector& t),的方法, 不用自已实现
 
 	cout << "Surface of t2: " << t2.surface() << endl;
 	cout << "Surface of v2: " << v2.surface() << endl;
@@ -988,16 +956,16 @@ int main(int argc, const char ** argv){
 }
 ```
 
-override http://blog.csdn.net/jszhangyili/article/details/7570311
+override 只能用在基类带有 virtual 的方法上。
 
 ```cpp
 class Base ｛
 virtual void f();
-}；
+}
 
 class Derived : public Base {
-void f() override; 		// 表示派生类重写基类虚函数f
-void F() override;		//错误：函数F没有重写基类任何虚函数
+void f() override;  // 表示派生类重写基类虚函数f
+void F() override;  //错误：函数F没有重写基类任何虚函数
 }；
 ```
 
@@ -1029,8 +997,8 @@ int main(int argc, const char ** argv){
 	TriVector t(1,2,3);
 	Vector *r =  &t; // Vector指针, 但是指向 TriVector 的实例,
 
-	cout << "module of r: " << r->module() << endl;		// output: 3.74166
-	cout << "module of t: " << t.module() << endl;		// output: 3.74166
+	cout << "module of r: " << r->module() << endl;  // output: 3.74166
+	cout << "module of t: " << t.module() << endl;   // output: 3.74166
 ```
 
 结论: C++ 通过 virtual 来实现类似于 其它语言称为 Interface 的东西.
@@ -1042,7 +1010,7 @@ using namespace std;
 
 class Octopus{
 public:
-	virtual double module() = 0;	// = 0 强制方法未定义, 这可以使这个类无法被声明.
+	virtual double module() = 0;  // = 0 强制方法未定义, 这可以使这个类无法被声明.
 };
 
 class Vector: public Octopus{
@@ -1131,24 +1099,35 @@ class TriVector: public Vector, public Number{
 * 指针快速索引
 
   ```cpp
-  int const *n; 	// 指针可变,指向的值不可变
+  int const *n;    // 指针可变,指向的值不可变
 
-  int	*const m; 	// 指针不可变,指向的值可变
+  int *const m;    // 指针不可变,指向的值可变
 
   const int const *mn;
 
-  int *a[]; 		// array of pointers. 英文的意思更清楚
+  int *a[];        // array of pointers. 英文的意思更清楚
 
-  int (*a)[]; 		// pointer to array.
+  int (*a)[];      // pointer to array.
 
-  int *f(); 		// 返回一个int类型指针, 这种风格应该尽量避免，不如传指针为参数
+  int *f();        // 返回一个int类型指针, 这种风格应该尽量避免，不如传指针为参数
 
-  int (*f)(); 		// 函数指针.
+  int (*f)();      // 函数指针.
 
   // 多唯数组指针对应
   int x[10][20];
   int(*px)[20];
   px = x;			//等同于 px = &x[0]
+  ```
+
+* 结构体的初使化，各编译器似乎有些不一致
+
+  ```cpp
+  struct Person{
+    int id;
+    int phone;
+  };
+
+  struct Person p = {10, 101};  // 兼容 MSVC,GCC
   ```
 
 * `#ifdef __cplusplus` 一些源码能常见到的.
@@ -1167,14 +1146,20 @@ class TriVector: public Vector, public Number{
   #endif
   ```
 
-* 函数后()边跟 const, 表示这个函数不会修改成员变量.
+* 方法后边接...
 
   ```cpp
-  int current_track() const;
-  //....
-  int current_track() const{
-  	return x;
-  }
+  // 接 const 表示这个函数不会修改成员变量.
+  int current_track() const {
+
+  // 接 throw() 表示这个函数不允许抛出异常, (c++11 还有个形为一样的 noexcept 但 msvc 不支持)
+  const char* what() const throw() {  // c++98
+
+  // 接 override, 表示覆盖父类的同名虚函数, (个人注: override 应该放到上边几个的最后)
+  const char* what() const throw() override {
+
+  // 虚函数置 0 为纯虚函数。 这使得这个类不允许直接初使化, 只能通过子类初使化.
+  virtual void test() = 0;
   ```
 
 * 初使化成员列表, 可以初使化 const 类型成员.
@@ -1247,23 +1232,30 @@ class TriVector: public Vector, public Number{
 
 * `explicit` 用来修饰类的构造函数,防止隐式转换 <http://www.educity.cn/develop/461209.html>
 
-* 三规则, 其中第二条,可以在第一条加explicit防止显示赋值
+* 三条规则, 第一条可以加 explicit 明确地禁止隐式赋值，这样将导致赋值不成立
 
   ```cpp
-  // 1. copy constructor
-  person(const person& that) : name(that.name), age(that.age){
+  // 1. copy constructor， 这个是使用另一个 Person 初使化时调用
+  Person(const Person& that) : name(that.name), age(that.age){
   }
 
-  // 2. copy assignment operator
-  person& operator=(const person& that){
+  // 2. copy assignment operator，这个是初使化后赋值时调用
+  Person& operator=(const Person& that){
   	name = that.name;
   	age = that.age;
   	return *this;
   }
 
   // 3. destructor
-  ~person(){
+  ~Person(){
   }
+
+  // ...
+  Person p1;
+
+  Person p2 = p1; // 1. copy constructor
+
+  p2 = p1;        // 2. copy assignment operator
   ```
 
 * 子类中使用 using 声明引入基类成员 <http://www.cnblogs.com/ustc11wj/archive/2012/08/11/2637316.html>

@@ -236,7 +236,7 @@ int         31-bit signed int (roughly +/- 1 billion) on 32-bit
 			
 			ocaml 没有无符号的整数类型. 但使用 nativeint 能得到同样效果.
 
-float       IEEE double-precision floating point, equivalent to C's double
+float       IEEE double-precision floating point, equivalent to C\'s double
 			ocaml 没有单精度浮点数.
 
 bool        A boolean, written either true or false
@@ -300,10 +300,10 @@ let, let rec 之间的唯一区别是函数名称的作用域. 如果只是 let,
 
 ```ocaml
 let positive_sum a b = 
-    let a = max a 0				(*  重新定义 a 和 b , 
-									"let a =" 之后的 "max a 0" 中的 a 表示之前定义
-									所以这里不能使用 let rec a ,								
-								*)
+    let a = max a 0	    (*  重新定义 a 和 b , 
+                            "let a =" 之后的 "max a 0" 中的 a 表示之前定义
+                            所以这里不能使用 let rec a ,
+                        *)
     and b = max b 0 in
     a + b;;
 	
@@ -327,7 +327,7 @@ int_of_char : char -> int
 
 如果一个函数返回 nothing (相当于 C 语言的 void), 这表示返回 uint 类型. 例如:
 
-```
+```ocaml
 output_char : out_channel -> char -> unit
 ```
 
@@ -1857,7 +1857,7 @@ String.fill 和 String.blit 分别是 C 语言 memset 和 strcpy, String.copy �
 
 ### 数组
 
-数组的表达式形式为: `[| el; e2; e3; .... |]`, 和链表很像, 只是中括号二边多了 '|' 符号.一个展示 for 循环的示例:
+数组的表达式形式为: `[| el; e2; e3; .... |]`, 和链表很像, 只是中括号二边多了 '\|' 符号.一个展示 for 循环的示例:
 
 ```ocaml
  let add_vect v1 v2 =

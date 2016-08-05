@@ -856,32 +856,25 @@ class Helo{
 ```
 
 
-
-
 ### 泛型
 
 * [泛型 (Type Parameters)](http://haxe.org/ref/type_params)
 
 * [高级类型(Type Advanced)](http://haxe.org/ref/type_advanced)
 
-* **有些时候** 需要在使用了`<T>` 的类中,要添加前缀 `@:generic`,比如使用了 `new T()` 这样的代码.
+* `@:generic` 的使用参考 <http://haxe.org/manual/type-system-generic.html>, 注意加不加这个元数据生成的代码有什么不一样.
 
-* 泛型限定 `<T:Foo>`, 将 T 限定为 Foo,
+* 类型限定 `<T:Foo>`, 将 T 限定为 Foo,
 
-  > 对于 `<T:{prev:T,next:T}> 或 <K:{ function hashCode():Int;}>` 这样的源码
-  >
-  > 实际上 `{}` 可以看成匿名类型,然后这个类型只要包含 prev,next 属性 或 hasCode 方法就行了, 分析 haxe.macro.Type.hx 的 Ref
+  > 对于 `<T:{prev:T,next:T}> 或 <K:{ function hashCode():Int;}>` 这样的源码, 可以把 `{}` 看成 typedef 定义的类型。
+
+
+* 类型多个限定, 参考下边示例, T 必须 **同时满足** `Iterable<String>, 和 Measurable`
 
   ```haxe
-  typedef Ref<T> = {
-      public function get() : T;
-      public function toString() : String;
+  static function test<T:(Iterable<String>, Measurable)>(a:T) {
   }
-  // 只要一个类型它包含了 get 及 toString ,就可以看成是 Ref
   ```
-
-
-
 
 ### metadata
 
@@ -973,25 +966,157 @@ var w:Window = {x:0,y:0};
 
 ### abstract
 
-abstract 用于抽象化数据结构,用于包装底层类型, 其行为更像是 inline,编译器将作自动替换.
-
-> 通过添加 `@:enum` 可以使 abstract 类有成员变量. 这时成员变量会 **被当成常量** 处理,或者`getter`
->
-> 从示例中可以看到,和 `typedef` 的区别是抽象类型是要有原形(小括号Int)的,并且 `abstract` 可以有方法体,和一些类型写类型转换规则
->
-> 在 abstract 语法内 的 static 成员方法,不需要 using, 见 [abstract-selective-functions](http://haxe.org/manual/types-abstract-selective-functions.html) 这一点对运算符重载很重要,
->
-> 因为运算符重载有时需要添加 `@:commutative` 来交换二个操作数的位置,就 **必须** 使用 static 类型的方法重载.
+“抽象类”, 比如你可以把一个 Float 类型 **想象成(抽象成)** DateTime 类型，使得代码更可读。
+看上去像是使用 `typedef` 定义了一个别名， 但不同的是抽象类可以在这个别名上添加各种方法， 绝大多数情况下
+这些方法都为 inline 类型， 因为编译器在底层只是将抽象类做一些名字替换而已。例:
 
 ```haxe
-@:commutative @:op(A + B) private static inline function addWithFloat(a:UInt, b:Float):Float {
-	return a.toFloat() + b;
+@:analyzer(no_const_propagation)   // 这个参数是防止编译器对常量优化
+class Main {
+	static public function main() {
+		var s = new Score(61);
+		trace(s.pass());
+	}
 }
 
-@:commutative @:op(A * B) private static inline function mulWithFloat(a:UInt, b:Float):Float {
-	return a.toFloat() * b;
+// 这里小括号中的类型 Int, 我们称之为: 底层类型(underlying type)
+abstract Score(Int){
+	inline public function new(i:Int){
+		this = i;
+	}
+	inline public function pass():Bool {
+		return this >= 60;
+	}
 }
 ```
+
+输出 JS 为:
+
+```js
+(function () { "use strict";
+var Main = function() { };
+Main.main = function() {
+	console.log(61 >= 60);       // 如果没有防止优化, 这里会直接输出 true
+};
+Main.main();
+})();
+```
+
+对于抽象类, haxe 提供了多个 “元标记(metadata)”， 不同 “元标记” 有其各自的意义
+
+* `@:enum`: 使得抽象类像 C 语言中的枚举，
+
+  ```haxe
+  @:enum abstract C(Int) {
+      var X = 0;
+      var Y = 1;
+      var Z = 2;
+      var W = 3;
+  }
+  // 这里有一个问题是, 这种枚举不能自动增量，当然你可以使用“宏”来实现自动增量
+  // ...
+  trace(W);    // 编译成 JS 后将为: console.log(3);
+  ```
+
+对于抽象类，建议大家参考 haxe 中 UInt.hx 的源码。
+
+#### Implicit Casts
+
+[隐式转换...](http://haxe.org/manual/types-abstract-implicit-casts.html), 直接与底层类型转换可以简单地使用 from 和 to.
+
+```haxe
+abstract Score(Int) from Int to Int{
+	inline public function pass(score:Int):Bool {
+		return score >= 60;
+	}
+}
+
+//...
+	var s:Sore = 61;  // from Int, 可直接从 Int 赋值
+	trace(s + 20);    // to Int, 可直接转换成 Int
+```
+
+如果想要隐式地转换成其它类型， 则可以使用： `@:from, @:to`
+
+```haxe
+abstract Score(Int){
+	inline public function new(i:Int){
+		this = i;
+	}
+	// @:from 应该放在 static 类型上, 对应这个方法的参数类型
+	@:from inline static public function fromString(s:String):Score{
+		return new Score(Std.parseInt(s));
+	}
+
+	// 对应这个方法的返回值类型
+	@:to inline public function toArray():Array<Int>{
+		return [this];
+	}
+}
+//...
+	var s:Score = "61";    // from String
+	var a:Array<Int> = s;  // to Array
+	trace(a);              // 输出: [61]
+```
+
+#### Operator Overloading
+
+[操作符重载...](http://haxe.org/manual/types-abstract-operator-overloading.html),
+
+
+只是在这节介绍下 commutative, 用于交换二个操作数的左右位置
+
+* `@:commutative`: 应用用抽象类的运算符重载，你可以参考 UInt.hx 的源码
+
+  ```haxe
+  @:commutative @:op(A + B) private static inline function addWithFloat(a:UInt, b:Float):Float {
+  	return a.toFloat() + b;
+  }
+
+  @:commutative @:op(A * B) private static inline function mulWithFloat(a:UInt, b:Float):Float {
+  	return a.toFloat() * b;
+  }
+  ```
+
+#### Array Access
+
+[索引器...](http://haxe.org/manual/types-abstract-array-access.html)，通过在抽象类上添加 `@:arrayAccess`
+
+```haxe
+abstract AString(String) {
+  inline public function new(s) this = s;
+  @:arrayAccess inline function getInt1(k:Int) {
+    return this.charAt(k);
+  }
+}
+//...
+	var a = new AString("foo");
+	trace(a[0]); // "f"
+```
+
+> 由于字符串不可变, 因此这个示例没有添加 setter 的索引器了， 如果存在多个类型相同的索引器，则自动选择第一个而忽略后边
+
+
+#### Selective Functions
+
+实际上对于抽象类， 编译器在底层将提升成员方法为“静态”，因此你也可以直接定义成静态方法, 语法类似于 “静态扩展”，
+只要静态函数的第一个参数类型为抽象类的底层类型(underlying type)即可，有点像是编译器自动帮你使用了 "using" 一样。
+
+```haxe
+// 这里仍旧使用上边的示例, 只是把 pass 改成了静态方法,
+abstract Score(Int){
+	inline public function new(i:Int){
+		this = i;
+	}
+	@:impl
+	inline static public function pass(score:Int):Bool {
+		return score >= 60;
+	}
+}
+```
+
+> `@:impl` 就像 “静态扩展” 的 "using" 关键字， 因为正常情况下， Selective Functions 是用于 “隐式转换”，“操作符重载”
+这些操作上，这样的话就可以不用添加 impl。 而很少会像这样直接写成静态方法的形式(因为一般情况下都是写成成员方法)
 
 
 分隔线
@@ -999,7 +1124,7 @@ abstract 用于抽象化数据结构,用于包装底层类型, 其行为更像�
 
 一些类细节
 
-#### haxe.web.Dispatch
+### haxe.web.Dispatch
 
 http://old.haxe.org/manual/dispatch
 
@@ -1179,12 +1304,11 @@ input或output 默认都是阻塞类型的,
 
 * `connect(host:Host, port:Int):Void`
 
-
 其实使用 vm.net.ThreadServer 就好了...
 
 
 ### FPHelper
 
-最新特性
+针对 Float 类型的一些帮助方法，
 
 <br />

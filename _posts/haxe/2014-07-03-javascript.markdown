@@ -27,11 +27,12 @@ categories: haxe
 * `__js__` 用于直接嵌入 js 代码
 
   ```haxe
-  var s:String = untyped __js__("Navigator.plugin[\"Shockwave Flash\"]");
+  var s:String = untyped __js__('Navigator.plugin["Shockwave Flash"]');
 
-  // 由于 js 的 {} 并没有其独立作用域，因此 __js__ 内部可以随意写局部变量
+  // 实例上 __js__ 的签名是: __js__("js code", arg1, arg2, argn...)
+  // 它使用了类似于 C# 的字符串格式语法
   var a = 1, b = 2;
-  untyped __js__("var c = a+b");
+  untyped __js__("var c = {0} + {1}", a, b); // a, b 将分将替换掉 {0}, {1}
 
   // 或者在一个函数的内部如:
   untyped Array.prototype.slice.call(__js__("arguments"));

@@ -89,6 +89,8 @@ https://github.com/sindresorhus/awesome
 
 这个章节的大多数内容都是用于美化的 CSS 或 Javascript , 大多数似乎在 ie8 中都会报错.
 
+* <https://github.com/jeff-optimizely/Guiders-JS> 弹出层向导, 兼容性未知
+
 * <http://w3layouts.com/> **NOTE** 网页布局模板
 
 * <http://www.iwan0.com/> 一个前端资源的网站导航, 中文

@@ -622,7 +622,6 @@ vcproj                 : GenCPP internal
 # purity_inference -
 # unreachable_code -
 # ignore -
-# no_simplification
 # dot_debug
 @:analyzer(param)    : Used to configure the static analyzer
 
@@ -746,7 +745,9 @@ vcproj                 : GenCPP internal
 
 
 # **常用于**.当 new T()时, 需要添加这个标记  用于替换掉需要接口 haxe.rtti.Generic类,用于声明泛型类. (since 3.0.
-# 标记 class 或 class field 为泛型, 因此每个类型参数将构建自身
+# 标记“类”或“静态字段”为泛型, 因此每个类型参数将分别构建自身
+# 比如 Some<Int>,Some<Float> 加上这个元数据后会被分别编译为 Some_Int,和 Some_Float 类
+# 对于静态平台来说, 加上这个是最好, 但如果是 JS 平台, 则不需要加
 @:generic            : Marks a class or class field as generic so each type parameter combination generates its own type/field
 
 # http://haxe.org/manual/macro-generic-build.html
@@ -807,7 +808,7 @@ vcproj                 : GenCPP internal
 # 生成相应的 Flash 元数据, 例: @:meta(Event(name="test",type="Foo"))
 @:meta               : Internally used to mark a class field as being the metadata field. (flash only)
 
-# Map.hx 就是多类型
+# 参考 Map.hx, 用于 abstract 配合 @:to, 比较复杂
 @:multiType          : (Relevant type parameters)Specifies that an abstract chooses its this-type from its @:to functions
 
 # 重写输出类或枚举的包名, 例: @:native("my.real.Cls"). 使它更容易绑定到 extern 类, 可能有不一样的名称.
