@@ -5,18 +5,18 @@ date:   2014-03-29 17:50:10
 categories: haxe
 ---
 
-
 本文档的目的是帮助 熟悉 Actionscript 3 的开发人员快速入门 Haxe。更多 Haxe 特定文档请参阅主要的 [Haxe.org](http://Haxe.org).
 
-- [Haxe 语法](http://haxe.org/ref/syntax)
-- [Haxe 语言参考手册](http://haxe.org/ref)
-- [Haxe API](http://api.haxe.org) 如果你安装了 Haxe 可以打开安装目录下 **HaxeToolkit\haxe\doc\index.html**
-- 如果你熟悉 AS3 建议从 [Haxe/openfl](http://www.openfl.org/documentation/) 开始. openfl 提供了跨平台的 Flash API
+* [Haxe 简介](http://haxe.org/manual/introduction.html)
 
+* [Haxe IDE选择](http://haxe.org/documentation/introduction/editors-and-ides.html)
+
+* 如果你熟悉 AS3 建议从 [Haxe/openfl](http://www.openfl.org/documentation/) 开始. openfl 提供了跨平台的 Flash API
+
+<!-- more -->
 
 这个文档源文来自: [Haxeflixel's guide](http://haxeflixel.com/documentation/as3-and-haxe-comparison/).
 
-<!-- more -->
 <h3 id="基础类型">Basic Types(基础类型)</h3>
 <div class="row">
   <div class="col-md-6 as3">
@@ -65,7 +65,7 @@ const MAX:int = 100;
 {% highlight haxe %}
 
 static inline var MAX:Int = 100;
-// 但是 haxe 的常量只允许 Int, Bool, Float, String 这些常量类型.
+// haxe 的常量只允许为 Int, Bool, Float, String
 {% endhighlight %}
 </div>
 </div>
@@ -106,7 +106,7 @@ package com.example.myapplication;
 public class MyClass {
 
    public function MyClass () {
-	
+
    }
 
 }
@@ -155,13 +155,12 @@ for (var propertyName:String in object) {
 <h4>Haxe</h4>
 
 {% highlight as %}
-// haxe 中没有 for(var i=0; i<10; i++) 这样的循环
+// haxe 没有 for(var i=0; i<10; i++)
 for (i in 0...100) {
 
 }
 
 for (value in items) {
-
 }
 var fields = Reflect.fields (object);
 for (propertyName in fields) {
@@ -222,8 +221,7 @@ switch (value) {
 {% highlight as %}
 var hi = "Hello World";
 
-// type is Object (类型为 Object)
-// fails to compile in strict mode (不能通过严格模式的编译)
+// 类型为 Object，不能通过严格模式的编译
 {% endhighlight %}
 </div>
 
@@ -233,8 +231,7 @@ var hi = "Hello World";
 {% highlight haxe %}
 var hi = "Hello World";
 
-// type is String (类型为 String)
-// even works for code completion (能正常通过编译)
+// 类型为 String，能正常通过编译
 {% endhighlight %}
 </div>
 
@@ -282,12 +279,11 @@ var toInteger = Std.int (10.1);
 <h4>AS3</h4>
 
 {% highlight as %}
-if (vehicle is Car) {
-
-}
-
 import flash.utils.getDefinitionByName;
 import flash.utils.getQualifiedClassName;
+
+if (vehicle is Car) {
+}
 
 name = getQualifiedClassName (vehicle);
 type = Class (getDefinitionByName (name);
@@ -298,7 +294,8 @@ type = Class (getDefinitionByName (name);
 <h4>Haxe</h4>
 
 {% highlight haxe %}
-// haxe 中没有 is as 以及 instanceof 这些关键字.
+// haxe 中没有 is,as 以及 instanceof 这些关键字
+
 if (Std.is (vehicle, Car)) {
 
 }
@@ -333,7 +330,7 @@ if (!object) {
 
 {% highlight haxe %}
 if (object == null) {
-	
+
 }
 
 {% endhighlight %}
@@ -469,7 +466,7 @@ function hello (msg:String):Void {
 
 }
 
-var type:String->Void = hello; 
+var type:String->Void = hello;
 
 // can also use Dynamic
 var type2:Dynamic = hello;
@@ -488,15 +485,11 @@ var type2:Dynamic = hello;
 
 {% highlight as %}
 function get x ():Number {
-
    return _x;
-
 }
 
 function set x (value:Number):void {
-
    _x = value;
-
 }
 {% endhighlight %}
 </div>
@@ -505,18 +498,13 @@ function set x (value:Number):void {
 <h4>Haxe</h4>
 
 {% highlight haxe %}
+var _x:Float;
 public var x (get, set):Float;
-
-function get_x():Float {
-	//return x;				// 如果返回 x,则需要给 var x 添加 @:isVar,
-							// 如果你只是想返回 x, 建议把 get 更改为 default
-	return Other;
-}
+function get_x():Float { return _x; }
 
 function set_x(value:Float):Float {
-	//return x = value;		// 重要: 如果是是这种形式, 则 var x需相加 @:isVar,		
-	return value;			// 对于 get 形式,实际上不需像上边一行给 x 赋值
-}
+	return _x = value;
+} // 实际上不需要写得这么晦涩难懂
 {% endhighlight %}
 </div>
 </div>
@@ -530,10 +518,9 @@ function set_x(value:Float):Float {
 <h4>AS3</h4>
 
 {% highlight as %}
-function get x ():Float {
 
+function get x ():Number {
    return _x;
-
 }
 {% endhighlight %}
 </div>
@@ -543,13 +530,9 @@ function get x ():Float {
 
 {% highlight haxe %}
 public var x (default, null):Float;
-
-// null allows private access
-// never would restrict all access
-public var y(default, set):Float;
-function set_y(v:Float):Float{
-	return y = v; 		// 注意这个 y 没有下划线, 和声明的 y 变量一相同
-}
+// setter 的值可以为: null, never 或 set
+// null 表示仅能在类的内部修改其它
+// never 表示不可修改
 {% endhighlight %}
 </div>
 </div>
@@ -563,23 +546,18 @@ function set_y(v:Float):Float{
 <h4>AS3</h4>
 
 {% highlight as %}
-var cancelID:uint = setTimeout(calllback,delay_time_ms);
+var cancelID:uint = setTimeout(callb, 1000);
 
 clearTimeout(cancelID);// 取消
-
 {% endhighlight %}
 </div>
 
 <div class="col-md-6 hx3">
 <h4>Haxe</h4>
 {% highlight haxe %}
-// 重要: haxe.Timer 原生 Haxe 只支持 flash 以及 Javascript 平台
-// 使用 openfl 时, haxe.Timer 才是跨平台的.参看 HaxeToolkit\haxe\lib\openfl-native\1,n,n\haxe\Timer.hx
-// 使用 openfl 时, haxe.Timer 和 flash.utils.Timer 不是同一个类.
-var timer = haxe.Timer.delay(calllback,delay_time_ms); // return Type haxe.Timer
-
-timer.stop(); // 取消
-
+// haxe.Timer 仅只支持 flash 以及 JS 平台
+var t = haxe.Timer.delay(callb, 1000);
+t.stop(); // 取消
 {% endhighlight %}
 </div>
 
@@ -593,11 +571,9 @@ timer.stop(); // 取消
 <h4>AS3</h4>
 {% highlight as %}
 // AS 中对比二个实例是否为一个很简单,和普通类型变量一样
-
 trace(this == root);
 
 //或, AS 或 JS 都可以用 === 三个等号来表示全等于
-
 trace(this === root);
 {% endhighlight %}
 </div>
@@ -605,14 +581,11 @@ trace(this === root);
 <div class="col-md-6 hx3">
 <h4>Haxe</h4>
 {% highlight haxe %}
-// Haxe 则需要类型一致,  或者A的类型是 B 的 父类或子类
-
-// 假如 this => Main,  root => MovieClip
+// Haxe 则需要类型一致, 或者互为父,子类
 trace(this == cast(root,Sprite)); //
 
-//或,强制转换成另一个父类
-
-trace(this == cast(root,DisplayObject));
+//或使用 cast
+trace(this == cast root);
 {% endhighlight %}
 </div>
 
@@ -625,12 +598,10 @@ trace(this == cast(root,DisplayObject));
 <div class="col-md-6 as3">
 <h4>AS3</h4>
 {% highlight as %}
-
-// divillysausages.com/blog/as3_conditional_compilation
+// 需要 IDE 支持
 CONFIG::DEBUG{
   trace("debug");
 }
-
 {% endhighlight %}
 </div>
 
@@ -638,20 +609,16 @@ CONFIG::DEBUG{
 <h4>Haxe</h4>
 {% highlight haxe %}
 
-// 细节参看页尾的 条件编译
 #if debug
   trace("debug");
 #end
-
 {% endhighlight %}
 </div>
 </div>
 <hr />
 
 
-
-
-### Additional Features
+### 更多特性
 
 Haxe 增加了一些 Actionscript 3 没有的语法特性:
 
@@ -662,5 +629,13 @@ Haxe 增加了一些 Actionscript 3 没有的语法特性:
 * [custom iterators](http://haxe.org/ref/iterators)
 * [conditional compilation](http://haxe.org/ref/conditionals)
 * [inlining](http://haxe.org/ref/inline)
-* and more!
 
+### 个人笔记
+
+have fun!
+
+* [haxe/flash]({% post_url 2014-05-10-flash %})
+
+* [haxe/flash air]({% post_url 2014-05-15-compile-haxe-air %})
+
+<br />
