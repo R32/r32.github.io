@@ -318,9 +318,6 @@ nekotools 是一个安装 haxe 时附带的工具,nekotools 很简单只有二�
   # haxe --eval "class Foo{static public function main(){Sys.print('Hello world!');}}" --interp
   --eval		: evaluates argument as Haxe module code
 
-  # [隐藏]大概是被 --macro 取代了的命令. 是直接运行指定的文件类, 相当于 --macro Main.main()
-  # --run		: 直接运行指定的类, 以 neko 平台.
-
   # 绑定当前工作目录到 host:port, 用于缓存编译, 适用于大型项目, 减少编译时间, 参看下边示例
   # http://haxe.org/manual/cr-completion-server.html
   --wait <[host:]port> : wait on the given port for commands to run)

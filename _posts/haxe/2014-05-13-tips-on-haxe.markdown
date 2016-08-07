@@ -29,6 +29,8 @@ categories: haxe
 
 注意一些是 Git dev版本
 
+* `haxe.MainLoop` 的引入 <https://github.com/HaxeFoundation/haxe/pull/5017>
+
 * `extern clsss` 不知从什么时候起也允许有函数体了, 这样的话更方便JS模块化编程
 
 * [haxe 3.3 支持 extern 的 abstract 类以及 extern @:enum abstract](https://github.com/HaxeFoundation/haxe/issues/4862)
@@ -1122,7 +1124,6 @@ abstract Score(Int){
 分隔线
 ------
 
-一些类细节
 
 ### haxe.web.Dispatch
 
@@ -1270,7 +1271,7 @@ http://old.haxe.org/doc/remoting
 
 ### List
 
-链表形式, Haxe 中的List 是由包含二个元素的各个数组链接而成,文档称 适用于经常删除和添加元素,而避免复制.从源码上感觉这个List 的实现不太好, 感觉 List 没什么用.不如直接用 Vector 或 Array.
+链表, 个人建议只在 neko 这个平台推荐使用它, 至少目前是这样。 其它平台还是使用其它类吧.
 
 ```haxe
 var list = new List<Int>();
@@ -1307,8 +1308,23 @@ input或output 默认都是阻塞类型的,
 其实使用 vm.net.ThreadServer 就好了...
 
 
-### FPHelper
+### haxe.io.FPHelper
 
-针对 Float 类型的一些帮助方法，
+针对 Float 类型 与 Int 类型相互转换的一些方法， doubleToI64/i64ToDouble, floatToI32/i32ToFloat,
+
+形为和 C 语言的  dtoi/itod, ftoi/itof, 一样
+
+### haxe.MainLoop
+
+haxe 3.3 才正式加入的类, 使得目前除了flash 和 js平台, 其它平台也包含有 haxe.Timer.delay 方法
+
+需要注意的是 haxe.Timer.delay 只在存在于主线程，即使你在线程里调用它。因此如果你阻塞了主线程的话，
+那么 haxe.Timer.delay 也会被阻塞。
+
+当然, MainLoop 并不是为了实现 delay 而加入的，它最主要是为了游戏引擎的跨平台
+
+* `MainLoop.addThread`: 和 Thread.create 一样只不过它会当主线程退出运行时，会先等待子线程退出。
+
+* `MainLoop.add`: 参考 haxe.Timer 的源码.
 
 <br />

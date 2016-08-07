@@ -57,8 +57,15 @@ categories: other
 
 ### 语法差异
 
+**常量**
 
-**for 循环**, 首先, haxe 中没有 `for(var i=0; i < len; i++){}` 这种语法, 取而代之的是:
+ javascript | haxe
+----------- | -----------
+`const MAX = 100;` | `static inline var MAX = 100;`
+
+#### for 循环
+
+haxe 中没有 `for(var i=0; i < len; i++){}` 这种语法, 取而代之的是:
 
 ```haxe
 for(i in 0...10){ // js: for(var i=0; i < 10;  i++)
@@ -99,29 +106,32 @@ untyped __js__('for(k in {0}) {
 }', obj);  // obj 将会替换掉 {0}
 ```
 
-**switch**, haxe 中不需要写 break 语句， 当遇到下一条 case 或 default 语句时会自动 break。
+#### switch
+
+haxe 中不需要写 break 语句
 
 ```haxe
 switch(val){
 case 1:
   //do some thins
-case 2,3:
-  // 可使用逗号"," 或分隔符"|" 分隔多个一致的条件
+case 2, 3:
+  // 多条件, 可使用逗号"," 或分隔符"|"
 default:
   //
 }
 ```
 
-**关于IE 兼容性**，
+#### IE 兼容性
 
 * 首先, haxe 中的 DOM 对象是基于 W3C 的 IDL 文件自动生成的, 因此操作 DOM 时, 你应该尽量使用 js.jquery.JQuery 来操作 DOM
+
 * haxe 默认输出为 es5, 如果你想要兼容 ie8 或更低的浏览器则建议添加编译参数 `-D js-es=3`
 
 ### 特性
 
 这下边只写了一些目前我所能想到的, 其它的未来再补充。
 
-* `--no-traces` 这个编译参数将使得 trace 产生的语句(console.log) 不会出现在 js 文件中.
+* `--no-traces`: 一个编译参数即可擦除所有 console.log 语句
 
 * `#if, #elseif, #else, #end` 条件编译。 例:
 
@@ -133,12 +143,32 @@ default:
   #end
 
   // 或者你使用了一个名字为 heaps 的 haxe 库， 或者通过 -D 定义的自定义参数
-  // 这些条件检测支持 !, &&, ||
+  // 这些条件检测支持 !, &&, ||，注意使用条件运算符一定要用 “小括号”
   #if (heaps || MyDef)
   #end
+
+  #if (haxe_ver >= 3.2)
+  // 注意使用条件运算符一定要用“小括号”将表达式括起来
+  #end
+
+  // 如果你不知道有哪些 defines 可以使用, 可以像下边这个 “宏方法”， 例:
+  class Main {
+  	static function main() {
+  		trace(getDefines()); // console.log({'js-es5' : "1", .....})
+  	}
+
+  	macro static function getDefines(){
+  		var obj = {};
+  		var m = haxe.macro.Context.getDefines();
+  		for (k in m.keys()) {
+  			Reflect.setField(obj, k, "" + m.get(k));
+  		}
+  		return macro $v{obj};
+  	}
+  }
   ```
 
-* 抽像类，关键字: `abstract + inline`  比如你可以把 Int 类型想象成 Direction 类型, 使得代码更容易理解:
+* 抽像类，关键字: `abstract + inline`, 比如你可以把 Int 类型想象成 Direction 类型, 使得代码更容易理解:
 
   ```haxe
   // 小括号中的 Int 我们称之为 底层原型(underlying type)

@@ -555,8 +555,8 @@ clearTimeout(cancelID);// 取消
 <div class="col-md-6 hx3">
 <h4>Haxe</h4>
 {% highlight haxe %}
-// haxe.Timer 仅只支持 flash 以及 JS 平台
 var t = haxe.Timer.delay(callb, 1000);
+
 t.stop(); // 取消
 {% endhighlight %}
 </div>
@@ -570,10 +570,10 @@ t.stop(); // 取消
 <div class="col-md-6 as3">
 <h4>AS3</h4>
 {% highlight as %}
-// AS 中对比二个实例是否为一个很简单,和普通类型变量一样
+// AS 中对比二个实例是否为一个很简单
 trace(this == root);
 
-//或, AS 或 JS 都可以用 === 三个等号来表示全等于
+//或使用全等号
 trace(this === root);
 {% endhighlight %}
 </div>
