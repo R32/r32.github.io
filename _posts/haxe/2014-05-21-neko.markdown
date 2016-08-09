@@ -13,6 +13,8 @@ categories: haxe
 
 * [使用 threadserver](http://old.haxe.org/doc/neko/threadserver)
 
+* [haxe vs .neko vs nekoml 基准测试](https://gist.github.com/R32/87c14a13a9468739fff4d4084132200a)
+
 * 可能需要参考 http://nekovm.org/doc 的文档获得一些细节, 比如源码: `__dollar__print`
 
   - http://nekovm.org/doc/libs
@@ -163,7 +165,7 @@ class Poll {
 	function prepare( read: Array<Socket>, write: Array<Socket> ):Void;
 
 	// 轮询指定的socket数组并返回其中有效的, 这个类似于 Socket.select, 但没有 Socket.select 那样的连接数量限制
-	// 这个方法像是等于 prepare(a) + events(t)
+	// 这个方法等于 prepare(a, []) + events(t), 也不需要关心 readIndexes 和 writeIndexes的值
 	function poll( a: Array<Socket>, ?t: Float ): Array<Socket>;
 }
 // example: copy from tora/Tora.hx
@@ -246,30 +248,11 @@ Neko 虚拟机的可执行文件, 一个 Module 对应一个 `.n` 文件
 
 <br />
 
+
 nekovm
 ------
 
 从这里开始的内容并非是 haxe 代码。<http://nekovm.org/doc>
-
-nekoc.exe:
-
-```bash
-Neko Compiler v2.0.0 - (c)2005-2012 Motion-Twin
- Usage : neko [options] files...
- Options :
-  -d <file> : dump bytecode
-  -z <file> : make bytecode release
-  -p <file> : parse and print neko source
-  -doc <file> : make documentation
-  -o <dir> : set output directory
-  -console : run the console
-  -link <file> : link bytecodes files
-  -v : verbose mode
-  -version : set the bytecode version
-```
-
-### neko 语言规范
-
 
 #### 语法
 
@@ -424,7 +407,7 @@ Neko Compiler v2.0.0 - (c)2005-2012 Motion-Twin
 * 没有 return 和 ocaml 一样
 * 参数或返回值可以使用 `i:int` 这样的语法来显示明确类型
 * 和 ocaml 一样, int 的值无法自动隐式地转换成 float.
-* match 表达式中的 `[< NN; NNN >]` 为 stram 类型, 通常会在 Parse 文件的地方看到这种表达式
+* match 表达式中的 `[< NN; NNN >]` 为 stream 类型, 通常会在 Parse 文件的地方看到这种表达式
 * 运算符, 不支持三元运算符
 * 变量或方法名不可以用大写字母开头
 * 正则如果需要 options 需要自已从 neko("") 中调用

@@ -7,37 +7,47 @@ categories: other
 
 ---
 
-尝试接触下函数式语言, 这有个安装配置视频视频 <http://www.algo-prog.info/ocaide/tutorials/4-installingOnWindows/installingOnWindows.htm>
+在线快速熟悉 <https://try.ocamlpro.com/>
 
-* cygwin， 这里安装 ocaml 蛮简单不需要像视频里那样下载源码编译.
+安装配置视频 <http://www.algo-prog.info/ocaide/tutorials/4-installingOnWindows/installingOnWindows.htm>
 
-  - 双击运行 cygwin-setup.exe, 在界面里选择 `ocaml: The OCaml compiler and runtime(install helper)` 就完成了. 
+**[ocpwin](https://www.typerex.org/ocpwin.html)**
 
-* eclipse + OcaIDE, 在插件安装里输入 <http://www.algo-prog.info/ocaide/>
+* 选择, OCPWin-MINGW-Full(32 bits)，按照文档设置安装即可
 
-  安装时需要可以访问 Google(用Lantern), 需要 Java 1.7 版本(如果打开eclipse出错可以修改ini文件调小Xms和Xmx的值).
-	
-* 配置, 在 "窗口" - "首选项" 中找到 OcaIDE,进行一些配置,如 path 等等
+  > 安装第三方库 [camlp4](https://github.com/ocaml/camlp4) TODO: 不知道能否使用 cygwin 的 make?
 
-  - `Ocaml Binaries Directory`: 点击 Browse 定位目录(关联于cygwin的根目录, 如果不在 `cygwin/bin` 就在 `cygwin/usr/local/bin` 找找), 选好目录后按下 "Apply"
+* IDE 新手可以选择 <https://www.typerex.org/ocaml-top.html>
 
 <!-- more -->
 
-  - "make" 通常在 `cygwin/bin` 下
+**cygwin** 这里安装 ocaml 蛮简单不需要像视频里那样下载源码编译.
 
-  - "ocaml lib path": 通过命令 `ocamlc -where`, 如果通过界面安装的 ocaml 通常在 `cygwin/lib/ocaml`
+* 双击运行 cygwin-setup.exe, 在界面里选择 `ocaml: The OCaml compiler and runtime(install helper)` 就完成了.
 
-  - 重启eclipse, 你将会在控制台窗口处的"ocaml toplevel"看到 "OCaml version 4.01.0" 这样的字符.
+* `eclipse + OcaIDE`, 在插件安装里输入 <http://www.algo-prog.info/ocaide/>
 
-* TIPS: 如果 `which ocaml` 显示 `usr/lib/bin` 其实真实路径为 `PATH/TO/cygwin/bin`, 同样 `ocamlc -where` 显示 `usr/lib/ocaml` 其实路径在 `PATH/TO/cygwin/lib/ocaml`
+  > 安装时需要可以访问 Google(用Lantern), 需要 Java 1.7 版本(如果打开eclipse出错可以修改ini文件调小Xms和Xmx的值).
+  >
+  > 配置, 在 "窗口" - "首选项" 中找到 OcaIDE,进行一些配置,如 path 等等
+  >
+  > Ocaml Binaries Directory: 点击 Browse 定位目录(关联于cygwin的根目录, 如果不在 `cygwin/bin` 就在 `cygwin/usr/local/bin` 找找), 选好目录后按下 "Apply"
+  >
+  > "make" 通常在 `cygwin/bin` 下
+  >
+  > "ocaml lib path": 通过命令 `ocamlc -where`, 如果通过界面安装的 ocaml 通常在 `cygwin/lib/ocaml`
+  >
+  > 重启eclipse, 你将会在控制台窗口处的"ocaml toplevel"看到 "OCaml version 4.01.0" 这样的字符.
+  >
+  > 由于 `Ctrl+space` 与输入法冲突建议改成其它按键如 `Ctrl+,`
+  >
+  > TIPS: 如果 `which ocaml` 显示 `usr/lib/bin` 其实真实路径为 `PATH/TO/cygwin/bin`, 同样 `ocamlc -where` 显示 `usr/lib/ocaml` 其实路径在 `PATH/TO/cygwin/lib/ocaml`
 
-  - 如果需要用 eclipse 来直接编译 ocaml 需要将 cygwin/bin 添加到路径
+* 如果需要用 eclipse 来直接编译 ocaml 需要将 cygwin/bin 添加到路径
 
-  - 由于 `Ctrl+space` 与输入法冲突建议改成其它按键如 `Ctrl+,`
+  > TODO: 如果能有什么方法来避免添加这个路径就好了
 
 [官方文档](http://ocaml.org/learn/tutorials/index.zh.html), 但网页引用了 google api, 你需要一个特殊的浏览器才能快速打开这个页面.
-
-在线快速熟悉 <https://try.ocamlpro.com/>
 
 ### 速记
 
@@ -50,7 +60,7 @@ API 文件建议参考 cygwin/lib/ocaml 下的 mli 文件, 一些方法会提示
   if 1+2 = 3 then (
 	print_string "did you knew that?\n";
 	print_string "amazing!\n"
-  ) 
+  )
 
   let f = function
   | (a, 1) -> (match a with | 1 -> true | _ -> false)
@@ -62,9 +72,9 @@ API 文件建议参考 cygwin/lib/ocaml 下的 mli 文件, 一些方法会提示
   ```ocaml
   let double x =
     x + x;;
-	
+
   double 3 + 2 (* 这个其实是先算 double 3, 然后再把结果 + 2*)
-  double (3+2) 
+  double (3+2)
 
   let neg = ref (-1) (* 当引用一个负值时, 如果不加小括号将出错 *)
   ```
@@ -99,7 +109,7 @@ API 文件建议参考 cygwin/lib/ocaml 下的 mli 文件, 一些方法会提示
 
 * misc
   - 对于不等号 ocaml 支持 `!= , <>` 二种型式
-  - 数组和List不一样的是, 数组的值像mutable record 一样可变, 即: `arr.(0) <- 100` 
+  - 数组和List不一样的是, 数组的值像mutable record 一样可变, 即: `arr.(0) <- 100`
   - List 下的方法, 大多数 rec_ 为前缀的方法才是 tail-recursive 形式的
   - incr/decr 用于 int ref 为增和减
 
@@ -111,7 +121,7 @@ API 文件建议参考 cygwin/lib/ocaml 下的 mli 文件, 一些方法会提示
 print_string "Hello world!\n";;
 ```
 
-使用下边命令行参数编译: 
+使用下边命令行参数编译:
 
 ```bash
 ocamlc -o hello Hello.ml
@@ -121,24 +131,8 @@ ocamlc -o hello Hello.ml
 Hello world!
 ```
 
-eclipse 项目常用: 视频 <http://www.algo-prog.info/ocaide/tutorials/3-projects/projects.htm>
-
-* 要求:需要将 cygwin/bin 添加到系统路径。 eclipse 似乎不能在启动时添加一个临时的系统变量.
-
-* `文件 -> 新建 -> "Ocaml Project ocamlbuild"`
-
-* 进入到项目后, `右键 -> 新建 -> Module` 选择路径然后输入 Hello 即可
-
-* 在项目上右键选择 "属性", 配置一下 "Project" 的 "Target" 行, 舅 hello.ml 则输入 hello.byte
-
-* 运行, 在 _build 目录内找到 .byte 文件, `右键 -> 运行方式 -> Ocaml Compiler Output`
-
-  - 如果简单的文件像这个 helloworld, 在源码上右键然后选择 "Load in TopLevel" 即可
-
-
 基础知识
 -----
-
 
 ### 注释
 
@@ -202,8 +196,8 @@ let average a b =
 ```ocaml
 let hello () =
 	print_endline "Hello"
-	
-(* 调用, 像是其它语言的函数调用 *)	
+
+(* 调用, 像是其它语言的函数调用 *)
 hello()
 
 (* 或者这样调用 *)
@@ -229,11 +223,11 @@ List.map (fun i -> i*2) [1;2;3];;
 
 ```bash
 int         31-bit signed int (roughly +/- 1 billion) on 32-bit
-            processors, or 63-bit signed int on 64-bit processors			
-			由于 ocaml 使用了 int 一个位(bit) 用于管理内存(garbage collection), 
+            processors, or 63-bit signed int on 64-bit processors
+			由于 ocaml 使用了 int 一个位(bit) 用于管理内存(garbage collection),
 			所以基本 int 类型为 31 位. 如果你需要更大数字,可以使用 bignums .
 			或者你需要处理 32 位类型(例如: 加密代码), ocaml 提供 nativeint 类型
-			
+
 			ocaml 没有无符号的整数类型. 但使用 nativeint 能得到同样效果.
 
 float       IEEE double-precision floating point, equivalent to C\'s double
@@ -259,10 +253,10 @@ OCmal 没有这样的隐式转换, `1 + 2.5` 将直接报错:
 # 1 + 2.5;;
 Error: This expression has type float but an expression was expected of type
          int
-		
+
 # 1 +. 2.5;;
 Error: This expression has type int but an expression was expected of type
-         float		
+         float
 ```
 
 但是如果需要计算 整形和浮点数, 需要 显示强制转换:
@@ -293,21 +287,21 @@ let rec range a b =
     else a :: range (a+1) b;;
 ```
 
-let, let rec 之间的唯一区别是函数名称的作用域. 如果只是 let, 当在 range 内部调用 range时, 那么将在定义这个 range 函数之前查找 range 的定义. 
+let, let rec 之间的唯一区别是函数名称的作用域. 如果只是 let, 当在 range 内部调用 range时, 那么将在定义这个 range 函数之前查找 range 的定义.
 
 
 使用 let (无 rec) 允许重新定义一个值. 因为 ocaml 变量定义之后就不能改变, 需要用 let 重新定义
 
 ```ocaml
-let positive_sum a b = 
-    let a = max a 0	    (*  重新定义 a 和 b , 
+let positive_sum a b =
+    let a = max a 0	    (*  重新定义 a 和 b ,
                             "let a =" 之后的 "max a 0" 中的 a 表示之前定义
                             所以这里不能使用 let rec a ,
                         *)
     and b = max b 0 in
     a + b;;
-	
-(* val positive_sum : int -> int -> int = <fun> *)		
+
+(* val positive_sum : int -> int -> int = <fun> *)
 ```
 
 在 let 和 let rec 定义的函数之间并没有性能差异, 所以如果你愿意可以一直使用 `let rec`, 并得到 C 语言相同的语义.
@@ -337,9 +331,9 @@ output_char : out_channel -> char -> unit
 ```ocaml
 let give_me_a_three x = 3;;
 
-(**  
+(**
  此函数的参数类型是什么? 在 ocaml 中使用一个特殊的占位符, 意思是 "任意类型的幻想",
- 表现形式为: 单引号字符后跟一个字符( 字符从 a 开始,那么第二个不同参数将为 b......),  
+ 表现形式为: 单引号字符后跟一个字符( 字符从 a 开始,那么第二个不同参数将为 b......),
 
  give_me_a_three : 'a -> int = <fun>
 
@@ -382,7 +376,7 @@ let average a b =
 
 短语 `let name = expression in` 用来定义一个局部表达式,之后在函数中 name 就可以用来代替 expressionm, 直到遇到 `;;` 结束代码块, 注意在 in 之后并不缩进, 只要把 let ... in 当作是一个整体就可以了.
 
-**重要:** 比较一下和 C语言 局部变量的区别, C 变量 sum, 将在堆栈段上给其分配了内存空间(参考汇编语言), 所以可以得到 sum 的内存地址. 而在 ocaml 中的 sum 却不是这样. ocaml 中的 sum ,只是 表达式 a +. b 的 **简短别名**. 所以我们无法给 sum 赋值或更改它. 
+**重要:** 比较一下和 C语言 局部变量的区别, C 变量 sum, 将在堆栈段上给其分配了内存空间(参考汇编语言), 所以可以得到 sum 的内存地址. 而在 ocaml 中的 sum 却不是这样. ocaml 中的 sum ,只是 表达式 a +. b 的 **简短别名**. 所以我们无法给 sum 赋值或更改它.
 
 下面的示例更清楚地说明了这个区别. 下面的两段代码返回同样的值, 后者中的 x 中是 a +. b 的缩写别名:
 
@@ -427,7 +421,7 @@ let my_ref = ref 0;;
 (* 引号保存一个个整数0, 现在可以赋值: *)
 my_ref := 100;;
 
-(* 
+(*
 查看这个引用包含的值:
 # !my_ref;;
 - : int = 100
@@ -460,7 +454,7 @@ foo (double a, double b){
 }
 ```
 
-嵌套函数可以使用包含它的函数当前可见的所有变量. 下面是 
+嵌套函数可以使用包含它的函数当前可见的所有变量. 下面是
 
 ```ocaml
 let read_whole_channel chan =
@@ -489,7 +483,7 @@ let read_whole_channel chan =
 
 OCaml带有很多有趣的模块（含有用代码的库）。例如标准模块中有画图、与GUI小部件（widget）交互、处理大数、数据结构、POSIX系统调用等模块。这些库位于/usr/lib/ocaml/VERSION/ （当然是指在Unix系统下的情况）。
 
-.mli 文件, 这是一个可读的 text 文件, 注意文件名大小写, **OCaml通常将文件名的第一个字母大写作为模块名**. 
+.mli 文件, 这是一个可读的 text 文件, 注意文件名大小写, **OCaml通常将文件名的第一个字母大写作为模块名**.
 
 例如如果想用Graphics中的函数，存在两种方法:
 
@@ -529,13 +523,13 @@ read_line ();;
   ```ocaml
   Random.self_init ();;
   Graphics.open_graph " 640x480";;
-  
+
   let rec iterate r x_init i =
-  	if i = 1 then 
+  	if i = 1 then
   		x_init
   	else
   		let x = iterate r x_init (i-1) in
-  		r *. x *. (1.0 -. x);;	
+  		r *. x *. (1.0 -. x);;
   ```
 
 * 规则 #2: 可省略的 ;;
@@ -549,15 +543,15 @@ read_line ();;
   - 文件的最后.
 
   - 一些其它（非常少）Ocaml能够 “猜出” 是语句结尾而不是中间的地方
-  
+
 * 规则 #3 和 #4:  关于单独的分号 ;
 
   > 它与 ;; 完成不同, 单独的分号 ;, 被称为 **连接点**(sequence point),
   >
-  > 具有在 c, c++, java 和 perl 一样的用途. 
+  > 具有在 c, c++, java 和 perl 一样的用途.
   >
-  > 我打赌你不知道它表示“先执行这个位置之前的语句，执行完成之后继续之后的语句”。 
-	
+  > 我打赌你不知道它表示“先执行这个位置之前的语句，执行完成之后继续之后的语句”。
+
 * 规则 #3: 把let ... in看作一条语句，永远不要在它后面加上单独的;
 
 * 规则 #4：在所有代码块中其他的语句后面跟上一个单独的; 最后一个例外
@@ -578,7 +572,7 @@ done
 
 **`;`** 注解: Brian Hurt 更正了一些我对于";"的观点。 ; 是和 + 一样的运算符。当然只是概念上的，并不完全一样。
 
-> **`+`** 具有 `int -> int -> int` 类型, 接受二个整型并返回一个整型(求合). 
+> **`+`** 具有 `int -> int -> int` 类型, 接受二个整型并返回一个整型(求合).
 >
 > **`;`** 的类型是 `unit -> 'b -> 'b`, 接受两个值并简单返回第二个. 就像 C 语言中的`,`(逗号)运算符,
 >
@@ -741,7 +735,7 @@ enum Tree{
 type 'a tree =
 	| Leaf of 'a
 	| Node of 'a tree * 'a tree
-;;	
+;;
 ```
 
 对应的 haxe 代码为:
@@ -789,7 +783,7 @@ variant          | Empty                      Cons (1, Cons (2, Empty))
 ```ocaml
 type expr =
   | Plus of expr * expr		(* a + b *)
-  | Minus of expr * expr	(* a - b *)	
+  | Minus of expr * expr	(* a - b *)
   | Times of expr * expr	(* a * b *)
   | Divide of expr * expr	(* a / b *)
   | Value of string			(* "x", "y", "n", ect. *)
@@ -853,19 +847,19 @@ class Main {
 	static function main() {
 		trace(to_string(Times(Value("n"), Plus(Value("x"),Value("y")) )));
 		// output: (n * (x + y))
-	}	
+	}
 	static function to_string(e) {
 		return switch(e) {
 			case Plus(left, right):
 				"(" + to_string(left) + " + " + to_string(right) + ")";
 			case Minus(left, right):
-				"(" + to_string(left) + " - " + to_string(right) + ")";	
+				"(" + to_string(left) + " - " + to_string(right) + ")";
 			case Times(left, right):
 				"(" + to_string(left) + " * " + to_string(right) + ")";
 			case Divide(left, right):
 				"(" + to_string(left) + " / " + to_string(right) + ")";
 			case Value(str):
-				str;			
+				str;
 		}
 	}
 }
@@ -902,7 +896,7 @@ let rec multiply_out e =
 ```
 
 
-**guards** 模式匹配 
+**guards** 模式匹配
 
 先看下 haxe 中的相同代码: 其实就是在 switch 的 case 后使用了 条件表达式
 
@@ -941,7 +935,7 @@ let factorize e =
 (* - : expr = Times (Value "n", Plus (Value "x", Value "y")) *)
 ```
 
-通常来说 match e with, 需要列出 Variants 的所有 constructor,例如: 将上边示例中的`to_string` 去掉`| Devide(left, right)` 那一行,将会弹出警告: 
+通常来说 match e with, 需要列出 Variants 的所有 constructor,例如: 将上边示例中的`to_string` 去掉`| Devide(left, right)` 那一行,将会弹出警告:
 
 ```ocaml
 (* Warning 8: this pattern-matching is not exhaustive.
@@ -949,7 +943,7 @@ Here is an example of a value that is not matched:
 Divide(_,_)
 val to_string : expr -> string = <fun>
 *)
-``` 
+```
 
 但有时候并不需要匹配所有 constructor ,所以表达式 `| e -> e`(这个变量名不必与 match 后边的变量名一致) 将代替所有剩余的模式, 相当于其它语言中 `switch` 中的 `default:` (注: 在 haxe 中,如果 switch 中检测 enum 时值也是如此.)
 
@@ -964,7 +958,7 @@ val to_string : expr -> string = <fun>
 ocaml 具有优雅的方案来解决 null 值. 简单地使用 Variants 定义:
 
 ```ocaml
-type 'a option = 
+type 'a option =
   | None
   | Some of 'a
 ;; (* type 'a option = None | Some of 'a *)
@@ -1146,7 +1140,7 @@ triple [1; 2; 3];;
 (* - : int list = [3; 6; 9] *)
 ```
 
-在上边的示例中 ( ( * ) n ) 是一个 (*) (乘)函数的部分应用, 注意这里的空格, 使得不会被当成是注释的开始. 
+在上边的示例中 ( ( * ) n ) 是一个 (*) (乘)函数的部分应用, 注意这里的空格, 使得不会被当成是注释的开始.
 
 你也可以把 中序操作符放在括号中形成一个函数:
 
@@ -1165,7 +1159,7 @@ plus 2 3;;
 
 <https://ocaml.org/learn/tutorials/functional_programming.zh.html>
 
-* function 为匹配模式, 
+* function 为匹配模式,
 * fun 为函数定义
 
 ```ocaml
@@ -1187,12 +1181,12 @@ let max x = fun y -> if x > y then x else y
 let foo = function
 	[] -> 0				(* 如果参数为空链表 则返回 0, *)
 	| a::l -> a		(* 如果空链表不为空, 则以头和尾形式表现, 这里将返回链表第一个值 *)
-;; (* var foo : int list -> int = <fun> *)	
+;; (* var foo : int list -> int = <fun> *)
 
 (* 上边的示例加上归递, 可以计算 List 的长度  *)
 let rec length_aux len = function
 	[] -> len							(* 如果为空链表[], 则返回值 len *)
-	| a::l -> length_aux (len + 1) l 	
+	| a::l -> length_aux (len + 1) l
 ;;
 
 length_aux 0 [0; 1; 2; 3; 4];;	(* 初使化第一个参数为 0, 因为递归需要 *)
@@ -1221,7 +1215,7 @@ currying(科里化):
 
 ```ocaml
 let plus a b = a + b;;
-   
+
 let f = plus 2;;	(* 像是 haxe 中的 var f = plus.bind(2) *)
 
 f 10;;
@@ -1241,7 +1235,7 @@ let multiply n list =
     List.map f list;;
 (* val multiply : int -> int list -> int list = <fun> *)
 
-(* 其实可以像下行这样, 不使用 f *)	
+(* 其实可以像下行这样, 不使用 f *)
 let multiply n = List.map (( * ) n);;
 
 
@@ -1266,10 +1260,10 @@ plus 2 3;;
   (* val give_me_a_three : 'a -> int = <fun> *)
   give_me_a_three (1/0);;
   (* Exception: Division_by_zero. *)
-  
+
   let lazy_expr = lazy (1/0);;
   (* val lazy_expr : int lazy_t = <lazy> *)
-  
+
   give_me_a_three lazy_expr;;
   (* - : int = 3 *)
   ```
@@ -1342,7 +1336,7 @@ let message = "Hello"
 let hello() = print_endline message;;
 ```
 
-这样的话, amodule 会有如下接口: 
+这样的话, amodule 会有如下接口:
 
 ```ocaml
 val messages : string
@@ -1406,7 +1400,7 @@ val create : ?days:int -> ?moths:int -> ?years:int -> unit -> date
 val sub : date -> date -> date
 val years : date -> float
 ```
-只有 create 和 sub 才能用来创建 date record, 因此访问这个模块的用户不可能创建不合规范的 record 值. 
+只有 create 和 sub 才能用来创建 date record, 因此访问这个模块的用户不可能创建不合规范的 record 值.
 
 
 ### 子模块
@@ -1442,12 +1436,12 @@ let () =
 ```ocaml
 module Hello : sig
  val hello : unit -> unit
-end = 
+end =
 struct
   let message = "Hello"
   let hello () = print_endline message
 end
-  
+
 (* 在这里 Hello.message 不再能被访问。 *)
 let goodbye () = print_endline "Goodbye"
 let hello_goodbye () =
@@ -1529,12 +1523,12 @@ List.optmap ...
 ocaml 有一个 if 语句,其含义很明显:
 
 ```ocaml
-if boolean-condition then 
+if boolean-condition then
 	expression
 
-if boolean-condition then 
-	expression 
-else 
+if boolean-condition then
+	expression
+else
 	other-expression
 ```
 
@@ -1581,7 +1575,7 @@ let rec range a b =
 (* val range : int -> int -> int list = <fun> *)
 ```
 
-查看这人常见的函数调用, 从最开始简单处 `a > b`, 如果调用 `range 11 10` 将返回 `[](空链表)` 就是这样. 还记得运算符 `::(cons)` 吗? `10::[]` 和 `[10]` 是一样的. 
+查看这人常见的函数调用, 从最开始简单处 `a > b`, 如果调用 `range 11 10` 将返回 `[](空链表)` 就是这样. 还记得运算符 `::(cons)` 吗? `10::[]` 和 `[10]` 是一样的.
 
 所以 `range 1 10` 的计算结果为: `[ 1; 2; 3; 4; 5; 6; 7; 8; 9; 10 ]`; 另一个复杂的 string_of_float 函数,展示了 多重 else if.. 注意嵌套函数 loop 如何递归.
 
@@ -1628,7 +1622,7 @@ if 1 = 0 then
       print_endline "ELSE";
       failwith "else clause"
     end;;
-(* 
+(*
 ELSE
 Exception: Failure "else clause".
 *)
@@ -1639,7 +1633,7 @@ if 1 = 0 then
       print_endline "ELSE";
       failwith "else clause"
     );;
-(* 
+(*
 ELSE
 Exception: Failure "else clause".
 *)
@@ -1654,13 +1648,13 @@ ocaml 对循环支持有限,因为更多的是使用递归
 for variable = start_value to end_value do
   expression
 done
-  
+
 for variable = start_value downto end_value do
   expression
 done
 
-(* 简单示例：相当于 for(int i = 0; i<=5; i++){} 
-   注意: 和 haxe 的 for 循环最大区别是 for(i in 0...5), i 的值最大为 4, 而 ocaml 为 5	
+(* 简单示例：相当于 for(int i = 0; i<=5; i++){}
+   注意: 和 haxe 的 for 循环最大区别是 for(i in 0...5), i 的值最大为 4, 而 ocaml 为 5
 *)
 for i = 0 to 5  do
   print_int i
@@ -1684,7 +1678,7 @@ while not quit_loop do
 done
 ```
 
-ocaml 的 let 绑定 并不是真正的变量(更像是宏常量),幸运的是 ocaml 有引用(ref), 注意 引用(ref)前的 `!` 类似于 C语言的 `*` 用于从指针中提取值, 并不是 逻辑非(Not) 的意思. 
+ocaml 的 let 绑定 并不是真正的变量(更像是宏常量),幸运的是 ocaml 有引用(ref), 注意 引用(ref)前的 `!` 类似于 C语言的 `*` 用于从指针中提取值, 并不是 逻辑非(Not) 的意思.
 
 ```ocaml
 let quit_loop = ref false in
@@ -1752,7 +1746,7 @@ sum my_list;; (* - : int = 55 *)
 product my_list;; (* - : int = 3628800  *)
 
 (* 这很简单, 偶然做一个数学阶乘: (range 参上前边小节的定义)
-请注意这个阶乘的函数不是非常有用，因为会溢出整数，或者如果参数值较小将得到一个错误。真正的阶乘的函数将使用Big_int模块。	
+请注意这个阶乘的函数不是非常有用，因为会溢出整数，或者如果参数值较小将得到一个错误。真正的阶乘的函数将使用Big_int模块。
  *)
 let fact n = product (range 1 n);;
 ```
@@ -1761,7 +1755,7 @@ let fact n = product (range 1 n);;
 
 String 模块提供很多字符串处理的相关功能.其中一些波及遍历整个字符串. String.iter
 
-String.fill 和 String.blit 分别是 C 语言 memset 和 strcpy, String.copy 复制一个字符串, 像 strdup. 
+String.fill 和 String.blit 分别是 C 语言 memset 和 strcpy, String.copy 复制一个字符串, 像 strdup.
 
 
 ### 递归
@@ -1774,22 +1768,22 @@ String.fill 和 String.blit 分别是 C 语言 memset 和 strcpy, String.copy �
 
   ```ocaml
   open Printf
-  
-  let read_whole_chan chan = 
+
+  let read_whole_chan chan =
     let len = in_channel_length chan in
     let result = string.create len in
     really_input chan result 0 len;
     result
-  
+
   let read_whole_file filename =
     let chan = open_in filename in
     read_whole_chan chan
-  
+
   let () =
     let filename = Sys.argv.(1) in
     let str = read_whole_file filename in
-    printf "I read %d characters from %s\n" (String.length str) filename 
-  
+    printf "I read %d characters from %s\n" (String.length str) filename
+
   (* 不是很理想, 因为 read_whole_chan 不会像 键盘输入或套接字之类的非文件流 *)
   ```
 
@@ -1809,11 +1803,11 @@ String.fill 和 String.blit 分别是 C 语言 memset 和 strcpy, String.copy �
               (always raise Assert_failure). *)
     with
       End_of_file -> Buffer.contents buf
-  
+
   let read_whole_file filename =
     let chan = open_in filename in
     read_whole_chan chan
-  
+
   let () =
     let filename = Sys.argv.(1) in
     let str = read_whole_file filename in
@@ -1824,7 +1818,7 @@ String.fill 和 String.blit 分别是 C 语言 memset 和 strcpy, String.copy �
 
   ```ocaml
   open Printf
-  	  
+
   let read_whole_chan chan =
     let buf = Buffer.create 4096 in
     let rec loop () =
@@ -1836,16 +1830,16 @@ String.fill 和 String.blit 分别是 C 语言 memset 和 strcpy, String.copy �
       loop ()
     with
       End_of_file -> Buffer.contents buf
-    
+
   let read_whole_file filename =
     let chan = open_in filename in
     read_whole_chan chan
-    
+
   let () =
     let filename = Sys.argv.(1) in
     let str = read_whole_file filename in
     printf "I read %d characters from %s\n" (String.length str) filename
-  ```	
+  ```
 
 (注: 通道(channel) 应该就是所谓的 **文件流** 吧,类似于 stderr,stdio,stdin 之类的)
 
@@ -1867,7 +1861,7 @@ String.fill 和 String.blit 分别是 C 语言 memset 和 strcpy, String.copy �
       res.(i) <- v1.(i) +. v2.(i)
     done;
     res;;
-	
+
 add_vect [| 1.0; 2.0 |] [| 3.0; 4.0 |];;
 (* - : float array = [|4.; 6.|] *)
 ```
@@ -1881,7 +1875,7 @@ let head l =
     match l with
       [] -> raise Empty_list
     | hd :: tl -> hd;;
-	
+
 head [1;2];;	(* - : int = 1 *)
 
 head [];;		(* Exception: Empty_list. *)
@@ -1933,7 +1927,7 @@ ocaml.exe		# 单独输入这个则进去 top level,
 
 ocamlc.exe		# 编译 mli, ml , 及 链接
 
-ocamlopt.exe	# 
+ocamlopt.exe	#
 
 ocamldoc.exe	#
 

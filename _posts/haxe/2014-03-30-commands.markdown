@@ -172,29 +172,32 @@ nekotools 是一个安装 haxe 时附带的工具,nekotools 很简单只有二�
    Options :
 
   # 添加源码目录, 通常我们习惯将源码放置于 src 目录下, 所以能经常看到 -cp src
-  -cp <path>		: add a directory to find source files
+  -cp <path>     : add a directory to find source files
 
   # 编译代码为 javascript 平台的 .js 文件
-  -js <file>		: compile code to JavaScript file
-
-  # 编译代码为 flash 平台的 .swf 文件
-  -swf <file>		: compile code to Flash SWF file
+  -js <file>     : compile code to JavaScript file
 
   # haxe 3.3
-  -lua <file> : compile code to Lua file
+  -lua <file>    : compile code to Lua file
+
+  # 编译代码为 flash 平台的 .swf 文件
+  -swf <file>    : compile code to Flash SWF file
 
   # 解析代码为 flash 平台的 .as3 源码, 指定输出目录
-  -as3 <directory>	: generate AS3 code into target directory
+  -as3 <directory> : generate AS3 code into target directory
 
   # 编译代码为 neko 平台的 .n 文件
-  -neko <file>		: compile code to Neko Binary
+  -neko <file>     : compile code to Neko Binary
 
   # 编译代码为 php 平台的 .php 文件, 指定输出目录
-  -php <directory>	: generate PHP code into target directory
+  -php <directory> : generate PHP code into target directory
 
   # 编译代码为 c++ 平台的 .cpp 文件, 指定输出目录,
   # 第一次编译时可能会花上一段时间, Tips: 可以编译成 neko 平台用于快速测试.
-  -cpp <directory>	: generate C++ code into target directory
+  -cpp <directory> : generate C++ code into target directory
+
+  # 构建 cppia 平台代码到文件, 这个平台可以快速测试 cpp
+  -cppia <file>    : generate Cppia code into target file
 
   # 编译代码为 c# 平台的 .cs 文件, 指定输出目录, 需要安装 hxcs 库
   -cs <directory>		: generate C# code into target directory
@@ -205,7 +208,7 @@ nekotools 是一个安装 haxe 时附带的工具,nekotools 很简单只有二�
   # haxe 3.2 + 编译代码为 python
   -python <file>		: generate Python code as target file
 
-  # haxe 3.3 ????? C语言
+  # haxe 3.3 一个计划用来代替 neko 新平台
   -hl <file> : compile HL code as target file
 
   # 导出代码API注释内容为 xml 文件
@@ -217,8 +220,8 @@ nekotools 是一个安装 haxe 时附带的工具,nekotools 很简单只有二�
   # 使用 haxelib, 允许指定库版本
   -lib <library[:version]> : use a haxelib library
 
-  # 编译定义, 用于定义条件编译参数
-  -D <var> : define a conditional compilation flag
+  # 编译定义, 如果没有指定 value 值, 则值默认为 "1"
+  -D <var[=value]> : define a conditional compilation flag
 
   # 详细显示编译过程
   -v : turn on verbose mode

@@ -25,25 +25,53 @@ categories: haxe
 
 <!-- more -->
 
+[windows 平台编译 haxe 编译器](https://github.com/HaxeFoundation/haxe/issues/5174)
+
 ### 最新改动
 
-注意一些是 Git dev版本
+下边内容通过参考 CHANGES 文件
+
+* `Any` 类型的引入，<https://github.com/HaxeFoundation/haxe-evolution/blob/master/proposals/0001-any.md>
+
+  ```haxe
+  var d:Dynamic = 1;
+  d.charCodeAt(0)  // 编译器无法检测这行的正确性, 但运行时一定会出错
+
+  var a:Any = 1;
+  d.charCodeAt(0); // 编译器不允许访问 Any 类型的 filed
+
+  if ((a is String))
+  	(d:String).charCodeAt(0) // 除非强制转换成 String
+  ```
+
+* `is` 操作符，必须和小括号一起使用，感觉和 Std.is 一样
 
 * `haxe.MainLoop` 的引入 <https://github.com/HaxeFoundation/haxe/pull/5017>
 
+* `@:resolve` 可用于 abstract 类, 这样当你访问不存在的字段时, 将自动转到 resolve 方法上 `#3753`
+
+  ```haxe
+  private abstract A(Map<String, String>) from Map<String, String> {
+  	@:resolve function resolve(name:String) {
+  		return this[name];
+  	}
+  }
+  // resolve 原本只是用于 `implements Dynamic<T>`
+  ```
+
 * `extern clsss` 不知从什么时候起也允许有函数体了, 这样的话更方便JS模块化编程
 
-* [haxe 3.3 支持 extern 的 abstract 类以及 extern @:enum abstract](https://github.com/HaxeFoundation/haxe/issues/4862)
+* `extern` 现在可以用在 abstract 类以及 @:enum abstract上了. `#4862`
 
-* [haxe 3.3 新的操作符](https://github.com/TiVo/intellij-haxe/issues/375) `||=, &&= 以及 后置!`, 但似乎只适用于 abstract 类中的操作符中载
+  ```haxe
+  @:native("http_status")
+  @:enum extern abstract HttpStatus(Int) {
+      var Ok;
+      var NotFound;
+  }
+  ```
 
-* <https://groups.google.com/forum/#!topic/haxelang/GaekP1atMwE>
-
-  - 新的 meatadata `@:structInit`见下边描述, 以及适用于小型结构的 `inline new`
-
-  - 一个值得注意的编译标记是 `-D dump=pretty` 能获得更易读的 dump
-
-  - haxe 3.3 `-D analyzer` 将默认为打开状态
+* `-D dump=pretty`: 获得更易读的 dump
 
 * `@:structInit`: <https://github.com/HaxeFoundation/haxe/issues/4526>
 
@@ -1201,7 +1229,17 @@ haxe.web.Dispatch.run("/user", new Map<String,String>(), api);
 
 ### haxe.remoting
 
-http://old.haxe.org/doc/remoting
+远程方法调用 <http://old.haxe.org/doc/remoting>, 主要流程:
+
+1. “远程” 自定义 Api.hx 类, 并使用 .Context 类绑定 new Api;
+
+2. “用户” 定义一个 .Proxy 的子类 **S**, 形参使用上边同一个 Api.hx 文件
+
+  > haxe 编译器将会自动解析 Api.hx 的所有 public 方法
+
+3. “用户” 创建一个 .Connect 实例, 并把它作为 **S** 的构造函数参数，初使化 **S**
+
+------
 
 * Proxy 魔法类,自动包装 Api类的public属性方法, http://old.haxe.org/doc/remoting/proxy
 
@@ -1215,7 +1253,6 @@ http://old.haxe.org/doc/remoting
 
 #### haxe.remoting.Context
 
-"被调用者"将方法绑定在这个类上
 
 * `addObject( name: String, obj: {}, ?recursive: Bool): Void`
 
