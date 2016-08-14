@@ -1,7 +1,7 @@
 ---
 
 layout: post
-title:  各种命令及参数(包含库管理)
+title:  命令行参数
 date:   2014-03-30 21:10:10
 categories: haxe
 
@@ -310,6 +310,7 @@ nekotools 是一个安装 haxe 时附带的工具,nekotools 很简单只有二�
   # 使用内部宏系统执行, 当不需要指定输出时,
   # 参看下边 --eval 的示例, 如果不加 --interp 将不会有显示..
   --interp	: interpret the program using internal macro system
+  --run     : 类似于 --interp 例: haxe --run Main arg1 arg2
 
   # 调用 macro 命令, 默认为 macro.Compiler 下的 宏(macro)方法, --macro keep("SomeClass")
   # 但其实可以是任意方法,例如: --macro Sys.println("Hello World!")

@@ -1232,7 +1232,9 @@ class TriVector: public Vector, public Number{
 
 * `explicit` 用来修饰类的构造函数,防止隐式转换 <http://www.educity.cn/develop/461209.html>
 
-* 三条规则, 第一条可以加 explicit 明确地禁止隐式赋值，这样将导致赋值不成立
+* 三条规则, 第一条（copy constructor）可以加 explicit 明确地禁止隐式赋值，这样将导致赋值不成立
+
+  **注:** 由于 move 的引用, 因此下列 第 一, 二项可以多加上一个 `&` 就成了 move 相关的.
 
   ```cpp
   // 1. copy constructor， 这个是使用另一个 Person 初使化时调用
@@ -1243,7 +1245,7 @@ class TriVector: public Vector, public Number{
   Person& operator=(const Person& that){
   	name = that.name;
   	age = that.age;
-  	return *this;
+  	return *this;    // 注: assignment 必须要有返回才可以.
   }
 
   // 3. destructor
@@ -1302,7 +1304,7 @@ c++11
 
 * std::`move(container) | (InIt_begin, InIt_end, OutIt_Dest)` 避免值的多次复制,
 
-  - 由于STL是传值赋值,感觉这似乎是让人不要使用指针而用 move. 但是 move 的左右值很难使用.
+  > 注意: 不要 move 局部函数内所创建的容器，这和从函数中返回一个栈指针的后果一样
 
   ```cpp
   string tmp = "hello world";
@@ -1367,6 +1369,19 @@ c++11
   }
   ```
 
+  * `std::ref` 反正只要函数参数类型为“引用类型”那么用它包装就是了
+
+  * `thread` 标准线程
+
+  ```cpp
+  // yield() 在多线程的环境下，重新规划线程的执行，让其他线程先运行
+
+  * [async/future/promise/packaged_task](http://en.cppreference.com/w/cpp/thread#Futures)
+
+  ```cpp
+  // 当 move(packaged_task) 给线程之后 packaged_task.valid 才为 0
+  ```
+
 ### 头文件
 
 一些头文件, 大多数情况下我只在 msvc 2013 下
@@ -1378,7 +1393,13 @@ c++11
 用于计算 time 相关的表达式, 并且提供了几个工具类和函数。 只要看几个示例就能明白它们的形为
 
 * Durations: 二个时间之间的跨度，
-  - 已经定义好了的有 `hours/minutes/seconds/milliseconds/microseconds/nanoseconds`
+
+  已经定义好了的有 `hours/minutes/seconds/milliseconds/microseconds/nanoseconds`
+
+  ```cpp
+  // c++ 内很多类目录都使用它作为参数:
+  this_thread::sleep_for(chrono::seconds(1));
+  ```
 
 * Time points: 用于表示一个时间点
 
@@ -1388,13 +1409,13 @@ c++11
   - high_resolution_clock: 高精度, 最短刻度线时钟。 它可能是 system_clock或steady_clock的别名
   - monotonic_clock: MSVC 专用???
 
-
 ### container
 
 <http://wenku.baidu.com/view/34698d68561252d380eb6e87.html>
 
-所有容器都是 value 的语意而非 reference, 容器执行插入元素的操作时, 内部实施拷贝动作.
-因此 STL容器内存储的元素必须能够被拷贝(必须提供拷贝构造函数)
+所有容器都是 value 的语意而非引用，这是因为考虑到有人会从函数中返回一个容器（虽然copy会有性能损失，但 new 会内存碎片化），所以有什么问题应该就在函数内部处理完，不要随便返回。
+
+容器执行插入元素的操作时, 内部实施拷贝动作，因此 STL容器内存储的元素必须能够被拷贝(必须提供拷贝构造函数)
 
 每个容器都提供可通回迭代器的函数
 

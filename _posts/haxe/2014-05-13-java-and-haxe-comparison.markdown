@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  Java 和 Haxe 语法对比
+title:  Java 与 Haxe 语法对比
 date:   2014-05-13 11:50:10
 categories: haxe
 notes: markdown中夹着 html 时解析时很怪异.
@@ -20,7 +20,7 @@ notes: markdown中夹着 html 时解析时很怪异.
 <div class="row">
   <div class="col-md-6 as3">
   <h4>Java</h4>
-  
+
 {% highlight Java %}
 public class Helo {
   public static void main(String arg[]) {
@@ -32,7 +32,7 @@ public class Helo {
 //运行: > java Helo
 //输出: > Hello,Java
 {% endhighlight %}
-  
+
   </div>
 
   <div class="col-md-6 hx3">
@@ -49,7 +49,7 @@ class Helo {
 //运行: > neko Helo.n
 //输出: > Hello,Haxe/Neko
 {% endhighlight %}
-  
+
   </div>
 </div>
 
@@ -65,15 +65,15 @@ class Helo {
 
 public class TheClass {
 	// 和 C++ 一样.构造方法绝对不能写 void,
-	public TheClass(){      
+	public TheClass(){
 		return;
 	}
 	public TheClass(int n){ // 方法重载.
-		return;  
+		return;
 	}
-    
+
 	//混乱的, 但这只是一个 void 普通方法,而非 构造函数
-	public void TheClass(){ 
+	public void TheClass(){
 		return;
 	}
 
@@ -95,7 +95,7 @@ class TheClass {
     }
 
     // haxe 没有方法重载.
-    
+
     public static function main(){
         n:TheClass = new TheClass();
     }
@@ -118,7 +118,7 @@ byte    // 8  -128 ~ 127
 short   // 16 -32768 ~ 32767
 int     // 32 -2^31 ~ 2^31-1
 long    // 64
-float   // 32  
+float   // 32
 double  // 64
 boolean
 char
@@ -147,22 +147,22 @@ Void
  <h4>Java</h4>
 {% highlight java %}
 public class Test {
-	
+
 	public Test(){
 		System.out.println("new instance");
 		System.out.println(num + "\n");
-	}	
+	}
 
 	// 和 haxe 不一样的是 num 会先被赋值为 100, 然后再被 static 块中的代码改为 200, 最后为 200
 	public static int num = 100;
-	
+
 	// static 代码块, 同样只运行一次
 	static{
 		num = 200;
 		System.out.println("static code block");
 	}
 
-	public static void main(String arg[]) {		
+	public static void main(String arg[]) {
 		new Test();
 		new Test();
 	}
@@ -170,7 +170,7 @@ public class Test {
 	 static code block
 	 new instance
 	 200
-	 
+
 	 new instance
 	 200
 	*/
@@ -182,31 +182,31 @@ public class Test {
   <h4>Haxe</h4>
 {% highlight haxe %}
 class Test{
-	
+
 	public function new(){
 		trace("new instance");
 		trace(num + "\n");
 	}
-	
+
 	//  num 会被 __init__ 先赋值为 200, 然后被赋值为 100; 即最后的值为 100;
 	static var num:Int = 100;
-	
+
 	// __init__ 方法　只会运行一次
 	static function __init__(){
 		trace("static __init__");
 		num = 200;
 	}
-	
+
 	public static function main(){
 		new Test();
 		new Test();
 	}
-	
+
 	/* 输出:
 	 static __init__
 	 new instance
 	 100
-	 
+
 	 new instance
 	 100
 	*/
@@ -226,11 +226,11 @@ class Test{
 
 // 使用 native 关键字描述方法体, 经常用于加载 c 语言库
 public class HelloJni{
-	
+
 	public native String  stringFromJNI();
-		
+
 	static{
-		System.loadLibrary("hello-jni");		
+		System.loadLibrary("hello-jni");
 	}
 }
 
@@ -256,7 +256,7 @@ extern class Foo{
 // hxcpp 加载 外部 C 库 - CFFI
 // 首先使用 hxcpp 编译 c 源码. hxcpp 将根据不同平台选择不同 c/c++ 编译器
 // 同样使用 Lib.l
-class HelloCFFI{	
+class HelloCFFI{
 	private static var stringFromCFFI = Lib.load("path/to/lib.ndll","funcName",0);
 }
 
@@ -338,7 +338,7 @@ class HelloCFFI{
   ```
 
 * `java.lang` 这个包不需要导入就可以直接使用.
- 
+
 * `java.lang.Object`
 
   > 除了Java的基础类型,所有类型都是继承于 Object,包括 String. 很多数据类型必须为 Object.
@@ -363,7 +363,7 @@ class HelloCFFI{
   	};
     runnable.run();
   }
-  // 这个示例同样展示了 Java 可以在 实例化时,写 override 方法 
+  // 这个示例同样展示了 Java 可以在 实例化时,写 override 方法
   ```
 
 <br />

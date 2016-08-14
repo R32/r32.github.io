@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  haxe 语法记录
+title:  haxe 语法日志
 date:   2014-05-13 12:26:10
 categories: haxe
 ---
@@ -1288,7 +1288,7 @@ haxe.web.Dispatch.run("/user", new Map<String,String>(), api);
 }
 ```
 
-其实由于 macro 最近用得越来越多(在编译时获得类信息), rtti 用到的地方越来越少了， 目前 SPOD 和 tora 的 Share 都是基于 rtti 的。
+这种 rtti 数据可方便地程序之间传递类型信息
 
 **重要:** 需要在类上添加元标签 `@:rtti` 才能使用这个包中的类, 这个类因此就获得“运行时类型(runtime type)”, 注意和编译时类型相区分。
 
@@ -1305,6 +1305,7 @@ haxe.web.Dispatch.run("/user", new Map<String,String>(), api);
   }
   ```
 
+haxe.rtti.XmlParser 还可以用来解释 gen-doc 产生的 xml 文档。 因为它们是一样的类型。
 
 ### List
 

@@ -25,6 +25,8 @@ categories: other
 
 <!-- more -->
 
+* `-debug` 模式下将会自动创建 source map 文件并相之相关联，以方便定位源文件错误
+
 * 除了 JS 能编译成 cpp、flash、neko 等其它几个平台
 
 * [在线尝试 haxe](http://try.haxe.org)
@@ -248,11 +250,11 @@ default:
   ```
 
 
-* **haxe 最强大的特性：宏**。 通常它用来自动创建，比如你可以分析某个本地或网络文件然后动态一个类
+* **haxe 最强大的特性：宏（macro）**。 通常它用来自动创建，比如你可以分析某个本地或网络文件然后动态创建一个类
 
   > 建议新手先跳过这一块, 但如果你对《编译原理》有自信的话，那么这些东西你会非常熟悉
 
-  例: 这个宏用来获得当前项目最后提交的 GIT HASH 值
+  例: 这个 macro 用来获得当前项目最后提交的 GIT HASH 值
 
   ```js
   // MyMacros.hx
@@ -287,9 +289,11 @@ default:
   console.log("3d807e9ccea66be262b492be49e8415291921cf9")
   ```
 
+  **tips**: 如果你正在学习使用 macro，有一个编译标志 `-D dump=pretty` 可以让你看到 macro 做了什么
+
 ### 其它
 
-[一篇个人 haxe/js 的日志]({% post_url haxe/2014-07-03-javascript %})
+[一篇个人 haxe/js 的日志]({% post_url 2014-07-03-javascript %})
 
 国内交流 QQ 群: **30373020**, 有任何问题可以在群里问，就算不学 haxe 也没关系 (注: 我并不是群主，也没任何广告)
 

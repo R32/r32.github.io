@@ -1,13 +1,13 @@
 ---
 
 layout: post
-title:  导出代码注释为 API 文档
+title:  API 文档构建
 date:   2014-05-05 21:03:10
 categories: haxe
 
 ---
 
-使用 [haxe dox](https://github.com/dpeek/dox) 来构建 API 文档. 参考这个库的 Readme 你能直接获得最新Haxe API. 
+使用 [haxe dox](https://github.com/dpeek/dox) 来构建 API 文档. 参考这个库的 Readme 你能直接获得最新Haxe API.
 
 * 参考 gen.hxml 如何从 hx源码中导出 xml 文件,
 
@@ -33,22 +33,22 @@ categories: haxe
   -----------:  | :------------
   Content Cell  | Content Cell
   Content Cell  | Content Cell
-  
+
   # 一些基本的 HTML 标签
   To <b>edit</b> settings, press `Ctrl + ,`
-  
+
   # URL 引用 (TODO: 如何引用当前手册中的链接?)
   [example](http://example.com)
   ```
 
 * 元数据, 大多数情况下不需要写这些, 解析器能识别各参数或回值类型
 
-  ```	
+  ```
   @since name 1.2.3 aplha		# 需要正确的版本号格式 n.n.n
   @exception TypeName 描述		# 或 @throws
   @param delay 写参数名就行了
   @return 一些描述内容			# 或 @returns
-  @see TypeName				# 
+  @see TypeName				#
   @deprecated 弃用描述			# 不用理会这个的顺序
   ```
 
@@ -78,10 +78,6 @@ class DocGen {
 }
 ```
 
-The extra parameter to the process method is the platform name (javascript in this example). It allows you to use several process calls (one per platform) in order to merge the different documentation as available for each platform. This way you'll be able to know which particular method is supported on which platform(s), such as the Http class shows.
-
-Once this parsing/merging is done, you can access the parser.root variable which contains the root package as a TypeRoot
-
 ### dox 命令行
 
 你可以不必安装这个库, [下载](https://github.com/dpeek/dox) theme 文件夹 和 run.n 文件就可以了, 并用 `neko run.n` 来替换 `haxelib run dox`
@@ -91,34 +87,34 @@ Once this parsing/merging is done, you can access the parser.root variable which
   ```bash
   # 最终输出文件 e.g: -o bin/api-laster.zip 或者为目录 -o bin/docs
   [-o |  --output-path] <path>
-  	
+
   # XML 所在目录。 e.g： -i bin/xmls
   [-i | --input-path] <path>
-  
+
   #Add template directory
   [-t | --template-path] <path>
-  
+
   # Add a resource directory whose contents are copied to the output directory
   [-res | --resource-path] <dir>
-  
+
   #Add a path include filter, EReg String
   [-in | --include] <path>
-  
+
   #Add a path exclude filter, EReg String. e.g: -ex ^js -ex flash
   [-ex | --exclude] <path>
-  
+
   #Set the page main title
   --title <name>
-  
+
   #Set the package which serves as top-level
   --toplevel-package <dotPath>
-  
+
   #Set the theme name or path, 设置模板
   -theme <name>
-  
+
   #Defines key = value
   [-D  | --defines] <key> <value>
-  
+
   # 其它
   -D source-path 	#将定义源码URL
   ```
@@ -126,5 +122,43 @@ Once this parsing/merging is done, you can access the parser.root variable which
 #### 模板修改
 
 由于引用了 Google 文件,而国内却无法访问.因此可以做一些改动。
+
+### Old Makefile
+
+由于 使用 `-in` 代替了 `-ex` , 因此不再需要这份旧的文件
+
+```makefile
+CC  := neko gendoc.n
+
+# --> 修改 TARGET_DIR 为你要输出的目录,注意: haxe dox  不支持 cygwin环境下跨磁盘的的目录
+TARGET_DIR  :=  ./api-h3d
+
+# --> 修改 FILES 为 你用 haxe -xml 生成的 xml 文件. 目录/文件名
+FILES   := pkgs.xml
+
+
+TARGET  :=  $(TARGET_DIR)/index.html
+
+
+# 赋值空格
+EMPTY:=
+SPACE:= $(EMPTY) $(EMPTY)
+
+#排除这些不要的类
+EX := microsoft javax haxe flash format hxsl Array ArrayAccess Bool Class Dynamic EReg Enum EnumValue Float
+EX += IMap Int Iterable Iterator Lambda List Map Math Null Reflect Std String StringBuf
+EX += StringTools Type UInt ValueType Void Xml XmlType Date
+
+EXCLUDE := $(addprefix -ex$(SPACE),$(EX))
+
+all : $(TARGET)
+
+$(TARGET):
+    $(CC) -i $(FILES) -o $(TARGET_DIR) $(EXCLUDE)
+
+clean:
+    @echo clean...
+    @rm -rf $(TARGET_DIR)
+```
 
 <br />

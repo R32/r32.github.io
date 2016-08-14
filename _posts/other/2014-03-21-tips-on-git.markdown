@@ -51,18 +51,18 @@ git pull --depth=1 origin master
 
 * 输入: `svn co <URL> <LOCAL_DIR>`, 但这个最近在 github 也变得不适用了
 
-  
+
 #### 更新
 
 * `远端(remote) -> Add` 输入 fork 的原始分支, bob名字任意
- 
+
   - `git remote add bob https://github.com/DoubleSpout/restjs.git`
 
 * `远端(remote) -> 从获取(fetch)` , 选择相应的名字如bob
 
   - `git fetch bob`
 
-* `合并(merge) -> 本地合并` 
+* `合并(merge) -> 本地合并`
 
   - git merge bob/master`
 
@@ -71,10 +71,10 @@ git pull --depth=1 origin master
   ```bash
   # 如有冲突,查看当前有哪些文件产生了冲突:
   git diff
-  
+
   # 解决掉冲突之后
   git add file.txt
-  
+
   # 如果你觉得你合并后的状态是一团乱麻，想把当前的修改都放弃
   git reset --hard HEAD
   ```
@@ -86,11 +86,11 @@ git pull --depth=1 origin master
   ```bash
   # rebase合并
   git rebase bob/master
-  
+
   # 如果有冲突(conflict), 则修改冲突后添加到缓存
   # 查看冲突使用 git diff 命令
   git add	path/to/conflict.file
-  
+
   # 不需要执行 git commit,而是:
   git rebase --continue
 
@@ -109,12 +109,48 @@ git pull --depth=1 origin master
 ### 其它
 
 
+* 合并多个 commit 为一个， 你可以随意的提交， 当合并到其它 banrch 时 再选择性地合并
+
+  ```bash
+  # 如果遇到问题，下边指令可以终止 rebase
+  git rebase --abort
+
+  # 进入交互模式，(尝式将 AFTER_COMMIT_HASH 之后的 commit 合并成一个)
+  git rebase -i AFTER_COMMIT_HASH
+
+  # 这时会进入到 VIM 的交互模式，可使用其它 IDE 编辑，但是你仍然需要了解几个 VIM 命令
+  pick 16b5fcc Code in, tests not passing
+  pick c964dea Getting closer
+  pick 06cf8ee Something changed
+  pick 396b4a3 Tests pass
+
+  # 除了第一条不动，将 pick 全改成 squash
+  pick 16b5fcc Code in, tests not passing
+  squash c964dea Getting closer
+  squash 06cf8ee Something changed
+  squash 396b4a3 Tests pass
+
+  # VIM 交互模式下 "保存并退出" (ESC + :wq)
+  # 这时 VIM 将会重新加载一个 commit message 列表，所有非注释内容会被当成提交
+  # VIM 交互模式下 "保存并退出" (ESC + :wq)
+  # done!
+
+  # 如果你使用其它 IDE 编译，当保存后, VIM 这边会提示你是否 [L]oad 进来,
+
+  # VIM 按下 ESC 则进入 "命令模式"，这时:
+  ## :w 保存但不退出 write
+  ## :q 不保存退出 quit
+  ## :wq 保存并退出，如果最后加上 ! 则有强制的意思
+  ## :e! 放弃所有修改，恢复到上次保存文件时
+  # 按 Insert 可 toggle 到 Insert 模式方便编辑
+  ```
+
 * 恢复 **单个文件** 到某个历史版本
 
   ```bash
   # git checkout COMMIT_HASH -- path_to_file.ext
   git checkout 45a0c601f32b1c245c988d00e364e27b9b90eff0 -- readme.md
-  
+
   # 从 HEAD 中恢复
   git checkout -- readme.md
   ```
@@ -132,13 +168,13 @@ git pull --depth=1 origin master
   ```bash
   # 将所有 JS 文件当成 统计为 Haxe
   *.js linguist-language=Haxe
-  
-  
+
+
   # Use the linguist-vendored attribute to vendor or un-vendor paths
   # 被标记为 linguist-vendored 是表示不统计, 而 = false 是添加到统计
   special-vendored-path/* linguist-vendored
   jquery.js linguist-vendored=false
-  
+
   # Use the linguist-documentation attribute to mark or unmark paths as documentation.
   project-docs/* linguist-documentation
   docs/formatter.rb linguist-documentation=false
@@ -150,28 +186,28 @@ git pull --depth=1 origin master
   git stash
   # 之后整个目录会回到最后一次提交时的状态
   # 以便于临时修改一些Bug.
-  
+
   # 做一些提交后,想回到工作目录
   git stash apply
-  
+
   # 处理冲突如果有
   git add <filename>
-  git reset HEAD <filename> 
+  git reset HEAD <filename>
   # 或 git reset HEAD 	# 注意执行这个命令时需要确认文件已经被添加,因为未添加到缓存的所有文件将被重置
-  
+
   git stash clear
-  
+
   # 如果需要提交到 github 还是用新分支吧.做完再合并到主线上来.
   ```
-	
+
 * 没有共同祖先的分支, http://gitbook.liuhui998.com/5_1.html
 
   ```bash
-  git symbolic-ref HEAD refs/heads/newbranch 
-  rm .git/index 
-  git clean -fdx 
-  #<do work> 
-  git add your files 
+  git symbolic-ref HEAD refs/heads/newbranch
+  rm .git/index
+  git clean -fdx
+  #<do work>
+  git add your files
   git commit -m 'Initial commit'
   ```
 
@@ -188,35 +224,38 @@ git pull --depth=1 origin master
   git bisect start
   git bisect good v2.6.18
   git bisect bad master
-  
+
   # 通过不停的 git bisect bad, good 查找问题
-  
-  # 找到问题后,恢复到git bisect start,  
+
+  # 找到问题后,恢复到git bisect start,
   git bisect reset
-  
+
   # 更多参考 http://gitbook.liuhui998.com/5_4.html
   ```
 
-* 将改动做成补丁
+* 将改动做成补丁, [这个链接有些其它内容](http://blog.csdn.net/xzongyuan/article/details/9425739)
 
   ```bash
   # 首先创建一个新分支如 patch-1,然后 checkout,
   # 输入以下命令后将在在目录下生成一个 .patch 的文件:
   git format-patch master
-  
-  # hash之间的改动做成补丁
+
+  # hash 之间的改动做成补丁,不包括 old_sha 但会包括 new_sha，中间的三个点号要加上
   git format-patch <old_sha>...<new_sha> -o <patch_dir>
-  
-  # 应用patch(不完整),
+
+  # 自 after_sha 后的修改，不包括 after_sha
+  git format-patch <after_sha>
+
+  # 应用 patch(不完整),
   git apply --start xxx.patch		# 检查 patch
   git apply --check xxx.patch		# 是否能应用成功
-  
+
   git am -s < xxx.patch			# 应用patch
   ```
 
 #### submodule
 
-就是当项目需要引入公共的 库文件时,不需要　每个人都复制一份到源码,而是使用 submodule, 
+就是当项目需要引入公共的 库文件时,不需要　每个人都复制一份到源码,而是使用 submodule,
 
 ```bash
 git submodule add 仓库地址 本地存放路径
@@ -236,14 +275,14 @@ git submodule update --depth=1
 
 ```bash
 git submodule status       # 显示 submodule 信息
-git submodule deinit .     # 反向init, . 表示全部, 
+git submodule deinit .     # 反向init, . 表示全部,
 git submodule deinit path  # 或者指定 status 显示的路径
 git submodule init         # 初使化全部
 git submodule init path    # 初使化单独一个路径(status)
 git submodule update       # 拉取 init 指定的模块
 ```
 
-分拆子目录为子模块: `git submodule split` 
+分拆子目录为子模块: `git submodule split`
 
 ```bash
 $ git submodule split [--url submodule_repo_url] submodule_dir \
@@ -271,7 +310,7 @@ subtree 是 1.8 之后的新命令, 和 submodule 的区别是: [百度文库](h
   git init
   touch .gitignore
   git add .gitignore
-  git commit -m "initial commit"  
+  git commit -m "initial commit"
   ```
 
 * 添加新仓库为 subtree
@@ -331,22 +370,22 @@ $ git cherry-pick HASH
 删除已经提交的历史文件, 注意命令行中的小数点
 
 ```bash
-> git filter-branch --tree-filter 'rm -f passwords.txt' HEAD 
-Rewrite bb383961a2d13e12d92be5f5e5d37491a90dee66 (2/2)  
-Ref 'refs/heads/master'  
- was rewritten  
-> git ls-remote .  
-230b8d53e2a6d5669165eed55579b64dccd78d11        HEAD  
-230b8d53e2a6d5669165eed55579b64dccd78d11        refs/heads/master  
-bb383961a2d13e12d92be5f5e5d37491a90dee66        refs/original/refs/heads/master  
-> git update-ref -d refs/original/refs/heads/master [bb383961a2d13e12d92be5f5e5d37491a90dee66]  
-> git ls-remote .  
-230b8d53e2a6d5669165eed55579b64dccd78d11        HEAD  
-230b8d53e2a6d5669165eed55579b64dccd78d11        refs/heads/master  
+> git filter-branch --tree-filter 'rm -f passwords.txt' HEAD
+Rewrite bb383961a2d13e12d92be5f5e5d37491a90dee66 (2/2)
+Ref 'refs/heads/master'
+ was rewritten
+> git ls-remote .
+230b8d53e2a6d5669165eed55579b64dccd78d11        HEAD
+230b8d53e2a6d5669165eed55579b64dccd78d11        refs/heads/master
+bb383961a2d13e12d92be5f5e5d37491a90dee66        refs/original/refs/heads/master
+> git update-ref -d refs/original/refs/heads/master [bb383961a2d13e12d92be5f5e5d37491a90dee66]
+> git ls-remote .
+230b8d53e2a6d5669165eed55579b64dccd78d11        HEAD
+230b8d53e2a6d5669165eed55579b64dccd78d11        refs/heads/master
 > rm -rf .git/logs			# linux: 删除日志
 > git reflog --all  		# 分支等引用变更记录管理
 > git prune  				# 从对象库删除过期对象
-> git gc  			
+> git gc
 > du -hs  					# linux 以M为单位统计此目录所有文件大小总合
 ```
 

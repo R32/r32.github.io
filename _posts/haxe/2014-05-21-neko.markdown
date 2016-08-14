@@ -1,7 +1,7 @@
 ---
 
 layout: post
-title:  neko(虚拟机)
+title:  nekovm
 date:   2014-05-21 10:10:08
 categories: haxe
 

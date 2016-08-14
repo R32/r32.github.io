@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  templo(模板)
+title:  templo (模板)
 date:	2014-10-07 13:50:41
 categories: haxe
 ---
@@ -40,7 +40,7 @@ haxe.Template 使用双冒号 `::` 作为替换分隔符, 因此表达式放置�
 
 * `::(135)::` : 整数常量, 注意: 不允许 Float 类型
 
-运算符语法有一些苛刻, 由于它不能处理运算符的优先级, 因此需要为每个表达式加上小括号.  
+运算符语法有一些苛刻, 由于它不能处理运算符的优先级, 因此需要为每个表达式加上小括号.
 
 目前支持的 运算符(OP)有 `+`,`-`,`*`,`/`,`>`,`<`,`>=`,`<=`,`==`,`!=`,`&&` 和 `||`.
 
@@ -84,7 +84,7 @@ haxe.Template 使用双冒号 `::` 作为替换分隔符, 因此表达式放置�
 
 ```html
 ::foreach rows::
-    ::foreach __current__::		
+    ::foreach __current__::
 		::__current__::
     ::end::
 ::end::
@@ -100,7 +100,7 @@ var data = {
 
 #### 子模板
 
-可以将一个模板计算返回的结果作为参数传递到另一个模板的 execute 方法, 
+可以将一个模板计算返回的结果作为参数传递到另一个模板的 execute 方法,
 
 ```haxe
 var users = [{name:"Mark", age:30}, {name:"John", age:45}];
@@ -128,15 +128,15 @@ class Main {
 
   public function new() {
     var user = {name:"Mark", distance:3500};
-	
+
 	// 模板使用二个 $ 符号作为方法前缀, 并且注意其参数的使用.
     var sample = "The results: $$display(::user::,::time::)";
-	
+
     var template = new haxe.Template(sample);
     var output = template.execute({user:user, time: 15}, this);
     trace(output);
   }
-  
+
   // 注意这个函数第一个参数的类型
   function display(resolve:String->Dynamic, user:User, time:Int) {
     return user.name + " ran " + (user.distance/1000) + " kilometers in " + time + " minutes";
@@ -154,7 +154,7 @@ trace 将输出: `Mark ran 3.5 kilometers in 15 minutes.` 另一个示例: <http
 haxelib
 ------
 
-从 github 搜集到的一些库模板, 这里只是列出其中的几个, 
+从 github 搜集到的一些库模板, 这里只是列出其中的几个,
 
 ### templo
 
@@ -185,18 +185,18 @@ Usage : temploc [options] <files>
 
 * 在 haxe 项目中调用 templo 目录下的 `Loader.hx`(这个文件通过Process执行temploc.exe)
 
-  ```haxe	
+  ```haxe
   // 注意默认情况下以 haxe 的输出文件夹为目录顶层,通常为 bin
   // 所有目录名必须以 / 结尾, 目录必须自行建立,如果不存在则出错
-  
+
   Loader.BASE_DIR = "some/"		// mtt模板文件所在目录, 默认为 "",
-  
+
   Loader.TMP_DIR = "mtt/"			// 存放临时文件, 默认为 "/tmp/",因此非 unix-like 系统必须设置
-  								
+
   Loader.MACROS = null;			// macro文件, 默认为 "macros.mtt" 没有则设为 null
-  
+
   var t = new templo.Loader("some.mtt");	// 这个是以系统文件的形式加载的
-  t.execute({ values : [1,2,3,4] });		// 
+  t.execute({ values : [1,2,3,4] });		//
   ```
 
 (注:或者也可以使用 mtwin 库的 templo.Template 像 haxe.Template 一样, 或者使用 hxtemplo 这个haxe 的移植库)
@@ -211,10 +211,10 @@ Usage : temploc [options] <files>
 
   ```js
   context.myMessage = "<p>Hello haxe</p>";		// in haxe
-  
+
   before: ::myMessage::
   after : ::raw myMessage::
-  
+
   // 将转换为
   before : &lt;p&gt;Hello haxe&lt;/p&gt;
   after : <p>Hello haxe</p>
@@ -241,7 +241,7 @@ Usage : temploc [options] <files>
   }
   ```
 
-  你可以这样使用 switch, **注意:** 要和 QuestItem 中先后顺序一至. 
+  你可以这样使用 switch, **注意:** 要和 QuestItem 中先后顺序一至.
 
   ```html
   ::switch myEnum::DEFAULT VALUE(默认值,如果省略则为空值)
@@ -249,29 +249,29 @@ Usage : temploc [options] <files>
   ::case:: ::args[0]:: gold
   ::case:: ::args[0]:: XP
   ::end::
-  
+
   <!-- switch 2, case 0 带表第一个 EnumValue值 -->
   ::switch myEnum::
   ::case 0:: ITEM
   ::case 2:: XP
   ::end::
-  ```	
-  
+  ```
+
 * foreach, 这里和标准库 haxe.Template 有点差异, 标准库没有自定义的 value 变量,而是使用 `__current__`
-  
+
   ```html
   ::foreach value iterable::
   	You can use ::value:: there
   ::end::
-  
+
   <!-- 如 listOfNumbers = [0, 2, 5, 6],  -->
   ::foreach n listOfNumbers::
   	Number = ::n::
-  ::end::	
+  ::end::
   ```
-  
+
 * repeat, 相当于 foreach 与 cond 的混合体, 只在当条件为 true, 才会迭代输出
-  
+
   ```html
   <ul>
   	<li ::repeat user listOfConnectedUsers::>
@@ -313,21 +313,21 @@ Usage : temploc [options] <files>
 
   ```html
   ::set myVar = myValue::
-  
+
   ::set isLogged = (user != null) && (user.id != null)::
-  
+
   ::set sum = 0::
   ::foreach i listOfNumbers::
       number = ::i::
       ::eval sum = sum + i::
   ::end::
-  Sum = ::sum::	
+  Sum = ::sum::
   ```
 
 * fill, 形为像 set, 但是允许捕获一些 html 字符串, 并将其值作为一个变量.
 
   ```html
-  ::fill navigation::			<!-- 捕获开始 -->	
+  ::fill navigation::			<!-- 捕获开始 -->
   <div>
       <a href="/previous">Previous</a> |
       ::foreach page resultPages::
@@ -336,10 +336,10 @@ Usage : temploc [options] <files>
       <a href="/next">Next</a>
   </div>
   ::end::						<!-- 捕获结束 -->
-  
+
   <!-- we use the filled variable -->
   ::raw navigation::
-  
+
   <table>
       <thead>
           <tr>
@@ -356,7 +356,7 @@ Usage : temploc [options] <files>
       </tbody>
   </table>
   <!-- we reuse the filled variable to avoid executing the loop twice -->
-  ::raw navigation::	
+  ::raw navigation::
   ```
 
 * use, 用于在当前模板引用其它的模板文件,二个模板将共享它们的变量, 共享的变量请注意先后顺序
@@ -370,8 +370,8 @@ Usage : temploc [options] <files>
           <li><a href="/account">My account</a></li>
       </ul>
   </div>
-  
-  <!-- myPage.mtt : -->	
+
+  <!-- myPage.mtt : -->
   <html>
       <head>
           ...
@@ -383,51 +383,51 @@ Usage : temploc [options] <files>
           ::use 'userMenu.mtt'::::end::
           ...
       </body>
-  </html>	
+  </html>
   ```
-	
+
   另一个实例: 注意在 use 和 end 中间,给变量 content 进行了填充
-	
+
   ```html
-  <!-- design.mtt :-->	
+  <!-- design.mtt :-->
   <html>
       <head>
           <title>My title</title>
       </head>
       <body>
           <h1>My title</h1>
-  
+
           <!-- 假设另一个模板将会引用这个模板,并且给 content 变量填充值 -->
           ::raw content::
       </body>
   </html>
-  
-  
+
+
   <!-- mypage.mtt : -->
-  ::use 'design.mtt'::	
+  ::use 'design.mtt'::
       ::fill content::
           <h2>My page</h2>
           some data here
-      ::end::	
-  ::end::	
+      ::end::
+  ::end::
   ```
 
   由于上述 use,fill 的语法非常麻烦, 因此在 use 和 end 中间的字符串将自动填充为 **`__content__`**
-	
+
   因此下边更为简洁:
-	
+
   ```html
   <!-- mypage.mtt : -->
   ::use 'design.mtt'::
   <h2>The content to write in design.mtt</h2>
   ::end::
-  
+
   <!-- design.mtt :-->
   ::raw __content__::
   ```
-  
+
   在上边的示例中使用了 `::use 'design.mtt'::` 用引号引用模板, 实际上,可以更灵活像这样:
-  
+
   ```html
   ::use theme+'.mtt'::
   ...
@@ -435,16 +435,16 @@ Usage : temploc [options] <files>
   ```
 
   这样的话, theme 可以被当成一个变量, 当设变量 theme='design' 时,那么则对应为 'design.mtt',其它当 theme = 'blueDesign' 时则将对应 'blueDesign.mtt'
-  	
+
 * attr 一个添加attribute语法糖, 注意常量字符串要用引号括起来,否则会被当成变量处理
-  
+
   ```html
   <ul>
   ::foreach link links::
       <li><a ::attr title link.title; href link.href::>::link.title::</a></li>
   ::end::
   </ul>
-  
+
   <!-- 上边的那行 li 其实就等于 -->
   	<li><a href="::link.href::" title="::link.title::">::link.title::</a></li>
   ```
@@ -455,20 +455,20 @@ Usage : temploc [options] <files>
   <ul>
       <li><a href="http://www.google.com" title="google search">google search</a></li>
       <li><a href="http://www.haxe.org" title="Haxe">Haxe</a></li>
-  </ul>	
+  </ul>
   ```
-	
+
   看上去非常适合用在表单的 input,select/option 这些元素上:
-	
+
   ```html
   <!-- 只有当 someCondition 的值为 true 时,才会添加 checked="checked" -->
-  <input type="checkbox" value="some value" ::attr checked someCondition::/>	
-  
+  <input type="checkbox" value="some value" ::attr checked someCondition::/>
+
   <select>
       ::foreach opt availableOptions::
       <option value="::opt.value::" ::attr selected (opt.value == currentValue)::>::opt.name::</option>
       ::end::
-  </select>	
+  </select>
   ```
 
 * attr 和条件检测,常量字符串用引号包围。 当条件表达为 **非true** 值时, 则不会添加任何属性
@@ -477,7 +477,7 @@ Usage : temploc [options] <files>
   ::attr attributeName if( someCondition ) "A" else "B"::
   or
   ::attr attributeName if( someCondition ) "A"::
-  ``` 
+  ```
 
 #### templo macros
 

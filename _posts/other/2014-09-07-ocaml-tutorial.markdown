@@ -16,6 +16,10 @@ categories: other
 * 选择, OCPWin-MINGW-Full(32 bits)，按照文档设置安装即可
 
   > 安装第三方库 [camlp4](https://github.com/ocaml/camlp4) TODO: 不知道能否使用 cygwin 的 make?
+  >
+  > 这个包带有 ocalm 4.02, MingW-GCC，GNU Binutils，但是没有 GUN Make，因为它是使用 ocp-build 作为打包工具
+  >
+  > 如果 cygwin 中也有 ocaml 并且已经加入到了 PATH 估计会冲突.
 
 * IDE 新手可以选择 <https://www.typerex.org/ocaml-top.html>
 

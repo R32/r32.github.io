@@ -1,14 +1,14 @@
 ---
 layout: post
-title:  SPOD(简单对象数据库)
+title:  SPOD (简单对象数据库)
 date:   2014-09-16 13:16:18
 categories: haxe
 ---
 
 SPOD 建立在 SQLite 或 Mysql 上. 全称为 Simple Persistent Object Database. SPOD可以映射数据库表(db table)为类(Class). 即每个继承`sys.db.Object`的类都可以看成为一个数据库表.
 
-因此需要简单地修改类字段或调用类方法即可修改数据库表. 大多数情况下, 你只需要提供一些基础的声明, 而不需要编写单独的 SQL 语句, SPOD 是基于宏的, 也就是说类到数据库表的转换是在编译时完成的,而不是运行时, 这样就不用担心性能的问题. 
- 
+因此需要简单地修改类字段或调用类方法即可修改数据库表. 大多数情况下, 你只需要提供一些基础的声明, 而不需要编写单独的 SQL 语句, SPOD 是基于宏的, 也就是说类到数据库表的转换是在编译时完成的,而不是运行时, 这样就不用担心性能的问题.
+
 <!-- more -->
 
 原英文: <http://old.haxe.org/manual/spod>
@@ -112,10 +112,10 @@ typedef SNull<T> = Null<T>				// 指定 SQL 字段值 可为NULL. 例: SNull<SDa
 typedef SEncoded = Null<Int>			// 指定整数使用自定义编码 TODO: 未知
 
 /** haxe Serialized string **/
-typedef SSerialized = String			// 被 haxe 序列化(Serialize) 的字符串 
+typedef SSerialized = String			// 被 haxe 序列化(Serialize) 的字符串
 
 /** native neko serialized bytes **/
-typedef SNekoSerialized = haxe.io.Bytes	// 
+typedef SNekoSerialized = haxe.io.Bytes	//
 
 /** a set of bitflags of different enum values **/
 /** 一组不同的二进制位 enum 值, 类似于多项选译 **/
@@ -146,7 +146,7 @@ typedef SEnum<E:EnumValue> = Null<E>	// 允许存储不具有参数, 简单的in
 
 * `@:table("myTableName")`： 表名在数据库中的名称（默认与类名相同）
 
-* `@:id(field1,field2,...)`： 指定表的主键字段。例如下面的类并没有一个唯一的 id 与自动递增，但两个字段组成 联合主键 
+* `@:id(field1,field2,...)`： 指定表的主键字段。例如下面的类并没有一个唯一的 id 与自动递增，但两个字段组成 联合主键
 
   ```haxe
   @:id(uid,gid)
@@ -159,7 +159,7 @@ typedef SEnum<E:EnumValue> = Null<E>	// 允许存储不具有参数, 简单的in
 * `@:index(field1,field2,...,[unique])`: 声明指定的字段为索引(index)-并将按此顺序进行索引。如果最后一个字段是 unique 类型这意味着这是唯一性索引(unique index)（可以声明多个@:index, 每个字段值的组合可以只能出现一次）
 
 
-* `@:skip`: ???跳过自动创建 manager, 
+* `@:skip`: ???跳过自动创建 manager,
 
 * `@:skipFields` ???忽略当前类(非父类和子类)的所有字段
 
@@ -186,7 +186,7 @@ class User extends sys.db.Object {
 
 ```haxe
 var cnx : sys.db.Connection;
-if( !useMysql )	
+if( !useMysql )
 	cnx = sys.db.Sqlite.open("mydatabase_file.db");
 else {
 	cnx = sys.db.Mysql.connect({
@@ -221,7 +221,7 @@ sys.db.Connection 实例具有如下方法: 源码参见 各实现平台包如: 
 
 * `request(sql:String):sys.db.ResultSet`: 例: request("select * from User");
 
-* `close():Void`: 关闭数据库连接 
+* `close():Void`: 关闭数据库连接
 
 * `escape(s:String):String`: 转义单引号
 
@@ -231,7 +231,7 @@ sys.db.Connection 实例具有如下方法: 源码参见 各实现平台包如: 
   >
   > 例: `request("select * from User WHERE name LIKE " + quote(name))`
 
-* `addValue(s:StringBuf, v:Dynamic ):Void;`: 
+* `addValue(s:StringBuf, v:Dynamic ):Void;`:
 
 * `lastInsertId():Int`: 需要在insert之后才有效,和最后一个插入的自增id值一致
 
@@ -241,7 +241,7 @@ sys.db.Connection 实例具有如下方法: 源码参见 各实现平台包如: 
 
 * `commit():Void` 确认,
 
-* `rollback():Void`: 回滚,回滚到最后一次的commit() 
+* `rollback():Void`: 回滚,回滚到最后一次的commit()
 
 #### 表格操作
 
@@ -267,9 +267,9 @@ sys.db.Connection 实例具有如下方法: 源码参见 各实现平台包如: 
 
 * `get(id:Int, ?lock:Bool):User`: 返回单个 spod(即一行数据)
 
-* `search(cond:Dynamic, ?options:{}, ?lock:Bool):List<User>`: 
+* `search(cond:Dynamic, ?options:{}, ?lock:Bool):List<User>`:
 
-* `select(cond:Dynamic, ?options:{}, ?lock:Bool):User`: 
+* `select(cond:Dynamic, ?options:{}, ?lock:Bool):User`:
 
 * `unsafeCount(sql:String):Int`:	sql 为 SQL语句,只是返回值不一致, 例: unsafeCount("select count(*) from User");
 
@@ -293,7 +293,7 @@ sys.db.Connection 实例具有如下方法: 源码参见 各实现平台包如: 
 class User extends sys.db.Object {
 	//......
 	public static var manager = MyManager<User>(User);
-}	
+}
 ```
 
 
@@ -311,7 +311,7 @@ u.insert();
 在 .insert() 完成之后, 自动增量的唯一性 ID 将被设置为 NULL,
 
 #### 获取
-　
+
 为了找到你的 SPOD 实例(SQL 表的一行数据), 可以通过使用 对象的唯一标识符(主键) 调用 manager.get 方法:
 
 ```haxe
@@ -379,7 +379,7 @@ unsafeSearch("SELECT * FROM User WHERE id < "+Manager.quoteInt(minId));
 * 条件测试 `&&, ||`
 
 * 圆括号(parenthesizes)
- 
+
 * 调用及字段访问(编译成 Haxe 表达式)
 
 #### 额外的语法
@@ -430,8 +430,8 @@ function listName( ?name : String ) {
 
 * stringA.like(stringB) : 将使用 SQL LIKE 操作符来查找 如果 stringB 包含在 stringA
 
-  例: `$name.like("J%") 或 "filedname".like("J%")`, 
-   
+  例: `$name.like("J%") 或 "filedname".like("J%")`,
+
 * TODO: 在源码中除了 like 还有 has, 但是没有 has 的文档, has 看上去用于 SFlags(EnumFlags)字段
 
 
@@ -459,7 +459,7 @@ User.manager.search(true, {orderBy : name, limit : 20 });
 
   例如: `orderBy : [-name,id] 将生成 SQL ORDER BY name DESC, id`
 
-* limit: 限定搜索返回结果集, 可以使用 haxe 变量和表达式, 例如: { limit : [pos,length] } 
+* limit: 限定搜索返回结果集, 可以使用 haxe 变量和表达式, 例如: { limit : [pos,length] }
 
 * forceIndex: 强制使用此索引搜索。　例如: { forceIndex : [name,date] }
 
@@ -504,7 +504,7 @@ class UserGroup extends sys.db.Object {
 }
 ```
 
-当第一次从 UserGroup实例 中读取 user 字段, SPOD 将获取 uid 所对应的User实例并将其缓存. 如果你更改了 user 字段,它将在同一时间修改 uid 值.(If you set the user field, it will modify the uid value as the same time.) 
+当第一次从 UserGroup实例 中读取 user 字段, SPOD 将获取 uid 所对应的User实例并将其缓存. 如果你更改了 user 字段,它将在同一时间修改 uid 值.(If you set the user field, it will modify the uid value as the same time.)
 
 (个人注: 这是因为它们引用的是同一个值, 但是如果执行了 user.delete(), 是需要自已删除相关联的表格数据, 小心表格的级联处理)
 
@@ -530,7 +530,7 @@ class UserGroup extends sys.db.Object {
 
 #### 关系搜索
 
-You can search a given relation by using either the relation key or the relation property 
+You can search a given relation by using either the relation key or the relation property
 
 ```haxe
 var user = User.manager.get(1);
@@ -587,6 +587,6 @@ SDate 是二进制的 blob. 为了允许任何类型的序列化(文本或二进
 
 ### 自动插入,搜索,编辑生成
 
-[dbadmin](https://github.com/ncannasse/dbadmin) 项目提供了一个基于 HTML 的界面, 允许插入和搜索/编辑和删除 SPOD 对象根据已编译的 SPOD 信息, 它还允许数据库同步根据 SPOD 结构在编译时自动检测差异在编译时和当前 DB之间.  
+[dbadmin](https://github.com/ncannasse/dbadmin) 项目提供了一个基于 HTML 的界面, 允许插入和搜索/编辑和删除 SPOD 对象根据已编译的 SPOD 信息, 它还允许数据库同步根据 SPOD 结构在编译时自动检测差异在编译时和当前 DB之间.
 
 注意这个库只是个 haxelib, 并非独立的应用.

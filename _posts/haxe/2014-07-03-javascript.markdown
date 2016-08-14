@@ -11,10 +11,15 @@ categories: haxe
 ### Tips
 
 * 尽量使用 git 版本的 haxe, 可以在 <http://build.haxe.org> 处下载
+
 * 查看 js.Lib 下的方法
+
+* `-debug` 模式将会生成 source map 文件用于调试
+
 * 访问JS中的全局变量, 例: `js.Lib.global.MyVal = 100`.
   - 如果是浏览器, 那么 global 将等于 window, 如果 nodejs 则为 global, 其它情况下为 self 或 this
   - 需要注意的是在 nodejs 中, 顶层的 var 变量, 并非可以通过 global.XXX 的方式来访问.
+
 * 当把一个成员方法作为函数参数时传递时, 比如 `addEventListener(onSome)`, 确保 this 的指向是否如预期（haxe 会将把 **成员方法** 自动绑到所属对象上, 但有时候你并不需要这样做）
   - 因此haxe的function bind尽量不要用在成员方法上, 静态方法才能获得期待的 Currying 效果.
 

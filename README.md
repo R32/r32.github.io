@@ -23,6 +23,9 @@
   # 添加其所在目录名 前缀,修正
   [haxe 中引用 SWC 文件 ]({% post_url haxe/2014-05-10-tips-haxe-flash %})
   
+
+  # 2016-7 更新
+  似乎又是改回之前的方式了（即不需要添加目录名），真是怪异
   ```
 
   > 实际上 文章是根据 文件头部的 categories 属性来分类, 对于文件所在目录,目前我只知道只会影响到 post_url,
@@ -67,7 +70,7 @@
 
 * 2016-2-8 由于 github-pages 在 5月时将只支持 `kramdown`, 因此估计要做大量的迁移改动
 
-  - 为了支持 "fenced code blocks" 需要添加: 但是有一点限制是"反引号" 前不能有空格字符(包括Tab)
+  - 为了支持 "fenced code blocks" 需要添加:
 
   ```yml
   kramdown:
