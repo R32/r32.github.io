@@ -7,13 +7,6 @@ categories: other
 
 ---
 
-在接触一些声音API之前，具备一些预备知识很重要 <http://www.drpetter.se/article_sound.html>,
-
-AS3 参考手册 Sound 类里边的外链(中文)
-
-<!-- more -->
-
-
 ### 什么是声音
 
 声音是由物体振动发生的, 正在发声的物体叫做声源。物体在一秒钟之内振动的次数叫做频率，单位是赫兹，字母Hz.
@@ -22,42 +15,167 @@ AS3 参考手册 Sound 类里边的外链(中文)
 
 音调，响度，音色是乐音的三个主要特征，人们就是根据他们来区分声音
 
-* loudness(响度) 通常叫:音量　由 amplitude(振幅) 和人离声源的距离决定. 单位: dB(分贝)
+<!-- more -->
 
-* pitch(音调) 声音的高低（高音、低音),由频率决定, 频率越高音调越高.
+* loudness(响度) 通常叫:音量　由 amplitude（振幅） 和人离声源的距离决定. 单位: dB(分贝)
 
-  - frequency(频率) 每秒经过一给定点的声波数量, 单位: Hz(hertz赫兹)
+  > Peak amplitude（峰值振幅或最高振幅）， TODO: 值是 0 ~ 1. 0 用于控制音量大小，（峰值 * 幅值）???
+  >
+  > Amplitude value（幅度值，幅值）即合成波形的输出值
 
+* pitch(音调) 声音的高低（高音、低音),由频率（frequency）决定, 频率越高音调越高.
+
+  > frequency(频率) 每秒要取多少个幅度值, 单位: Hz(hertz赫兹) 通常为 44100，即 44.1KHz
+  >
   > 人听觉范围 20~20KHz. 20Hz 以下为次声波, 20KHz为超声波.
 
-* Timbre(音色) 又称音品, 波形决定了声音的音色, 音色本身是一种抽象的东西，但波形是把这个抽象直观的表现.
+* Timbre(音色) 又称音品, 波形（waveform）决定了声音的音色, 音色本身是一种抽象的东西，但波形（waveform）是把这个抽象直观的表现.
 
-  - Sine: 正弦
+  - Sine: 正弦，假设频率为 44100，则每 1 秒内声音从 -1.0 ~ 1.0 之间的值对应于 sin(0度 ~ 360度)
 
-  - Triangle: 三角形
+  - Square: 正方形
+
+  - Triangle: 三角
 
   - Sawtooth: 锯齿
 
-  - Noise: 噪声
+  - Noise: 噪声，即 -1.0 ~ 1.0 之间的随机值，这个最容易创建。
+
+  ```haxe
+  // Noise
+  for(p in 0...2048){
+    var a = Math.random() * 2.0 - 1.0;
+    var b = Math.random() * 2.0 - 1.0;
+    event.data.writeFloat(n * 0.25); // 左声道
+    event.data.writeFloat(n * 0.25); // 右, 0.25 表示假设峰值为 1.0 ，这里缩放 1/4
+  }
+  ```
 
   > 当两个物体碰撞后振动产生声音时，若两者振动频率比为不可化简的复杂比，如：201：388，那么我们分辨出来会觉得这个声音刺耳；相反，若两者振动频率比为可化简的简单比，如：3：7，那么我们分辨出来会觉得很动听。（毕达哥拉斯发现）
 
 
-### 波形
+### numerical synthesis
+
+数值合成，合成的值在 -1.0 ~ 1.0 之间
+
+<https://en.wikibooks.org/wiki/Sound_Synthesis_Theory/Oscillators_and_Wavetables>
 
 
-#### 一般波形
+下边各公式的输入和输出值:
 
-General waveforms
+```
+Input: Peak amplitude (A), Frequency (f)
+Output: Amplitude value (y)
+```
 
-#### 动态波形
+#### Sine wave
 
-Dynamic waveforms
+sin 函数返回的值刚好在 -1.0 ~ 1.0 之间，并对应于 0 ~ 360 度。
 
-#### 数值合成
+```lua
+y = A * sin(phase)
 
-numerical synthesis
+phase = phase + ((2 * pi * f) / samplerate)
 
+if phase > (2 * pi) then
+      phase = phase - (2 * pi)
+
+--[[
+ f 表示音调对应的频率，可以在网上搜这些值。
+音调    低    中    高
+ DO   262   523   1046
+ RE   294   587   1175
+ MI   330   659   1318
+ FA   349   698   1397
+ SO   392   784   1568
+ LA   440   880   1760
+ SI   494   988   1967
+
+实际上有一个公式: base * pow(2, n/12),如:
+  262 * pow(2, 2/12) => 294.0850566570557
+  262 * pow(2, 4/12) => 330.09931507245676
+  262 * Math.pow(2, 5/12) => 349.728041792549
+-]]
+```
+
+因此我们可以通过 haxe 宏生成这些如:
+
+```haxe
+macro public static function autoFq(base:Float){
+	var ret:Array<Float> = [base];
+	for (i in 1...13)
+		ret.push(base * Math.pow(2, i  / 12));
+	return macro $v{ret};
+}
+
+autoFq(440.0) // [440,466.16376151,493.88330125,523.25113060,...]
+```
+
+通过上边 WIKI 的示例做一些改变，
+
+```haxe
+static var pos = 0;
+
+static function onSample(event:SampleDataEvent) {
+	for(i in 0...2048) {  // 最小 2048 最大 8192，越大的值延迟越明显
+		var phase = pos * (Math.PI * 2 / 44100); // 将常量括起来让编译器优化
+		var f = 262;
+		var  = 0.25 * Math.sin(phase * f);
+		event.data.writeFloat(y);
+		event.data.writeFloat(y);
+		pos++;
+	}
+}
+```
+
+#### Square wave
+
+```lua
+if phase < pi then
+      y = A
+else
+      y = -A
+
+phase = phase + ((2 * pi * f) / samplerate)
+
+if phase > (2 * pi) then
+      phase = phase - (2 * pi)
+```
+
+#### Sawtooth wave
+
+```lua
+y = A - (A / pi * phase)
+
+phase = phase + ((2 * pi * f) / samplerate)
+
+if phase > (2 * pi) then
+      phase = phase - (2 * pi)
+```
+
+#### Triangle wave
+
+```lua
+if phase < pi then
+      y = -A + (2 * A / pi) * phase
+else
+      y = 3A - (2 * A / pi) * phase
+
+phase = phase + ((2 * pi * f) / samplerate)
+
+if phase > (2 * pi) then
+      phase = phase - (2 * pi)
+```
+
+### 合并
+
+empty..
+
+------
+
+
+其它
+------
 
 ### 脉冲编码
 
@@ -77,13 +195,29 @@ PCM 是最常用、最简单的波形编码。它是一种直接、简单地把�
 
   目前编程中大多使用: 44.1 kHz(CD音质), 22.05 kHz(FM广播音质), 11.025kHz(电话音质)的取样频率
 
-  - 缓冲区(bufferSample): 这个值的设置根据不同的API 来设定, 在 flash 中分别对应为: 44.1 kHz/8192, 22.05 kHz/4096, 11.025kHz/2048
+  - 缓冲大小(bufferSample): 这个值的设置根据不同的API 来设定, 在 flash 中分别对应为: 44.1 kHz/8192, 22.05 kHz/4096, 11.025kHz/2048
 
-* 采样位数, 即采样值或取样值（就是将采样样本幅度量化) 目前主流的为 32 位 float, 旧的可能为 16 位 float.
+* 采样位数, 例 16位 或 32 位。目前主流的为 32 位 float, 旧的可能为 16 位 Int.
+
+  > 对于 float 类型，采样值在 `-1.0 ~ 1.0` 之间，而 16 位 Int 则在 -32768 ~ 32767 之间。
 
 * 声道数, 例: 单声道, 双声道,
+
+  > `声道数 * 采样位数 * 取样频率 * 秒 = PCM 即 WAV 文件的大小`
+
 
 ### NSF
 
 FC/NES(或Family Computer,Famicom,任天堂,红白机……)的音乐（含效果音）格式
 
+
+### 参考链接
+
+AS3 参考手册 Sound 类里边的外链(中文)
+
+英文: <http://www.drpetter.se/article_sound.html>
+
+Sound Synthesis: <http://blog.sina.com.cn/s/blog_4bfac6ef0100l4bf.html>
+
+<br />
+<br />

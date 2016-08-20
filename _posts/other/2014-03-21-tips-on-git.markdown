@@ -17,7 +17,7 @@ categories: other
 
 ### 简单
 
-中文git描述(github项目): <http://gitbook.liuhui998.com/index.html>
+中文 git文档: <https://git-scm.com/book/zh/v2>
 
 另一个人的经验笔记: <http://blog.csdn.net/kangear/article/details/13169395>
 
@@ -111,6 +111,8 @@ git pull --depth=1 origin master
 
 * 合并多个 commit 为一个， 你可以随意的提交， 当合并到其它 banrch 时 再选择性地合并
 
+  注: 如果采用分支的形式提交到 github, github 会自动帮你合成一个.
+
   ```bash
   # 如果遇到问题，下边指令可以终止 rebase
   git rebase --abort
@@ -155,6 +157,13 @@ git pull --depth=1 origin master
   git checkout -- readme.md
   ```
 
+* 撤消一个 commit，并保留它使得你可以恢复
+
+  ```bash
+  git revert --continue
+  git revert --abort
+  ```
+
 * upstream, 自动更新 fork 版本 repo
 
   - 先将仓库指定为 upstream `git remote add upstream https://github.com/fork.git`
@@ -186,6 +195,7 @@ git pull --depth=1 origin master
   git stash
   # 之后整个目录会回到最后一次提交时的状态
   # 以便于临时修改一些Bug.
+  # 可以加参数 -u 例 git stash -u，这样可以把新文件也暂存进去
 
   # 做一些提交后,想回到工作目录
   git stash apply
@@ -255,7 +265,7 @@ git pull --depth=1 origin master
 
 #### submodule
 
-就是当项目需要引入公共的 库文件时,不需要　每个人都复制一份到源码,而是使用 submodule,
+就是当项目需要引入公共的库文件时,不需要每个人都复制一份到源码,而是使用 submodule,
 
 ```bash
 git submodule add 仓库地址 本地存放路径

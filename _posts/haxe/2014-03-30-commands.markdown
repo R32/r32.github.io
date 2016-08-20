@@ -62,6 +62,7 @@ haxelib 用于管理 haxe库,  `haxelib run libname` 可以调用指定库下边
     Development
       submit    : 提交或更新自已写的 haxe 库到　haxelib 服务器
       register  : 注册 haxelib 新用户
+      # 注: 这个命令已经弃用，你可能需要自已解压然后用 haxelib dev 命令
       local     : 离线方式安装库, 压缩包名字随意. 例: haxelib local xxx.zip
       dev       : 设置指定目录为库, 常用于 fork 别人的库 例: haxelib dev some dir
       git       : 连接下载 git 版本库, 需要 git 命令支持
@@ -94,7 +95,7 @@ haxelib 用于管理 haxe库,  `haxelib run libname` 可以调用指定库下边
 
   haxelib install haxepunk #在线安装名为 haxepunk 的库
 
-  haxelib local some.zip  #安装已经下载到硬盘上的库,通常用为 zip 格式, zip文件名随意
+  # haxelib local some.zip  #安装已经下载到硬盘上的库,通常用为 zip 格式, zip文件名随意
 
   haxelib update stablexui #在线更新名为 stablexui 的库
 

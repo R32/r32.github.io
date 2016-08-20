@@ -5,22 +5,19 @@ date:   2014-05-10 15:16:10
 categories: haxe
 ---
 
-可以说 haxe 的目标平台最稳定的就是 flash 平台了.
+可以说 haxe 的目标平台最稳定的就是 flash 平台了
 
 * flash.Lib 提供几个方法,也许会很有用, 如:
 
   ```as
-  // 如在 as3 中经常用到的 
-  event.currentTarget as SomeClass
-  
-  // 在 haxe 应该写为
-  Lib.as(event.currentTarget, SomeClass);
-  
   // 在浏览器中将 trace 输出到浏览器的 console
+  // 当你的 flash 需要在浏览器中调试时这非常有效
   Lib.redirectTraces()
-  
-  // 调用 as3 自带的 trace 而非 haxe 提供的.
+
+  // 调用 flash 原生的 trace，例如当你在处于 Worker 时，就能能用这个方法了
+  // 如果你用 flashdevelop 可以在 视图 -> flash 日志视图里看到输出，
   Lib.trace(arg:Dynamic)
+  // 或者加上 -D fdb 参数将重定向所有 trace 语句
   ```
 
 <!-- more -->
@@ -32,12 +29,12 @@ categories: haxe
 
 很可能需要添加编译参数 `-D network-sandbox` 使得 swf 只能访问网络.
 
-注意: 使用 `Workder` 时,子线程总是为 **只访问网络**.(关于这一点我不太确定,因为我测试时这样)
+注意: 使用 `Workder` 时,工作线程总是为 **只访问网络**.
 
 ```xml
 <?xml version="1.0"?>
 <!DOCTYPE cross-domain-policy SYSTEM "http://www.adobe.com/xml/dtds/cross-domain-policy.dtd">
-<cross-domain-policy> 
+<cross-domain-policy>
 	<site-control permitted-cross-domain-policies="all" />
     <allow-access-from domain="*" />
     <allow-http-request-headers-from domain="*" headers="*"/>
@@ -47,7 +44,7 @@ categories: haxe
 
 ### 编译
 
-仅针对 flash 平台, 这个清单可能并不完整治, 详细通过 `haxe --help` 查询
+仅针对 flash 平台, 这个清单可能并不完整, 详细通过 `haxe --help` 查询
 
 ```bash
 # 将 hx 源码直接编译成 swf 文件
@@ -83,10 +80,10 @@ haxe -as3 outdir -main Main
 # 添加 swf 库, 文件通常为 swc 格式
 -swf-lib <file>			: add the SWF library to the compiled SWF
 
-# 
+#
 -swf-lib-extern <file>	: use the SWF library for type checking
 
-# (个人认为)实际上这是被弃用的, 见补充说明小节, 
+# (个人认为)实际上这是被弃用的, 见补充说明小节,
 --gen-hx-classes		: generate hx headers for all input classes
 ```
 
@@ -125,7 +122,7 @@ swf-gpu                : Use GPU compositing features when drawing graphics
 ## 注: swf-gpu 和 swf-direct-blit 只适用于 Flash Player 独立播放器时
 ## 当 位于浏览器中播放时, swf-direct-blit 对应 wmode="direct", 而 swf-gpu 则是 wmode="gpu"
 
-# 嵌入元数据 xml文件到 swf,以便搜索引擎检索信息, 示例: -D swf-metadata=data.xml 
+# 嵌入元数据 xml文件到 swf,以便搜索引擎检索信息, 示例: -D swf-metadata=data.xml
 # 元数据 xml文件 格式参见 http://www.adobe.com/products/xmp.html
 swf-metadata           : =<file> Include contents of <file> as metadata in the swf.
 
@@ -161,7 +158,7 @@ swf-protected          : Compile Haxe private as protected in the SWF instead of
 ```
 @:bind				  : 覆盖 flash 的同名定义, 当在 Haxe 中声明了一个类(不是extern类)已经存在于 SWF 库, 将会报错.
 
-@:setter(property)    : 示例: 见补充说明的 "override flash" 
+@:setter(property)    : 示例: 见补充说明的 "override flash"
 
 @:getter(property)    : 同 @:setter
 
@@ -170,17 +167,17 @@ swf-protected          : Compile Haxe private as protected in the SWF instead of
 @:ns("namespace")     ：指定的字段或方法的命名空间
 
 
-@:sound		: 用于嵌入声音, 
+@:sound		: 用于嵌入声音,
 			  例: @:sound("blit.mp3") class MySound extends flash.media.Sound{}
 
-@:file		: 以 ByteArray 的方式嵌入文件, 
+@:file		: 以 ByteArray 的方式嵌入文件,
 			  例: @:file("a.dat") class MyByteArray extends flash.utils.ByteArray{}
 
 @:font		: 嵌入字体,仅限 ttf. 第二个参数为可选字符,而不是全部字符
 			  例: @:font("font/ceri0553.ttf", "a-zA-Z0-9~!@#$%^&*()_+=-][}{.,;\":><") class MyFont extends Font { }
-			
+
 @:bitmap	: 以 bitmapData 形式嵌入图片,
-			  例: @:bitmap("path/logo.png|jgp|gif") class MyBitmapData extends flash.display.BitmapData{}			
+			  例: @:bitmap("path/logo.png|jgp|gif") class MyBitmapData extends flash.display.BitmapData{}
 ```
 
 #### 黑魔法
@@ -189,7 +186,7 @@ swf-protected          : Compile Haxe private as protected in the SWF instead of
 
 ```
 # __global__ 调用 as3 的全局成员
-untyped __global__["undefined"]; 
+untyped __global__["undefined"];
 untyped __global__["uint"]; //basic type
 untyped __global__["flash.display.DisplayObject"];
 
@@ -221,13 +218,13 @@ for(k in untyped __keys__(obj)){
 
 haxe 能直接引用并解析 AS3 的 swc 库, 因此没特别的地方(参看　patch files)根本不需要写 extern class;
 
-### swc 
+### swc
 
 
 
 #### 导出
 
-一些参考 https://github.com/jcward/HaxeSWCExample 和 http://old.haxe.org/manual/swc?lang=cn , 示例: 
+一些参考 https://github.com/jcward/HaxeSWCExample 和 http://old.haxe.org/manual/swc?lang=cn , 示例:
 
 ```bash
 # 单个文件或多个文件, 每个 hx 文件不要带有扩展名, 因为会与包名混淆
@@ -235,9 +232,9 @@ haxe 能直接引用并解析 AS3 的 swc 库, 因此没特别的地方(参看�
 haxe -swf bin/hxlib.swc A B com.some.C
 
 
-# 导出整个文件夹, 这种方法仅用于导出带有 **包名** 的整个目录. 
+# 导出整个文件夹, 这种方法仅用于导出带有 **包名** 的整个目录.
 # 参考 haxe.macro.Compiler.include 方法
-haxe -swf bin/hxlib.swc --macro "include('com.some')" 
+haxe -swf bin/hxlib.swc --macro "include('com.some')"
 ```
 
 **NOTE**: 在 AS3 中使用 haxe 导出的 swc 库.需要初使化 `haxe.initSwc(root_sprite)`
@@ -272,7 +269,7 @@ haxe -main Test -swf-lib libname.swc -swf Test.swf
 -starling.core.Starling.contentScaleFactor
 ```
 
-**错误 2:** 当调用 flash alchemy 打包的 swc 库时,将会出错,但使用 `-debug` 编绎选项却能通过. [问题#1976](https://github.com/HaxeFoundation/haxe/issues/1976), 所以目前只能以 loader 的形式加载 swf [示例](https://github.com/R32/HelloWorld/blob/Older/test/as3/stringecho/hx-proj/EchoTestLoader.hx) 
+**错误 2:** 当调用 flash alchemy 打包的 swc 库时,将会出错,但使用 `-debug` 编绎选项却能通过. [问题#1976](https://github.com/HaxeFoundation/haxe/issues/1976), 所以目前只能以 loader 的形式加载 swf [示例](https://github.com/R32/HelloWorld/blob/Older/test/as3/stringecho/hx-proj/EchoTestLoader.hx)
 
 
 
@@ -280,7 +277,7 @@ haxe -main Test -swf-lib libname.swc -swf Test.swf
 
 当在 haxe 中调用 flash 的 swc 库时, haxe 编译器能自动提取里边的定义,虽然大多数情况下不会造成问题,
 
-但在某些情况下你可能必须创建 patch file, patch file 将修改 flash库中已经存在类的字段类型, 
+但在某些情况下你可能必须创建 patch file, patch file 将修改 flash库中已经存在类的字段类型,
 
 ```haxe
 // Removes a class field from Haxe definition
@@ -344,7 +341,7 @@ class LEByteArray extends ByteArray{
 		if(len > super.length){
 		  super.length = len;
 		}else if(len < super.length ){
-			throw 'You are not allowed to change the length.';	
+			throw 'You are not allowed to change the length.';
 		}
 	}
 	@:setter(endian) function set_endian(endian:String):Void {
@@ -389,11 +386,11 @@ SWF文件结构
 03			 1		 # flash 版本号
 04~07		 4		 # LE小头 Int 类型，解压后, 整个 swf 的大小
 
-# 1. 获得后边的二进制数据, 如果压缩则解压(这里没有考虑到 lzma 算法生成的压缩), 
+# 1. 获得后边的二进制数据, 如果压缩则解压(这里没有考虑到 lzma 算法生成的压缩),
 # 2. 然后使用 bitsInput(位) 的方式读取一个 Rect 数据： 参考 format/tools/bitsIntput
 #偏移(位)		大小		描述
 b0~b04		 5		 # 获得 left ,right ,top ,bottom 所占用的位数 SB(符号位扩展), 5个二进制最多表示 31 位
-b05+SB		SB		 # left, 单位为 twip, 1 twip等于1/20象素	
+b05+SB		SB		 # left, 单位为 twip, 1 twip等于1/20象素
 += SB 		SB 		 # right
 += SB		SB		 # top
 += SB		SB		 # bottom

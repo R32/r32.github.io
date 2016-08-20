@@ -67,15 +67,6 @@ categories: haxelib
 
 这里只记录部分类, 其它都写在 fork 版本的注释上了.
 
-* 使用 Worker 播放音乐, 在 main 函数中使用 `hxd.res.Sound.startWorker()`
-
-  ```haxe
-  Res.initEmbed();
-  if (!hxd.res.Sound.startWorker()){
-    // isPrimordial == true
-  }
-  ```
-
 * bitmap font 工具 https://github.com/andryblack/fontbuilder
 
   1. fontBuilder 生成的 xml 文件, 一些字体可能 height 的值过高, 可以改为 size + 4

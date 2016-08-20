@@ -80,138 +80,32 @@ class Foo{
 
 haxe 宏分为三种类型:
 
-* 表达式宏,
+* 表达式宏，通常表现为在正常的方法（function）上添加了关键字 `macro`
+
+  ```haxe
+  macro static function line(){
+	var pos = haxe.macro.Context.currentPos();
+    return macro $v{pos};
+  }
+  ```
 
 * 宏构建 `@:build`
 
 * 初使化宏. 主要是通过 编译参数 --macro 来执行, 运行顺序在解析 main 之前, 所以通常用来配置编译器行为
 
-### 宏方法
 
-**Tips:** haxe 标准库中有很多 工具类能更好地构建, 如: macro.TypeTools, macro.ExprTools, 以及其它以 Tools 结尾的类, 通常是使用 using 关键字添加这些工具类.
+------
 
-通常应该把宏函数和其它函数分开放在不同文件,否则代码中的很多地方要加上**`#if macro`** 这样的条件编译才能通过编译.
 
-给宏函数传参数时,**参数应该是常量**, 如果传变量只能获得 变量名 不能获得 变量值(因为宏编译时赋值还没发生).
+* haxe.macro 包下有很多工具类能更好地构建, 如: TypeTools, ExprTools
 
-* 最简单, `macro 常量`
-
-  ```haxe
-  // 示例:    trace( tut_const() );    =>     相当于 trace("simple");
-  macro public static function tut_const() {
-      return macro "simple";
-  }
-  ```
-
-* 使用变量, `macro $v{变量}`, 注意: 变量类型不能为 `Expr` ,只能是简单的数据类型,数组,及 结构对象.
-
-  ```haxe
-  // 示例:    trace( tut_variable() );    =>     trace("so easy!");
-  macro public static function tut_variable() {
-  	var easy:String = "easy!";
-  	return macro "so " + $v{ easy };
-  }
-  // 示例:    trace( tut_array([1,2,3,4,5]) );    =>     trace([1,2,3,4,5,10]);
-  macro public static function tut_array(arr:Array<Int>) {
-  	arr.push(10);
-  	return macro $v{arr};
-  }
-   //注意 ${ 变量 } ,不能是复杂数据类型,下边语句 因为 编译器不知道如何将 Map 类型转换成 Expr
-   macro public static function tut_map() {
-  	var map:Map<String,String> = new Map<String,String>();
-  	map.set('desc', 'some msg');
-  	try{
-  		return macro $v{map}; // 错误: Unsupported value {desc => "some msg"}
-  	}catch (err:Dynamic) {
-  		return macro $v{err};
-  	}
-  }
-  ```
-
-* Expr类型变量, `macro $Expr变量`, 加前缀 $ 就行了,只能出现在 macro 的语句后边
-
-  > 你应该注意到了,即使宏函数参数声明为 Expr 类型,在调用这个函数时传的值却是 字符串类型.
-  >
-  > 如果参数为 Expr 时,编译器会自动转换这些直接常量为 Expr,然后在宏函数内部 这个变量将会是 Expr 类型.
-
-  ```haxe
-  // trace( tut_param('456') );	=> trace('123456');
-  macro public static function tut_param(param:Expr) {
-
-  	var str:String = "123";
-
-  	return macro $v{str} + $param;
-  }
-
-  // 这有个复杂的示例:
-  // trace( repeat(10,5) )	=>		[10,10,10,10,10]
-  macro public static function repeat(e : Expr, eN : Expr) {
-  	return macro [for( x in 0...$eN ) $e];
-  }
-
-  // Tips: 在宏函数体中获得 Expr 的值
-  // getValue("hello");	then val = 'hello';
-  macro public static function getValue(ep:Expr){
-  	var val = haxe.macro.ExprTools.getValue(ep));
-  	return macro null;
-  }
-  ```
-
-* 处理文件.
-
-  这只是一个从文件中解析数据的示例.
-
-  或者你可以通过 template 以及 haxe.io.File 来动态将文件数据写成一个 class
-
-  ```xml
-  <?xml version="1.0" encoding="utf-8" ?>
-  <root>
-  <data lang="zh">
-  	<user name="小明" phone="123" addr="详细地址描述" />
-  	<user name="小红" phone="456" addr="不存在" />
-  </data>
-  <data lang="en">
-  	<user name="ming" phone="123" addr="expanded address details." />
-  	<user name="hong" phone="456" addr="..." />
-  </data>
-  </root>
-  ```
-
-  haxe code:
-
-  ```haxe
-  // example trace(tut_file("test.xml")) => [{ name : 小明, addr : 详细地址描述, phone : 123 },{ name : 小红, addr : 不存在, phone : 456 }]
-  macro public static function tut_file(name:String) {
-  	var content = sys.io.File.getContent( Context.resolvePath(name) );
-  	var xml = Xml.parse(content);
-  	var fast = new haxe.xml.Fast(xml.firstElement());
-
-  	var ret = new Array<Dynamic>();
-
-  	for (data in fast.nodes.data) {
-  		if (data.att.lang == 'zh') {
-  			for (user in data.nodes.user) {
-  				var obj:Dynamic<String> = { };
-  				for (k in user.x.attributes()) {
-  					Reflect.setField(obj, k, user.att.resolve(k));
-  				}
-  			ret.push(obj);
-  			}
-  		}
-  	}
-  	return macro $v{ret};
-  }
-  ```
-
-* 使用 Context.parseInlineString 用于解析字符串代码, 多数ui库,都使用这个方法来预处理 xml 配置文件
+* 使用 Context.parseInlineString 用于解析字符串代码
 
   这个方法有一定的局限性,通常使用类似的匿名函数，不可以包含 class 这些.
 
-
   ```haxe
-  //example: trace(tut_parse());  => {width => 800, lang => zh-CH, note => 测试, sprite => [object Sprite]}
   macro public static function tut_parse() {
-  	var str = "测试";    // Tip:在单引号字符串中,可以使用 ${变量} 来引用一些变量,
+  	var str = "测试";
   	var code:String = '
   		function() {
   			var map = new haxe.ds.StringMap<Dynamic>();
