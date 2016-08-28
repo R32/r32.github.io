@@ -256,15 +256,18 @@ CSS3 属性前加上 -webkit 前缀大部分都支持， 比如 `display: -webki
 总得来说调试器非常不好用, 只能在 HTML 元素上添加修改 CSS , 调试器还得自已刷次一次才会更新右面板的值.
 
 CSS 属性 <http://www.runoob.com/cssref/css3-pr-box-ordinal-group.html> , AIR4.0 ~ 21都没有更新过 WebKit
+
+[fox-flex 的细节参考](http://www.zhangxinxu.com/wordpress/2010/12/css-box-flex%E5%B1%9E%E6%80%A7%EF%BC%8C%E7%84%B6%E5%90%8E%E5%BC%B9%E6%80%A7%E7%9B%92%E5%AD%90%E6%A8%A1%E5%9E%8B%E7%AE%80%E4%BB%8B/)
+
 ```css
 /* 只这三个属性就可以完美配置 Layout, 记得把顶层包括 body,html 的高度值设为 100% */
 /* display: flex */
 display: -webkit-box;
 
-/* flex: 1; 给另一个DIV以定值,然后这个设 1 就行了 */
+/* flex-grow: 1; 给另一个DIV以定值,然后这个设 1 就行了 */
 -webkit-box-flex: 1;
 
-/* flex-flow: row|column */
+/* flex-direction: row|column */
 -webkit-box-orient: horizontal|vertical|inline-axis|block-axis|inherit;
 
 /* 其它 */

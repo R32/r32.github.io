@@ -8,8 +8,8 @@
 * [github pages jekyll 版本对比](https://pages.github.com/versions/)
 
 * [引用仓库的一些元数据](https://help.github.com/articles/repository-metadata-on-github-pages/)
- 
- 
+
+
 ### 更新
 
 * 2014-10-4 12:24 : 将 _post目录中的各文件放置到相关目录中去
@@ -19,10 +19,10 @@
   ```
   # 报错的 post_url
   [haxe 中引用 SWC 文件 ]({% post_url 2014-05-10-tips-haxe-flash %})
-  
+
   # 添加其所在目录名 前缀,修正
   [haxe 中引用 SWC 文件 ]({% post_url haxe/2014-05-10-tips-haxe-flash %})
-  
+
 
   # 2016-7 更新
   似乎又是改回之前的方式了（即不需要添加目录名），真是怪异
@@ -30,13 +30,13 @@
 
   > 实际上 文章是根据 文件头部的 categories 属性来分类, 对于文件所在目录,目前我只知道只会影响到 post_url,
   >
-  >所以 为了让 _post 看起来更整洁, 可以随意将 文件 放置到不同目录, 
+  >所以 为了让 _post 看起来更整洁, 可以随意将 文件 放置到不同目录,
 
 * 2014-10-4 12:24 : 添加 with_toc_data
 
   ```yml
   markdown: redcarpet
-  
+
   redcarpet:
     extensions: ["no_intra_emphasis", "fenced_code_blocks", "autolink", "tables", "with_toc_data"]
   ```
@@ -50,7 +50,7 @@
   > `#### Desc(Note)` 这样的标题将变成为 `<h4 id="Desc-Note">Desc(Note)</h4>`
   >
   > 但是 github 上的页面则为: `<h4><a id="user-content-DescNote" href="DescNote"></a>Desc(Note)</h4>`
-	
+
 * 2015-2-2 更简洁的结构,设计更改, 不需要所有页面都使用 default.layout 这样后期不好维护更改.特别是 主页需要独立出来
 
   抛弃变量 post.categories[0] 而转而使用 page.dir 来控制目录
@@ -82,7 +82,7 @@
 
 * 需要一个 haxe 生成的 html5 简单动画放在 主页 上.
 
-* 找到合适的 **个人** 模板, 
+* 找到合适的 **个人** 模板,
 
 * 一些颜色值
 
@@ -92,7 +92,7 @@
   red:	#bd2c00
   orange:	#f93
   purple:	#6e5494
-  
+
   gray-light:	#999
   gray:		#666
   gray-dark:	#333
@@ -132,6 +132,8 @@
   	{% assign p_category = p_categories[1] %}
   {% endif %}
   ```
+
+* 几个特殊字符 `『』「」`
 
 ### 错误
 
@@ -175,13 +177,13 @@
 
   ```markdown
   *   First item
-  
+
       A second paragraph
-  
+
       * nested list
-  
+
       > blockquote
-  
+
   *   Second item
   ```
 
@@ -193,7 +195,7 @@
 
   ```markdown
   Hello		{#some-hello}
-  
+
   # Hello		{#first}
   ## Hello ##	{#second}
   ```
@@ -202,11 +204,11 @@
 
   ```markdown
   This is some text.[^1]. Other text.[^footnote].
-  
+
   * 定义
 
   [^1]: Some *crazy* footnote definition.
-  
+
   [^footnote]:
     > Blockquotes can be in a footnote.
   ```

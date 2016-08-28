@@ -17,11 +17,11 @@ categories: haxe
 * `-debug` 模式将会生成 source map 文件用于调试
 
 * 访问JS中的全局变量, 例: `js.Lib.global.MyVal = 100`.
-  - 如果是浏览器, 那么 global 将等于 window, 如果 nodejs 则为 global, 其它情况下为 self 或 this
-  - 需要注意的是在 nodejs 中, 顶层的 var 变量, 并非可以通过 global.XXX 的方式来访问.
+  - 如果是浏览器, 那么 global 将等于 window, 如果 nodejs 则为 global
+  - 需要注意的在 nodejs 中, 顶层的 var 变量不可以通过 global.XXX 的方式来访问.
 
 * 当把一个成员方法作为函数参数时传递时, 比如 `addEventListener(onSome)`, 确保 this 的指向是否如预期（haxe 会将把 **成员方法** 自动绑到所属对象上, 但有时候你并不需要这样做）
-  - 因此haxe的function bind尽量不要用在成员方法上, 静态方法才能获得期待的 Currying 效果.
+  - 因此 haxe 的 function bind 尽量不要用在成员方法上, 静态方法才能获得期待的 Currying 效果.
 
 <!-- more -->
 
@@ -59,13 +59,13 @@ categories: haxe
 
 * ~~js-es5~~ 默认情况下 haxe 将以 js-es=5 的形式输出代码, 如果你想要兼容旧的浏览器可以指定为 `-D js-es=3`
 
-  - 在未来的 haxe 中(ver: 3.4)， 可以 `-D js-es=6` 以使用最新的JS特性
+  在未来的 haxe 中(ver: 3.4)， 可以 `-D js-es=6` 以使用最新的JS特性
 
   例如: `Array.prototype.indexOf`, 如果定义了 js-es=3, 那么 haxe 将会实现它（比如IE8并没有这个方法,因此需要自已实现）
 
 * ~~`js-flatten`~~ 平坦模式. haxe 3.2+ 中这将是默认行为
 
-  - **`js-unflatten`** 如果想恢复以前旧的模式的化. 例旧模式： `Main.a.b.c`, 而默认的平模模式为: `Main_a_b_c`
+  **`js-unflatten`** 如果想恢复以前旧的模式的化. 例旧模式： `Main.a.b.c`, 而默认的平模模式为: `Main_a_b_c`
 
 * ~~embed-js~~ 已经被移除, 你可以使用 [includeFile](#includeFile) 方法来嵌入想要的文件
 
@@ -89,7 +89,8 @@ categories: haxe
   ```
 
 * **`@:expose(?Name=Class path)`** 将类或静态方法接到全局对象下（即成为一个全局范围的变量）
-  - 注意和 `@:native`(用来更改输出类名或字段名) 相区别,
+
+  注意和 `@:native`(用来更改输出类名或字段名) 相区别,
 
 * `@:initPackage` 用来初使化 包及路径 (仅限于 javascript) 注:在 haxe 3.2 中好像已经没作用了.似乎被移除.
 
@@ -133,7 +134,8 @@ categories: haxe
 由于 Javascript **上下文** 的随意性, 并没有好的工具能自动创建 extern class, 所以需要自已手动为这些外部 JS 文件写 extern class 声明.
 
 * 从 webidl 文件获得一些类型参考 <https://github.com/mozilla/gecko-dev/tree/master/dom/webidl>
-  - 实际 HF 有自动解析 webidl 为 extern clsss 的工具, 只是我没成功过 <https://github.com/HaxeFoundation/html-externs>
+
+  > 实际 HF 有自动解析 webidl 为 extern clsss 的工具, 只是我没成功过 <https://github.com/HaxeFoundation/html-externs>
 
 由于 JS 中方法的参数可以是不同类型, 因此在写 extern class 时,会经常用到 元标签 @:overload
 
@@ -199,10 +201,11 @@ haxe -main Main -js bin/main.js --macro includeFile("projDir/path/to/file.js")
 
 * 枚举值可以使用 `@:enuu abstract` 来指定.
 
-* 不要把成员函数作为参数传递, 除非你将它指定成变量形式.(因为 haxe 会自作多情地绑定上下文, 但很多时候并不需要这样)
+* 不要把成员函数作为参数传递, 除非你将它指定成变量形式.(因为 haxe 会自动绑定上下文, 但很多时候并不需要这样)
 
-* 使用 `@:native("native_name")` 来指定真实名字, （比如当外部类使用了相同名字的静态方法和成员方法时, 这在 haxe 中是不允许的）
-  - 如果用在字段名上, 如果你需要的是全局的则可以指定为 inline 方法或 getter, 参考: js.Lib.undefined
+* 使用 `@:native("native_name")` 来指定真实方法或变量名
+
+   如果在需要通过一个类的字段访问 JS 的全局变量如 undefined, 可以指定为 inline 方法或 getter, 可参考: `js.Lib.undefined`
 
 * `@:selfCall` 上边已经描述,但是由于 haxe 也会帮 extern clss 绑定上下文会导致一些不方便。
 

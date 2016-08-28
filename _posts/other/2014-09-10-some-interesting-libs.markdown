@@ -7,23 +7,27 @@ categories: other
 
 ---
 
-记录 github 上一些有意思的库, 大多数是从 https://github.com/trending?since=weekly 上看到的.
+记录 github 上一些有意思的库, 大多数是从 <https://github.com/trending?since=weekly> 上看到的.
 
-https://github.com/sindresorhus/awesome
+* <https://github.com/sindresorhus/awesome> 这个包括了所有语言，平台，前后端等等的链接收集
+
+<!-- more -->
 
 ### Tools
 
+* [letsencrypt](https://letsencrypt.org/) 国外一个公共的免费SSL项目, 如果需要免费的SSL证书
+
 * [c/c++内存泄漏检测](http://wetest.qq.com/cloud/index.php/index/TMM) 腾迅内部开放工具, （情况未知）
+
+* [Go-For-It](https://github.com/mank319/Go-For-It) to-do list
 
 * [apache mod_rewrite online tools](http://htaccess.madewithlove.be/) 在线测试 htaccess 规则
 
 * [github Issue management](http://huboard.com/) github issue 管理
 
-* [letsencrypt](https://letsencrypt.org/) 国外一个公共的免费SSL项目, 如果需要免费的SSL证书
+* [Tor网络向导](https://bridges.torproject.org/) 需要方Q
 
-* [Tor网络向导](https://bridges.torproject.org/) 需要方Qiang
-
-* [lantern](https://github.com/getlantern/lantern) 可以方Qiang
+* [lantern](https://github.com/getlantern/lantern) 不解释
 
 * **[wink](http://www.debugmode.com/wink/)** 录屏软件, 录制为flash, 能在某些点自动暂停
 
@@ -48,8 +52,6 @@ https://github.com/sindresorhus/awesome
   > 一个在线工具用于将 文本转换为 Acsii art 的在工具,
 
 * <https://www.captionbot.ai/> 一个非常智能有趣的的在线网页图片识别, 类似于微软的那个颜龄检测
-
-<!-- more -->
 
 * **[web-bundle](https://github.com/haxorplatform/web-bundle)** Tool to pack binary files into a PNG image.
 
@@ -83,6 +85,8 @@ https://github.com/sindresorhus/awesome
 * [elasticsearch](https://github.com/proletariatgames/hxnodejs-elasticsearch) 基于Lucene的搜索服务器,这是 nodejs, haxe extern 版的
 
 ### web
+
+[awesome-javascript - 中文](https://github.com/rwson/awesome-javascript-cn)**
 
 [Frontend stuff](https://github.com/moklick/frontend-stuff) 前端资源
 
@@ -152,10 +156,6 @@ https://github.com/sindresorhus/awesome
 
 * **[holder](https://github.com/imsky/holder)** 生成图像占位符
 
-
-
-* [angular.js](https://github.com/angular/angular.js) 用于经常需要修改及更新的数据 [中文文档](http://www.apjs.net/)
-
 * [KaTeX](https://github.com/Khan/KaTeX) 用于在网页中展示数学公式.
 
 * **[startbootstrap](https://github.com/IronSummitMedia/startbootstrap)**  Bootstrap themes and templates
@@ -196,6 +196,8 @@ https://github.com/sindresorhus/awesome
 
 * <http://ink.sapo.pt/>  HTML5/CSS3 framework 快速布置
 
+* <https://github.com/hgoebl/mobile-detect.js> 设备检测
+
 ### article
 
 * [ZeroMQ 中文](https://github.com/anjuke/zguide-cn) 一套用于快速构建的套接字组件
@@ -213,13 +215,12 @@ https://github.com/sindresorhus/awesome
 
 * [w3school html5](http://www.w3school.com.cn/html5/index.asp)
 
-* **[CSS 各项属性](http://www.runoob.com/cssref/pr-tab-caption-side.html)** 除了 CSS, 这个一个其它各种资料非常全面的网站
+* **[CSS 各项属性](http://www.runoob.com/cssref/pr-tab-caption-side.html)**
 
-  - <http://www.runoob.com/>
+  <http://www.runoob.com/> 除了 CSS, 这个网站的各种学习资源非常全
 
 * [如何调试Chrome的Proxy](http://www.chromium.org/developers/design-documents/network-stack/debugging-net-proxy)
 
-* [awesome-javascript - 中文](https://github.com/rwson/awesome-javascript-cn)
 
 ### resource
 
@@ -227,7 +228,7 @@ https://github.com/sindresorhus/awesome
 
 * [Font-Awesome](https://github.com/FortAwesome/Font-Awesome/) 矢量图标字体
 
-  > <http://fortawesome.github.io/Font-Awesome/examples/>
+  <http://fortawesome.github.io/Font-Awesome/examples/>
 
 
 ### misc

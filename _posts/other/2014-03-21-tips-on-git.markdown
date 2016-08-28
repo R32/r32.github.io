@@ -210,12 +210,12 @@ git pull --depth=1 origin master
   # 如果需要提交到 github 还是用新分支吧.做完再合并到主线上来.
   ```
 
-* 没有共同祖先的分支, http://gitbook.liuhui998.com/5_1.html
+* [没有共同祖先的分支](http://gitbook.liuhui998.com/5_1.html)
 
   ```bash
   git symbolic-ref HEAD refs/heads/newbranch
   rm .git/index
-  git clean -fdx
+  git clean -fdx  # 注意这行会删除当前所有没有被跟踪的文件
   #<do work>
   git add your files
   git commit -m 'Initial commit'

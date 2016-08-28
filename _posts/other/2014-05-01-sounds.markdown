@@ -130,49 +130,14 @@ static function onSample(event:SampleDataEvent) {
 
 #### Square wave
 
-```lua
-if phase < pi then
-      y = A
-else
-      y = -A
-
-phase = phase + ((2 * pi * f) / samplerate)
-
-if phase > (2 * pi) then
-      phase = phase - (2 * pi)
-```
 
 #### Sawtooth wave
 
-```lua
-y = A - (A / pi * phase)
-
-phase = phase + ((2 * pi * f) / samplerate)
-
-if phase > (2 * pi) then
-      phase = phase - (2 * pi)
-```
 
 #### Triangle wave
 
-```lua
-if phase < pi then
-      y = -A + (2 * A / pi) * phase
-else
-      y = 3A - (2 * A / pi) * phase
 
-phase = phase + ((2 * pi * f) / samplerate)
-
-if phase > (2 * pi) then
-      phase = phase - (2 * pi)
-```
-
-### 合并
-
-empty..
-
-------
-
+<br />
 
 其它
 ------
@@ -218,6 +183,8 @@ AS3 参考手册 Sound 类里边的外链(中文)
 英文: <http://www.drpetter.se/article_sound.html>
 
 Sound Synthesis: <http://blog.sina.com.cn/s/blog_4bfac6ef0100l4bf.html>
+
+关键字搜索: `声音合成 滤波器`，`声音的合成`
 
 <br />
 <br />

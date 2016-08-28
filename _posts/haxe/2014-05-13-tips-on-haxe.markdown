@@ -61,7 +61,7 @@ categories: haxe
 
 * `extern clsss` 不知从什么时候起也允许有函数体了, 这样的话更方便JS模块化编程
 
-* `extern` 现在可以用在 abstract 类以及 @:enum abstract上了. `#4862`
+* `extern` 现在可以用在 abstract 类以及 @:enum abstract上了. [#4862](https://github.com/HaxeFoundation/haxe/issues/4862)
 
   ```haxe
   @:native("http_status")
