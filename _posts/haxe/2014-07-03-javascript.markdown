@@ -92,10 +92,6 @@ categories: haxe
 
   注意和 `@:native`(用来更改输出类名或字段名) 相区别,
 
-* `@:initPackage` 用来初使化 包及路径 (仅限于 javascript) 注:在 haxe 3.2 中好像已经没作用了.似乎被移除.
-
-  > 因为 haxe 并不会为 extern class 创建相应包对象, 例: 在 extern class 中当源码声明为 `package js;` 时, 添加 这个元标记将会创建 `js = {}`
-
 * `@:runtime` (since 2.10) 未知, 但是现在的版本移除了 js only 的限制
 
 * **`@:selfCall`** 调用自身, 由于 javascript 没有构造函数, 在写 extern class 时会遇到一些问题
@@ -205,7 +201,9 @@ haxe -main Main -js bin/main.js --macro includeFile("projDir/path/to/file.js")
 
 * 使用 `@:native("native_name")` 来指定真实方法或变量名
 
-   如果在需要通过一个类的字段访问 JS 的全局变量如 undefined, 可以指定为 inline 方法或 getter, 可参考: `js.Lib.undefined`
+  如果在需要通过一个类的字段访问 JS 的全局变量如 undefined, 可以指定为 inline 方法或 getter, 可参考: `js.Lib.undefined`
+
+  注: 如果用在 typedef 中的匿名结构上目前暂时不会有任何效果, [#5105](https://github.com/HaxeFoundation/haxe/issues/5105)
 
 * `@:selfCall` 上边已经描述,但是由于 haxe 也会帮 extern clss 绑定上下文会导致一些不方便。
 

@@ -84,7 +84,7 @@ haxe 宏分为三种类型:
 
   ```haxe
   macro static function line(){
-	var pos = haxe.macro.Context.currentPos();
+    var pos = haxe.macro.Context.currentPos();
     return macro $v{pos};
   }
   ```

@@ -77,12 +77,12 @@ categories: haxe
 
   ```haxe
   @:structInit class MyStruct {
-	  public var a:Int;
-	  public var b:String;
-	  public inline function new(a,?b) {
-  		this.a = a;
-  		this.b = b;
-  	}
+      public var a:Int;
+      public var b:String;
+      public inline function new(a,?b) {
+      this.a = a;
+      this.b = b;
+    }
   }
   // would allow to be initialized with:
   var m1 : MyStruct = { a : 0 };
@@ -204,10 +204,10 @@ categories: haxe
 # haxe 3.2 标准, 运行三次取中间值
 # 而前边使用的是 class  定义的结构, 后边的 anon 代表使用 typedef 定义的结构,
 
-flash : 11.728 ------ anon: 45.306
+flash : 11.728 ------ anon: 45.306  # flash player debug, 非 debug 的能提升到 5 秒内
 js    : 0.6359 ------ anon: 0.6479	# nodejs
-js    : 0.8719 ------ anon:	1.2426	# chrome browser
-cpp   : 0.7321 ------ anon: 16.614
+js    : 1.2219 ------ anon:	1.2426	# chrome browser js 平台基本一致
+cpp   : 0.6921 ------ anon: 16.614
 java  : 低于1秒 ------ anon: 11.		# 低于1秒,有时候为 1 有时候为 0 , 不能显示小数部分
 c#    : 0.5050 ------ anon: 6.8803
 neko  : 28.201 ------ anon: 19.601  # 运算前期速度还行，越到后边越慢

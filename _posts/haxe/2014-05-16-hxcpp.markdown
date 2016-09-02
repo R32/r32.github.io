@@ -15,21 +15,86 @@ categories: haxe
 
   - [关于 CFFI/Extern 最详细的说明](https://github.com/snowkit/hxcpp-guide/issues/1)
 
-这里主要记录一些和 hxcpp 相关的东西, 由于我没有找到 hxcpp 的相关文档, 因此不保证内容的正确性.
+这里主要记录一些和 hxcpp 相关的东西, 由于没有找到 hxcpp 的相关文档, 因此不保证内容的正确性.
 
 
 <!-- more -->
 
 ### 编译
 
-* 编译器配置,找到并修改 `user/.hxcpp_config.xml`, 比如 win7 中这个文件通常在 `C:\Users\MYNAME\` 下, 通常只在使用 andorid 或一些指定平台时才要配置这个.
+编译器配置，找到并修改 `user/.hxcpp_config.xml`, 比如 win7 中这个文件通常在 `C:\Users\MYNAME\` 下, 通常只在使用 andorid 或一些指定平台时才要配置这个.
 
-  如果这个文件缺失, hxcpp 将会从 toolchain 目录下自动复制 example.hxcpp_config
+  > 如果这个文件缺失, hxcpp 将会从 toolchain 目录下自动复制 example.hxcpp_config
 
-* TIPS: 目前可以用 `-D cppia` 来调试, 实际上目前可以指定编译目标为 cppia, 但是 IDE 似乎并不支持
 
-  > 下边附录部分有关于如何使用 cppia 的介绍
+#### `new Foo`
 
+首先我们需要知道在 haxe 这边调用 `new Foo()` 这时相应的 cpp 代码会做些什么？
+
+```haxe
+class Main {
+	static function main() {
+		var foo = new Foo();
+	}
+
+}
+class Foo{
+	public function new() {}
+}
+```
+
+添加禁用优化参数 `-D no-analyzer` 在编译成 cpp 后，我们可以在 include 中找到 Foo.h 头文件类似于:
+
+```cpp
+#include <hxcpp.h>
+#define Foo Foo_obj
+
+class Foo_obj : public hx::Object
+{
+    public:
+        typedef hx::Object super;
+        typedef Foo_obj OBJ_;
+        Foo_obj();
+    public:
+        void __construct();
+        inline void *operator new(size_t inSize, bool inContainer=false,const char *inName="Foo")
+            { return hx::Object::operator new(inSize,inContainer,inName); }
+        inline void *operator new(size_t inSize, int extra)
+            { return hx::Object::operator new(inSize+extra,false,"Foo"); }
+        static hx::ObjectPtr< Foo_obj > __new();
+        static Dynamic __CreateEmpty();
+        static Dynamic __Create(hx::DynamicArray inArgs);
+        //~Foo_obj();
+        HX_DO_RTTI_ALL;
+        static void __register();
+        ::String __ToString() const { return HX_HCSTRING("Foo","\xe6","\x7e","\x35","\x00"); }
+};
+```
+
+Main.cpp 中相关的代码类似于:
+
+```cpp
+Foo foo = Foo_obj::__new();
+
+// Foo.hx 中 new 的方法体对应为:
+void Foo_obj::__construct(){}
+```
+
+首先，我们可以看到 haxe 中的 Foo 编译后变成了 Foo_obj， 其次， `new` 变成了 `__new` 方法
+
+> 事实上，只有当你在写 extern class 时, 才需要关心这些名字的改变，或者永远都不在 extern class 中添加 new 字段。
+>
+> 在 extern class 中由于 Foo 会成变 Foo_obj，因此如果是 static 属性方法，应该使用 `@:native()` 来重写字段名
+
+继承了 hx::Object
+
+> 由于在 haxe 代码中通常不会有类似于 `c/c++` 的 malloc/free 之类的操作，因此 hxcpp 被设计成一个带有 GC 的框架
+>
+> hxcpp 为了支持 haxe 中的 反射(Reflect)，因此会添加一此额外的方法，不过可使用 `@:unreflective` 关闭这一项
+>
+> 可以不要 GC 和 Reflect 吗?, 当然如果你将 `@:nativeGen` 添加到类或接口上，则代码看上去非常干净，但是这样你将无法从 haxe 这边使用 new 关键字，因为 new 是和 GC 一起的
+
+* **Tips** : 尽量减少使用 Dynamic 类型的使用，一些泛形应该使用 @:generic 以明确类型构建
 
 #### hxcpp-debugger
 
@@ -49,11 +114,6 @@ categories: haxe
   inline private static function setInt(bytes:haxe.io.BytesData, addr:Int, x:Int){
   	untyped __cpp__("*((int *) ({0}->GetBase() + {1})) = {2}",bytes,addr,x);
   }
-
-  // 实际上可以直接使用 CPP 的变量, 但只可以是函数的参数变量, 不可以为函数体内部的局部变量,
-  public function setFade(start_msec:Int){
-  	untyped __cpp__("gme_set_fade(start_msec);");	// 	直接引用函数参数变量,
-  }
   ```
 
 * `__global__` 直接调用cpp的全局函数等等, 参考 cpp.Lib
@@ -61,86 +121,142 @@ categories: haxe
 
 #### Metas
 
+重先先介绍几个重要的:
+
+* `@:nativeGen`: 表示不使用 hxcpp 带的 GC，并且没有其它如 Reflect 的代码
+
+  但是这是这种类，在 haxe 源码里不要使用 new 来来初使化它, 因为 `new Foo()` 将会变成 `Foo_obj::__new()`
+
+  加上后，将不能直接在类上初使化变量属性值，如果有静态变量将无法通过编译（受 `__boot__.cpp` 影响）
+
+  `__main__.cpp` 总是类似于这样调用 `Main_obj::main`, 但可以通过 `@:headerCode("#define Main_obj Main")` 绕过去.
+
+  这个标让加在 extern class 上将不会起作用.
+
+  ```haxe
+  @:structAccess
+  @:nativeGen
+  class Foo {
+  	public var i:Int;
+
+  	@:extern @:native("Foo")
+  	static public function fromStack():Foo {
+  		return null;
+  	}
+
+  	@:extern @:native("new Foo")
+  	static public function fromHeaps():cpp.Star<Foo> {
+  		return null;
+  	}
+
+  	static public inline function destory(ptr:cpp.Star<Foo>):Void{
+  		untyped __cpp__("delete {0}; {0} = 0", ptr);
+  	}
+
+  	static public inline function isNull(ptr:cpp.Star<Foo>):Bool{
+  		return untyped __cpp__("{0} == 0", ptr);
+  	}
+  }
+  ```
+
+  **结论:** 上边示例看上去非常麻烦，因此还不如直接用 cpp 代码写好，在 haxe 端写 extern class 就好了
+
+* `@:native` 和其它平台的差异，特别是写 extern class 时. 在 cpp 中如果用在静态字段上，将不带类名。例:
+
+  ```haxe
+  extern class Foo {
+	  @:native("cpp")
+      static function hi():Void;
+  }
+
+  class Main{
+      static function main() {
+          Foo.hi(); // 这行实际上会直接编译成全局的函数 cpp(), 不带类名
+      }
+  }
+  ```
+
 In order to [improve support for interacting](http://haxe.1354130.n2.nabble.com/hxcpp-native-access-td6968232.html) with CPP.
 
-**注意**: 当前文件路径 `./` 不能省略. 比如上层目录要写成 `./../`
+**注意**: 如果参数是文件路径的话， 则当前文件路径 `./` 不能省略. 比如上层目录要写成 `./../`
 
 ```bash
 # TODO
-@:abi					# Function ABI/calling convention
+@:abi                   # Function ABI/calling convention
 
 # 嵌入 xml 到 build.xml, 文件格式参看下边 buildXml
-@:buildXml				# Specify xml data to be injected into Build.xml
+@:buildXml              # Specify xml data to be injected into Build.xml
 
 # 附加于cpp文件上. 代码注入于 namespace 的前边
-@:cppFileCode			# Inject code into top of cpp file
+@:cppFileCode           # Inject code into top of cpp file
 
-# 附加于 类 上.. 在 .cpp 文件中头部添加　头文件引用, 注意: 只能添加一个
+# 附加于 类 上.. 在 .cpp 文件中头部添加　头文件引用, 注意: 只能添加一个，只有第一个会有效
 # 示例: @:cppInclude("stdlib.h") => #include "stdlib.h"
-@:cppInclude			# File to be included in generated cpp file
+@:cppInclude            # File to be included in generated cpp file
 
-# 附加于 类 上. 代码注入于 类 的前边.并包含当前类. 命名空间为 haxe 包名.
-@:cppNamespaceCode		#
+# 注入代码到 .cpp 文件的顶部，namespace 的内部（haxe 中对应的 package 名称）
+@:cppNamespaceCode      #
 
-# __declspec 参看 hxcpp/include/hxcpp.h
-@:decl					#
+@:decl                  #
 
-# 注入代码到 函数开始处
-@:functionCode			# Inject code into top of function - eg, whole implementation.
+# 注入代码到 函数开始处，还不如直接使用 __cpp__ 来注入代码
+@:functionCode          # Inject code into top of function - eg, whole implementation.
 
-# 注入代码到 函数结尾处, 在 return 之前.
-# 注: 由于 haxe 转换成的 cpp 用 {} 包围形成了闭包, 因此无法访问函数内部定义的局部变量, 但是可以访问函数的参数
-@:functionTailCode 		# Inject code into end of function
+# 注入代码到 函数结尾处, TODO: 现在似乎不会理会 return 的位置，不如直接使用 __cpp__
+@:functionTailCode      # Inject code into end of function
 
 # 注入 cpp 代码到 头文件(.h) Class 的内部 - 用于声明　成员变量或成员方法 例如: @:headerClassCode("int a,b")
-@:headerClassCode		# Code to be injected into the generated class, in the header
+@:headerClassCode       # Code to be injected into the generated class, in the header
 
 # 注入 cpp 代码到 头文件(.h) Class 的外部 - 用于 添加 头文件引用或 宏定义 例如: @:headerCode("#include <stdio.h>")
-@:headerCode()			# Code to be injected into the generated header file
+@:headerCode()          # Code to be injected into the generated header file
 
 # 附加在 class 上, 在 头文件(.h) 中 注入 例如: @headerInclude("stdio.h") - 只能添加一个头文件
 @:headerInclude(String)	# File to be included in generated header file
 
-@:headerNamespaceCode   # 头文件类声明, 类 的外部　命名空间内部
+@:headerNamespaceCode   # 注入 cpp 代码到 头文件(.h) Class 的外部，命名空间的内部
 
 # @:include("path/file.h") - 用于 extern 类, 指示 这个类应该导入哪个 头文件　和 @:sourceFile 一起使用
-@:include				# Generate "#include ..." to .h/.cpp where the class is being imported.
+@:include               # Generate "#include ..." to .h/.cpp where the class is being imported.
 
-# TODO
-@:nativeProperty 		# Use native properties which will execute even with dynamic usage
+# ??? 用在 class 上, TODO: 但加不加似乎并没什么区别
+@:nativeProperty        # Use native properties which will execute even with dynamic usage
 
-# TODO: 估计是用于将 haxe 的类导出为外部类给 C++ 调用, 通常你可能需要使用 -D static_link 来定义为静态链接库
-@:nativeGen				#
+# ??? 原生“静态扩展”，即被标记方法的第一个参数的类型它原来就有的方法
+@:nativeStaticExtension # Converts static function syntax into member call
 
 # 编译的cpp代码中不包含有类似于 HX_STACK_LINE...这些调试用的代码, 只用于字段或方法(但是好像无法作用于构造函数),
-@:noStack				#
+@:noStack               #
 
-@:nonVirtual         	# Declares function to be non-virtual in cpp (cpp only)
+@:nonVirtual            # Declares function to be non-virtual in cpp (cpp only)
 
 # @:sourceFile("path/file.cpp") - 用于 external class,路径以当前 hx 文件所在为当前目录,参考 hxcpp/test/native 目录
-@:sourceFile			# Source code filename for external class
+@:sourceFile            # Source code filename for external class
 
 # 重要: 用于 extern 类,
-@:structAccess			# Marks an extern class as using struct access('.') not pointer('->')
+@:structAccess          # Marks an extern class as using struct access('.') not pointer('->')
 
 # 如果你不需要使用 Reflect 来动态查找类上的成员, 则可以加上这个标记
-@:unreflective			# not generate __Field and __SetField bodies by default
+@:unreflective          # not generate __Field and __SetField bodies by default
 
-@:void					# Use Cpp native 'void' return type (cpp only)
+@:void                  # Use Cpp native 'void' return type (cpp only)
 
 # 文件依赖, 也就是当依赖的文件发生过改动,将重将编译.
 # 附加在 extern 类上, 哪个类调用了这个 extern 类, 就会在 build.xml 中相关 cpp 新增一条 <depend name="file.h" />
-@:depend 				# Add a dependency in the build.xml file.
+@:depend                # Add a dependency in the build.xml file.
 ```
 
 
 ### 混合编程
 
-发现一些库并没有使用 CFFI 那种方式,如 hxsdl, 它是混合了 C++ 在 haxe 代码中.　这样的代码比 cffi 性能更好.因为尽量避免了 haxe 变量和 cpp 变量的数据转换.
-
 这个一个尝试使用 extern class 来处理 c++ 库的项目: https://github.com/snowkit/linc_empty
 
 参看 hxsdl 及 hxcpp/test 中的源码可以发现 混合编程即使用了 metas 来嵌入一些 cpp 源码, 只是有些是通过　宏自动实现的.多参考 `hxcpp/test` 下的示例
+
+#### CFFI
+
+新的写法非常简单，称之为 Prime 并且可以除了 cpp 还可以作用于 neko 平台.
+先将外部的 C/C++ 库编译成 lib.ndll 用于在　haxe 代码中调用. hxcpp包源码的 test 中有一个 cffi 的示例.
 
 #### extern class
 
@@ -154,6 +270,10 @@ In order to [improve support for interacting](http://haxe.1354130.n2.nabble.com/
   @:native("new RGB")
   public static function create(r:Int, g:Int, b:Int):Pointer<RGB>;
   ```
+
+* 外部类由于并非从 GC 申请， 因此需要自已管理内存
+
+  如果你像上边返回的是 Pointer 对象， 那么可以调用 `Pointer::destroy 与 destroyArray`, 它们分别对应 `delete ptr 和 delete [] ptr`
 
 * 在 extern class 上加上 @:structAccess,
 
@@ -200,7 +320,7 @@ cpp.Float64    double
   var pa2:cpp.Pointer<Float> = cpp.NativeArray.address([1.0, 2.0, 3.0], 0);
   ```
 
- * **cpp.NativeString**, 转换成 `char*` 也可以调用 `var cstr:ConstPointer<Char> = untyped hxstr.__s`
+* **cpp.NativeString**, 转换成 `char*` 也可以调用 `var cstr:ConstPointer<Char> = untyped hxstr.__s`
 
   ```haxe
   using cpp.NativeString;
@@ -220,21 +340,21 @@ build.xml 用来配置 hxcpp 如何编译　haxe 源码。查看 `hxcpp/tools/hx
 
 ```haxe
 // 不需要理会这段代码
-var mDefines:StringMap<String>;			// 通过 "-D" 的定义和 "环境变量" 和 <set /><unset /> 设定的值
-var mCurrentIncludeFile:String;			//
-var mIncludePath:Array<String>;			//
+var mDefines:StringMap<String>;        // 通过 "-D" 的定义和 "环境变量" 和 <set /><unset /> 设定的值
+var mCurrentIncludeFile:String;        //
+var mIncludePath:Array<String>;        //
 
-var mCompiler:Compiler;					// 将 .cpp.c 等源文件编译到 .o 中间文件. <compiler>
-var mStripper:Stripper;					// strip工具, 用于去除调试多余信息. <strip>
-var mPrelinkers:StringMap<Prelinker>;	// ,预链接器, Target 通过 toolId 指定匹配. <prelinker id="">
-var mLinkers:StringMap<Linker>;			// ,链接器, Target 通过 toolId 指定. <linker id="">
-var mCopyFiles:Array<CopyFile>;			// 需要复制的文件配置 <copyFile>
-var mFileGroups:StringMap<FileGroup>;	// ,文件分组. <files id="">
-var mTargets:StringMap<Target>;			// ,目标. <target id="">
-var mFileStack:Array<String>;			//
-var mMakefile:String;					//
-var m64:Bool;				// -D HXCPP_M64
-var m32:Bool;				// -D HXCPP_M32
+var mCompiler:Compiler;                // 将 .cpp.c 等源文件编译到 .o 中间文件. <compiler>
+var mStripper:Stripper;                // strip工具, 用于去除调试多余信息. <strip>
+var mPrelinkers:StringMap<Prelinker>;  // ,预链接器, Target 通过 toolId 指定匹配. <prelinker id="">
+var mLinkers:StringMap<Linker>;        // ,链接器, Target 通过 toolId 指定. <linker id="">
+var mCopyFiles:Array<CopyFile>;        // 需要复制的文件配置 <copyFile>
+var mFileGroups:StringMap<FileGroup>;  // ,文件分组. <files id="">
+var mTargets:StringMap<Target>;        // ,目标. <target id="">
+var mFileStack:Array<String>;          //
+var mMakefile:String;                  //
+var m64:Bool;                // -D HXCPP_M64
+var m32:Bool;                // -D HXCPP_M32
 ```
 
 条件检测(if, unless)可以用于检测 `haxe -D` 定义的值,以及用 set 元素设置的变量.
@@ -244,12 +364,12 @@ var m32:Bool;				// -D HXCPP_M32
 ```xml
 <!-- function valid(inEl:Fast,inSection:String):Bool -->
 
-<set name="var1" value="v1" if="D1" />			<!-- 如果 D1 存在, 则设置 var1=v1 -->
-<set name="var2" value="v2" if="D1 D2" />		<!-- 如果 D1 与 D2 定义同时存在, ... -->
-<set name="var3" value="v3" if="D1 || D2" />	<!-- 如果 D1 或 D2 定义存在, ... -->
+<set name="var1" value="v1" if="D1" />        <!-- 如果 D1 存在, 则设置 var1=v1 -->
+<set name="var2" value="v2" if="D1 D2" />     <!-- 如果 D1 与 D2 定义同时存在, ... -->
+<set name="var3" value="v3" if="D1 || D2" />  <!-- 如果 D1 或 D2 定义存在, ... -->
 
-<echo value="hello" unless="D1" />		<!-- 只有当 D1 不存在时, 才打印 hello , 支持:或(||),与(" ") -->
-<echo value="world" ifExists="path/to/file" />	<!-- 检测文件或目录存在 -->
+<echo value="hello" unless="D1" />            <!-- 只有当 D1 不存在时, 才打印 hello , 支持:或(||),与(" ") -->
+<echo value="world" ifExists="path/to/file" /><!-- 检测文件或目录存在 -->
 ```
 
 除了 if, 其它元素属性都支持使用 `${}` 来调用 set 设置的变量.
@@ -262,40 +382,44 @@ var m32:Bool;				// -D HXCPP_M32
 `${var}` 支持下边前缀: [第 1572 行: function substitute(str:String...]
 
 ```bash
-haxelib:		- 返回haxelib库所在路径.  ${haxelib:hxcpp} => `G:\...`
+haxelib:        - 返回haxelib库所在路径.  ${haxelib:hxcpp} => `G:\...`
 
 # 示例: <flag value='-DHXCPP_API_LEVEL=${removeQuotes:hxcpp_api_level}' />
-removeQuotes:	- 去除变量返回值的双引号
+removeQuotes:   - 去除变量返回值的双引号
 
-dospath:		- ??? 将变量返回值转换成DOS path.
+dospath:        - ??? 将变量返回值转换成DOS path.
 
-dir:			- ??? 和 dospath 一样, 只是多了检测
+dir:            - ??? 和 dospath 一样, 只是多了检测
+
+this_dir        - （注: 没有冒号，即值为 ${this_dir} 时）
 ```
 
 在 haxe 代码中通过 **`@:buildXml('')`** 来嵌入这些　xml。你可以参看 toolchain 目录下的 xml 文件.
 
 当要自定义一些 linker 时用到的参数, 可以嵌入一个相同 id 的 linker 元素,然后加要需要的参数
 
-```xml
-<set name="" value="" />		<!-- 设置变量 name=value, 在其它元素中通过 ${name} 来引用 value 的值　-->
-								<!-- 可用于变量条件检测, 示例 -->
-	<set name="someMsg" value="Hello world!" />
-	<echo value="${someMsg}" if="someMsg" />
+你可以在 `tools/hxcpp/BuildTool` 中找到 parseXML 方法
 
-<unset name="" />				<!-- 移除变量 或 haxe -D -->
+```xml
+<set name="" value="" />        <!-- 设置变量 name=value, 在其它元素中通过 ${name} 来引用 value 的值　-->
+                                <!-- 可用于变量条件检测, 示例 -->
+    <set name="someMsg" value="Hello world!" />
+    <echo value="${someMsg}" if="someMsg" />
+
+<unset name="" />               <!-- 移除变量 或 haxe -D -->
 
 <!-- hxcpp编译设置, 细节查看 Setup.hx -->
 <setup name="androidNdk|blackberry|msvc|mingw|emscripten" />
 
-<echo value="" />				<!-- log -->
-<error value="" />				<!-- error, 将中断编译 -->
+<echo value="" />               <!-- log -->
+<error value="" />              <!-- error, 将中断编译 -->
 
-<setevn name="" value="" />		<!-- 设置环境变量, 通过 Sys.putEnv 阶段性(session)  -->
+<setevn name="" value="" />     <!-- 设置环境变量, 通过 Sys.putEnv 阶段性(session)  -->
 
-<path name="" />				<!-- 设置环境路径, 通过 Sys.putEnv("PATH",) 阶段性(session)  -->
+<path name="" />                <!-- 设置环境路径, 通过 Sys.putEnv("PATH",) 阶段性(session)  -->
 
-<include name="path/to/file.xml" />		<!-- 导入另一个 xml, 覆盖到当前(以当前目录为根) -->
-<import name="relative.xml"/>			<!-- 同上(以 source.xml 的目录为根) -->
+<include name="path/to/file.xml" />     <!-- 导入另一个 xml, 覆盖到当前(以当前目录为根) -->
+<import name="relative.xml"/>           <!-- 同上(以 source.xml 的目录为根) -->
 
 <!-- copyFile, 当你需要复制 文件 到输出文件夹(target.outputDir)时 -->
   <!-- name: 要复制的文件名,可以是任意文件 -->
@@ -304,53 +428,62 @@ dir:			- ??? 和 dospath 一样, 只是多了检测
   <!-- [allowMissing]: 是否允许缺失, 值为 1|t|true 时为真, 其它为假 -->
 <copyFile name="libstdc++-6.dll" from="${MINGW_ROOT}/bin" toolId="exe" allowMissing="true" unless="no_shared_libs" />
 
-<section if="Some"></section>			<!-- 所有条件相同的元素集合, 用于避免给每个元素加上同样的条件检测 -->
+<section if="Some"></section>           <!-- 所有条件相同的元素集合, 用于避免给每个元素加上同样的条件检测 -->
 
 
-<pleaseUpdateHxcppTool version="1" />	<!-- Int类型. 如果 hxcpp.n 小于某个版本,将出错误. 这个值似乎很久没用了 -->
+<pleaseUpdateHxcppTool version="1" />   <!-- Int类型. 如果 hxcpp.n 小于某个版本,将出错误. 这个值似乎很久没用了 -->
 
 <!-- 文件组,id 为文件组标识符, 用于被其它元素引用, 同 id 的文件组, 后边的将覆盖前边的  -->
 <files id="__main__">
-  <compilerflag value="-Iinclude" />	<!-- 文件分组编译参数 -->
-  <file name="src/__main__.cpp" />		<!-- 分组内的文件 -->
-    <depend name="include/Main.h" />	<!-- 所依剌的头文件,位于 file 元素内部只能有 name 属性  -->
-	<depend name="include/other.h" />
+  <compilerflag value="-Iinclude" />    <!-- 文件分组编译参数 -->
+  <compilervalue name="-D" value="Some" />
+  <file name="src/__main__.cpp" />      <!-- 分组内的文件 -->
+    <depend name="include/Main.h" />    <!-- 所依剌的头文件,位于 file 元素内部只能有 name 属性  -->
+    <depend name="include/other.h" />
   </file>
+  <file name = "src/hx/gc/Immix.cpp" tags="haxe,gc" />   <!-- tags: TODO -->
 
-  <depend name="path/file.h" />			<!-- 依赖另一个文件,　注意 depend 属性要么是 name 或 files -->
-  <depend files="id" />					<!-- 依赖另一个文件组内的所有 depend.has.name 元素  -->
+  <depend name="path/file.h" />         <!-- 依赖另一个文件,　注意 depend 属性要么是 name 或 files -->
+  <depend files="id" />                 <!-- 依赖另一个文件组内的所有 depend.has.name 元素  -->
 
   <!-- TODO:  fxc.exe /nologo /T %profile% %file% /Vn %variable% /Fh %target% -->
   <hlsl name="path/tofile.fx" profile="" variable="" target="" />
 
-  <options name="Options.txt"/>			<!-- TODO: 不明确,反正都是 Options.txt -->
-  <precompiledheader name="" dir="" />  <!-- 预编译头文件,name:文件名, dir:目录  -->
+  <options name="Options.txt"/>         <!-- TODO: 不明确,反正都是 Options.txt -->
 
-  <include name="path/to/file.xml" />	<!-- 导入另一个 xml, 覆盖到当前 -->
+  <precompiledheader name="" dir="" />  <!-- 预编译头文件, name: 输出文件名, dir: 需要编译的头文件所在目录  -->
+                                        <!-- 输出的 .pch 文件目录由 files.id 值来确定-->
+
+  <include name="path/to/file.xml" />   <!-- 导入另一个 xml, 覆盖到当前 -->
   <section></section>
+
+  <config name=""  />        <!-- TODO -->
+  <tag value=""  />          <!-- TODO: 添加 tag 标记到 tags, files 有 tags 属性 -->
+  <addTwice if="linux" />    <!-- TODO -->
+  <cache value="true" project="" asLibrary="true"    />    <!-- TODO -->
 </files>
 
 <!-- 编译, 将源码编译为中间文件时用到 -->
   <!-- id: 名称标识符 -->
   <!-- exe: 编译器命令名, 如 gcc, cl.exe ... -->
 <compiler id="android-gcc" exe="g++">
- <exe name="${EXEPREFIX}-g++" if="" />	<!-- 同上,一般写在这里的会有条件检测, 如果重复将覆盖前边设置 -->
- <flag value="" />						<!-- 编译器参数,用于所有 .c .cpp .m .mm -->
+ <exe name="${EXEPREFIX}-g++" if="" />  <!-- 同上,一般写在这里的会有条件检测, 如果重复将覆盖前边设置 -->
+ <flag value="" />                      <!-- 编译器参数,用于所有 .c .cpp .m .mm -->
  <flag value="-Dsome=value" />
  <flag value="-I${HXCPP}/include" />
 
- <cflag value="" />				<!-- 仅用于 .c 的编译参数 -->
- <cppflag value="" />			<!-- 仅用于 .cpp 或 .c++ 的编译参数 -->
- <objcflag value="" />			<!-- 仅用于 .m(object-c) 的编译参数 -->
- <mmflag value="" />			<!-- 仅用于 .mm(object-c++) 的编译参数 -->
- <pchflag value="" />			<!-- 仅用于 .pch(预编译头文件) 的编译参数 -->
+ <cflag value="" />             <!-- 仅用于 .c 的编译参数 -->
+ <cppflag value="" />           <!-- 仅用于 .cpp 或 .c++ 的编译参数 -->
+ <objcflag value="" />          <!-- 仅用于 .m(object-c) 的编译参数 -->
+ <mmflag value="" />            <!-- 仅用于 .mm(object-c++) 的编译参数 -->
+ <pchflag value="" />           <!-- 仅用于 .pch(预编译头文件) 的编译参数 -->
 
- <objdir value="" />			<!-- 输出文件夹目录, 默认为 obj -->
- <outflag value="" />			<!-- 输出　编译标记, 通常为 -o 或 --output -->
- <pch value="" />				<!-- TODO: 未知 - if(pch == "gcc"){...} -->
+ <objdir value="" />            <!-- 输出文件夹目录, 默认为 obj -->
+ <outflag value="" />           <!-- 输出　编译标记, 通常为 -o 或 --output -->
+ <pch value="" />               <!-- TODO: 未知 - if(pch == "gcc"){...} -->
  <getversion value="some.exe" /><!-- TODO: 一个输出一些字符到 stderr　的工具命令,输出的字符将通过 md5 计算  -->
- <ext value="" />				<!-- 输出　扩展名, 默认为 .o -->
- <include name="" />			<!-- 导入另一个 xml, 覆盖到当前 -->
+ <ext value="" />               <!-- 输出　扩展名, 默认为 .o -->
+ <include name="" />            <!-- 导入另一个 xml, 覆盖到当前 -->
  <section unless=""></section>
 </compiler>
 
@@ -359,13 +492,13 @@ dir:			- ??? 和 dospath 一样, 只是多了检测
   <!-- id: 名称标识符 -->
   <!-- exe: strip 工具命令 -->
 <stripper id="strip" exe="strip" unless="nostrip">
-  <exe name="strip"/>				<!-- 执行 strip 命令名称 -->
+  <exe name="strip"/>           <!-- 执行 strip 命令名称 -->
   <exe name="arm-none-linux-gnueabi-strip" if="webos" />
   <exe name="${EXEPREFIX}-strip" if="EXEPREFIX" />
   <exe name="${HXCPP_STRIP}" if="HXCPP_STRIP" />
   <exe name="mipsel-linux-strip" if="gcw0" />
 
-  <flag value="-u" if="macos"/>		<!-- strip 命令参数 -->
+  <flag value="-u" if="macos"/> <!-- strip 命令参数 -->
   <flag value="-r" if="macos"/>
   <flag value="-x" if="macos"/>
   <flag value="-d" if="linux"/>
@@ -377,25 +510,25 @@ dir:			- ??? 和 dospath 一样, 只是多了检测
    <!-- id: 链接器标识符 -->
    <!-- exe: 链接器命令名称 -->
 <linker id="dll" exe="link.exe" if="windows">
-  <exe name="" if="" />				<!-- 链接器命令名称 -->
-  <flag value="-nologo"/>			<!-- linker 命令行参数 -->
+  <exe name="" if="" />           <!-- 链接器命令名称 -->
+  <flag value="-nologo"/>         <!-- linker 命令行参数 -->
 
-  <lib name="libm.so" if="demo" />	<!-- 依赖的链接库 -->
+  <lib name="libm.so" if="demo" /><!-- 依赖的链接库 -->
   <lib name="-llog" if="demo"/>
   <lib name="${dll_import_link}" if="dll_import_link" />
 
-  <libdir name="obj/lib" />			<!-- 依赖的链接库的文件夹 -->
+  <libdir name="obj/lib" />       <!-- 依赖的链接库的文件夹 -->
 
-  <fromfile value="@" />			<!-- 如果为 @,所有.obj　将以清单的形式写入到 all_objs. 默认为 @ -->
-									<!-- windows 需要这个 @ 符号 -->
+  <fromfile value="@" />          <!-- 如果为 @,所有.obj　将以清单的形式写入到 all_objs. 默认为 @ -->
+                                  <!-- windows 需要这个 @ 符号 -->
 
-  <ext value=".dll" />				<!-- 输出扩展名, .exe,.dll,"",.so -->
-  <outflag value="-out:" />			<!-- 输出参数: windows通常是 -out:,而非windows通常为 -o -->
+  <ext value=".dll" />            <!-- 输出扩展名, .exe,.dll,"",.so -->
+  <outflag value="-out:" />       <!-- 输出参数: windows通常是 -out:,而非windows通常为 -o -->
 
-  <prefix value="" />			<!-- 输出文件名前缀 -->
-  <ranlib name="" />			<!-- 命令工具,用于更新静态库的符号索引表,似乎只适用于 gcc 编译器 -->
-  <recreate value="1" />		<!-- 是否删除输出重新建立, 留空为 false,否则为 true.  -->
-  <expandAr value="" />			<!-- 解开 .a 库文件为多个 .o, 留空为 false,否则为 true.-->
+  <prefix value="" />             <!-- 输出文件名前缀 -->
+  <ranlib name="" />              <!-- 命令工具,用于更新静态库的符号索引表,似乎只适用于 gcc 编译器 -->
+  <recreate value="1" />          <!-- 是否删除输出重新建立, 留空为 false,否则为 true.  -->
+  <expandAr value="" />           <!-- 解开 .a 库文件为多个 .o, 留空为 false,否则为 true.-->
   <section></section>
 </linker>
 
@@ -430,15 +563,15 @@ dir:			- ??? 和 dospath 一样, 只是多了检测
   <!-- output:  输出文件名,不带扩展名.-->
   <!-- overwrite: 重写, 自已看源码定义 -->
 <target id="msvccompat" output="" tool="linker" toolid="${STD_MODULE_LINK}" >
-  <target id="" />				<!-- 子模块, 指定 id 值就行了 -->
-  <lib name="some.lib" />		<!-- 库名, [将覆盖加到 linker] -->
-  <flag value="" />				<!-- 编译参数,[将覆盖加到 linker]  -->
-  <depend name="" />			<!-- 文件依赖,将检测这些文件是否发生改动来决定是否重新编译 -->
-  <dir name="" />				<!-- (好像没用), 当调用 target.clean 时被将删除的目录 -->
-  <outdir name="path/to/" />	<!-- 最终输出文件存放目录 -->
-  <builddir name="" />			<!-- 设置编译时的当前目录, 目录必须存在. 之后所有相对目录以这个为基准 -->
-  <ext value="" />				<!-- 输出扩展名, 如果指定将覆盖 linker 的设定 -->
-  <files id="__main__" />		<!-- 选择需要编译的文件分组, 不同 id 表示不同分组 -->
+  <target id="" />             <!-- 子模块, 指定 id 值就行了 -->
+  <lib name="some.lib" />      <!-- 库名, [将覆盖加到 linker] -->
+  <flag value="" />            <!-- 编译参数,[将覆盖加到 linker]  -->
+  <depend name="" />           <!-- 文件依赖,将检测这些文件是否发生改动来决定是否重新编译 -->
+  <dir name="" />              <!-- (好像没用), 当调用 target.clean 时被将删除的目录 -->
+  <outdir name="path/to/" />   <!-- 最终输出文件存放目录 -->
+  <builddir name="" />         <!-- 设置编译时的当前目录, 目录必须存在. 之后所有相对目录以这个为基准 -->
+  <ext value="" />             <!-- 输出扩展名, 如果指定将覆盖 linker 的设定 -->
+  <files id="__main__" />      <!-- 选择需要编译的文件分组, 不同 id 表示不同分组 -->
   <section></section>
 </target>
 
@@ -454,11 +587,6 @@ dir:			- ??? 和 dospath 一样, 只是多了检测
 附录
 ------
 
-### CFFI
-
-先将外部的 C/C++ 库编译成 lib.ndll 用于在　haxe 代码中调用. hxcpp包源码的 test 中有一个 cffi 的示例.
-
-一个工具能自动写一些模板 <https://github.com/player-03/ExtensionBoilerplate>
 
 ### cppia
 
@@ -480,14 +608,97 @@ dir:			- ??? 和 dospath 一样, 只是多了检测
 
 <http://haxe.org/manual/target-cpp-defines.html>
 
-一些定义你可以在 `hxcpp/toolchain` 目录下的 xml 文件中找到.
+一些定义你可以在 `hxcpp/toolchain` 目录下的 xml 文件中找到. 特别是 "common-defines.xml"
 
 ```bash
 HAXE_OUTPUT_FILE      # 指定输出文件名称, 因为 -cpp bin 指定的是个目录
 
-static_link           # 生成成静态库, 而不是 exe 文件
+static_link           # 生成成静态链接库, 例如 windows 下生成 .lib 文件
+
+dll_import            # ???生成动态链接库, 例如 windows 下导出 .dll 文件
 
 no_console            # 没有控制台窗口, 例如如果你使用 SDL 来分创建窗口的话
+```
+
+## API
+
+由于没有文档，只能在 google group 中的 haxelang 频道搜索相关文档。
+
+### cpp.vm.Gc
+
+在 haxe 调用 new 关键字（或匿名结构及匿名函数）将会使得 Gc 跟踪这个对象
+
+* **Tips** : 因此减少 new 和匿名结构及匿名函数的使用似乎能降低 gc 的遍历以达到优化目的
+
+```bash
+# 强制 GC 回收
+run(major: Bool): Void`
+
+enable(inEnable:Bool) : Void
+
+# TODO: 未知，大概和 `HXCPP_GC_MOVING` 有些关系,
+compact(): Void
+
+# estimate of how much is needed by program (at last collect)
+memUsage(): Int`
+
+# 获得下一个将被清理的对象, （TODO: -debug 下似乎有个bug, 似乎需要先空调用一次这个方法在 gc.run 之前???）
+getNextZombie(): Dynamic
+
+# 防止某一对象被 Gc 清除，但调用 Gc.run 之后仍然会被清楚，但是可以从 getNextZombie 获得这个对象
+# 但是不会再触发 setFinalizer 所设置的函数了。由为对象被传递到 getNextZombie,
+doNotKill(inObj: Dynamic): Void
+
+# 设置回调，当某个对象被回收时将调用，你可以通过 cpp.Function 来创建第二个参数
+setFinalizer<T>(inObject:T, inFinalizer:cpp.Callable<T->Void> ): Void
+
+#
+safePoint(): Void
+
+#
+enterGCFreeZone()/exitGCFreeZone(): Void
+
+# TODO
+setMinimumFreeSpace(inBytes: Int): Void
+setTargetFreeSpacePercentage(inPercentage: Int) : Void
+setMinimumWorkingMemory(inBytes: Int) : Void
+
+trace(sought:Class<Dynamic>,printInstances:Bool=true): Int
+```
+
+### cpp.abi.Abi
+
+The "ABI" allows for differences between "stdcall" and "cdecl" which is important when using WINAPI functions - otherwise use the cpp.abi.Abi default.
+
+关于 Abi 的描述: <http://my.oschina.net/superpdm/blog/215826>
+
+### cpp.Function
+
+用于调用源生的 c/c++ 代码,
+
+> 提供一个静态方法 fromStaticFunction 能简单创建 cpp.Callable，但怪异的是那个方法体的内部得是 `__cpp__` 代码才行
+
+### cpp.Callable
+
+抽象类，编译器将会把这个类转换成 cpp.Function，可以参考 cpp.Prime 是如何加载 Prime 的.
+
+下边的示例是展示如何直接调用 cpp 中的全局方法的.
+
+```haxe
+@:cppFileCode("void Func(int x) { printf(\"%d\\n\", x); }")
+class Test {
+   static function takeCallback(f:cpp.Callable<Int->cpp.Void>) f.call(10);
+   public static function main() {
+      untyped __cpp__("takeCallback(Func)");
+      // 实际上改成 takeCallback(untyped Func); 也行
+   }
+}
+```
+
+CFFI 以 Prime 的形式从 NDLL 中加载方法的原型类似于:
+
+```haxe
+static var add:cpp.Callable<Int -> Int -> Int> = cast cpp.Prime._loadPrime("NDLL_NAME", "addInts", "iii", false);
 ```
 
 <br />

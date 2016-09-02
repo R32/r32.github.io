@@ -201,22 +201,22 @@ nekotools 是一个安装 haxe 时附带的工具,nekotools 很简单只有二�
   -cppia <file>    : generate Cppia code into target file
 
   # 编译代码为 c# 平台的 .cs 文件, 指定输出目录, 需要安装 hxcs 库
-  -cs <directory>		: generate C# code into target directory
+  -cs <directory>  : generate C# code into target directory
 
   # 编译代码为 java 平台的 .java 文件, 指定输出目录, 需要安装 hxjava 库
-  -java <directory>	: generate Java code into target directory
+  -java <directory>: generate Java code into target directory
 
   # haxe 3.2 + 编译代码为 python
-  -python <file>		: generate Python code as target file
+  -python <file>   : generate Python code as target file
 
   # haxe 3.3 一个计划用来代替 neko 新平台
-  -hl <file> : compile HL code as target file
+  -hl <file>       : compile HL code as target file
 
   # 导出代码API注释内容为 xml 文件
-  -xml <file> : generate XML types description
+  -xml <file>      : generate XML types description
 
   # 指定入口文件
-  -main <class> : select startup class
+  -main <class>    : select startup class
 
   # 使用 haxelib, 允许指定库版本
   -lib <library[:version]> : use a haxelib library
@@ -264,10 +264,10 @@ nekotools 是一个安装 haxe 时附带的工具,nekotools 很简单只有二�
   -cmd : run the specified command after successful compilation
 
   # flash平台, 更严格的类型检测
-  --flash-strict : more type strict flash API
+  --flash-strict   : more type strict flash API
 
   # 编译时忽略所有 trace 语句
-  --no-traces	: do not compile trace calls in the program
+  --no-traces      : do not compile trace calls in the program
 
   # 解析 flash 的 swf/swc 库并自动生成 extern class, 感觉是一个自动写 extern class 的工具, 只能用于 flash.
   # 既然 haxe 能直接使用 swc 库, 个人感觉 就已经不需要 extern class 类了.也就是说 --gen-hx-classes 多余了.
@@ -275,7 +275,7 @@ nekotools 是一个安装 haxe 时附带的工具,nekotools 很简单只有二�
   --gen-hx-classes : generate hx headers for all input classes
 
   # 分隔 haxe 编译, hxml 文件中经常能见到
-  --next		: separate several haxe compilations
+  --next           : separate several haxe compilations
 
   # 用于 单个hxml文件(或单条CLI命令)的多目标编译, 在 --each 之前的参数将用于所有 --next
   --each
@@ -285,47 +285,47 @@ nekotools 是一个安装 haxe 时附带的工具,nekotools 很简单只有二�
   --display	: display code tips
 
   # 编译但是不输出, 通常用于测试是否能通过编译, 或 导出 API 注释文档(haxe -xml)时用到
-  --no-output	: compiles but does not generate any file
+  --no-output   : compiles but does not generate any file
 
   # 显示 编译所花费的时间
-  --times		: measure compilation times
+  --times       : measure compilation times
 
   # 停用 inline 关键字, inline 关键字将被忽略
-  --no-inline	: disable inlining
+  --no-inline   : disable inlining
 
   # 停用代码优化
-  --no-opt	: disable code optimizations
+  --no-opt      : disable code optimizations
 
   # 设置主文件名, 默认为: index.php
-  --php-front <filename>	: select the name for the php front file
+  --php-front <filename>    : select the name for the php front file
 
   # 设置库文件夹名, 文件夹名默认为: lib
-  --php-lib <filename>	: select the name for the php lib folder
+  --php-lib <filename>      : select the name for the php lib folder
 
   # 为所有类添加字符前缀
-  --php-prefix <name>		: prefix all classes with given name
+  --php-prefix <name>       : prefix all classes with given name
 
   # 映射 package 到 target. 相当于 为 target 取一个别名 package. 例: --remap flash:openfl
-  --remap <package:target> : remap a package to another one
+  --remap <package:target>  : remap a package to another one
 
   # 使用内部宏系统执行, 当不需要指定输出时,
   # 参看下边 --eval 的示例, 如果不加 --interp 将不会有显示..
-  --interp	: interpret the program using internal macro system
+  --interp  : interpret the program using internal macro system
   --run     : 类似于 --interp 例: haxe --run Main arg1 arg2
 
   # 调用 macro 命令, 默认为 macro.Compiler 下的 宏(macro)方法, --macro keep("SomeClass")
   # 但其实可以是任意方法,例如: --macro Sys.println("Hello World!")
   # 或者像这样: haxe -cp src --macro Main.main()
-  --macro 	: call the given macro before typing anything else
+  --macro   : call the given macro before typing anything else
 
   # 运行代码. https://github.com/HaxeFoundation/haxe/pull/3309
   # 就像是 js 里边的 eval("code"), 例如: 可以复制示例粘贴到 CMD中去
   # haxe --eval "class Foo{static public function main(){Sys.print('Hello world!');}}" --interp
-  --eval		: evaluates argument as Haxe module code
+  --eval    : evaluates argument as Haxe module code
 
   # 绑定当前工作目录到 host:port, 用于缓存编译, 适用于大型项目, 减少编译时间, 参看下边示例
   # http://haxe.org/manual/cr-completion-server.html
-  --wait <[host:]port> : wait on the given port for commands to run)
+  --wait <[host:]port>    : wait on the given port for commands to run)
 
   # 连接端口, 使用缓存编译, 如果文件未发生改动, 参看下边示例
   --connect <[host:]port> : connect on the given port and run commands there)
@@ -428,7 +428,7 @@ flash-strict           : More strict typing for flash target
 # 示例参看 http://old.haxe.org/doc/flash/preloader
 flash-use-stage        : Keep the SWF library initial stage. To be used together with -swf-lib.
                          Place objects found on the stage of the SWF lib.
-						(Not to be used together with -swf-header)
+                         (Not to be used together with -swf-header)
 
 force-lib-check        : Force the compiler to check -net-lib and -java-lib
                          added classes (internal)
@@ -458,7 +458,7 @@ java-ver               : <version:5-7> Sets the Java version to be targeted
 #
 jquery-ver             : The jQuery version supported by js.jquery.*. The
                          version is encoded as an interger.
-						 e.g. 1.11.3 is encoded as 11103
+                         e.g. 1.11.3 is encoded as 11103
 
 # 不使用闭包和 "strict mode" 包装代码输出.
 js-classic             : Don not use a function wrapper and strict mode in JS output
@@ -629,7 +629,7 @@ vcproj                 : GenCPP internal
 
 @:annotation         : Annotation (@interface) definitions on -java-lib
                      imports will be annotated with this metadata. Has
-					 no effect on types compiled by Haxe (java only)
+                     no effect on types compiled by Haxe (java only)
 
 @:arrayAccess        : Allows [] access on an abstract
 
@@ -697,8 +697,8 @@ vcproj                 : GenCPP internal
 
 # 如果一个字段或类, 被添加这个标记, 编译器将在编译时输出警告信息（注:目前仅适用于hxjava,未来可能会扩展到所有平台）
 @:deprecated         : Automatically added by -java-lib on class fields
-                       annotated with @Deprecated annotation.
-					   Has no effect on types compiled by Haxe.(java only)
+                     annotated with @Deprecated annotation.
+                     Has no effect on types compiled by Haxe.(java only)
 # 添加在 abstract 关键字前, 生成类似于常量的集合 http://haxe.org/manual/types-abstract-enum.html
 @:enum               : Defines finite value sets to abstract definitions
 
@@ -725,7 +725,7 @@ vcproj                 : GenCPP internal
 # 防止类被扩展(extends)
 @:final              : Prevents a class from being extended
 
-# haxe 3.3
+# haxe 3.3, (似乎只对 cpp 有影响, 因为只在 cpp 中会编译成固定结构)
 @:fixed              : Delcares an anonymous object to have fixed fields
 
 # 嵌入字体文件. 仅支持 ttf 字体文件, 例:
@@ -771,12 +771,12 @@ vcproj                 : GenCPP internal
 
 @:hxGen              : Annotates that an extern class was generated by Haxe (for cs,java)
 
-# 如果 特性存在,则不会被 dce 清除
+# 如果符合条件,则不会被 dce 清除
 @:ifFeature          : (Feature name)Causes a field to be kept by DCE if the given feature is part of the compilation
 
 @:include            :  (cpp only)
 
-@:initPackage        : 用于 js 平台的 extern class, 用于将 包名 初使为 Object, 或者也可以使用 @:native 来更改输出的类名.
+#@:initPackage       : 用于 js 平台的 extern class, 用于将 包名 初使为 Object,（已移除）
 
 @:internal           : Generates the annotated field/class with 'internal' access (for cs,java)
 
@@ -816,13 +816,15 @@ vcproj                 : GenCPP internal
 # 重写输出类或枚举的包名, 例: @:native("my.real.Cls"). 使它更容易绑定到 extern 类, 可能有不一样的名称.
 # 示例 @:native("global") extern class Node {}, 这样在 Haxe 这边调用 Node 而其实输出端调用的是 global
 # 但是这个在写字段用于成员字段时, @:native("a.b") 将变为 ["a.b"] 这种形式(只在JS中测试过)
+# 注意各平台的 native 可能会有差异，比如 js 和 cpp, 在静态字段上 js 永远会带有类名,而 cpp 则总是全局名
 @:native             : (Output type path)Rewrites the path of a class or enum during generation
 
 @:nativeChildren     : Annotates that all children from a type should be
                        treated as if it were an extern definition - platform
                        native (for cs,java)
-
-@:nativeGen          : Annotates that a type should be treated as if it were an extern definition - platform native (for cs,java)
+# 如果用于 cpp, 则不会
+@:nativeGen          : Annotates that a type should be treated as if it were an extern
+                       definition - platform native (for cs, java, cpp)
 
 @:nativeProperty     : Use native properties which will execute even with dynamic usage (cpp only)
 

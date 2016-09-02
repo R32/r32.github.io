@@ -221,6 +221,10 @@ categories: other
 
 * [如何调试Chrome的Proxy](http://www.chromium.org/developers/design-documents/network-stack/debugging-net-proxy)
 
+* 大前端的瑞士军刀: <https://github.com/nieweidong/fetool>
+
+  > [一些帮助开发的 chrome 插件](http://www.cnblogs.com/cench/p/5565389.html)
+
 
 ### resource
 
