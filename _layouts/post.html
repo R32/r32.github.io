@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="description" content="{{page.title}}" />
     <title>{{ page.title }}</title>
-	<link rel="stylesheet" type="text/css" href="/assets/css/bootstrap.min.css" />  
+	<link rel="stylesheet" type="text/css" href="/assets/css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="/assets/css/custom.css" />
     <link rel="stylesheet" type="text/css" href="/assets/css/github-markdown.css" />
     <style type="text/css">
@@ -28,7 +28,7 @@
 
 	@media print {
 		#header{
-			display: none;	
+			display: none;
 		}
 
 		#footer{
@@ -58,20 +58,19 @@
         <div id="mainContainer" class="container">
           <div class="row">
             <div class="col-md-3">
-              <div class="bs-sidebar hidden-print affix-top" role="complementary" data-spy="affix" data-offset-top="4">
+              <div class="bs-sidebar hidden-print affix-top" role="complementary" data-spy="affix" data-offset-top="4"></div>
             </div>
-            </div>
-
             <div class="col-md-9" role="main">
               <h2 class="article-title">{{ page.title }}</h2>
               <p class="text-muted">{{ page.date | date: '%Y年%m月%d日 %H:%MGMT+8' }} <a href="{{site.doc_url_path | append: page.path}}" target="_blank" class="badge doc-edit" data-toggle="tooltip" title=" 如有错误可点击尝试修改 ">改正错误...</a></p>
-              <div class="markdown-body">{{content}}</div>   
+              <div class="markdown-body">{{content}}</div>
+              <!-- 多说评论框 start
+              <hr class="gh" />
+              <div class="ds-thread" data-thread-key="{{page.path | remove_first:'_posts/' | remove_first:'.markdown'}}" data-title="{{page.title}}" data-url="{{page.url}}"></div>
+              -->
             </div>
-            <hr class="gh" />
-            <!-- 多说评论框 start -->
-           <div class="ds-thread" data-thread-key="{{page.path | remove_first:'_posts/' | remove_first:'.markdown'}}" data-title="{{page.title}}" data-url="{{page.url}}"></div> 
           </div>
-        </div>        
+        </div>
       </div>
 {% include footer.html %}{% if site.use_cdn == true %}
 <script src="http://cdn.bootcss.com/jquery/1.11.2/jquery.min.js"></script>
@@ -87,11 +86,16 @@
   try{
 	  jQuery('a.doc-edit:first').tooltip({placement: 'right'})
   }catch(err){
-	  // IE 7 中 tooltip 会出错. 可能是由于 jQuery 的原因	
+	  // IE 7 中 tooltip 会出错. 可能是由于 jQuery 的原因
   };
 
   // 关于 toc.js
   // 移除了 16,17,18 行的 encodeURIComponent
+{% if page.notes == "full" %}
+	jQuery("#mainContainer div.col-md-3:first")
+	  .css("display","none")
+	  .next().css("width", "100%");
+{% else %}
   var eToc = jQuery('#mainContainer .bs-sidebar:first');
 
   eToc.toc({
@@ -107,7 +111,7 @@
       $(window).off('.affix');
       eToc.removeAttr("data-spy").removeClass("affix");
       return;
-    } 
+    }
 
     try{
       jQuery('body').scrollspy({
@@ -119,9 +123,9 @@
     }
 
   });
+{% endif %}
 
-
-/*  
+/*
   // 暂时不使用评论.
   if(location.host !== 'localhost'){
     var duoshuoQuery = {short_name:"r32"};
@@ -130,7 +134,7 @@
       ds.type = 'text/javascript';ds.async = true;
       ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
       ds.charset = 'UTF-8';
-      (document.getElementsByTagName('head')[0] 
+      (document.getElementsByTagName('head')[0]
        || document.getElementsByTagName('body')[0]).appendChild(ds);
     })();
   } */
