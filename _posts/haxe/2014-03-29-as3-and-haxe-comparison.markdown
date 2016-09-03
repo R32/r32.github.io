@@ -3,6 +3,7 @@ layout: post
 title:  AS3 和 Haxe 语法对比
 date:   2014-03-29 17:50:10
 categories: haxe
+notes: full
 ---
 
 本文档的目的是帮助 熟悉 Actionscript 3 的开发人员快速入门 Haxe。更多 Haxe 特定文档请参阅主要的 [Haxe.org](http://Haxe.org).

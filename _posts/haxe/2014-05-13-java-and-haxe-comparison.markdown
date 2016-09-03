@@ -3,7 +3,7 @@ layout: post
 title:  Java 与 Haxe 语法对比
 date:   2014-05-13 11:50:10
 categories: haxe
-notes: markdown中夹着 html 时解析时很怪异.
+notes: full
 ---
 
 ### 前言

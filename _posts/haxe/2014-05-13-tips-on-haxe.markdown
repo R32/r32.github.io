@@ -478,7 +478,7 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
 
 * `项目属性 -> 输出(选项卡) -> 平台[下拉菜单]` 选择 hxml, 可用 hxml 来编译
 
-  但是这样将不会使用编译缓存, 可以找到 命令行预编译 在 `${output}` 的前边加上 `--connect 6000`
+  ???但是这样将不会使用编译缓存, 可以找到 命令行预编译 在 `${output}` 的前边加上 `--connect 6000`
 
 * 这是一个 fd 的模板源码 <https://github.com/Chman/Snowkit-FD>
 
@@ -496,6 +496,25 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
 
 * HaxeContext - `Generate Imports`: 关闭自动导入(import)
 
+
+#### vscode
+
+
+一些快捷键命令:
+
+* `ctrl+shift+p`: 调出vscode命令菜单, 选择 "haxe: initialized VSCode Project" 用于新建项目
+
+  "haxe: Select display Configuration" 用于选择 .hxml 配置文件（即 .vscode 目录下的 settings.json 文件描述, 用于语法提示）
+
+
+* `ctrl+shift+b`: 编译输出，或通过 "task: "
+
+  我感觉通过 `ctrl+~` 来打开命令行窗口更好用???
+
+TODO: 如何启动 completion server ?  似乎只能自已通过 CLI 命令行自已先连接??? 但是这样却又无法从 OUTPUT 窗口查看输出
+
+
+总结: 在 windows 平台还是使用 flashdevelop 吧...
 
 ### 遇见的一些错误
 
