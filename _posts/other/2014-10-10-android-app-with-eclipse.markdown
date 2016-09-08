@@ -7,7 +7,7 @@ categories: other
 
 ---
 
-[一些 Java 的语法参考]({% post_url 2014-05-13-java-and-haxe-comparison %})
+[一些 Java 的语法参考]({% post_url 2014-03-29-vs-java %})
 
 * 下载 [ADT](http://developer.android.com/sdk/index.html)
 
