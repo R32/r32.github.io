@@ -103,7 +103,7 @@ default:
 
 1. 首先, haxe 中的 DOM 对象是基于 W3C 的 IDL 文件自动生成的, 因此操作 DOM 时, 你应该尽量使用 js.jquery.JQuery
 
-2. haxe 默认输出为 es5, 如果你想要兼容 ie8 或更低的浏览器则可添加编译参数 `-D js-es=3`
+2. haxe 默认输出为 es5, 如果你想要兼容 ie8 则可添加编译参数 `-D js-es=3`
 
 ### 特性
 
@@ -131,43 +131,45 @@ default:
 
   // 如果你不知道有哪些 defines 可以使用, 可以像下边这个 “宏方法”， 例:
   class Main {
-  	static function main() {
-  		trace(getDefines()); // console.log({'js-es5' : "1", .....})
-  	}
+      static function main() {
+          trace(getDefines()); // console.log({'js-es5' : "1", .....})
+      }
 
-  	macro static function getDefines(){
-  		var obj = {};
-  		var m = haxe.macro.Context.getDefines();
-  		for (k in m.keys()) {
-  			Reflect.setField(obj, k, "" + m.get(k));
-  		}
-  		return macro $v{obj};
-  	}
+      macro static function getDefines(){
+          var obj = {};
+          var m = haxe.macro.Context.getDefines();
+          for (k in m.keys()) {
+              Reflect.setField(obj, k, "" + m.get(k));
+          }
+          return macro $v{obj};
+      }
   }
   ```
 
 * 抽像类 `abstract + inline`， 例如你可以把 Int 类型想象成 Direction 类型, 使得代码更容易理解:
 
+  > haxe 中的抽象类的形为实际上得有些像 inline, 与其它语言如 java 或 C# 中所谓的抽象类完全是不同的概念,
+
   ```haxe
   // 小括号中的 Int 我们称之为 底层原型(underlying type)
   abstract Direction(Int){
-  	inline public function new(i:Int){
-  		this = i;
-  	}
-  	inline public function inLeft(){
-  		return this < 0;
-  	}
-  	inline public function inRight(){
-  		return this > 0;
-  	}
+      inline public function new(i:Int){
+          this = i;
+      }
+      inline public function inLeft(){
+          return this < 0;
+      }
+      inline public function inRight(){
+          return this > 0;
+    }
   }
 
   class Main {
-  	static function main() {
-  		var d = new Direction(js.Browser.window.screenX);
-  		trace(d.inLeft());
-  		trace(d.inRight());
-  	}
+      static function main() {
+          var d = new Direction(js.Browser.window.screenX);
+          trace(d.inLeft());
+          trace(d.inRight());
+      }
   }
   ```
 
@@ -189,14 +191,14 @@ default:
 
   ```haxe
   @:enum abstract Week(Int) to Int{
-  	var Sun = 0;
-  	var Mon = 1;
+      var Sun = 0;
+      var Mon = 1;
   }
 
   class Main {
-  	static function main() {
-  		trace(Mon - Sun);
-  	}
+      static function main() {
+          trace(Mon - Sun);
+      }
   }
   ```
 
@@ -206,7 +208,7 @@ default:
   (function () { "use strict";
   var Main = function() { };
   Main.main = function() {
-  	console.log(1);
+    console.log(1);
   };
   Main.main();
   })();
@@ -214,26 +216,20 @@ default:
 
 * 静态扩展. 比如你想在某个类上添加一些自定义的方法, 但是又不必修改其源码
 
-  Foo.hx
-
   ```haxe
-  class Foo{
-    public static inline function triple(n: Int){
-        return n * 3;
-    }
-  }
-  ```
-
-  Main.hx, (由于不能和被 using 的类位于同一个文件, 因此需要分离成二个文件)
-
-  ```haxe
-  using Foo;  // 第一步, 使用 using 引入 Foo 类
+  using Main.Foo;  // 第一步, 使用 using 引入 Foo 类, (由于文件名是 Main.hx, 因此默认是 Main 类)
 
   class Main {
-    static public function main() {
-      var i = 101;
-      trace(i.triple()); // 直接调用, 只要 triple 函数的第一个参数类型为 Int.
-    }
+      static public function main() {
+        var i = 101;
+        trace(i.triple()); // 直接调用, 只要 triple 函数的第一个参数类型为 Int.
+      }
+  }
+
+  class Foo{
+      public static inline function triple(n: Int){
+          return n * 3;
+      }
   }
   ```
 
@@ -252,9 +248,9 @@ default:
 
 * **haxe 最强大的特性：宏（macro）**。 通常它用来自动创建，比如你可以分析某个本地或网络文件然后动态创建一个类
 
-  > 建议新手先跳过这一块, 但如果你对《编译原理》有自信的话，那么这些东西你会非常熟悉
+  > 建议新手先跳过这一块, 但如果你对《编译原理》有自信的话
 
-  例: 这个 macro 用来获得当前项目最后提交的 GIT HASH 值
+  例: 这个 macro 用来获得当前项目最后提交的 GIT HASH 值，它通过宏打开一个进程执行指定的命令并将结果返回给代码
 
   ```js
   // MyMacros.hx
@@ -277,9 +273,9 @@ default:
 
   // Main.hx
   class Main{
-  	static function main(){
-  		trace(MyMacros.MyMacros());
-  	}
+      static function main(){
+          trace(MyMacros.MyMacros());
+      }
   }
   ```
 
@@ -290,6 +286,108 @@ default:
   ```
 
   **tips**: 如果你正在学习使用 macro，有一个编译标志 `-D dump=pretty` 可以让你看到 macro 做了什么
+
+  示例 2: 定义类似于 c 语言中的宏函数, 先假设:
+
+  ```cpp
+  int main(int argc, char *argv[])
+  {
+      int A = 1, B = 2, C = 3, D = 4;
+  #define S(a,b) (a + b)
+  #define P(a,b,c,d,e)              \
+  {                                 \
+      a += F(c, d) + S(a, b) * e;   \
+      b += (c + ~d);                 \
+  }
+  #define F(c, d) (c * d)
+      P( A, B, C, D, 2);
+  #undef F
+  #define F(c, d) (c * d + 1)
+      P( A, B, C, D, 3);
+      printf("{A: %d}", A);
+  }
+  ```
+
+  这段 c 代码宏展开后为:
+
+  ```cpp
+  int main(int argc, char *argv[])
+  {
+      int A = 1, B = 2, C = 3, D = 4;
+
+      { A += (C * D) + (A + B) * 2; B += (C + ~D); };
+
+      { A += (C * D + 1) + (A + B) * 3; B += (C + ~D); };
+
+      printf("{A: %d}", A);
+  }
+  ```
+
+  那么我们在 haxe 中来实现上边代码: Main.hx
+
+  ```js
+  import Mt.*;     // 通过 * 引入这个类下的所有静态方法
+
+  class Main {
+      static function main() {
+          var A = 1, B = 2, C = 3, D = 4;
+          P(A, B, C, D, 2, F1);  // 把 "宏方法" 当参数传递, 与 c 的差异
+          P(A, B, C, D, 3, F2);
+          trace(A);
+      }
+  }
+  ```
+
+  把和宏相关的代码放在另一个文件: Mt.hx
+
+  ```js
+  class Mt {
+      // 在普通的方法前加上 macro 关键字
+      // 对于 (maxro $a + $b) 请参见 http://haxe.org/manual/macro-reification-expression.html
+      macro public static function S(a, b) return macro $a + $b;
+
+      macro public static function P(a, b, c, d, e, F){
+      // 使用 {} 返回代码块, 如果不想将输出大括号, 可以加 @:mergeBlock
+          return macro @:mergeBlock{
+              $a += $F($c, $d) + S($a, $b) * $;
+              $b += $c + ~$d;
+          };
+      // 由于 S() 并不是用参数传进来的, 因此不需要添加 $ 为前缀，
+      // 只需要确保在调用 P() 的地方, 也机样能访问 S() 方法, 否则会找不到方法
+      }
+
+      macro public static function F1(c, d) { return macro $c * $d; }
+
+      macro public static function F2(c, d) return macro $c * $d + 1;
+
+      // 最后忘了说了: 如果你需要从宏里返回多个语句可以用 `@:mergeBlock{  }` 括起来.
+  }
+  ```
+
+  编译为 JS, `haxe -main Main -js test.js -D no-analyzer`, 后边那个参数是防止编译器优化,
+
+  ```js
+  // Generated by Haxe 3.3.0 (git build development @ bcd544a)
+  (function () { "use strict";
+  var Main = function() { };
+  Main.main = function() {
+      var A = 1;
+      var B = 2;
+      var C = 3;
+      var D = 4;
+      A += C * D + (A + B) * 2;
+      B += C + ~D;
+      A += C * D + 1 + (A + B) * 3;
+      B += C + ~D;
+      console.log(A);
+  };
+  var Mt = function() { };
+  Main.main();
+  })();
+  ```
+
+  最终的结果全完与 c 代码展开后一样, 如果你不想编译为 js, 同样能在 dump 目录里可以看到类似的代码, 如果你有添加 `-D dump=pretty` 为编译参数
+
 
 ### 其它
 

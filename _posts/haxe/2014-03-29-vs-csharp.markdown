@@ -1,0 +1,651 @@
+---
+layout: post
+title:  C# 语法对比
+date:   2014-03-29 13:31:10
+categories: haxe
+notes: full
+---
+
+语法差异:
+
+* c# 使用 namespace 来管理组织类, haxe 则使用类的所在目录(package) 方式
+
+* c# 可使用 struct 用于创建紧凑数据, haxe 没有相关功能，
+
+  > 虽然 haxe 中的"匿名结构"看上去非常像 struct , 但"匿名结构"是一种降低性能的 Dynamic 结构数据，
+  > haxe 中的"匿名结构"只对 js 和 neko 这二个平台没有性能影响
+
+* 对于 c# 中的固定数组, 在 haxe 中 haxe.ds.Vector 是个类似固定数组的容器
+
+* c# 中有 goto 跳转, 而 haxe 中没, 并且 haxe 中的 break 只能跳出当前循环。
+
+* vs 中 `ctrl+K...ctrl+F` 可以格式化选择了的代码, 而 haxe 没有相关工具。
+
+下边将使用 `Haxe/Neko` 平台来和 `C#` 对比. 注: 由于在 c# 上我也只是新手, 因此下边 c# 的代码可能写得很烂
+
+<!-- more -->
+
+### HelloWorld
+
+<div class="row">
+  <div class="col-md-6 cs">
+  <h4>C#</h4>
+
+{% highlight cs %}
+class CsHello {
+    static void Main(string[] args) {
+        System.Console.WriteLine("Hello csharp");
+    }
+}
+// 找到 csc.exe 或者直接用 VS 创建模板会更简单
+// 编译: csc /out:cs_hello.exe CsHello.cs
+// 运行: cs_hello.exe
+{% endhighlight %}
+
+  </div>
+
+  <div class="col-md-6 hx">
+  <h4>Haxe</h4>
+
+{% highlight js %}
+// 对于入口类, 文件名需要与类名一致, 任何类型的首字母必须大写
+class HxHello {
+  public static function main() {
+    trace("Hello, Haxe");
+  }
+}
+//文件保存为: HxHello.hx, 我们直接在 --interp 下运行
+//运行: > haxe -main HxHello --interp
+{% endhighlight %}
+
+  </div>
+</div>
+
+<hr />
+
+
+### 基础类型
+
+<div class="row">
+  <div class="col-md-6 cs">
+  <h4>C#</h4>
+
+{% highlight cs %}
+// C# 的基础类型非常完整
+bool    System.Boolean
+byte    System.Byte
+sbyte   System.SByte
+char    System.Char
+decimal System.Decimal
+double  System.Double
+float   System.Float
+int.....System.Int32
+// .....太长不写了
+// 函数空类型
+void
+// 任意类型, 形为与 haxe 的 Dynamic 一样
+dynamic
+// 除了基础类型的复杂类型
+object  System.Object  // 多了装箱与拆箱操作
+string  System.String  // 不可变
+
+{% endhighlight %}
+  </div>
+</div>
+
+  <div class="col-md-6 hx">
+  <h4>Haxe</h4>
+
+{% highlight js %}
+// 再次强调 haxe 中所有类型名必须大写
+Bool
+Int
+Float
+// 函数空类型
+Void
+// 任意类型
+Dynamic
+// 复杂类型
+String        // 不可变
+
+
+{% endhighlight %}
+  </div>
+</div>
+
+<hr />
+
+### 变量定义
+
+c# 中有的函数类型可以声明为"引用"(ref 和 out), 而 haxe 中不存在引用
+
+c# 中的"委托"是用来定义类型的, 因此它的位置和其它定义类型的关键字一样例如 struct
+
+
+> haxe 中没有“委托”的概念
+
+<div class="row">
+ <div class="col-md-6 cs">
+ <h4>C#</h4>
+{% highlight cs %}
+
+int i = 10;         // 类似于 c 的语法, 语句必须以 ; 结束
+var s = "hello";    // 如果能明确知道右边类型
+
+// 0. 运行时类型检测, 及强制转换
+Console.WriteLine(1 is int);   // is 关键字
+dynamic ext;                   // 假设我们有这样一个类型不明确的变量
+int? i = ext as int;           // 之后判断 i 是否为 null, 和 as3 中一样
+int j = Convert.ToInt32(ext);  // 转换基础类型, 转不了将抛出异常
+int x = Convert.ToInt32(ext,16)// 将 ext 当成类似于 0xfff 这样的字符串处理
+int y = 1;
+int.tryParse(ext, out y);      // 如果失败, y 将被置 0.
+
+// 1. 可为 null 的语法
+int? num = null;
+    void foo(int? a, int? b){}
+    // TODO: cs 查看一个方法的类型了?
+
+// 2. 委托, 假设在外部有如下定义
+delegate void Log(string s);    // 定义一个 Log 类型的委托
+// ......
+Log trace = Console.WriteLine;  // 看上去像函数类型的变量,
+trace += Console.WriteLine;     // 但委托有 +/- 操作符,
+trace("hello c#");              // 由于有二个, 因此输出二次
+
+// 3. try/catch/finally
+try {
+    // do something.
+}catch(System.IO.IOException err){
+    // err 必须为 Exception 类型
+}catch(Exception err){
+    // 成能的 err 类型
+} finally {
+    Console.WriteLine("finally");
+}
+
+{% endhighlight %}
+ </div>
+
+ <div class="col-md-6 hx">
+  <h4>Haxe</h4>
+{% highlight js %}
+
+var i:Int = 10;     // 标准的定义, 语句必须以 ; 结束
+var s = "hello";    // 同样, 如果能明确类型
+
+// 0. 运行时类型检测, 强制转换
+trace(Std.is(1, Int));   // 使用 Std.is 方法 运行时检测类型
+var ext:Dynamic;         // 假设我们有这样一个类型不明确的变量
+var i = cast(ext, Int);  // 安全强制转换, 但如果转换不成功将抛出异常
+var j:Int = cast ext;    // 非安全强转, 即直接将 ext 当成左边类型, 当然不保证后边运行时是否出错
+
+// 1. haxe 中可为 null
+var num:Null<Int> = null;
+    // 在方法中有二种方式
+    function foo(?a: Int, b:Null<Int>): Void;
+    $type(foo); // a: Null<Int> -> ?b: Null<Int> -> Void
+
+// 2. haxe 中没有委托, 只有变量类型的函数, 如:
+var log: String->Void = Sys.println;
+log("hello haxe");
+
+// 3. try/catch
+try{
+    // do something
+}catch(err: String){
+    // err 类型可以是任意, 但这并不推荐使用，
+    // 如果你编译到 c# 则可以把 err 的类型设置得与 c# 的一样
+    // 如果是编译到其它平台则 err 类型为 Dynamic 则合合适
+}catch(err: Dynamic){
+    // 万能 err 类型
+}
+    // haxe 中没有 finally
+
+{% endhighlight %}
+ </div>
+</div>
+
+<hr />
+
+### 构造函数和方法重载
+
+<div class="row">
+ <div class="col-md-6 cs">
+ <h4>C#</h4>
+{% highlight cs %}
+
+class TheClass {
+    public TheClass(){
+    }
+    // cs 使用同名方法作为构造函数
+    // 重载
+    public TheClass(string msg){
+    }
+
+    public static function main(){
+        var inst = new TheClass();
+    }
+}
+
+{% endhighlight %}
+ </div>
+
+ <div class="col-md-6 hx">
+  <h4>Haxe</h4>
+{% highlight js %}
+
+class TheClass {
+    public function new(){
+    }
+    // haxe 使用 new 方法作为构造函数
+    // 为了避免混乱 haxe 在语言设计上没有方法重载.
+    // 可选参数 or 函数式变体(enum) 能完成你想要的
+    public static function main() {
+        var inst = new TheClass();
+    }
+}
+{% endhighlight %}
+ </div>
+</div>
+
+<hr />
+
+### interface
+
+c# 的 interface 不可以包含字段, 但是可以定义成 getter/setter, 只是都必须为 public.
+
+而 haxe 中定义 interface 则可以有字段, 但是在 haxe 中 `var id:Int; 与 var id(default, null):Int;`
+并不是同一种东西, 前者称为 field(字段), 后者为 property(属性).
+
+<div class="row">
+ <div class="col-md-6 cs">
+ <h4>C#</h4>
+{% highlight cs %}
+// interface 定义接口，首字母大小写无所谓
+interface SayHello{
+    void hi(string s);
+}
+interface Empty {}
+
+class Base{
+    public Base(){}       // c# 即使不定义构造函数也可以 new
+}
+
+// 使用 : 接口, 多个之间使用 , 号分隔（cpp 采用的形式）
+// 如果有继承, 则基类需要放在第一个, 只允许单继承, 可以多接口
+class Hi : Base, SayHello,Empty, {
+    public void hi(string s) {}
+    public Hi(): base() { //
+    // 通过使用 base 关键字调用基类的构造函数, 看上去与 c++ 相似, 但只允许单继承
+    // 实际上, 如果基类的构造函数没有参数, 可以不必调用它
+    }
+}
+
+// 抽象基类, cs 即使没有定义构造函数也可以使用 new 来创建实例,
+// 因此将基类的构造函数定义成 abstract 可防止直接 new 基类()
+// cs 中的 abstract 似于 interface,
+{% endhighlight %}
+ </div>
+ <div class="col-md-6 hx">
+  <h4>Haxe</h4>
+{% highlight js %}
+// interface 定义接口, 首字母必须大写
+interface SayHello{
+    function hi(s: String): Void;
+}
+interface Empty {}
+
+class Base{
+    public new(){}    // haxe 中, 如果想要 new 就必须定义构造函数,
+                      // 但基类可以没有构造函数，由子类来创建也可以
+}
+
+// haxe 分别使用 implements 实现多接口
+// 基类位置随意, 同样只允许单继承, 多接口
+class Hi implements SayHello implements Empty extends Base{
+    public function hi(s: String):Void {}
+    public function new(){
+        super(); // 如果子类有构造函数, 无论基类的构造函数是否有参数
+                 // 都必须掉用父构造函数, 使用 super 关键字
+    }
+}
+
+// haxe 中没有抽象基类的概念, 如果你不想一个类被 new ,
+// 则不要定义或者定义成 private 形式的构建函数即可,
+// haxe 中的 abstract 是一个魔法类, 是一个有些类似于 inline 的东西
+{% endhighlight %}
+ </div>
+</div>
+
+<hr />
+
+### 泛型约束
+
+c# 中对泛型的定义二者的语法都类似. 下边只描述泛型约束的语法差异
+
+<div class="row">
+ <div class="col-md-6 cs">
+ <h4>C#</h4>
+{% highlight cs %}
+interface Length {
+    int length{get; set;}
+}
+
+class Foo: Length {
+    public int length { get; set; }
+    public Foo(string s) {
+        length = s.Length;
+    }
+}
+// 使用 <T> where T: SOME_TYPE 的形式约束
+class Bar<T> where T : Length {
+    public Bar(T v) {
+        Console.WriteLine(v.length);
+    }
+}
+class Main  {
+    static void Main(string[] args) {
+        var f = new Foo("hello csarp");
+        var b = new Bar<Foo>(f);
+    }
+}
+
+{% endhighlight %}
+ </div>
+
+ <div class="col-md-6 hx">
+  <h4>Haxe</h4>
+{% highlight js %}
+// 由于使用 interface 来示例会和 c# 中的一样复杂
+// 因此这里使用 typedef ,像 C 语言一样, haxe 中 typedef 只是个别名工具
+typedef Length = {
+    var length(default,null) : Int;
+}
+// haxe 中则省略了 where 这个语句
+class Foo<T: Length> {
+    public function new(v: T){
+        trace(v.length);
+    }
+}
+
+class Main{
+    static function main(){
+        var s = "hello haxe";
+        tee(s);
+        new Foo(s);
+        var a = [1, 2, 3, 4];
+        tee(s);
+        new Foo(a);
+        // String, Array 都符合 typedef 的描述带有 length 属性,
+    }
+    // 泛型可以直接放在静态方法名称后
+    static function tee<T: Length>(v: T){
+        trace(v.length);
+    }
+}
+// haxe.Constraints 包中有一些编译器级别的约束定义,
+// 比如约束某个类型必须为函数, 在 c# 中则有 "委拖" 来约束
+{% endhighlight %}
+ </div>
+</div>
+
+<hr />
+
+### 内插字符串
+
+<div class="row">
+ <div class="col-md-6 cs">
+ <h4>C#</h4>
+{% highlight cs %}
+var name = "csharp";
+// 1. 通过 String.Format 方法
+String.Format("[name: {0}, len: {1}]", name, name.Length);
+
+// 2. 需要 VS 2015 , 以 $ 作字符串前缀,
+$"[name: {name}, len: {name.Length}]";
+{% endhighlight %}
+ </div>
+
+ <div class="col-md-6 hx">
+  <h4>Haxe</h4>
+{% highlight js %}
+var name = "haxe";
+// 直接使用 "单引号" 的字符串, 变量则用 $ 作前缀, 如果复杂可以用大括号包围 ${}
+// 若要输出 $ 字符, 重符一次即可如: $$
+'[name: $name, len: ${name.length}]';
+
+// 由于没有 char 类型, haxe 使用这种方式获得字符常量:
+trace("A".code);  // 实际上展开后为: trace(65), 不可用于变量,
+{% endhighlight %}
+ </div>
+</div>
+
+### GetterSetter
+
+<div class="row">
+ <div class="col-md-6 cs">
+ <h4>C#</h4>
+{% highlight cs %}
+// 1. 在 cs 中定义一个（外部可访问, 但不可修改的属性）
+public string hi{get; private set;}
+
+
+// 2. 对应第二种,
+int _id;                // 当 getter/setter 同时有方法体时, id 值不存在，因此..
+public int id{
+    get{ return _id;}
+    set{
+        _id = value;    // setter 使用 value 作为输入值
+    }
+}
+
+// 3. 对应第三种, 即不写 set 即可.
+public string bye{      // 同样, 变量 bye 并不真实存在. 因此不能访问
+    get{ return "bye  bye!";}
+}
+
+{% endhighlight %}
+ </div>
+
+ <div class="col-md-6 hx">
+  <h4>Haxe</h4>
+{% highlight js %}
+//
+// 1. 最常见的 getter/setter, (外部可访问，但只能由定义处的类修改)
+public var hi(default, null): String;
+// 小括号左边为 getter 访问控制, 右边为 setter 的访问控制
+// setter 的值还可以为 never, 表示不可修改
+
+// 2. 第二种常见组合, (外部可访问及修改)
+public var id(default, set):Int;
+inline function set_id(v){// 声明一个 inline(推荐) 的函数，名字为 set_XXX
+    // do somethins
+    return id = v;        // 必须返回值， 由于会有 a = b = c = 0 这样的表达式.
+}
+
+// 3. 第三种常见组合,
+public var bye(get, never): String;
+inline function get_bye() {
+                           // 当 getter 为 "get" 时只要 setter 为 "never" 或 "set"
+    return "bye bye!";     // 这时 bye 是不存在的, 即不可以在 getter/setter 内部访问变量 bye.
+}
+{% endhighlight %}
+ </div>
+</div>
+
+### 循环
+
+<div class="row">
+ <div class="col-md-6 cs">
+ <h4>C#</h4>
+{% highlight cs %}
+
+// 1. for 循环, 0 ~ 4
+for(var i=0; i < 5; i += 1)
+    // do something..
+
+// 2. white 或 do...while 和正常一样
+{% endhighlight %}
+ </div>
+
+ <div class="col-md-6 hx">
+  <h4>Haxe</h4>
+{% highlight js %}
+
+// haxe 中没有 for(var i=0; i < 5; i += 1) 这种循环
+// 1. for 循环, 0 ~ 4, 注: 这种循环不可以逆向循环
+for(i in 0...5)
+    // do something...
+
+// 2. white 或 do...while 和正常一样
+{% endhighlight %}
+ </div>
+</div>
+
+<hr />
+
+### 迭代器
+
+<div class="row">
+ <div class="col-md-6 cs">
+ <h4>C#</h4>
+{% highlight cs %}
+
+int[] a = {1, 2, 3, 4, 5}; // 固定数组
+foreach(var n in a)        // 使用 foreach 关键字
+    Console.WriteLine(n)
+
+// 1. cs 中使用 yield 实现 IEnumerable<T>,
+{% endhighlight %}
+ </div>
+
+ <div class="col-md-6 hx">
+  <h4>Haxe</h4>
+{% highlight js %}
+var a = [1, 2, 3, 4, 5];   // 类似于 JS 中的数组
+for(n in a)                // 和循环一样使用 for
+    trace(n);
+
+// 1. 只要类型实现接口 Iterable<T> 或者包含有 iterator<T> 这个方法.
+// 2. 或者包含有 hasNext():Bool 及 next():T 方法的类
+// haxe 中的容器全已实现
+{% endhighlight %}
+ </div>
+</div>
+
+
+### 枚举
+
+1. 在 cs 中使用逗号"," 分隔, 而 haxe 中则使用分号";"
+
+2. cs 中引用枚举必须带上全名, 而 haxe 直接使用其值.
+
+<div class="row">
+ <div class="col-md-6 cs">
+ <h4>C#</h4>
+{% highlight cs %}
+
+enum Color {
+    Red,    // 各值之间用 , 号分隔
+    Green,  // 首字母大小都可以
+    Blue,
+}
+
+class Main {
+    static void Main(string[] args) {
+        foo(Color.Blue);
+        Console.WriteLine((int)MachineState.Hibernating);
+    }
+    static void foo(Color color) {
+        switch(color){
+        case Color.Red:
+            break;          // 必须要 break 语句
+        case Color.Green:
+        case Color.Blue:
+            break;
+        }
+    }
+}
+
+enum MachineState : byte   // 默认的枚举值为 32  位 int, 这里可以改
+{
+    PowerOff = 0,          // 可自定义数值
+    Running = 5,
+    Sleeping = 10,
+    Hibernating = Sleeping + 5
+}
+
+{% endhighlight %}
+ </div>
+
+ <div class="col-md-6 hx">
+  <h4>Haxe</h4>
+{% highlight js %}
+
+enum Color {
+    Red;    // 各值之间用 ; 号分隔
+    Green;  // 值首字母必须大写
+    Blue;   // 不可以像  cs 那样自定每个数值
+}
+
+class Main{
+    static function main(){
+        foo(Green);        // 可直接使用枚举的值
+        trace(Hibernating);
+    }
+    static function foo(color: Color) {
+        switch(color) {
+        case Red:          // 可直接使用枚举的值
+        case Green | Blue: // haxe 中的 switch 语句不需要写 break 语句
+                           // 如果需要匹配多项使用 | 分隔即可
+        }
+    }
+}
+
+// haxe 中可自定义的则是抽象类
+@:enum abstract MachineState(Int) to Int {
+    var PowerOff = 0;      // 分号(;) 分隔
+    var Running = 5;
+    var Sleeping = 10;
+    var Hibernating = Sleeping + 5;
+}
+{% endhighlight %}
+ </div>
+</div>
+
+<hr />
+
+
+### 空的
+
+<div class="row">
+ <div class="col-md-6 cs">
+ <h4>C#</h4>
+{% highlight cs %}
+
+// 替换这里的内容
+
+{% endhighlight %}
+ </div>
+
+ <div class="col-md-6 hx">
+  <h4>Haxe</h4>
+{% highlight js %}
+
+// 替换这里的内容
+
+{% endhighlight %}
+ </div>
+</div>
+
+<hr />
+
+
+
+<br />
+
+
+
+
+

@@ -106,6 +106,11 @@ git pull --depth=1 origin master
 
   - `git push origin master`
 
+### github
+
+[本地测试 github 上别人提交的 PR](https://help.github.com/articles/checking-out-pull-requests-locally/#modifying-an-inactive-pull-request-locally)
+
+
 ### 其它
 
 

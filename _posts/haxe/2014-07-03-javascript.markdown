@@ -23,6 +23,8 @@ categories: haxe
 * 当把一个成员方法作为函数参数时传递时, 比如 `addEventListener(onSome)`, 确保 this 的指向是否如预期（haxe 会将把 **成员方法** 自动绑到所属对象上, 但有时候你并不需要这样做）
   - 因此 haxe 的 function bind 尽量不要用在成员方法上, 静态方法才能获得期待的 Currying 效果.
 
+* 当写 extern class 时, 静态扩展目前将忽略 `@:overload` [#5596](https://github.com/HaxeFoundation/haxe/issues/5596)
+
 <!-- more -->
 
 ### 黑魔法

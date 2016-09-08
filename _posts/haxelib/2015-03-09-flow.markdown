@@ -7,7 +7,7 @@ categories: haxelib
 
 flow 是一个基于 nodejs 的项目构建工具, <https://underscorediscovery.github.io/flow/>
 
-> flow的源码包的 bin 目录下有各平台的 node.exe 
+> flow的源码包的 bin 目录下有各平台的 node.exe
 >
 > 另 `src/flow/tools` 下包含一个 nodejs 源码的 http 服务器用于调试 web 应用 (其实haxe也自带一个http服务器)
 
@@ -37,10 +37,10 @@ haxelib run flow "$@"
 
 ### 基础命令
 
-在命令行中输入 `flow usage` 来获取帮助信息. 可以详细到命令,如: `flow usage run` 
+在命令行中输入 `flow usage` 来获取帮助信息. 可以详细到命令,如: `flow usage run`
 
 ```bash
-command list : 
+command list :
     run, launch, build, compile, hooks, clean, package,
 	setup, files, icons, config, upx, info, sync, usage
 
@@ -109,7 +109,7 @@ options:
 * `flow config [leaf] [value] [--options]` 只能设置或获得 config 已经定义了的 leaf,
 
 >* 当给定 value 时, leaf 的值将被存储到 `.flow.config.json` 文件中去
->* 当没有指定 value 时, 仅输出 leaf 当前的 value, 
+>* 当没有指定 value 时, 仅输出 leaf 当前的 value,
 >* options: --list 当 leaf 值为 Object 类型时,打印它的所有值
 
 如果未指定 target, 则使用你的当前系统, 例如在 mac 中执行 flow build 则表现为 `flow build mac --arch 64`
@@ -228,7 +228,7 @@ if:{
 
 #### Conditional project nodes
 
-在根节点 if中, 目前可以使用下边节点:
+在根节点 if 中, 目前可以使用下边节点:
 
 * files
 
@@ -259,7 +259,7 @@ if : {
 
 **conditional statements**
 
-条件节点支持如下操作符: 
+条件节点支持如下操作符:
 
 * `!` not
 
@@ -276,290 +276,289 @@ if : {
 ```js
 {
   project : {
-	
-	/**
-	项目的显示名称, 对于 mobile 目标,将显示为菜单标题
-	
-	@type String
-	@required 表示为必须提供这个参数
-	*/
+
+    /**
+    项目的显示名称, 对于 mobile 目标,将显示为菜单标题
+
+    @type String
+    @required 表示为必须提供这个参数
+    */
     name : 'empty',
-    
-	/**
-	版本号, 和 haxelib 版本无关.使用 [semantic versioning](http://semver.org/lang/zh-CN/) 格式,即 "major.minor.patch"
-	
-	@type String
-	@required
-	*/
-	version : '1.0.0',
-    
-	/**
-	项目的作者/所属人/管理者, 可以为任意字母和数字的字符串
-	
-	@type String
-	*/
-	author : 'luxeengine',
-	
-	// {}
+
+    /**
+    版本号, 和 haxelib 版本无关.使用 "major.minor.patch"
+
+    @type String
+    @required
+    */
+    version : '1.0.0',
+
+    /**
+    项目的作者/所属人/管理者, 可以为任意字母和数字的字符串
+
+    @type String
+    */
+    author : 'luxeengine',
+
+    // {}
     app : {
-		
-	  /**
-	  应用的二进制文件名称,不能包括特殊字符(需要符合系统文件名称规范)
-	  
-	  @type String
-	  @default "flow_app"
-	  */
+
+      /**
+      应用的二进制文件名称,不能包括特殊字符(需要符合系统文件名称规范)
+
+      @type String
+      @default "flow_app"
+      */
       name : 'flow_app',
-	  
-	  /**
-	  bundle/package/app的标识符, 不能包括特殊字符和空格. 你应该更改这个属性
-	
-	  @type String
-	  @default "org.snowkit.flow_app"
-	  */
+
+      /**
+      bundle/package/app的标识符, 不能包括特殊字符和空格. 你应该更改这个属性
+
+      @type String
+      @default "org.snowkit.flow_app"
+      */
       package : 'org.snowkit.flow_app'
-	
-	  /**
-	  指定输出文件夹名称
-	
-	  @type String
-	  @default "bin"
-	  */
+
+      /**
+      指定输出文件夹名称
+
+      @type String
+      @default "bin"
+      */
       output : 'bin/'
-	
-	
-	  /**
-	  指定haxe的主类,不需要写 ".hx" 扩展名
 
-	  @type String
-	  @default "Main"
-	  */
+
+      /**
+      指定haxe的主类,不需要写 ".hx" 扩展名
+
+      @type String
+      @default "Main"
+      */
       main : 'Main',
-	
-	  /**
-	  指定源码所在目录, 等同于 haxe 的 `-cp` 参数所指定的目录
-	
-	  @type Array<String>
-	  @default "src"
-	  */
-	  codepaths: ['src'],
-	
-	  /**
-	  指定 icons 的文件位置. (TODO:文档描述的不明确,只参看了 luxe项目的 luxe.flow 文件)
-	
-	  当值仅为 path 时, 这时假定图标的名称为 "icon" , 相当于 path => icon
-	
-	  当值为 path => name时, 将使用指定的 name 作为图标名称,
-	
-	  path 将相对于 project.flow 的文件所在位置
-	
-	  文件目录示例参考: `flow/src/flow/cmd/icons/default`
 
-	  @type String
-	  @default 将使用flow内部的图标集,即上边示例
-	  */
-	  icon: 'path/to/ => icon',
-	
-	
-	  // node, 很明显这个节点用于 html5形式的 app.
+      /**
+      指定源码所在目录, 等同于 haxe 的 `-cp` 参数所指定的目录
+
+      @type Array<String>
+      @default "src"
+      */
+      codepaths: ['src'],
+
+      /**
+      指定 icons 的文件位置. (TODO:文档描述的不明确,只参看了 luxe项目的 luxe.flow 文件)
+
+      当值仅为 path 时, 这时假定图标的名称为 "icon" , 相当于 path => icon
+
+      当值为 path => name时, 将使用指定的 name 作为图标名称,
+
+      path 将相对于 project.flow 的文件所在位置
+
+      文件目录示例参考: `flow/src/flow/cmd/icons/default`
+
+      @type String
+      @default 将使用flow内部的图标集,即上边示例
+      */
+      icon: 'path/to/ => icon',
+
+
+      // node, 很明显这个节点用于 html5形式的 app.
       web : {
-		
-		/**
-		这些名称将传递到模板中去.
-		
-		libname: 给定库名称
-		path: 相对于 output 指定的目录, 可以为绝对路径如 http://
-		@type node of keys {libname: 'path'}
-		*/
-		libs : {
-		  jquery: "js/jquery.js",
-		  index: "index.js"
-		}
+
+        /**
+        这些名称将传递到模板中去.
+
+        libname: 给定库名称
+        path: 相对于 output 指定的目录, 可以为绝对路径如 http://
+        @type node of keys {libname: 'path'}
+        */
+        libs : {
+          jquery: "js/jquery.js",
+          index: "index.js"
+        }
       },
-	  
-	  // node, 用于 mobile 目标
+
+      // node, 用于 mobile 目标
       mobile : {
-          
-		  /**
-		  if device fullscreen is used.
-		
-		  @type Bool
-		  @default true
-		  */
-		  fullsceen: true,
-		
-		  /**
-		  横屏(landscape)竖屏(portrait)
-		
-		  可用值为: "landscape","landscape left","landscape both","portrait","portrait upside down","portrait both"
-		
-		  @type String
-		  @default "landscape"
-		  */
-		  orientation: "landscape",
-          
-		  //node
-		  ios : {
-			
-			/**
-			在 xcode 中指定设备类型
-			
-			有效值为: "Universal","iPhone","iPad"
-			@type String
-			@default "Universal"
-			*/
-			devices: "Universal",
-			
-			/**
-			指定 ios 的最低版本
-			
-			@type String
-			@default "6.0"
-			*/
-			deployment_target: "6.0",
-			
-			/**
-			xcode 工具包名用于cpp, 不需要更改,除非框架需求, 允许框架开发者定制 cpp 库,
-			
-			@type String
-			default "libc++"
-			*/
-			cpp: "libc++"
-		  },
-          
-		  //node
-		  android : {
-			/**
-			debug/store 编译标记,可用值为: "store","debug"
-			
-			@type String
-			@default "debug"
-			*/
-			build_type: "debug",
-			
-			/**
-			installLocation in android manifest: 
-			http://developer.android.com/guide/topics/manifest/manifest-element.html#install
-			
-			@type String
-			@default "preferExternal"
-			*/
-			install_location: "preferExternal",
-			
-			/**
-			sdk min in android manifest: 
-			http://developer.android.com/guide/topics/manifest/uses-sdk-element.html
-		
-			@type String
-			@default "10"
-			*/
-			sdk_min: "10",
-			
-			/**
-			sdk target in android manifest: 
-			http://developer.android.com/guide/topics/manifest/uses-sdk-element.html
-			
-			通常设置为可用的最高.
-			
-			@type String
-			@default "19"
-			*/
-			sdk_target: "19",
-			
-			/**
-			android manifest permissions: 
-			http://developer.android.com/reference/android/Manifest.permission.html
-			
-			@type Array<String>
-			@default []
-			*/
-			permissions: [
-			  'android.permission.READ_EXTERNAL_STORAGE',
-			  'android.permission.INTERNET'
-			]
-		  }
+
+          /**
+          if device fullscreen is used.
+
+          @type Bool
+          @default true
+          */
+          fullsceen: true,
+
+          /**
+          横屏(landscape)竖屏(portrait)
+
+          可用值为: "landscape","landscape left","landscape both","portrait","portrait upside down","portrait both"
+
+          @type String
+          @default "landscape"
+          */
+          orientation: "landscape",
+
+          //node
+          ios : {
+
+            /**
+            在 xcode 中指定设备类型
+
+            有效值为: "Universal","iPhone","iPad"
+            @type String
+            @default "Universal"
+            */
+            devices: "Universal",
+
+            /**
+            指定 ios 的最低版本
+
+            @type String
+            @default "6.0"
+            */
+            deployment_target: "6.0",
+
+            /**
+            xcode 工具包名用于cpp, 不需要更改,除非框架需求, 允许框架开发者定制 cpp 库,
+
+            @type String
+            default "libc++"
+            */
+            cpp: "libc++"
+            		  },
+
+          //node
+          android : {
+            /**
+            debug/store 编译标记,可用值为: "store","debug"
+
+            @type String
+            @default "debug"
+            */
+            build_type: "debug",
+
+            /**
+            installLocation in android manifest:
+            http://developer.android.com/guide/topics/manifest/manifest-element.html#install
+
+            @type String
+            @default "preferExternal"
+            */
+            install_location: "preferExternal",
+
+            /**
+            sdk min in android manifest:
+            http://developer.android.com/guide/topics/manifest/uses-sdk-element.html
+
+            @type String
+            @default "10"
+            */
+            sdk_min: "10",
+
+            /**
+            sdk target in android manifest:
+            http://developer.android.com/guide/topics/manifest/uses-sdk-element.html
+
+            通常设置为可用的最高.
+
+            @type String
+            @default "19"
+            */
+            sdk_target: "19",
+
+            /**
+            android manifest permissions:
+            http://developer.android.com/reference/android/Manifest.permission.html
+
+            @type Array<String>
+            @default []
+            */
+            permissions: [
+              'android.permission.READ_EXTERNAL_STORAGE',
+              'android.permission.INTERNET'
+            ]
+          }
       }
     },
 
     build : {
-	  /**
-	  haxe 编译标记, 将直接传递给 haxe.exe
-	
-	  @type Array<String>
-	  @default []
-	  */
+      /**
+      haxe 编译标记, 将直接传递给 haxe.exe
+
+      @type Array<String>
+      @default []
+      */
       flags : ['-v', '--macro keep(example)'],
-	
-	  
-	  /**
-	  自定义 haxe defines, 通过`-D define` 形式传递给 haxe.exe
-	
-	  @type Array<String>
-	  @default []
-	  */
+
+
+      /**
+      自定义 haxe defines, 通过`-D define` 形式传递给 haxe.exe
+
+      @type Array<String>
+      @default []
+      */
       defines : ['no_sfx', 'no_music'],
-	
-	  /**
-	  key/value 形式的hash列表. 指定 haxelib
-	  key 应该为 haxelib list 中列出的库, version 为 "*" 时表示为当前版本, 或者指定成 "1.0.0" 的形式.
-	
-	  被依赖的库将会优先读取 .flow 文件, 如果不存在则读取 haxelib.json 文件分析内部的依赖
-	  @type {}, i.e. {depend: "version"}
-	  @default {}
-	  */
+
+      /**
+      key/value 形式的hash列表. 指定 haxelib
+      key 应该为 haxelib list 中列出的库, version 为 "*" 时表示为当前版本, 或者指定成 "1.0.0" 的形式.
+
+      被依赖的库将会优先读取 .flow 文件, 如果不存在则读取 haxelib.json 文件分析内部的依赖
+      @type {}, i.e. {depend: "version"}
+      @default {}
+      */
       dependencies : {
         hxnodejs : '*'
       },
-	
-	  /**
-	  位于 project/build下的files,将复制文件到 output/target.build/ 下, 其它参考 project/files 的说明
-	
-	  i.e bin/web.build/
-	
-	  web.build目录和web目录的区别是: web.build 是存放haxe源码的,而web目录则为最终生成结果的目录
-	  */
-	  files:{	
-	  }
+
+      /**
+      位于 project/build下的files,将复制文件到 output/target.build/ 下, 其它参考 project/files 的说明
+
+      i.e bin/web.build/
+
+      web.build目录和web目录的区别是: web.build 是存放haxe源码的,而web目录则为最终生成结果的目录
+      */
+      files:{
+      }
     },
 
 
-	/**
-	位于 project 下的 files,将复制文件到 output/target/ 例: bin/web/
-	位于 project/build/下的files 则复制文件到 output/target.build/ 例: bin/web.build/
-	
-	基本格式为: {filereference: "path/source.ext => dest/path/dest.ext"}, 注意 "=>" 符号
-	
-	source: 源文件位置, 相对于 project.flow 文件
-	dest: 目标位置, 相对于目标文件夹
-	  - 将被创建, 包括目录, 可以被覆盖重写(后边描述如何禁止覆盖)
-	  - 部分为可选, 这时将表现为 `name: "source => source"`
-	
-	@type {}
-	@default {}
-	*/
+    /**
+    位于 project 下的 files,将复制文件到 output/target/ 例: bin/web/
+    位于 project/build/下的files 则复制文件到 output/target.build/ 例: bin/web.build/
+
+    基本格式为: {filereference: "path/source.ext => dest/path/dest.ext"}, 注意 "=>" 符号
+
+    source: 源文件位置, 相对于 project.flow 文件
+    dest: 目标位置, 相对于目标文件夹
+      - 将被创建, 包括目录, 可以被覆盖重写(后边描述如何禁止覆盖)
+      - 部分为可选, 这时将表现为 `name: "source => source"`
+
+    @type {}
+    @default {}
+    */
     files : {
-	  data : 'data/ => assets/',
-	  // 带有 not_listed 参数
-	  howlerjs : { path:'flow/web/lib/howler.min.js => lib/howler.js', not_listed:true }
-	  /**
-	  如需通过模板生成, 则写成这种形式, 模板使用 [handlebars](http://handlebarsjs.com/)
-	  */
+      data : 'data/ => assets/',
+      // 带有 not_listed 参数
+      howlerjs : { path:'flow/web/lib/howler.min.js => lib/howler.js', not_listed:true }
+      /**
+      如需通过模板生成, 则写成这种形式, 模板使用 [handlebars](http://handlebarsjs.com/)
+      */
       config : {
-		  /**
-		  @type String
-		  */
+          /**
+          @type String
+          */
           path: 'config.template.json => config.json',
-		  /**
-		  指定的值为 flow文件的根节点(除了if节点),这些节点和自定义节点可以作为模板参数传递
-		  @type Array<String>|String
-		  */
+          /**
+          指定的值为 flow文件的根节点(除了if节点),这些节点和自定义节点可以作为模板参数传递
+          @type Array<String>|String
+          */
           template:['project']
       },
-	  // example
-	  boot : { path:'flow/boot/SnowApp.hx => haxe/SnowApp.hx', template:['project', 'snow'] }
+          // example
+          boot : { path:'flow/boot/SnowApp.hx => haxe/SnowApp.hx', template:['project', 'snow'] }
     }
   },
-
   if : {
     ...
   }
@@ -571,48 +570,37 @@ if : {
 flow源码结构
 
 ```bash
-bin/ 			# 包括各平台的 node.exe
-
-setup/			# haxelib run flow 的快捷方式,
-     /Flow.hx		# run.n 的源码, 获得 args 参数然后传递调用 node flow.js
-	 /flow/			# 目录下所有代码基于 nodejs
-          
-		  /cmd/		# flow <command>,各命令, 这种方式真是简洁
-		  
-		  /node_modules/
-		  
-		  /project/		# flow.js 加载 project.js 由 project.js 加载这个目录下所有脚本
-		          /dependencies/
-				               /hxcpp.flow	# ?主要是移动hxcpp编译之后的库文件到 .build下
-				  /prepare/		# 
-				          /conditions.js	# 
-						  /defines.js		#
-						  /depends.js		#
-						  /files.js			#
-						  /flags.js			#
-				  /bake.js			#
-				  /prepare.js		#
-				  /project.js		#	将被初使化加载到 flow.project 属性下
-		  
-		  /tools/		# http 服务器用于 web 调试
-		  
-		  /utils/
-		        /er.js			# 打印一朵字符串拼凑的花,
-				/flagger.js		# 解析命令行参数到
-				/haxelib.js		# 方便从 haxelib 获取一些信息
-				/process.js		# 使用 child_process 运行 cmd,并从 stdout 获得结果
-				/util.js		# 一些 Array,Object 方法
-		
-		  flow.js		# 入口文件
-		
-		  config.json	# 用于配置flow,可在个人项目中如 project.flow 的 flow 节点中覆盖这个文件的设置
-						# 例如覆盖 android sdk 的正确路径
-		
-		  project.defaults.json		# project.flow 项目的默认配置, 被加载到 flow.project.default
-
+bin/            # 包括各平台的 node.exe
+setup/          # haxelib run flow 的快捷方式,
+     /Flow.hx       # run.n 的源码, 获得 args 参数然后传递调用 node flow.js
+    /flow/          # 目录下所有代码基于 nodejs
+          /cmd/     # flow <command>,各命令, 这种方式真是简洁
+          /node_modules/
+          /project/	# flow.js 加载 project.js 由 project.js 加载这个目录下所有脚本
+                  /dependencies/
+                               /hxcpp.flow	# ?主要是移动hxcpp编译之后的库文件到 .build下
+                  /prepare/     #
+                          /conditions.js    #
+                          /defines.js       #
+                          /depends.js       #
+                          /files.js         #
+                          /flags.js         #
+                  /bake.js          #
+                  /prepare.js       #
+                  /project.js       # 将被初使化加载到 flow.project 属性下
+          /tools/       # http 服务器用于 web 调试
+          /utils/
+                /er.js          # 打印一朵字符串拼凑的花,
+                /flagger.js     # 解析命令行参数到
+                /haxelib.js     # 方便从 haxelib 获取一些信息
+                /process.js     # 使用 child_process 运行 cmd,并从 stdout 获得结果
+                /util.js        # 一些 Array,Object 方法
+          flow.js       # 入口文件
+          config.json	# 用于配置flow,可在个人项目中如 project.flow 的 flow 节点中覆盖这个文件的设置
+                        # 例如覆盖 android sdk 的正确路径
+          project.defaults.json     # project.flow 项目的默认配置, 被加载到 flow.project.default
 src/
-
-tests/		# 包含一个 flow.json 的配置样例
+tests/      # 包含一个 flow.json 的配置样例
 ```
 
 <br />
