@@ -287,7 +287,7 @@ default:
 
   **tips**: 如果你正在学习使用 macro，有一个编译标志 `-D dump=pretty` 可以让你看到 macro 做了什么
 
-  示例 2: 定义类似于 c 语言中的宏函数, 先假设:
+  <strong id="same-as-c-macros">示例 2</strong>: 定义类似于 c 语言中的宏函数, 先假设:
 
   ```cpp
   int main(int argc, char *argv[])
@@ -359,8 +359,6 @@ default:
       macro public static function F1(c, d) { return macro $c * $d; }
 
       macro public static function F2(c, d) return macro $c * $d + 1;
-
-      // 最后忘了说了: 如果你需要从宏里返回多个语句可以用 `@:mergeBlock{  }` 括起来.
   }
   ```
 
