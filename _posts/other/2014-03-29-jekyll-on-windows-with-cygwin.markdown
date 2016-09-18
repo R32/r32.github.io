@@ -21,9 +21,9 @@ categories: other
 ### 安装 Jekyll
 
 1. 运行 Cygwin `setup.exe`. 本人 win7x64 装的 32位版本.
-	![setup cygwin](/assets/img/cygwin-setup.png) 
+	![setup cygwin](/assets/img/cygwin-setup.png)
 
-2. 选择这些包 `ruby` ,`crypt` ,`zip`,`python (select the **2.x** package, **not python3**!)`  
+2. 选择这些包 `ruby` ,`crypt` ,`zip`,`python (select the **2.x** package, **not python3**!)`
 
    ```bash
    Ruby/ruby: Interperted object-oriented script......
@@ -31,7 +31,7 @@ categories: other
    Ruby/ruby-nokogiri: Ruby HTML/XML/SAX library	# 由于cygwin下无法通过编译这个库 1.6.6.2
    Archive/zip: Info-ZIP compression utility.
    Libs/crypt: Encryption/Decrypion utility and library
-   Python/python: Python language interpreter. 
+   Python/python: Python language interpreter.
    ```
 
 3. 可选安装.一些我在装`jekyll` 之前就已经装好了包.不太清楚其中一些是否为 `jelyll` 必须安装的
@@ -46,11 +46,11 @@ categories: other
 4. 可选安装. 把`cygwin bash` 到添加右键菜单
 
    1. 在 `setup` 安装包中,选上 `Shells/chere : Cygwin Prompt Here context menus`
-	 
+
    2. 安装完成之后. `cygwin bash` 下输入 `chere -i`. win7 需要以管理员模式运行
-	
+
    3. 右键就能找到 `bash prompt here` 的菜单.
-	
+
    4. `chere -u` 将移除右键菜单. 参看 `chere --help`
 
 5. `gem install github-pages` 就可以完成安装.
@@ -70,7 +70,7 @@ categories: other
    ```
 
 6. 测试
- 
+
    ```bash
    jekyll --help
    jekyll new test
@@ -133,7 +133,7 @@ empty
 
   直接从 DOS 中调用命令, 例: `bash -l -c "sass --help"`
 
-* makefile 中检测 win 系统, 但这个无法区分是在 DOS 还是 BASH 下, 
+* makefile 中检测 win 系统, 但这个无法区分是在 DOS 还是 BASH 下,
 
   - 目前没有办法检测 DOS/BASH 和 bash -login， 因此不要在 makefile 中使用 `$(shell find)` 就可以
 
@@ -145,5 +145,7 @@ empty
   # 这个同样不会有正确的结果, DOS 和 bash 以及 bash -login 下全返回 "cygwin"
   SYS   := $(shell echo $${OSTYPE})
   ```
+
+  一个检测平台的 makefile 示例: <https://github.com/WaterJuice/CryptLib>
 
 <br />

@@ -273,7 +273,7 @@ In order to [improve support for interacting](http://haxe.1354130.n2.nabble.com/
 
 * 外部类由于并非从 GC 申请， 因此需要自已管理内存
 
-  如果你像上边返回的是 Pointer 对象， 那么可以调用 `Pointer::destroy 与 destroyArray`, 它们分别对应 `delete ptr 和 delete [] ptr`
+  如果你像上边返回的是 Pointer 对象， 那么可以调用 `Pointer::destroy 与 destroyArray`, 分别为 `delete ptr 和 delete [] ptr`
 
 * 在 extern class 上加上 @:structAccess,
 
@@ -282,6 +282,11 @@ In order to [improve support for interacting](http://haxe.1354130.n2.nabble.com/
   - (推荐)用 `@:native("ClassName")`　省略掉包名就行了.
 
   - 或可以使用 -cp 将 hx 类添加进编译路径
+
+
+TODO: 感觉 `Pointer<T>` 与 `Star<T>` 经常弄混，好像是由于编译器优化导致的就像和 js 的 `{}.some` 错误一样.
+
+* 当把一个 c++ 的指针对像传递给 haxe 任意类的 new 方法上时,必须用 Pointer 才能通过编译
 
 
 #### 变量转换

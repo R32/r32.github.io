@@ -15,6 +15,10 @@ categories: other
 
 ### Tools
 
+* [procrastitracker](https://github.com/aardappel/procrastitracker) windows 上的一款时间跟踪软件, 跟踪你用计算机都做了些什么
+
+  > 老板监视员工的利器？也可以自行标记（label）出哪些是你要做的工作,以提高工作效率..
+
 * [letsencrypt](https://letsencrypt.org/) 国外一个公共的免费SSL项目, 如果需要免费的SSL证书
 
 * [c/c++内存泄漏检测](http://wetest.qq.com/cloud/index.php/index/TMM) 腾迅内部开放工具, （情况未知）
@@ -200,6 +204,8 @@ categories: other
 
 ### article
 
+* [值得推荐的C/C++框架和库(转)](http://www.cnblogs.com/kernel0815/p/4624101.html)
+
 * [ZeroMQ 中文](https://github.com/anjuke/zguide-cn) 一套用于快速构建的套接字组件
 
 * [15分钟快速入门各种语言](https://github.com/adambard/learnxinyminutes-docs)
@@ -253,6 +259,7 @@ categories: other
 [C标准头文件](http://stackoverflow.com/questions/2027991/list-of-standard-header-files-in-c-and-c)
 
 c++参考手册: <http://en.cppreference.com/w/>
+
 
 * [nuklear](https://github.com/vurtun/nuklear) A small ANSI C gui toolkit
 

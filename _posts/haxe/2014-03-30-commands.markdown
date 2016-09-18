@@ -611,7 +611,7 @@ vcproj                 : GenCPP internal
 @:allow              : (Target path)Allows private access from package, type or field
 
 ## http://haxe.org/manual/cr-static-analyzer.html#modules
-## 优化配置 文档 # 参数 https://github.com/HaxeFoundation/haxe/blob/development/analyzer.ml
+## 优化配置 文档 # 参数 https://github.com/HaxeFoundation/haxe/blob/development/src/optimization/analyzer.ml
 ## 最近更新: https://github.com/HaxeFoundation/haxe/commit/d57112a64a5e0f7b867378446702e45cb73d664f
 ## 局部配置: e.g: @:analyzer(no_simplification) , 注意参数没有引号, 编译时需要指定 "-D analyzer", 这时下边的参数都为打开状态
 ## 全局配置: 一些参数可以在编译时通过 -D 指定, 例如: -D analyzer-no-const-propagation

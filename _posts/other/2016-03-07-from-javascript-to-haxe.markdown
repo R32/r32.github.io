@@ -297,7 +297,7 @@ default:
   #define P(a,b,c,d,e)              \
   {                                 \
       a += F(c, d) + S(a, b) * e;   \
-      b += (c + ~d);                 \
+      b += (c + ~d);                \
   }
   #define F(c, d) (c * d)
       P( A, B, C, D, 2);
@@ -305,6 +305,14 @@ default:
   #define F(c, d) (c * d + 1)
       P( A, B, C, D, 3);
       printf("{A: %d}", A);
+
+  /////////////////////////
+    #define CAT(a, b) a##b
+      int CAT(A, B) = 101;
+      printf("CAT(A, B): %d\n", CAT(A, B));
+
+    #define LOG(exp) printf(#exp)
+        LOG(hello);
   }
   ```
 
@@ -320,12 +328,17 @@ default:
       { A += (C * D + 1) + (A + B) * 3; B += (C + ~D); };
 
       printf("{A: %d}", A);
+      //
+      int AB = 101;
+      printf("CAT(A, B): %d\n", AB);
+
+      printf("hello");
   }
   ```
 
   那么我们在 haxe 中来实现上边代码: Main.hx
 
-  ```js
+  ```haxe
   import Mt.*;     // 通过 * 引入这个类下的所有静态方法
 
   class Main {
@@ -334,13 +347,24 @@ default:
           P(A, B, C, D, 2, F1);  // 把 "宏方法" 当参数传递, 与 c 的差异
           P(A, B, C, D, 3, F2);
           trace(A);
+
+          CAT(A, B, null, 101);  // 第三个参数 null 换成 Int 也行.
+          trace('CAT(A, B): ' + CAT(A, B));
+
+          LOG(hello);
       }
   }
   ```
 
   把和宏相关的代码放在另一个文件: Mt.hx
 
-  ```js
+  ```haxe
+  #if macro
+  import haxe.macro.Expr;
+  import haxe.macro.Context;
+  using haxe.macro.ExprTools;
+  #end
+
   class Mt {
       // 在普通的方法前加上 macro 关键字
       // 对于 (maxro $a + $b) 请参见 http://haxe.org/manual/macro-reification-expression.html
@@ -359,6 +383,34 @@ default:
       macro public static function F1(c, d) { return macro $c * $d; }
 
       macro public static function F2(c, d) return macro $c * $d + 1;
+
+      macro public static function LOG(exp) {
+          var s = exp.toString();    // using haxe.macro.ExprTools;
+          return macro trace($v{s});
+      }
+
+      // 注: 由于要定义变量, 因此这个示例有些太复杂
+      // 如需定义类成员或 class 应该使用其它方式
+      macro public static function CAT(x, y, ?type, ?expr) {
+          var sx = x.toString();
+          var sy = y.toString();
+          var stype = type.toString();
+          var sexpr = expr.toString();
+          if ((stype == "null" || stype == "_")
+              && (sexpr == "null" || sexpr == "_")
+          ) {
+            return macro $i { sx + sy };
+          }
+
+          return { // 由于没法使用 macro 语法糖, 因此手工输入 AST 变量
+            expr: EVars([{
+              name: sx + sy,
+              expr: expr,
+              type: stype == "null" ? null : Context.toComplexType(Context.getType(stype)),
+            }]),
+            pos: Context.currentPos()
+          };
+      }
   }
   ```
 
@@ -378,6 +430,10 @@ default:
       A += C * D + 1 + (A + B) * 3;
       B += C + ~D;
       console.log(A);
+
+      var AB = 101;
+      console.log("CAT(A, B): " + AB);
+      console.log("hello");
   };
   var Mt = function() { };
   Main.main();
