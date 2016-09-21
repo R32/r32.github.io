@@ -201,6 +201,8 @@ git pull --depth=1 origin master
   # 之后整个目录会回到最后一次提交时的状态
   # 以便于临时修改一些Bug.
   # 可以加参数 -u 例 git stash -u，这样可以把新文件也暂存进去
+  # 可以使用 save  来添加备注
+  git stash save "一些方便识别的 msg"
 
   # 做一些提交后,想回到工作目录
   git stash apply
@@ -212,7 +214,23 @@ git pull --depth=1 origin master
 
   git stash clear
 
+
+  -k | --[no-]eep-index: 保存进度后, 是否重置暂存区(默认会会重置, 如果没有这些参数)
   # 如果需要提交到 github 还是用新分支吧.做完再合并到主线上来.
+  ```
+
+  你可能只想要 stash 单个文件, 可以使用:
+
+  ```bash
+  # 下边是 --patch 的简写, 这时将进入交互模式, 然后选 y 或 n 就可以了
+  git stash -p
+  git stash save -p "some notes"
+  ```
+
+  从 stash 中恢复单个文件可以参考: [single file from stash](http://stackoverflow.com/questions/1105253/how-would-i-extract-a-single-file-or-changes-to-a-file-from-a-git-stash)
+
+  ```bash
+  git checkout stash@{0} -- path/to/file.ext
   ```
 
 * [没有共同祖先的分支](http://gitbook.liuhui998.com/5_1.html)
