@@ -604,7 +604,7 @@ vcproj                 : GenCPP internal
 
 @:abstract           : Sets the underlying class implementation as 'abstract' (for cs,java)
 
-# 访问已经声明为 private 的包 类或字段.
+# 访问已经声明为 private 的包 类或字段. (注: 不能从外部访问 private class)
 @:access             : (Target path)Forces private access to package, type or field
 
 # 允许声明的包访问当前包 类或字段
@@ -633,7 +633,8 @@ vcproj                 : GenCPP internal
 
 @:arrayAccess        : Allows [] access on an abstract
 
-# 见 https://gist.github.com/skial/c1e35988b853b214da39
+# 见 https://github.com/HaxeFoundation/haxe/issues/4959
+# 当你在写一个覆盖标准库的类时(使用 @:coreApi), 你只想覆盖部分方法, 而其它的方法仍旧使用旧的定义
 @:astSource          : Filled by the compiler with the parsed expression of
                       the field
 # 使用宏构建这个类的子类, 而非当前类
@@ -685,6 +686,7 @@ vcproj                 : GenCPP internal
 
 @:dce                : Forces dead code elimination even when not -dce full is specified
 
+# flash 当 release 时强制写入 debug 信息到被标记的字段
 @:debug              : Forces debug information to be generated into the Swf even without -debug (flash only)
 
 @:decl               :  (cpp only)
@@ -695,10 +697,12 @@ vcproj                 : GenCPP internal
 
 @:depend             :  (cpp only)
 
-# 如果一个字段或类, 被添加这个标记, 编译器将在编译时输出警告信息（注:目前仅适用于hxjava,未来可能会扩展到所有平台）
-@:deprecated         : Automatically added by -java-lib on class fields
-                     annotated with @Deprecated annotation.
-                     Has no effect on types compiled by Haxe.(java only)
+# 如果一个字段或类, 被添加这个标记, 编译器将在编译时输出警告信息
+@:deprecated         : Mark a type or field as deprecated
+
+# 用在 typedef 上, 使得这个优先被处理, https://github.com/HaxeFoundation/haxe/issues/4825
+@:eager              : Forces typedefs to be followed early
+
 # 添加在 abstract 关键字前, 生成类似于常量的集合 http://haxe.org/manual/types-abstract-enum.html
 @:enum               : Defines finite value sets to abstract definitions
 
@@ -726,6 +730,7 @@ vcproj                 : GenCPP internal
 @:final              : Prevents a class from being extended
 
 # haxe 3.3, (似乎只对 cpp 有影响, 因为只在 cpp 中会编译成固定结构)
+# 看上去不错, 例: var o = @:fixed {a: 1, b:2, c: "some"}; 但好像还是用的 Dynamic 类型
 @:fixed              : Delcares an anonymous object to have fixed fields
 
 # 嵌入字体文件. 仅支持 ttf 字体文件, 例:
@@ -805,10 +810,14 @@ vcproj                 : GenCPP internal
 @:macro              : (deprecated)
 
 # https://github.com/HaxeFoundation/haxe/commit/cddba88af64b740cd09e105ef5abf6929783e8aa
+# 将用大括号包围的代码, 合并出来(即去掉大括号, 因此某些语言大括号内的变量不能被外部访问)
 @:mergeBlock         : Merge the annotated block into the current scope
 
 # 生成相应的 Flash 元数据, 例: @:meta(Event(name="test",type="Foo"))
 @:meta               : Internally used to mark a class field as being the metadata field. (flash only)
+
+# LuA, 标识一个外部类表示其将会有多个返回值,
+@:multiReturn        : Annotates an extern class as the result of multi-return function (lua only)
 
 # 参考 Map.hx, 用于 abstract 配合 @:to, 比较复杂
 @:multiType          : (Relevant type parameters)Specifies that an abstract chooses its this-type from its @:to functions
@@ -863,6 +872,9 @@ vcproj                 : GenCPP internal
 # ？定义 class 或 interface 用于与 OBJ-C 代码交互?
 @:objc               : Declares a class or interface that is used to interoperate with Objective-C code (cpp only)
 
+@:objcProtocol       : Associates an interface with, or describes a function
+                     in, a native Objective-C protocol. (cpp only)
+
 # abstract 操作符重载- http://haxe.org/manual/types-abstract-operator-overloading.html
 @:op                 : (The operation)Declares an abstract field as being an operator overload
 
@@ -915,6 +927,8 @@ vcproj                 : GenCPP internal
 # 表明 abstract 类型为运行时类型, 通常用于包装各平台底层类型
 @:runtimeValue       : Marks an abstract as being a runtime value
 
+@:scalar             : Used by hxcpp to mark a custom coreType abstract (cpp only)
+
 # 调用自身 见 javascript 页面
 @:selfCall           : Translates method calls into calling object directly (js only)
 
@@ -926,13 +940,16 @@ vcproj                 : GenCPP internal
 
 @:sourceFile         : Source code filename for external class (cpp only)
 
+# 使得这个类的实例仅存在于 stack (??? 好像并不起作用)
+@:stackOnly          : Instances of this type can only appear on the stack(cpp only)
+
 @:strict             : Used to declare a native C# attribute or a native Java
                         metadata. Is type checked (for cs,java)
 
 @:struct             : Marks a class definition as a struct. (cs only)
 
-@:structAccess       : Marks an extern class as using struct access('.') not
-                        pointer('->') (cpp only)
+@:structAccess       : Marks an extern class as using struct access('.') not pointer('->') (cpp only)
+
 # haxe 3.3 新增 https://github.com/HaxeFoundation/haxe/issues/4526
 # 允许以匿名结构的方式初使化一个类
 @:structInit         : Allows to initialize the class with a structure that
@@ -955,7 +972,7 @@ vcproj                 : GenCPP internal
 
 @:unsafe             : Declares a class, or a method with the C#'s 'unsafe' flag (cs only)
 
-@:usage              : ?
+@:value              : Used to store default values for fields and function arguments
 
 @:void               : use Cpp native `void` return type(cpp only)
 

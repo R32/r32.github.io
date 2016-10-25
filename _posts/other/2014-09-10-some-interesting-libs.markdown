@@ -15,6 +15,8 @@ categories: other
 
 ### Tools
 
+* [fogleman/primitive](https://github.com/fogleman/primitive) go 语言, 输入普通图片生成几何图形, 类似于产生一个滤镜效果的图片, 需要安装 go 语言才能运行的命令行工具, 感觉不太好.
+
 * [procrastitracker](https://github.com/aardappel/procrastitracker) windows 上的一款时间跟踪软件, 跟踪你用计算机都做了些什么
 
   > 老板监视员工的利器？也可以自行标记（label）出哪些是你要做的工作,以提高工作效率..
@@ -188,6 +190,10 @@ categories: other
 
 * [Semantic-UI](https://github.com/Semantic-Org/Semantic-UI) CSS 框架,IE10, 不支持低版本浏览器, 因此适合做 app 类
 
+* [bulma](https://github.com/jgthms/bulma) 基于 flexbox 的轻量级 css 框架,才 120K 大小, 不提供 js 组件
+
+* [sensei-grid](https://github.com/datazenit/sensei-grid) 展现表格内容, 不支持 IE8
+
 * [sweetalert](https://github.com/t4t5/sweetalert)
 
   > A beautiful replacement for JavaScript's "alert" 演示示例: <http://tristanedwards.me/sweetalert>,
@@ -231,8 +237,13 @@ categories: other
 
   > [一些帮助开发的 chrome 插件](http://www.cnblogs.com/cench/p/5565389.html)
 
+* [微信小程序开发资源汇总](https://github.com/justjavac/awesome-wechat-weapp)
+
+* [编程各种算法-中文](https://github.com/julycoding/The-Art-Of-Programming-By-July/tree/master/ebook/zh)
 
 ### resource
+
+* [awesome-design](https://github.com/gztchan/awesome-design)
 
 * [图标下载](http://www.easyicon.net/)
 

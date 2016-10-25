@@ -97,9 +97,7 @@ categories: haxe
 
 * Compiler.keep 的行为发生了改变 https://github.com/HaxeFoundation/haxe/issues/4111
 
-  > 即通过 `--macro keep(pack.Cls)` 不再能防止被 DCE 清除,因为而编译器不再处理已经存在的类
-  >
-  > 但 haxe 3.3 似乎又改回来了, 又变得可用了
+  > `@:keep` only has an effect if the type is actually compiled to begin with. The compiler doesn't eagerly read all your .hx files, so you have to make sure the types in question are referenced somewhere. This can be done in code or via command line: For single classes you can just specify their path (without -main), for entire packages you can use `--macro include("package.path")`.
 
 * haxe.ds.Either 二个类型, 这样可以让一个函数返回二种类型
 
@@ -397,7 +395,7 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
   }
   ```
 
-* `Std.int`: 包括 Math.round,Math.floor,Math.ceil 在处理较大数字时, 将超出Int界限
+* `Std.int`: 包括 Math.round, Math.floor, Math.ceil 在处理较大数字时, 将超出Int界限
 
   > haxe 中 Int(基本上所有平台都是32位) 类型表示的数字范围有限,因此一些库使用 Float(IEEE 64-bit) 来代替
   >
@@ -406,16 +404,6 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
   > 正确: `(untyped Math.ffloor(Date.UTC(1900, 0, 31)) / 1000)` 先转换成 float 再除 1000
   >
   > 错误: `(untyped Math.ffloor(Date.UTC(1900, 0, 31) / 1000))` 先降以 1000 再转成 float
-
-* **`-dce full`**
-
-  > 这个编译选项会在打包时清除未引用代码. 默认为 -dce std. 有些时候如:编译成 SWC 时将会是 -dce no
-  >
-  > 所以有时候需要用 `@:keep` 或 `--macro keep` 来防止被 -dce 删除.
-  >
-  > 当使下边的些语法时,相关地方需要添加 `@:keep` ,这个标记只能用于 类 或 静态字段.
-  >
-  > 使用 `Class<Dynamic>` 或 `Class<SomeName>` 作为参数.例如: `Type.createInstance(_customSoundTray, [])` 这样的语法; 最好不要使用这样语法.
 
 * Sys.command 和 sys.io.Process
 
