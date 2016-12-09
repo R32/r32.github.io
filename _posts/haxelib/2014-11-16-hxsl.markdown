@@ -6,7 +6,7 @@ categories: haxelib
 ---
 
 heaps 下的 hxsl3 不仅仅是用于 flash,能同时作用于 桌面版的 opengl 以及 webgl, 因此比 haxelib hxsl2 要复杂多了.
- 
+
 
 AGAL
 -------
@@ -18,12 +18,12 @@ AGAL
 资源限制:
 
 ```
-#资源				允许的数量		总内存 
-Vertex buffers		4096			256 MB 
-Index buffers		4096 			128 MB 
-Programs			4096 			16 MB 
-Textures			4096 			128 MB¹ 
-Cube textures		4096 			256 MB 
+#资源                允许的数量        总内存
+Vertex buffers       4096             256 MB
+Index buffers        4096             128 MB
+Programs             4096              16 MB
+textures             4096             128 MB
+Cube textures        4096             256 MB
 ```
 
 AGAL 限制：每个程序 200 个 opcode。
@@ -39,7 +39,7 @@ AGAL 限制：每个程序 200 个 opcode。
 
   > 将接收来自两个源的输入：顶点缓冲区和常量寄存器。使用 Context3D setVertexBufferAt() 方法指定具体顶点"属性寄存器"将要使用的顶点数据。您最多可以为顶点属性定义 8 个寄存器。顶点属性值读取自三角形列表中每个顶点的顶点缓冲区，并放置在属性寄存器中。
   >
-  >使用 Context3D setProgramConstantsFromMatrix() 或 setProgramConstantsFromVector() 方法指定"常量寄存器"。常量寄存器为三角形列表中的每个顶点保留相同的值。（您只能在 drawTriangles() 调用之间修改常量值。） 
+  >使用 Context3D setProgramConstantsFromMatrix() 或 setProgramConstantsFromVector() 方法指定"常量寄存器"。常量寄存器为三角形列表中的每个顶点保留相同的值。（您只能在 drawTriangles() 调用之间修改常量值。）
   >
   > 负责将三角形顶点投影到剪辑空间（x 和 y 轴上 ±1 之间和 z 轴上 0-1 之间的规范可视区域），并将转换后的坐标放置到输出寄存器中。
   >
@@ -68,19 +68,19 @@ AGAL 限制：每个程序 200 个 opcode。
 
 * **常量:** 处理 AS3 传递到着色器参数. 由 Context3D::setProgramConstants() 设置
 
-  - **`fc<0~127>`** 用于 vertexProgram 
+  - **`fc<0~127>`** 用于 vertexProgram
 
   - **`vc<0~27>`** 用于 fragmentProgram
 
 * **临时:** 用于计算的临时寄存器, 无法从程序外部访问
 
-  - **`vt<0~7>`** 用于 vertexProgram 
+  - **`vt<0~7>`** 用于 vertexProgram
 
   - **`ft<0~7>`** 用于 fragmentProgram
 
 * **输出:** 着色器输出,在 vertexProgram 中，输出为剪辑空间位置；在 fragmentProgram 中，输出为颜色
 
-  - **`op`** 用于 vertexProgram 
+  - **`op`** 用于 vertexProgram
 
   - **`oc`** 用于 fragmentProgram
 
@@ -120,7 +120,7 @@ hxsl 主要适用于 flash 的 AGAL, http://old.haxe.org/manual/hxsl, 你应该�
 
 ```haxe
 class Shader extends hxsl.Shader {
-	
+
 	static var SRC = {
 		var input : {
 			pos : Float3,
@@ -143,7 +143,7 @@ class Shader extends hxsl.Shader {
 * 一个 input 变量, 对应于 VertexBuffer 中的一组数据
 
   > 如 VertexBuffer 除了坐标还包含颜色或uv数据, 那么 input 的数据类型应该定义相应的字段,如:
-		
+
   ```
   var input : {
 	  pos : Float3,
@@ -173,7 +173,7 @@ shader 方法的参数可在外部赋值, 如 `shader.mpos = xxx, shader.texture
 * Float: 单个32位浮点数
 * Float2, Float3, Float4: 2,3,4 个浮点数
 * Matrix \| M44: 4x4矩阵 相应的矩阵
-* M33, M43, M34: 
+* M33, M43, M34:
 * Texture: 2D纹理
 * CubeTexture: 立方体纹理
 * Int \| Color: 32位整数,　转化到 Float4 每个浮点数为 0.0~1.0
@@ -241,7 +241,7 @@ class ColorKey extends hxsl.Shader {
 
 * `@var`:
 
-* `@param`: 估计就是 flash-hxsl 中 vertex() 的参数, 因此可以像类普通的成员一样直接访问和赋值, 
+* `@param`: 估计就是 flash-hxsl 中 vertex() 的参数, 因此可以像类普通的成员一样直接访问和赋值,
 
   > 估计和 flash-hxsl 一样, fragment() 内访问的类型仅能为 Sampler2D, 其它则 vertex()中赋值然后在 fragment()中读取
   >

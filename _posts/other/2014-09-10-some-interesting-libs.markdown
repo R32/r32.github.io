@@ -15,6 +15,8 @@ categories: other
 
 ### Tools
 
+* [neural-enhance](https://github.com/alexjc/neural-enhance) python3 图片工具
+
 * [fogleman/primitive](https://github.com/fogleman/primitive) go 语言, 输入普通图片生成几何图形, 类似于产生一个滤镜效果的图片, 需要安装 go 语言才能运行的命令行工具, 感觉不太好.
 
 * [procrastitracker](https://github.com/aardappel/procrastitracker) windows 上的一款时间跟踪软件, 跟踪你用计算机都做了些什么
@@ -210,6 +212,12 @@ categories: other
 
 ### article
 
+* [stackoverflow online-webgl-glsl-shader-editor](http://stackoverflow.com/questions/13624124/online-webgl-glsl-shader-editor)
+
+* [game lists](https://github.com/leereilly/games) A list of popular/awesome videos games, add-ons, maps, etc. hosted on GitHub. Any genre. Any platform. Any engine
+
+* [game-off-2016](https://github.com/github/game-off-2016) 看上去有点类似于 LD 游戏大赛
+
 * [值得推荐的C/C++框架和库(转)](http://www.cnblogs.com/kernel0815/p/4624101.html)
 
 * [ZeroMQ 中文](https://github.com/anjuke/zguide-cn) 一套用于快速构建的套接字组件
@@ -271,6 +279,7 @@ categories: other
 
 c++参考手册: <http://en.cppreference.com/w/>
 
+* [wren](https://github.com/munificent/wren) 一个新的脚本语言
 
 * [nuklear](https://github.com/vurtun/nuklear) A small ANSI C gui toolkit
 

@@ -29,7 +29,9 @@ categories: haxe
 
 ### 最新改动
 
-下边内容通过参考 CHANGES 文件
+一些内容通过参考 CHANGES 文件
+
+* `import haxe.extern.AsVar`: 用于方法的参数类型, 传递给方法的实参将会先赋值给临时变量，再传递到方法上.
 
 * `Any` 类型的引入，<https://github.com/HaxeFoundation/haxe-evolution/blob/master/proposals/0001-any.md>
 
@@ -44,7 +46,7 @@ categories: haxe
   	(d:String).charCodeAt(0) // 除非强制转换成 String
   ```
 
-* `is` 操作符，必须和小括号一起使用，感觉和 Std.is 一样
+* `is` 操作符，必须和小括号一起使用，其实和 Std.is 是一样的
 
 * `haxe.MainLoop` 的引入 <https://github.com/HaxeFoundation/haxe/pull/5017>
 
@@ -1056,6 +1058,8 @@ Main.main();
   ```
 
 对于抽象类，建议大家参考 haxe 中 UInt.hx 的源码。
+
+* **note:** 注意在 abstract 类的内部, this 的类型为小括号内的底层类型, 而非当前这个抽像类
 
 #### Implicit Casts
 
