@@ -51,7 +51,7 @@ categories: haxelib
 
 * **[hxparse](https://github.com/Simn/hxparse/)** haxe Lexer/Parser library 词法分析器
 
-* **[datetime](https://github.com/RealyUniqueName/DateTime)** [Haxe UTC时区处理]({% post_url 2015-03-17-haxelib-datetime %}#时区处理)
+* **[datetime](https://github.com/RealyUniqueName/DateTime)** [Haxe UTC时区处理]({% post_url haxelib/2015-03-17-haxelib-datetime %}#时区处理)
 
 * [unifill](https://github.com/mandel59/unifill) Shim your code to support Unicode across all platforms.
 
@@ -147,7 +147,7 @@ haxe LD34游戏示例: <http://haxe.io/ld/34/>
 
 * **[openfl-bitfive](https://github.com/YellowAfterlife/openfl-bitfive)** readme 上写着比 openfl 默认的 **html5后端** 更好.
 
-* [mcli](https://github.com/waneck/mcli)  to easily create CLI applications [中文说明]({% post_url 2014-07-06-haxelib-mcli %})
+* [mcli](https://github.com/waneck/mcli)  to easily create CLI applications [中文说明]({% post_url haxelib/2014-07-06-haxelib-mcli %})
 
 * [hxargs](https://github.com/Simn/hxargs) 简单创建 CLI 程序, 帮助写在自定义的元标签 `@doc` 上.
 

@@ -635,8 +635,8 @@ Haxe 增加了一些 Actionscript 3 没有的语法特性:
 
 have fun!
 
-* [haxe/flash]({% post_url 2014-05-10-flash %})
+* [haxe/flash]({% post_url haxe/2014-05-10-flash %})
 
-* [haxe/flash air]({% post_url 2014-05-15-compile-haxe-air %})
+* [haxe/flash air]({% post_url haxe/2014-05-15-compile-haxe-air %})
 
 <br />

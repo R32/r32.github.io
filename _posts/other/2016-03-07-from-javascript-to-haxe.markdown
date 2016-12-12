@@ -445,7 +445,7 @@ default:
 
 ### 其它
 
-[一篇个人 haxe/js 的日志]({% post_url 2014-07-03-javascript %})
+[一篇个人 haxe/js 的日志]({% post_url haxe/2014-07-03-javascript %})
 
 国内交流 QQ 群: **30373020**, 有任何问题可以在群里问，就算不学 haxe 也没关系 (注: 我并不是群主，也没任何广告)
 

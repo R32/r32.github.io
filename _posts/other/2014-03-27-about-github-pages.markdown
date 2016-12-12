@@ -33,7 +33,7 @@ categories: other
 
 ### 安装 
 
-参考 [Cygwin 环境安装 Jekyll]({% post_url 2014-03-29-jekyll-on-windows-with-cygwin %})
+参考 [Cygwin 环境安装 Jekyll]({% post_url other/2014-03-29-jekyll-on-windows-with-cygwin %})
 
 
 ### 插件使用

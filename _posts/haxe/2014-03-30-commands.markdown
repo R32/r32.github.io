@@ -14,7 +14,7 @@ categories: haxe
 
 haxedoc 命令已经被弃用,而改用了另一个叫haxelib dox, **但是** 生成 xml 还是用的 haxe -xml 命令
 
-* [如何生成 Haxe API 文档]({% post_url 2014-05-05-doc-gen %})
+* [如何生成 Haxe API 文档]({% post_url haxe/2014-05-05-doc-gen %})
 
 
 <!-- more -->

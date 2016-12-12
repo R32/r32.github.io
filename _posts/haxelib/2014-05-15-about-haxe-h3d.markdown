@@ -178,7 +178,7 @@ categories: haxelib
 
 ### hxsl
 
-[参看 hxsl 的单独记录]({% post_url 2014-11-16-hxsl %}).
+[参看 hxsl 的单独记录]({% post_url haxelib/2014-11-16-hxsl %}).
 
 <br />
 
