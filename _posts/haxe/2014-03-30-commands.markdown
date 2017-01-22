@@ -63,7 +63,7 @@ haxelib 用于管理 haxe库,  `haxelib run libname` 可以调用指定库下边
       submit    : 提交或更新自已写的 haxe 库到　haxelib 服务器
       register  : 注册 haxelib 新用户
       # 注: 这个命令已经弃用，你可能需要自已解压然后用 haxelib dev 命令
-      local     : 离线方式安装库, 压缩包名字随意. 例: haxelib local xxx.zip
+      # local     : 离线方式安装库, 压缩包名字随意. 例: haxelib local xxx.zip
       dev       : 设置指定目录为库, 常用于 fork 别人的库 例: haxelib dev some dir
       git       : 连接下载 git 版本库, 需要 git 命令支持
       hg        : use Mercurial (hg) repository as library
@@ -206,10 +206,10 @@ nekotools 是一个安装 haxe 时附带的工具,nekotools 很简单只有二�
   # 编译代码为 java 平台的 .java 文件, 指定输出目录, 需要安装 hxjava 库
   -java <directory>: generate Java code into target directory
 
-  # haxe 3.2 + 编译代码为 python
+  # haxe 3.2+ 编译代码为 python
   -python <file>   : generate Python code as target file
 
-  # haxe 3.3 一个计划用来代替 neko 新平台
+  # haxe 3.3+
   -hl <file>       : compile HL code as target file
 
   # 导出代码API注释内容为 xml 文件
@@ -356,18 +356,21 @@ haxe --help-defines. 使用 -D 设定, 一些和上边重叠的不会再描述. 
 <http://haxe.org/manual/compiler-usage-flags.html>
 
 ```bash
+# ???
+HXCPP-GC-GENERATIONAL  : Experimental Garbage Collector
+
 # 在 trace 语句中 打印绝对路径
 absolute-path          : Print absolute file path in trace output
 
 # 添加 Scout (aka Monocle) 支持. Since SVN r5429
 advanced-telemetry     : Allow the SWF to be measured with Monocle tool
 
-# 3.3, 估计是用于 DOC 文档的生成
+# 位于 gencpp.ml 中. 因此仅用于 hxcpp, 添加后编译输出的 cpp 代码会有一些类型上的注释
 annotate-source        : Add additional comments to generated source code
 
 # 新的代码优化器, 以精简代码, http://haxe.org/manual/cr-static-analyzer.html
-# 在 haxe 3.3 中默认为打开状态
-# analyzer               : Use static analyzer for optimization
+# 由于在 haxe 3.3 及更高版本默认为打开状态，因此被取消。 你可以参考 no-analyzer
+# analyzer             : Use static analyzer for optimization
 
 as3                    : Defined when outputing flash9 as3 source code
 
@@ -378,7 +381,6 @@ core-api               : Defined in the core api context
 core-api-serialize     : Sets so some generated core api classes be marked
                          with the Serializable attribute on C#
 
-cppast                 : Generate experimental cpp code
 cppia                  : Generate experimental cpp instruction assembly
 
 dce                    : The current DCE mode
@@ -391,8 +393,8 @@ debug                  : Activated when compiling with -debug
 display                : Activated during completion
 
 # haxe 3.3+
-display-stdin             : Read the contents of a file specified in --display
-                            from standard input
+display-stdin          : Read the contents of a file specified in --display
+                         from standard input
 
 dll-export             : GenCPP experimental linking
 
@@ -403,7 +405,9 @@ doc-gen                : Do not perform any removal/change in order to
                          correctly generate documentation
 
 # -D dump=pretty, dump=record(haxe 3.3)
-dump                   : Dump the complete typed AST for internal debugging
+dump                   : <mode:pretty|record|legacy> Dump typed AST in dump
+                         subdirectory using specified mode or non-prettified
+                         default
 
 dump-dependencies      : Dump the classes dependencies
 
@@ -466,6 +470,9 @@ js-classic             : Don not use a function wrapper and strict mode in JS ou
 # JS ES5 运行时模式
 js-es                  : Generate JS compilant with given ES standard version (default 5)
 
+# 创建 source map,即使没有指定 debug 模式
+js-source-map          : Generate JavaScript source map even in non-debug mode
+
 js-unflatten           : Generate nested objects for packages and types
 
 # 使用更少的对象属性构建类, 例如: 默认情况下会创建的类有时似于 Main.a.b.c
@@ -524,9 +531,6 @@ no-opt                 : Disable optimizations
 no-pattern-matching    : Disable pattern matching
 
 no-root                : GenCS internal
-
-# 被移除了, 估计是使用了 -D analyzer(....) 代替了
-# no-simplify            : Disable simplification filter
 
 # 禁用 swf 压缩
 no-swf-compress        : Disable SWF output compression
@@ -690,8 +694,6 @@ vcproj                 : GenCPP internal
 @:debug              : Forces debug information to be generated into the Swf even without -debug (flash only)
 
 @:decl               :  (cpp only)
-
-@:defParam           : ?
 
 @:delegate           : Automatically added by -net-lib on delegates (cs only)
 
@@ -884,8 +886,17 @@ vcproj                 : GenCPP internal
 
 # 函数重载, 用于 extern class, 允许同一个方法有不同参数.
 @:overload           : (Function specification (no expression))Allows the field to be called with different argument types
-@:phpConstants       : Marks the fields of an TAbstract as php constants,
-                        without $ (php only)
+
+# php7
+@:phpClassConst        : (php7)  Generate static var of an extern class as a
+                          PHP class constant (php only)
+@:phpConstants         : Marks the static fields of a class as PHP constants,
+                          without $ (php only)
+@:phpGlobal            : (php7) Puts the static fields of a class in the
+                          global PHP namespace (for php,php)
+@:phpMagic             : (php7) Treat annotated field as special PHP magic
+                          field (php only)
+
 # Example: var val = @:privateAccess instance.privateFiled
 @:privateAccess      : Allow private access to anything for the annotated expression
 
@@ -956,6 +967,10 @@ vcproj                 : GenCPP internal
                        matches constructor parameters
 
 @:suppressWarnings   : Adds a SuppressWarnings annotation for the generated Java class (java only)
+
+# haxe 3.4,
+@:templatedCall      : Indicates that the first parameter of static call
+                       should be treated as a template arguement (cpp only)
 
 @:throws             : (Type as String)Adds a 'throws' declaration to the generated function. (java only)
 

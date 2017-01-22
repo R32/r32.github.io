@@ -111,46 +111,45 @@ git pull --depth=1 origin master
 [本地测试 github 上别人提交的 PR](https://help.github.com/articles/checking-out-pull-requests-locally/#modifying-an-inactive-pull-request-locally)
 
 
+### 合并多个 commit
+
+你可以随意的提交， 当合并到其它 banrch 时 再选择性地合并, 注: 如果采用分支的形式提交到 github, github 会自动帮你合成一个.
+
+```bash
+# 如果遇到问题，下边指令可以终止 rebase
+git rebase --abort
+
+# 进入交互模式，(尝式将 AFTER_COMMIT_HASH 之后的 commit 合并成一个)
+git rebase -i AFTER_COMMIT_HASH
+
+# 这时会进入到 VIM 的交互模式，可使用其它 IDE 编辑，但是你仍然需要了解几个 VIM 命令
+pick 16b5fcc Code in, tests not passing
+pick c964dea Getting closer
+pick 06cf8ee Something changed
+pick 396b4a3 Tests pass
+
+# 除了第一条不动，将 pick 全改成 squash
+pick 16b5fcc Code in, tests not passing
+squash c964dea Getting closer
+squash 06cf8ee Something changed
+squash 396b4a3 Tests pass
+
+# VIM 交互模式下 "保存并退出" (ESC + :wq)
+# 这时 VIM 将会重新加载一个 commit message 列表，所有非注释内容会被当成提交
+# VIM 交互模式下 "保存并退出" (ESC + :wq)
+# done!
+
+# 如果你使用其它 IDE 编译，当保存后, VIM 这边会提示你是否 [L]oad 进来,
+
+# VIM 按下 ESC 则进入 "命令模式"，这时:
+## :w 保存但不退出 write
+## :q 不保存退出 quit
+## :wq 保存并退出，如果最后加上 ! 则有强制的意思
+## :e! 放弃所有修改，恢复到上次保存文件时
+# 按 Insert 可 toggle 到 Insert 模式方便编辑
+```
+
 ### 其它
-
-
-* 合并多个 commit 为一个， 你可以随意的提交， 当合并到其它 banrch 时 再选择性地合并
-
-  注: 如果采用分支的形式提交到 github, github 会自动帮你合成一个.
-
-  ```bash
-  # 如果遇到问题，下边指令可以终止 rebase
-  git rebase --abort
-
-  # 进入交互模式，(尝式将 AFTER_COMMIT_HASH 之后的 commit 合并成一个)
-  git rebase -i AFTER_COMMIT_HASH
-
-  # 这时会进入到 VIM 的交互模式，可使用其它 IDE 编辑，但是你仍然需要了解几个 VIM 命令
-  pick 16b5fcc Code in, tests not passing
-  pick c964dea Getting closer
-  pick 06cf8ee Something changed
-  pick 396b4a3 Tests pass
-
-  # 除了第一条不动，将 pick 全改成 squash
-  pick 16b5fcc Code in, tests not passing
-  squash c964dea Getting closer
-  squash 06cf8ee Something changed
-  squash 396b4a3 Tests pass
-
-  # VIM 交互模式下 "保存并退出" (ESC + :wq)
-  # 这时 VIM 将会重新加载一个 commit message 列表，所有非注释内容会被当成提交
-  # VIM 交互模式下 "保存并退出" (ESC + :wq)
-  # done!
-
-  # 如果你使用其它 IDE 编译，当保存后, VIM 这边会提示你是否 [L]oad 进来,
-
-  # VIM 按下 ESC 则进入 "命令模式"，这时:
-  ## :w 保存但不退出 write
-  ## :q 不保存退出 quit
-  ## :wq 保存并退出，如果最后加上 ! 则有强制的意思
-  ## :e! 放弃所有修改，恢复到上次保存文件时
-  # 按 Insert 可 toggle 到 Insert 模式方便编辑
-  ```
 
 * 恢复 **单个文件** 到某个历史版本
 

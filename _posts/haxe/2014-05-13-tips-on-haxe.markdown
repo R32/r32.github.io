@@ -33,6 +33,16 @@ categories: haxe
 
 * `import haxe.extern.AsVar`: 用于方法的参数类型, 传递给方法的实参将会先赋值给临时变量，再传递到方法上.
 
+  或者如果是一些抽象类, 可以添加 `@:analyzer(as_var)`
+
+  ```haxe
+  @:analyzer(as_var) abstract Ptr(Int) to Int {
+    public inline function new(i:Int) {
+        this = i;
+    }
+  }
+  ```
+
 * `Any` 类型的引入，<https://github.com/HaxeFoundation/haxe-evolution/blob/master/proposals/0001-any.md>
 
   ```haxe

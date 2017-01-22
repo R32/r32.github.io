@@ -1,0 +1,61 @@
+---
+layout: post
+title:	hashlink
+date:	2016-12-22 06:55:21
+categories: haxe
+---
+
+之前神神密密的新平台最近终于有了介绍的文档 <http://hashlink.haxe.org/>
+
+### 简介
+
+大致来说由于机制不同，不能简单地把 hl 看成是 neko 的升级版。 <http://haxe.org/blog/hashlink-indepth-part-2/>
+
+haxe 代码编译成 `.hl` 字节码然后使用 hl 来运行用于快速开发（development）,
+
+```bash
+# 编译
+haxe -hl output.hl -main MyApp
+
+# 使用 hl虚拟机运行字节码
+hl output.hl
+```
+
+<!-- more -->
+
+而发布（release）的时候可以编译成 c 代码以获得更好的性能
+
+```bash
+# 生成 c 代码
+haxe -hl output.c -main MyApp
+
+# 使用 gcc 编译
+gcc -o myapp output.c hlc_main.c -Lhl
+```
+
+> 目前我是将输出的 output.c 改名为 _main.c 放置到 hl/src 的目录下然后生成 hlc 项目（可能需要在顶目属性里将std.lib 改成 libhl.lib, 由于我的是 vs2013 因此 v140得全改成 v120）
+
+编译现存的 c 库与 hashlink 一起使用则建议参考 include 和 libs 这二个目录的源码
+
+### 编译
+
+对于将 haxe 代码编译成 .hl 字节码或 .c, 需要 haxe 3.3 或更高(推荐下载 github 上的 night build 版本),
+
+对于 hl 虚拟机可以在 github 上的 release 页面中找到。
+如果需要自已编译虚拟机（windows平台为hl.exe），至少需要自已下载 sdl 放至到 include 目录，具体可以参考 hl.sln 的各个项目录配置，最后获取 release 目录下的 hl.exe 和所有 .hdll 和 libhl.dll
+
+
+### misc
+
+* 如何在 C 中嵌入虚拟机可以参考 `src/main.c` 文件
+
+* 例如 `@:hlNative("fmt","png_decode")`, 表示位于 fmt.hdll 库中的 png_decode 方法, 需要自已参考 `libs/fmt/fmt.c` 的统一格式
+
+* libs 下已经包含有 sdl, openal 等这类的库, 可以将目录添加到 -cp 参数后, 因为这些库已经写好了 extern
+
+* 对于 hl.UI, 实际上只有 dialog 还算比较实用, WinLog 只是用来测试的(参看 sdl 中的某一函数), 因为它并没有和 MSG 相关东西, 所以应该使用 sdl 来创建窗口， 因为 hl.UI 仅适用于 windows 平台
+
+
+感觉编译各种 c 库还是用 cmake 好了,
+
+**To Be Continued...**

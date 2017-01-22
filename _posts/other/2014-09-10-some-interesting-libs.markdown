@@ -212,6 +212,13 @@ categories: other
 
 ### article
 
+* [thebookofshaders](https://github.com/patriciogonzalezvivo/thebookofshaders/blob/master/README-ch.md) 选择 zh 反缀的 md 文件阅读
+
+* 使用 word 打印类似于请柬之类的东西, 其实只要用 word 写邮件就可以了, 以下以 word 2007 为示例:
+
+  - `邮件 -> 开始邮件合并 -> 邮件合并分步向导` 之后按着提示即可完成
+  - 使用 `插入 -> 文本框...` 来输入每个文本块 可以定义为竖排文字
+
 * [stackoverflow online-webgl-glsl-shader-editor](http://stackoverflow.com/questions/13624124/online-webgl-glsl-shader-editor)
 
 * [game lists](https://github.com/leereilly/games) A list of popular/awesome videos games, add-ons, maps, etc. hosted on GitHub. Any genre. Any platform. Any engine
@@ -227,9 +234,23 @@ categories: other
   - <https://learnxinyminutes.com>
 
 * [cmake 中文PDF](http://sewm.pku.edu.cn/src/paradise/reference/CMake%20Practice.pdf)
-  - <https://cmake.org/Wiki/CMake_Useful_Variables>
+  - <https://cmake.org/Wiki/CMake_Useful_Variables> 内容有些多，未来估计得单独写个 cmake 的日志
+  - [cmake 预编译头文件 stackoverflow](http://stackoverflow.com/questions/148570/using-pre-compiled-headers-with-cmake)
 
-* [use-gulp](https://github.com/Platform-CUF/use-gulp) 中文 gulp 收集, 但是 gulp 似乎只适合做 Web 类的构建工具
+  ```
+  CMAKE_SOURCE_DIR: 指的顶层 CMakeLists.txt 所在目录
+  CMAKE_BINARY_DIR: 指的运行 cmake 的当前目录， 如果和 CMAKE_SOURCE_DIR 相等则是所谓的 in source,
+  因此你应该在另一个临时目录中调用 cmake [options] path/to/CMAKE_SOURCE_DIR
+
+  # 假设顶层配置文件有 add_subdirectory(sub), 而 sub 中的 CMakeLists.txt 有如下
+  CMAKE_CURRENT_SOURCE_DIR: ${CMAKE_SOURCE_DIR}/sub
+  CMAKE_CURRENT_BINARY_DIR: ${CMAKE_BINARY_DIR}/sub
+
+  # 其它
+  EXECUTABLE_OUTPUT_PATH: 最终执行文件(release/debug)的所在目录,可通过 SET 更改
+  LIBRARY_OUTPUT_PATH: 最终库文件(release/debug)的所在目录, 可通过 SET 更改
+
+  ```
 
 * [the-art-of-command-line](https://github.com/jlevy/the-art-of-command-line) 正确使用命令行
 

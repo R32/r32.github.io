@@ -25,15 +25,20 @@ https://github.com/cmangos/issues 这里有一些仿的源码.
 
 网上能找到的基本都过期了, http://www.wowwiki.com/AddOn_Studio_2010, 未测
 
- * 开发环境 - ?? 只能使用 `/dump` 来调试各种 API 
+ * 开发环境 - ?? 只能使用 `/dump` 来调试各种 API
 
 	一些常用SLASH调试命令:
 ```bash
+# http://wowwiki.wikia.com/wiki/Blizzard_DebugTools
 /dump EXPRESSION	# 相当于JS的在浏览器上输入 console.log(...)
 /run ReLoadUI()		# 重载插件
+
+/fstack #显示鼠标处 frame 的相关信息
+
+/etrace [start|stop] #发生了什么事件
 ```
 
- * 可视化布局IDE - 
+ * 可视化布局IDE -
 
  * LUA 编辑器 - 似乎 Notepad++ 是个不错的选择, 装上 XML 查错工具
 
@@ -56,14 +61,14 @@ wow.exe -console
  2. 接下来的会进入到游戏登录界面, 这时 按下 `~` 键(数字1左边的键), 将进入到 控制台窗口
 
 
- 3. 获得FrameXML, 在控制台窗口输入下边命令: 
+ 3. 获得FrameXML, 在控制台窗口输入下边命令:
 
 ```bash
-exportInterfaceFiles code	
+exportInterfaceFiles code
 exportInterfaceFiles art		# 这个命令将导致使卡住一些分钟,因为导出的数据量有 1.3G 左右
 ```
 	一些比较旧的客户端(如: 1.121)可能并不支持这个命令, 因此需要自已解压 interface.MPQ
-	
+
  4. 最后在目录中可以找到对应的 BlizzardInterfaceArt 及 BlizzardInterfaceCode 目录
 
 <hr />
@@ -74,9 +79,9 @@ exportInterfaceFiles art		# 这个命令将导致使卡住一些分钟,因为导
 
  * 插件描述(TOC): 文件名必须和插件名(文件夹名)一致
 
- * 布局(XML): 用于UI布局, 如果插件无界面,那么这个文件也不是必须的. 
+ * 布局(XML): 用于UI布局, 如果插件无界面,那么这个文件也不是必须的.
 
- * 功能实现(LUA): 
+ * 功能实现(LUA):
 
 ### TOC
 
@@ -210,7 +215,7 @@ Bob.lua
 
  * X-Website
 
- * X-Feedback 
+ * X-Feedback
 
 
 <hr />
@@ -234,7 +239,7 @@ http://www.cnblogs.com/apexaddon/articles/1507772.html
 
 		`$parent`作前缀的名字表示这里引用父元素的名字: 如 "$parentWorld" 如果 父元素名为 "Hello", 则这个元素名为 "HelloWorld"
 		，这个特性能得能方便的复制现有的子元素到其它Frame中去
-		
+
   - parentKey(string) - 可以通过父元素访问这个元素的名字(旧版本不支持), 比如父元素为"Hello",这个设为"world", 则 "Hello.wrold" 将表示这个元素.
 
   - parentArray(string) - ??? 和 parentKey类似,但挂接在父元素的一个特定数组上???
@@ -271,7 +276,7 @@ FULLSCREEN	# 全屏层,例如世界地图, 打开时将遮盖住所有界面
 FULLSCREEN_DIALOG	# 全屏层上的对话框层
 TOOLTIP		# 提示窗口层.
 ```
-		
+
   - enableKeyboard(boolean) 元素是否接收键盘输入
 
   - clampedToScreen(boolean) 禁止元素移出屏幕,(方式未知, 可能是指拖动)
@@ -284,16 +289,16 @@ TOOLTIP		# 提示窗口层.
   - TitleRegion: 定义一个用作拖动的点击区域
   - Backdrop: 定义此元素的背景
   - HitRectInsets: 更改用户可点击此元素的区域
-  - Layers: 这个层定义的子元素仅作为显示, 一些文字标题, 材质（仅接受 FontSring 和 Texture 元素）, 
-  - Frames：子元素由各种Frame元素组成, 如 按钮,输入框 .....等等  
+  - Layers: 这个层定义的子元素仅作为显示, 一些文字标题, 材质（仅接受 FontSring 和 Texture 元素）,
+  - Frames：子元素由各种Frame元素组成, 如 按钮,输入框 .....等等
   - Scripts: 定义事件,如 OnLoad, OnEnvent, OnClick ......等等
-  - Attributes: TODOS: 
+  - Attributes: TODOS:
 
  * FontString: 不可编辑的文本字符串,
 
 	attributes:
-  - name:	
-  - inherits: 
+  - name:
+  - inherits:
   - virtual
   - hidden
   - bytes
@@ -332,7 +337,7 @@ layer level:
  * OVERLAY: 第四层
 
  * HIGHLIGHT: 顶层, 在鼠标移动到其区域时,将自动显示(如果enableMouse属性true), 看上去
- 
+
 
 #### Bindings.xml
 
@@ -358,7 +363,7 @@ example: header 属性表示按键绑定一个分类, 需要注意的是示例�
 
 wow api, 内容有些多 http://wowprogramming.com/docs
 
-**lua 语法15分钟快速入门** - https://github.com/adambard/learnxinyminutes-docs/blob/master/zh-cn/lua-cn.html.markdown 
+**lua 语法15分钟快速入门** - https://github.com/adambard/learnxinyminutes-docs/blob/master/zh-cn/lua-cn.html.markdown
 
 http://www.cnblogs.com/hewei2012/p/3552797.html
 
@@ -397,26 +402,26 @@ http://wowprogramming.com/docs/api_types#hyperlink
 分隔符
 
  * [itemLink](http://wowwiki.wikia.com/wiki/ItemLink),物品链接,注意区别 itemString,(因为一些方法喜欢用变量名 link 来表示 itemString) itemLink的内部包含了itemString
-	
-	格式示例: 
-	
+
+	格式示例:
+
 ```bash
 |cff9d9d9d|Hitem:7073:0:0:0:0:0:0:0:80:0:0:0:0|h[Broken Fang]|h|r
 
-# 各部分析	
+# 各部分析
 |cff9d9d9d		# 自定义的颜色值,开始
 |H	# hyperlink 开始
 item:7073:0:0:0:0:0:0:0:80:0:0:0:0	# linkdata, 这里表现为 itemString
 |h	# linkdata 结束
 [Broken Fang]	# 文本描述字符
 |h	# hyperlink 结束
-|r	# 恢复到通常状态的颜色 
+|r	# 恢复到通常状态的颜色
 ```
 
 	[itemString](http://wowwiki.wikia.com/wiki/ItemString): 经常作为 UI 的文本内容,由"item" 与 13 个 ":" 分隔符组成.
-	
-	示例, 注意种版本格式可能会有差异, 可以检索wiki网页的历史版本,如比较旧的[itemString](http://wowwiki.wikia.com/wiki/ItemString?oldid=76418)	
-	
+
+	示例, 注意种版本格式可能会有差异, 可以检索wiki网页的历史版本,如比较旧的[itemString](http://wowwiki.wikia.com/wiki/ItemString?oldid=76418)
+
 ```bash
 item:7073:0:0:0:0:0:0:0:80:0:0:0:0
 
@@ -427,7 +432,7 @@ item	# (0)itemString 的识别符总是为"item"
 0,0,0,0	# (3~6)jewelId1~4个, 作为物品的宝石插孔,因此其值为 EnchantID, 在 Patch 2.0 时期添加
 0		# (7)suffixId, 物品随机属性(比如一些制造类装备会随机的给属性), 参见 SuffixIds.
 0		# (8)uniqueId, ???一些特定的信息或者属于特定的场景(如风暴要塞的橙器), 或一些任务中的道具常常具有这个属性
-80		# (9)linkLevel, 提供的角色等级, 用于计算传家宝物品的弹性属性, 添加于 Patch 3.0 
+80		# (9)linkLevel, 提供的角色等级, 用于计算传家宝物品的弹性属性, 添加于 Patch 3.0
 0		# (10)specializationID, ???专精(TODOS: 同一件装备在专精下属性将不一样), 添加于 Patch 6.2.0
 0		# (11)reforgeld 添加于 Patch 4.0.2
 0		# (12)unknown1 未知估计是作为保留值
@@ -446,9 +451,9 @@ GetInventoryItemLink("unit",slot) -- 装备面板栏
 ```
 
  * [questLink](http://wowwiki.wikia.com/wiki/QuestLink) 任务链接,点击后将显示一些任务描述
-	
-	格式示例: 
-	
+
+	格式示例:
+
 ```bash
 |cff808080|Hquest:99:15|h[Arugal's Folly]|h|r
 |cffffff00|Hquest:982:17|h[Deep Ocean, Vast Sea]|h|r
@@ -463,9 +468,9 @@ quest	#(0) 识别符,总是为 "quest"
 /script SendChatMessage("\124cffffff00\124Hquest:99:15\124h[Arugal's Folly]\124h\124r", "SAY", "Common");
 /script DEFAULT_CHAT_FRAME:AddMessage("Shift-click this link to put into chat: \124cffffff00\124Hquest:99:15\124h[Arugal's Folly]\124h\124r");
 ```
-	
-	更多示例: 
-	
+
+	更多示例:
+
 ```lua
 local function findLast(haystack, needle)
 	local i=string.gfind(haystack, ".*"..needle.."()")()
@@ -478,7 +483,7 @@ local questLevel = string.sub(desc, indx+2);
 ```
 
  * spell:
-	
+
 ```
 |cffffd000|Henchant:59387|h[Certificate of Ownership]|h|r
 ```
@@ -486,12 +491,12 @@ local questLevel = string.sub(desc, indx+2);
  * channel: `|Hchannel:Guild|h[公会]|h` 没有文档.
 
 
- * player: 点击 playerLink 默认情况下左键点击将产生"密语"的文本输入框, 右键则将弹出一个上下文菜单(有如邀请入队或加入黑名单之类的选项),Shift+左键 将查询(/who NAME)这个玩家的一些信息. 
+ * player: 点击 playerLink 默认情况下左键点击将产生"密语"的文本输入框, 右键则将弹出一个上下文菜单(有如邀请入队或加入黑名单之类的选项),Shift+左键 将查询(/who NAME)这个玩家的一些信息.
 
 ```bash
 |Hplayer:Aerdrig:1:WHISPER:AERDRIG|h[Aerdrig]|h
 
-# 
+#
 player	#(0) 标识符
 Aerdrig	#(1) name,玩家名, 当跨服时(比如在战场)名字表现为(name-server,跨服邮寄小号也是这种形式)
 1		#(2) ChatID, 聊天窗口
@@ -505,7 +510,7 @@ AERDRIG	#(4) ???
 ```bash
 |HplayerGM:Eyonix|h[Eyonix]|h
 ```
-	
+
  * glyph: 雕文
 
 ```bash
