@@ -63,8 +63,7 @@ gcc -o myapp output.c hlc_main.c -Lhl
 &nbsp;
 &nbsp;
 
-misc
-------
+## misc
 
 ### 字符串
 

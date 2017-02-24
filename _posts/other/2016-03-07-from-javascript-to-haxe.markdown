@@ -19,7 +19,7 @@ categories: other
 
   > 搜 "typescript vs haxe", 即使 ts 背后虽然是微软, 但也并没有占什么优势
   >
-  > 但是有一点得承认，haxe 的中文文档以及中文社区不如 typescript
+  > haxe 的中文文档以及中文社区不如 typescript
 
 * 强类型，但编译器能自已推导变量的类型。
 
@@ -27,7 +27,7 @@ categories: other
 
 * `-debug` 模式下将会自动创建 source map 文件并相之相关联，以方便定位源文件错误
 
-* 除了 JS 能编译成 cpp、flash、neko 等其它几个平台
+* 除了 JS 能编译成 flash、hashlink、cpp、neko...
 
 * [在线尝试 haxe](http://try.haxe.org)
 
@@ -109,7 +109,7 @@ default:
 
 目前只想到这些, 其它的未来再补充
 
-* 一个编译参数 `--no-traces` 即可擦除所有 console.log 语句
+* 编译时添加 `--no-traces` 即可擦除所有 console.log 语句
 
 * 条件编译：
 
@@ -128,22 +128,6 @@ default:
   #if (haxe_ver >= 3.2)
   // 注意使用条件运算符或逻辑操作符一定要用“小括号”将表达式括起来
   #end
-
-  // 如果你不知道有哪些 defines 可以使用, 可以像下边这个 “宏方法”， 例:
-  class Main {
-      static function main() {
-          trace(getDefines()); // console.log({'js-es5' : "1", .....})
-      }
-
-      macro static function getDefines(){
-          var obj = {};
-          var m = haxe.macro.Context.getDefines();
-          for (k in m.keys()) {
-              Reflect.setField(obj, k, "" + m.get(k));
-          }
-          return macro $v{obj};
-      }
-  }
   ```
 
 * 抽像类 `abstract + inline`， 例如你可以把 Int 类型想象成 Direction 类型, 使得代码更容易理解:
@@ -248,200 +232,7 @@ default:
 
 * **haxe 最强大的特性：宏（macro）**。 通常它用来自动创建，比如你可以分析某个本地或网络文件然后动态创建一个类
 
-  > 建议新手先跳过这一块, 但如果你对《编译原理》有自信的话
-
-  例: 这个 macro 用来获得当前项目最后提交的 GIT HASH 值，它通过宏打开一个进程执行指定的命令并将结果返回给代码
-
-  ```js
-  // MyMacros.hx
-  class MyMacros {
-    public static macro function getGitCommitHash():haxe.macro.ExprOf<String> {
-    #if !display
-      var process = new sys.io.Process('git', ['rev-parse', 'HEAD']);
-      if (process.exitCode() != 0) {
-        var message = process.stderr.readAll().toString();
-        var pos = haxe.macro.Context.currentPos();
-        Context.error("Cannot execute `git rev-parse HEAD`. " + message, pos);
-      }
-      var commitHash:String = process.stdout.readLine();
-      return macro $v{commitHash};
-    #else
-      return macro $v{""};
-    #end
-    }
-  }
-
-  // Main.hx
-  class Main{
-      static function main(){
-          trace(MyMacros.MyMacros());
-      }
-  }
-  ```
-
-  编译成 JS 后:
-
-  ```js
-  console.log("3d807e9ccea66be262b492be49e8415291921cf9")
-  ```
-
-  **tips**: 如果你正在学习使用 macro，有一个编译标志 `-D dump=pretty` 可以让你看到 macro 做了什么
-
-  <strong id="same-as-c-macros">示例 2</strong>: 定义类似于 c 语言中的宏函数, 先假设:
-
-  ```cpp
-  int main(int argc, char *argv[])
-  {
-      int A = 1, B = 2, C = 3, D = 4;
-  #define S(a,b) (a + b)
-  #define P(a,b,c,d,e)              \
-  {                                 \
-      a += F(c, d) + S(a, b) * e;   \
-      b += (c + ~d);                \
-  }
-  #define F(c, d) (c * d)
-      P( A, B, C, D, 2);
-  #undef F
-  #define F(c, d) (c * d + 1)
-      P( A, B, C, D, 3);
-      printf("{A: %d}", A);
-
-  /////////////////////////
-    #define CAT(a, b) a##b
-      int CAT(A, B) = 101;
-      printf("CAT(A, B): %d\n", CAT(A, B));
-
-    #define LOG(exp) printf(#exp)
-        LOG(hello);
-  }
-  ```
-
-  这段 c 代码宏展开后为:
-
-  ```cpp
-  int main(int argc, char *argv[])
-  {
-      int A = 1, B = 2, C = 3, D = 4;
-
-      { A += (C * D) + (A + B) * 2; B += (C + ~D); };
-
-      { A += (C * D + 1) + (A + B) * 3; B += (C + ~D); };
-
-      printf("{A: %d}", A);
-      //
-      int AB = 101;
-      printf("CAT(A, B): %d\n", AB);
-
-      printf("hello");
-  }
-  ```
-
-  那么我们在 haxe 中来实现上边代码: Main.hx
-
-  ```haxe
-  import Mt.*;     // 通过 * 引入这个类下的所有静态方法
-
-  class Main {
-      static function main() {
-          var A = 1, B = 2, C = 3, D = 4;
-          P(A, B, C, D, 2, F1);  // 把 "宏方法" 当参数传递, 与 c 的差异
-          P(A, B, C, D, 3, F2);
-          trace(A);
-
-          CAT(A, B, null, 101);  // 第三个参数 null 换成 Int 也行.
-          trace('CAT(A, B): ' + CAT(A, B));
-
-          LOG(hello);
-      }
-  }
-  ```
-
-  把和宏相关的代码放在另一个文件: Mt.hx
-
-  ```haxe
-  #if macro
-  import haxe.macro.Expr;
-  import haxe.macro.Context;
-  using haxe.macro.ExprTools;
-  #end
-
-  class Mt {
-      // 在普通的方法前加上 macro 关键字
-      // 对于 (maxro $a + $b) 请参见 http://haxe.org/manual/macro-reification-expression.html
-      macro public static function S(a, b) return macro $a + $b;
-
-      macro public static function P(a, b, c, d, e, F){
-      // 使用 {} 返回代码块, 如果不想将输出大括号, 可以加 @:mergeBlock
-          return macro @:mergeBlock{
-              $a += $F($c, $d) + S($a, $b) * $;
-              $b += $c + ~$d;
-          };
-      // 由于 S() 并不是用参数传进来的, 因此不需要添加 $ 为前缀，
-      // 只需要确保在调用 P() 的地方, 也机样能访问 S() 方法, 否则会找不到方法
-      }
-
-      macro public static function F1(c, d) { return macro $c * $d; }
-
-      macro public static function F2(c, d) return macro $c * $d + 1;
-
-      macro public static function LOG(exp) {
-          var s = exp.toString();    // using haxe.macro.ExprTools;
-          return macro trace($v{s});
-      }
-
-      // 注: 由于要定义变量, 因此这个示例有些太复杂
-      // 如需定义类成员或 class 应该使用其它方式
-      macro public static function CAT(x, y, ?type, ?expr) {
-          var sx = x.toString();
-          var sy = y.toString();
-          var stype = type.toString();
-          var sexpr = expr.toString();
-          if ((stype == "null" || stype == "_")
-              && (sexpr == "null" || sexpr == "_")
-          ) {
-            return macro $i { sx + sy };
-          }
-
-          return { // 由于没法使用 macro 语法糖, 因此手工输入 AST 变量
-            expr: EVars([{
-              name: sx + sy,
-              expr: expr,
-              type: stype == "null" ? null : Context.toComplexType(Context.getType(stype)),
-            }]),
-            pos: Context.currentPos()
-          };
-      }
-  }
-  ```
-
-  编译为 JS, `haxe -main Main -js test.js -D no-analyzer`, 后边那个参数是防止编译器优化,
-
-  ```js
-  // Generated by Haxe 3.3.0 (git build development @ bcd544a)
-  (function () { "use strict";
-  var Main = function() { };
-  Main.main = function() {
-      var A = 1;
-      var B = 2;
-      var C = 3;
-      var D = 4;
-      A += C * D + (A + B) * 2;
-      B += C + ~D;
-      A += C * D + 1 + (A + B) * 3;
-      B += C + ~D;
-      console.log(A);
-
-      var AB = 101;
-      console.log("CAT(A, B): " + AB);
-      console.log("hello");
-  };
-  var Mt = function() { };
-  Main.main();
-  })();
-  ```
-
-  最终的结果全完与 c 代码展开后一样, 如果你不想编译为 js, 同样能在 dump 目录里可以看到类似的代码, 如果你有添加 `-D dump=pretty` 为编译参数
-
+  > 建议新手先跳过这一块。 **tips**: 如果你正在学习它，有一个很重要的编译标志 `-D dump=pretty` 可以让你看到 macro 展开后的代码是什么样
 
 ### 其它
 
