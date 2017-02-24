@@ -33,29 +33,137 @@ haxe -hl output.c -main MyApp
 gcc -o myapp output.c hlc_main.c -Lhl
 ```
 
-> 目前我是将输出的 output.c 改名为 _main.c 放置到 hl/src 的目录下然后生成 hlc 项目（可能需要在顶目属性里将std.lib 改成 libhl.lib, 由于我的是 vs2013 因此 v140得全改成 v120）
+> 目前我使用 vs2013 是直接打开 hashlink 源项目的 hl.sln, 然后更改 hlc 的属性, 将导出的主 .c 文件例如 myapp.c 添加进来, 然后将 myapp.c 所在的目录添加到 include 目录, 然后生成解决方案。
 
 编译现存的 c 库与 hashlink 一起使用则建议参考 include 和 libs 这二个目录的源码
 
-### 编译
+### 编译虚拟机
 
 对于将 haxe 代码编译成 .hl 字节码或 .c, 需要 haxe 3.3 或更高(推荐下载 github 上的 night build 版本),
 
 对于 hl 虚拟机可以在 github 上的 release 页面中找到。
-如果需要自已编译虚拟机（windows平台为hl.exe），至少需要自已下载 sdl 放至到 include 目录，具体可以参考 hl.sln 的各个项目录配置，最后获取 release 目录下的 hl.exe 和所有 .hdll 和 libhl.dll
+
+> 如果需要自已编译虚拟机（windows平台为hl.exe），至少需要自已下载 sdl, openal 等放至到 include 目录 (参看各 readme 文件)，具体可以参考 hl.sln 的各个项目录配置，最后获取 release 目录下的 hl.exe 和所有 .hdll 和 libhl.dll
+
+> 另外可能下载 Openal32.dll 以及 soft_oal.dll（openal-soft-1.17.2-bin.zip内有提供）
 
 
-### misc
+### Tips
 
 * 如何在 C 中嵌入虚拟机可以参考 `src/main.c` 文件
 
 * 例如 `@:hlNative("fmt","png_decode")`, 表示位于 fmt.hdll 库中的 png_decode 方法, 需要自已参考 `libs/fmt/fmt.c` 的统一格式
 
-* libs 下已经包含有 sdl, openal 等这类的库, 可以将目录添加到 -cp 参数后, 因为这些库已经写好了 extern
+* libs 下有个 sdl 库, 可添加到 haxelib，使用 hlsdl 作为库名
 
-* 对于 hl.UI, 实际上只有 dialog 还算比较实用, WinLog 只是用来测试的(参看 sdl 中的某一函数), 因为它并没有和 MSG 相关东西, 所以应该使用 sdl 来创建窗口， 因为 hl.UI 仅适用于 windows 平台
+* 对于 hl.UI, 实际上只有 dialog 还算比较实用, WinLog 只是用来测试的(参看 sdl 中的某一函数), 因为它并没有和 MSG 相关东西, 所以应该使用 sdl 来创建窗口， 因为 hl.UI 仅适用于 windows 平台（未来会实现多平台）
+
+* 在 hl 包下的 haxe 代码, 有时候你可以看到 `$new` 这种以美元字符开头的代码, 可参考 `genhl.ml`
+
+&nbsp;
+&nbsp;
+
+misc
+------
+
+### 字符串
+
+HL 中的字符串由 hl.bytes 构成, 但是字符串的编码有点奇怪. 例: "abc" 内 bytes 属性的字符为 "97,0,98,0,99,0". 细节参考 `haxe.io.Bytes.ofString`
+
+### 类型
+
+基础类型
+
+* `void`: 空, 因此没有对应的真实值
+* `u8`: unsigned 8, (0-255)
+* `ui16`: unsigned 16(0-65535)
+* `i32`: signed 32(-2147483648-2147483647)
+* `bool`: (true or false)
+* `f32`: 32位单精度浮点数
+* `f64`: 64位双精度浮点数
+
+接下来的将表现为指针的形式, （由 gc 管理内存申请的各种数据结构）
+
+* `bytes`: 连续字节(类似于 c 语言的 `char*`), 可自由读写（没有附加边界检测）。
+
+  **Tips:** 如果 c 端的参数是 `hl.bytes` 类型, 可直接传 `haxe.io.bytes`, 编译器会自已转换
+
+* `dyn`: 在运行时可以将任何值传递给 dynamic 类型（装箱操作）,它的运行时真实类型可通过 `gettype` 获得.
+
+* `ret fun(args)`: 在 hl 中为严格的函数类型, 可以是 `closure` 或一个函数。
+
+* `array`: 数组, 低层数组并非严格类型并且无边界检测, 但是有固定长度
+
+* `object`: 固定了结构, 相当于 haxe 中的 class
+
+* `dynobj`: 动态结构，性能不如 object, 但可以添加或移除某一字段。 对应 haxe 中的匿名结构
+
+  底层由一个已排好序（通过计算字段名的 hash 值）的数组所实现, 因此搜索某一字段的时间复杂度为 `O(log n)`
+
+* `virtual(fields...)`: 一种灵活的结构, 建议看原文档
+
+* `enum(name)`: 一个 enum 值, 可以有不同的构造器以及可选的参数
+
+* `ref(T)`: 引用类型, 它应该是某个函数的参数类型, 这个类型能自动创建, 有些 c 端的函数的参数类型是指针类型, 因此也可以用它
+
+   ```haxe
+   static function main() {
+       var i = 0;
+       inc(i);    // 传递过去的必须是变量
+       trace(i);  // 1
+   }
+   static function inc(i: hl.Ref<Int>) { i.set(i.get() + 1); }
+   ```
+* `null(T)`: 一个可以为 null 的基础类型（T的类型必须是基础类型）
+
+* `type`:
+
+* `abstract(name)`: 抽象类型, 由 c 端定义才可以在 haxe 这边访问
+
+  ```c
+  /* src/std/socket.c */
+  #define _SOCK	_ABSTRACT(hl_socket)
+  ```
+
+个人补充:
+
+* `vclosure*`: haxe function 在 c 端的表现形式
+
+&nbsp;
+
+haxe 与 HL 类型:
+
+  haxe  |  c
+--------|-------
+Void    |  void
+Int     |  i32
+Bool    |  bool
+String  |  string
+Float   |  f64
+Single  |  f32
+Dynamic |  dyn
+
+haxe 的 anonymous structure or interface instances 以 c 端表现为 `virtual(...)`
+
+&nbsp;
+
+#### Boxing
+
+当基础类型以及(`bytes, type, ref, abstract, enum`) 转换到 `dyn`（通过操作码 `todyn`） 类型时将会有 Boxing(装箱操作).
 
 
-感觉编译各种 c 库还是用 cmake 好了,
+### gc
+
+从 gc 中申请内存（不保证内容的正确性）：
+
+* `hl_gc_alloc_noptr`: 用于基础类型（如字节序节: `unsigned char*`),或者被装箱的基础类型(dynamic), 或者 c 端任意不会被 haxe 所引用的类型
+
+  实际上 `(vclosure*), (vdynobj_proto*)` 也都是通过这个来申请
+
+* `hl_gc_alloc`: dynamic, 如 `(vdynobj *), (vvirtual *)`
+
+* `hl_gc_alloc_raw`:
+
+* `hl_gc_alloc_finalizer`: 结构的第一个字段必须指向 `(void(*)(void *)` 以便 gc 在清除时调用, 参考 file.c 的 hl_file_open
 
 **To Be Continued...**

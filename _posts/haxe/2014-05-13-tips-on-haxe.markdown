@@ -1375,7 +1375,7 @@ input或output 默认都是阻塞类型的,
 
 ### haxe.MainLoop
 
-haxe 3.3 才正式加入的类, 使得目前除了flash 和 js平台, 其它平台也包含有 haxe.Timer.delay 方法
+haxe 3.3 才加入的类, 使得目前除了flash 和 js平台, 其它平台也包含有 haxe.Timer.delay 方法
 
 需要注意的是 haxe.Timer.delay 只在存在于主线程，即使你在线程里调用它。因此如果你阻塞了主线程的话，
 那么 haxe.Timer.delay 也会被阻塞。
@@ -1385,5 +1385,7 @@ haxe 3.3 才正式加入的类, 使得目前除了flash 和 js平台, 其它平�
 * `MainLoop.addThread`: 和 Thread.create 一样只不过它会当主线程退出运行时，会先等待子线程退出。
 
 * `MainLoop.add`: 参考 haxe.Timer 的源码.
+
+参考 EntryPoint 的文档注释可知, 当 haxe.MainLoop 存在时, 这时 `haxe.EntryPoint.run()` 将会被自动插入在 main 函数之后
 
 <br />

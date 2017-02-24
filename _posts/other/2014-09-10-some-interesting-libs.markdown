@@ -212,7 +212,9 @@ categories: other
 
 ### article
 
-* [thebookofshaders](https://github.com/patriciogonzalezvivo/thebookofshaders/blob/master/README-ch.md) 选择 zh 反缀的 md 文件阅读
+* [B站视频 线性代数的本质](http://www.bilibili.com/video/av6731067/index_4.html) 描述了矩阵乘法为什么要那样计算?
+
+* [thebookofshaders](https://github.com/patriciogonzalezvivo/thebookofshaders/blob/master/README-ch.md) 选择 zh 后缀的 md 文件阅读
 
 * 使用 word 打印类似于请柬之类的东西, 其实只要用 word 写邮件就可以了, 以下以 word 2007 为示例:
 

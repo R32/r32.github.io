@@ -251,8 +251,6 @@ In order to [improve support for interacting](http://haxe.1354130.n2.nabble.com/
 
 这个一个尝试使用 extern class 来处理 c++ 库的项目: https://github.com/snowkit/linc_empty
 
-参看 hxsdl 及 hxcpp/test 中的源码可以发现 混合编程即使用了 metas 来嵌入一些 cpp 源码, 只是有些是通过　宏自动实现的.多参考 `hxcpp/test` 下的示例
-
 #### CFFI
 
 新的写法非常简单，称之为 Prime 并且可以除了 cpp 还可以作用于 neko 平台.
