@@ -9,6 +9,10 @@ categories: other
 
 原文: http://www.4p8.com/eric.brasseur/cppcen.html, 默认使用 gcc 的 g++ 命令编译下边示例, 如果使用 gcc 则需加上 `-lstdc++`
 
+一些编译器的问题:
+
+* 对于 cl.exe(msvc) 如果有中文，源代码一定不能以 utf-8（无BOM）保存, 否则将乱码, [参考...](http://blog.csdn.net/darkdong/article/details/6067119)
+
 <!-- more -->
 
 ### 头文件引用

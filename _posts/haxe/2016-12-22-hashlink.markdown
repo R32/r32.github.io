@@ -165,4 +165,8 @@ haxe 的 anonymous structure or interface instances 以 c 端表现为 `virtual(
 
 * `hl_gc_alloc_finalizer`: 结构的第一个字段必须指向 `(void(*)(void *)` 以便 gc 在清除时调用, 参考 file.c 的 hl_file_open
 
+### 其它
+
+hashlink 中字符串在内存中(bytes)的编码是 ucs2, 因此需要一个到 gbk 的转换, 目前搜到这个 <https://github.com/qqee/qqee_clib>
+
 **To Be Continued...**

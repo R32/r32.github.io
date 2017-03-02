@@ -7,16 +7,13 @@ categories: haxe
 
 ---
 
-[hxcpp-guide](https://github.com/snowkit/hxcpp-guide) 手册进度未知.
+**[hxcpp-guide](https://github.com/snowkit/hxcpp-guide)** 最好的文档
 
-* 以 extern 的形式编译第三方库 <http://snowkit.github.io/linc/>, 这种形式避免是直接使用 c/cpp 源码, 因此更快
+* 以 extern 的形式编译第三方库 <http://snowkit.github.io/linc/>, 直接调用 c/cpp 源码
 
 * 以 CFFI 的形式编译第三方库, <https://github.com/native-toolkit>, 这种形式主要是为了同时给 neko 提供相应的调用
 
   - [关于 CFFI/Extern 最详细的说明](https://github.com/snowkit/hxcpp-guide/issues/1)
-
-这里主要记录一些和 hxcpp 相关的东西, 由于没有找到 hxcpp 的相关文档, 因此不保证内容的正确性.
-
 
 <!-- more -->
 
@@ -29,7 +26,7 @@ categories: haxe
 
 #### `new Foo`
 
-首先我们需要知道在 haxe 这边调用 `new Foo()` 这时相应的 cpp 代码会做些什么？
+一个简单的示例:
 
 ```haxe
 class Main {
@@ -80,19 +77,15 @@ Foo foo = Foo_obj::__new();
 void Foo_obj::__construct(){}
 ```
 
-首先，我们可以看到 haxe 中的 Foo 编译后变成了 Foo_obj， 其次， `new` 变成了 `__new` 方法
+1. 可以看到 haxe 中的 Foo 编译后变成了 Foo_obj， 其次， `new` 变成了 `__new` 方法
 
 > 事实上，只有当你在写 extern class 时, 才需要关心这些名字的改变，或者永远都不在 extern class 中添加 new 字段。
 >
 > 在 extern class 中由于 Foo 会成变 Foo_obj，因此如果是 static 属性方法，应该使用 `@:native()` 来重写字段名
 
-继承了 hx::Object
+2. 继承了 hx::Object, 用于实现"反射(Reflect)", 不过可使用 `@:unreflective` 关闭这一项
 
-> 由于在 haxe 代码中通常不会有类似于 `c/c++` 的 malloc/free 之类的操作，因此 hxcpp 被设计成一个带有 GC 的框架
->
-> hxcpp 为了支持 haxe 中的 反射(Reflect)，因此会添加一此额外的方法，不过可使用 `@:unreflective` 关闭这一项
->
-> 可以不要 GC 和 Reflect 吗?, 当然如果你将 `@:nativeGen` 添加到类或接口上，则代码看上去非常干净，但是这样你将无法从 haxe 这边使用 new 关键字，因为 new 是和 GC 一起的
+> 如果将 `@:nativeGen` 添加到类或接口上，则代码看上去非常干净，但是这样将无法从 haxe 这边使用 new 关键字，因为 new 是和 GC 一起的
 
 * **Tips** : 尽量减少使用 Dynamic 类型的使用，一些泛形应该使用 @:generic 以明确类型构建
 
@@ -110,7 +103,6 @@ void Foo_obj::__construct(){}
   untyped __cpp__('printf("hello world!")');
 
   // 使用下边方法传递变量到 __cpp__
-  // 但是如果使用了传参数,很容易就出错在多行时.
   inline private static function setInt(bytes:haxe.io.BytesData, addr:Int, x:Int){
   	untyped __cpp__("*((int *) ({0}->GetBase() + {1})) = {2}",bytes,addr,x);
   }
@@ -131,7 +123,7 @@ void Foo_obj::__construct(){}
 
   `__main__.cpp` 总是类似于这样调用 `Main_obj::main`, 但可以通过 `@:headerCode("#define Main_obj Main")` 绕过去.
 
-  这个标让加在 extern class 上将不会起作用.
+  这个 meta 加在 extern class 上将没有作用.
 
   ```haxe
   @:structAccess

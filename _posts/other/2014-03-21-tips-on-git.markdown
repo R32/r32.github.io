@@ -119,8 +119,8 @@ git pull --depth=1 origin master
 # 如果遇到问题，下边指令可以终止 rebase
 git rebase --abort
 
-# 进入交互模式，(尝式将 AFTER_COMMIT_HASH 之后的 commit 合并成一个)
-git rebase -i AFTER_COMMIT_HASH
+# 进入交互模式，(尝式将 AFTER_COMMIT_HASH(即不包括这个) 之后的 commit 合并成一个)
+git rebase -i [AFTER_COMMIT_HASH]
 
 # 这时会进入到 VIM 的交互模式，可使用其它 IDE 编辑，但是你仍然需要了解几个 VIM 命令
 pick 16b5fcc Code in, tests not passing

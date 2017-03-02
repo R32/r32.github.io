@@ -5,8 +5,6 @@ date:   2014-11-16 13:16:18
 categories: haxelib
 ---
 
-heaps 下的 hxsl3 不仅仅是用于 flash,能同时作用于 桌面版的 opengl 以及 webgl, 因此比 haxelib hxsl2 要复杂多了.
-
 
 AGAL
 -------
@@ -28,14 +26,11 @@ Cube textures        4096             256 MB
 
 AGAL 限制：每个程序 200 个 opcode。
 
-绘制调用限制：每个 present() 调用 32,768 个 drawTriangles() 调用。
-
-
 ### AGAL着色器
 
 上载到 Context3D 的一对渲染程序, 会在每次调用 Context3D.drawTriangles 时运行。vertexProgram 将要绘制的三角形列表中的每个顶点执行一次。fragmentProgram 则将三角形表面的每个像素执行一次
 
-* **vertexProgram** 将操作 VertexBuffer3D 中定义的数据，负责将顶点投影到剪辑空间，并将任何所需的顶点数据（例如颜色）传递到fragmentProgram
+* **vertexProgram** 将操作 VertexBuffer3D 中定义的数据，负责将顶点投影到剪辑空间，并将任何所需的顶点数据（例如颜色）传递到 fragmentProgram
 
   > 将接收来自两个源的输入：顶点缓冲区和常量寄存器。使用 Context3D setVertexBufferAt() 方法指定具体顶点"属性寄存器"将要使用的顶点数据。您最多可以为顶点属性定义 8 个寄存器。顶点属性值读取自三角形列表中每个顶点的顶点缓冲区，并放置在属性寄存器中。
   >
@@ -68,9 +63,9 @@ AGAL 限制：每个程序 200 个 opcode。
 
 * **常量:** 处理 AS3 传递到着色器参数. 由 Context3D::setProgramConstants() 设置
 
-  - **`fc<0~127>`** 用于 vertexProgram
+  - **`vc<0~127>`** 用于 vertexProgram
 
-  - **`vc<0~27>`** 用于 fragmentProgram
+  - **`fc<0~27>`** 用于 fragmentProgram
 
 * **临时:** 用于计算的临时寄存器, 无法从程序外部访问
 
@@ -228,6 +223,12 @@ class ColorKey extends hxsl.Shader {
 	}
 }
 ```
+
+通过上边的源码可以分析出:
+
+1. 继承（extends） hxsl.Shader
+
+2. 类中需要有一个名为 "SRC" 的 `static var`
 
 ### metas
 
