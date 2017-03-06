@@ -626,6 +626,7 @@ no_console            # 没有控制台窗口, 例如如果你使用 SDL 来分�
 * **Tips** : 因此减少 new 和匿名结构及匿名函数的使用似乎能降低 gc 的遍历以达到优化目的
 
 ```bash
+# 一些文档可以在 cpp 源码中的头文件中找到...
 # 强制 GC 回收
 run(major: Bool): Void`
 
@@ -647,10 +648,14 @@ doNotKill(inObj: Dynamic): Void
 # 设置回调，当某个对象被回收时将调用，你可以通过 cpp.Function 来创建第二个参数
 setFinalizer<T>(inObject:T, inFinalizer:cpp.Callable<T->Void> ): Void
 
-#
+# https://github.com/HaxeFoundation/hxcpp/issues/171
+#     如果一个线程没有 GC 调用（例如 new 一个 haxe 类, 或调用 system-block）,
+# 这时其它的线程将会一直等待其 "check in"
+# 为了确保安全, 你需要调用 Gc.enterGCFreeZone, 然后做一些"无GC分配"的操作最后调用
+# Gc.exitGCFreeZone, 或者也可以周期性地调用 Gc.safePoint
+# http://blog.csdn.net/iter_zc/article/details/41847887
 safePoint(): Void
-
-#
+# hxcpp 将这二个方法放置于各种调用 os 方法的二边（见src/hx/libs/std/Sys.cpp）.
 enterGCFreeZone()/exitGCFreeZone(): Void
 
 # TODO

@@ -61,7 +61,7 @@ categories: other
 
 * <https://www.captionbot.ai/> 一个非常智能有趣的的在线网页图片识别, 类似于微软的那个颜龄检测
 
-* **[web-bundle](https://github.com/haxorplatform/web-bundle)** Tool to pack binary files into a PNG image.
+* [web-bundle](https://github.com/haxorplatform/web-bundle) Tool to pack binary files into a PNG image.
 
   > 把多个文件打包成 png 图片形式, 然后可以解析这个图片获得文件,图片不受跨域加载的影响,同时减少 http 请求的数据量.
 
@@ -213,6 +213,8 @@ categories: other
 ### article
 
 * [B站视频 线性代数的本质](http://www.bilibili.com/video/av6731067/index_4.html) 描述了矩阵乘法为什么要那样计算?
+
+* [nginx 源码分析中文](https://github.com/y123456yz/reading-code-of-nginx-1.9.2)
 
 * [thebookofshaders](https://github.com/patriciogonzalezvivo/thebookofshaders/blob/master/README-ch.md) 选择 zh 后缀的 md 文件阅读
 
