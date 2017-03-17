@@ -5,7 +5,7 @@ date:	2015-03-09 08:12:18
 categories: haxelib
 ---
 
-flow 是一个基于 nodejs 的项目构建工具, <https://underscorediscovery.github.io/flow/>
+flow 是一个基于 nodejs 的项目构建工具, 类似于 makefile 之类的工具 <https://underscorediscovery.github.io/flow/>
 
 > flow的源码包的 bin 目录下有各平台的 node.exe
 >

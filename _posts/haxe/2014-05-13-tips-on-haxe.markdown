@@ -29,7 +29,9 @@ categories: haxe
 
 ### 最新改动
 
-一些内容通过参考 CHANGES 文件
+一些内容通过参考 [CHANGES](https://github.com/HaxeFoundation/haxe/blob/development/extra/CHANGES.txt) 文件
+
+* all : disabled analyzer optimizations by default, re-enable with -D analyzer-optimize
 
 * `import haxe.extern.AsVar`: 用于方法的参数类型, 传递给方法的实参将会先赋值给临时变量，再传递到方法上.
 
@@ -205,6 +207,10 @@ categories: haxe
   - `interface IMap<K,V>`
 
 
+* 转义字符串, haxe 识别的转义字符有限, 如仅能识别 "\n", "\t" 之类的, 但可使用 `"\000"`(八进制) 或 `"\x00"`(十六进制) 或 `"\u4E2D"`
+
+ > 可参考 [ast.ml](https://github.com/HaxeFoundation/haxe/blob/development/src/syntax/ast.ml) 中 `unescape` 的实现
+
 
 #### typedef 对性能的影响
 
@@ -244,7 +250,7 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
 
 * 各平台的 Lib 类都提供一些非常有用的方法
 
-* haxe.ds 包下的类通常为各自平台的源生类现
+* haxe.ds 包下的类通常为各自平台的源生类现, ds 指的 data struct
 
 ### 未分类
 
@@ -288,8 +294,6 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
   }
   ```
 
-* 对于命令行(CLI)程序, 包含有中文字符的文件代码应该为 ansi ,在 dos 中才会正确显示中文.
-
 * 字面量初使化 Map 的格式为:  `var map = [ 1 => 10, 2 => 20, 3 => 30]`
 
 * $type(val)　以警告的形式输出值类型, 在编译期这个标记会移除, 但是具有这个标记的表达式会保留
@@ -313,27 +317,7 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
   var name:SString<10>; // SQL VARCHAR(10)
   ```
 
-* flashdevelop -> 项目属性 -> 编译器选项 -> Additional Compiler Options
-
-  > 例如: `--macro openfl.Lib.includeBackend('native')` 在窗口配置中使用双引号将会出错, 而在 hxml 文件中,单双引号无所谓
-  >
-  > 如果使用了 openfl 在 flashdevelop 上修改项目属性将不会有任何改变.
-
-* openfl 的 neko 或 cpp 其实可以不带显示窗口的.
-
-  参考 `lime-tools`. `helpers.IconHelper` 中调用 `SVG`
-
-* 函数可选参数, 自动的参数顺序
-
-  ```haxe
-  function foo(i:Int, ?a:Array<Int>, ?f:Float){
-  	trace(i,f);
-  }
-  // 	haxe 编译器 将自动为第二个参数填入 null,
-  foo(10,0.123); //output => 10, 0.123
-  ```
-
-* `@:enum abstract`, 除了静态变量,还允许 inline 形式的方法
+* `@:enum abstract`, 除了变量, 还允许 inline 形式的方法
 
   ```haxe
   @:enum abstract C(Int) {
@@ -354,7 +338,7 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
 
 * field 和 property 的区别, field 是用 var 声明的普通变量, 而 property 是带用 setter/getter 的变量
 
-* `__this__`  仅适用于 js 或 as , **慎用**
+* `__this__`  适用于 js , 小心使用
 
   > 在 haxe 中即使是局部方法, this 的指向永远为其所在的类,而一些如 JS 或 AS 平台却不是这样. __this__ 必须接在 untyped 之后, 以表式目标平台类的 this, 可以将下列代码编译成 JS,以区别不同之处.
 
@@ -393,7 +377,7 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
   }
   ```
 
-* 泛型构造方法中有 new Some<T>() 这样的创建泛型实例时, 最好加上 `@:generic` 元数据.
+* 泛型构造方法中有 new Some<T>() 这样的创建泛型实例时, 除了 JS 之外, 最好加上 `@:generic` 元数据.
 
   ```haxe
   // 如果这个方法是 new Array<T>(),倒是没什么错误, 但是
@@ -499,6 +483,7 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
 
 #### vscode
 
+vscode 使用了一个特殊的命令(haxe. 3.3新增) `--wait stdio` 来启动 CompletionServer, [#5188](https://github.com/HaxeFoundation/haxe/pull/5188), 但是这个好像只能用于 haxe 的语法提示(`-D didplay-stdin`) 并不能加速源码的编译.
 
 一些快捷键命令:
 
@@ -507,14 +492,22 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
   "haxe: Select display Configuration" 用于选择 .hxml 配置文件（即 .vscode 目录下的 settings.json 文件描述, 用于语法提示）
 
 
-* `ctrl+shift+b`: 编译输出，或通过 "task: "
+* `ctrl+shift+b`: 编译输出由 tasks.json 所指定的
 
   我感觉通过 `ctrl+~` 来打开命令行窗口更好用???
 
-TODO: 如何启动 completion server ?  似乎只能自已通过 CLI 命令行自已先连接??? 但是这样却又无法从 OUTPUT 窗口查看输出
+* `settings.json`: 这个文件下的 haxe.displayConfigurations 下的 hxml 文件是用来产生语法提示的并非 build 时所
 
+总结:
 
-总结: 在 windows 平台还是使用 flashdevelop 吧...
+1. 你需要提供多个供于 display 的 display-xxx.hxml 用于语法提示, 指定单独的一个 build.hxml 用来编译
+（为什么不能自动解析 build.hxml 了? 因为这样太麻烦了）
+
+2. 如果能有些按钮什么就更好了. 比如
+
+3. 一些 reference 看上去不错, 但多了之后感觉有些混乱, 特别是连 tyepdef 定义的字段都被标有引用.
+
+在 windows 平台还是使用 flashdevelop 吧...
 
 ### 遇见的一些错误
 

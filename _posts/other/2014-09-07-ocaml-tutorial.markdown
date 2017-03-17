@@ -7,49 +7,59 @@ categories: other
 
 ---
 
-在线快速熟悉 <https://try.ocamlpro.com/>
+[在线尝试编程](https://try.ocamlpro.com/)
 
-安装配置视频 <http://www.algo-prog.info/ocaide/tutorials/4-installingOnWindows/installingOnWindows.htm>
+[在 windows 中安装 ocaml](http://fdopen.github.io/opam-repository-mingw/installation/), 因为 linux 中安装简单没什么好说的.
 
-**[ocpwin](https://www.typerex.org/ocpwin.html)**
+> 不要使用 cygwin 自带的 ocaml, 因为它不包含 opam, 也没法编译一些库。
 
-* 选择, OCPWin-MINGW-Full(32 bits)，按照文档设置安装即可
+* 使用 cygwin, 但是得把之前通过 setup.exe 安装的 ocaml 和 flexdll 卸载(uninstall) 掉, 如果你有的话.
 
-  > 安装第三方库 [camlp4](https://github.com/ocaml/camlp4) TODO: 不知道能否使用 cygwin 的 make?
-  >
-  > 这个包带有 ocalm 4.02, MingW-GCC，GNU Binutils，但是没有 GUN Make，因为它是使用 ocp-build 作为打包工具
-  >
-  > 如果 cygwin 中也有 ocaml 并且已经加入到了 PATH 估计会冲突.
+* 照着文档一步一步来(我是参照 Manual Installation 安装的)
 
-* IDE 新手可以选择 <https://www.typerex.org/ocaml-top.html>
+编译 haxe 源码:
+
+* 在 setup.exe 里选上 `mingw64-i686-zlib` 和 `mingw64-i686-pcre` (参考 Makefile.win 里的 dll 文件搜索)
+
+* 通过 opam 安装 camlp4, 需要注意的是应该使用 mintty 来代替 bash 以防止乱码.
+
+* 在 bash 里执行 `make haxe -j4 FD_OUTPUT=1 ADD_REVISION=1 -f Makefile.win` (第一次执行时必须编译 haxelib 因此先去掉 haxe)
 
 <!-- more -->
 
-**cygwin** 这里安装 ocaml 蛮简单不需要像视频里那样下载源码编译.
+[ocpwin](https://www.typerex.org/ocpwin.html), 虽然 haxe 有人用这个[编译 #5174](https://github.com/HaxeFoundation/haxe/issues/5174)
 
-* 双击运行 cygwin-setup.exe, 在界面里选择 `ocaml: The OCaml compiler and runtime(install helper)` 就完成了.
 
-* `eclipse + OcaIDE`, 在插件安装里输入 <http://www.algo-prog.info/ocaide/>
+接下来是 IDE 选择, 最重要的问题是 IDE 在调用命令是必须能调用 `cygwin/bin/bash`(需设置系统环境变量 `CHERE_INVOKING=1`，以防止 --login 时丢失目录),  但是这样做有一个副作用就是: 当从 "开始" 进入 "Cygwin Terminal" 时的当前目录会是 system32 下, 但可以通过可 `cd ~` 切回
 
-  > 安装时需要可以访问 Google(用Lantern), 需要 Java 1.7 版本(如果打开eclipse出错可以修改ini文件调小Xms和Xmx的值).
-  >
-  > 配置, 在 "窗口" - "首选项" 中找到 OcaIDE,进行一些配置,如 path 等等
-  >
-  > Ocaml Binaries Directory: 点击 Browse 定位目录(关联于cygwin的根目录, 如果不在 `cygwin/bin` 就在 `cygwin/usr/local/bin` 找找), 选好目录后按下 "Apply"
-  >
-  > "make" 通常在 `cygwin/bin` 下
-  >
-  > "ocaml lib path": 通过命令 `ocamlc -where`, 如果通过界面安装的 ocaml 通常在 `cygwin/lib/ocaml`
-  >
-  > 重启eclipse, 你将会在控制台窗口处的"ocaml toplevel"看到 "OCaml version 4.01.0" 这样的字符.
-  >
-  > 由于 `Ctrl+space` 与输入法冲突建议改成其它按键如 `Ctrl+,`
-  >
-  > TIPS: 如果 `which ocaml` 显示 `usr/lib/bin` 其实真实路径为 `PATH/TO/cygwin/bin`, 同样 `ocamlc -where` 显示 `usr/lib/ocaml` 其实路径在 `PATH/TO/cygwin/lib/ocaml`
+* `vscode`: 这个插件需要 ocp-indent, merlin 来产生语法提示,, 幸运的是这二个都不依赖 cygwin 登录环境
 
-* 如果需要用 eclipse 来直接编译 ocaml 需要将 cygwin/bin 添加到路径
+  settings.json:
 
-  > TODO: 如果能有什么方法来避免添加这个路径就好了
+  ```json
+  // 将设置放入此文件中以覆盖默认设置
+  {
+    "files.trimTrailingWhitespace": true,
+    "git.enabled": false,
+    "update.channel": "none",
+    "emmet.triggerExpansionOnTab": false,
+    "editor.renderWhitespace":"all",
+    "editor.insertSpaces": false,
+    "haxe.enableCodeLens": true,
+    "files.associations": {
+        "*.ml": "ocaml",
+        "*.mli": "ocaml"
+    },
+    "ocaml.ocpIndentPath": "E:\\cygwin\\home\\mn\\.opam\\4.02.3+mingw32c\\bin\\ocp-indent",
+    "ocaml.merlinPath": "E:\\cygwin\\home\\mn\\.opam\\4.02.3+mingw32c\\bin\\ocamlmerlin",
+    "terminal.integrated.shell.windows": "E:\\cygwin\\bin\\bash.exe", // integrated 表示 ctrl+p 中集成的控制台
+    "terminal.integrated.shellArgs.windows": ["--login"],
+    "terminal.integrated.rightClickCopyPaste": false
+  }
+  ```
+
+  对于 tasks.json 和 launch.json 以后再弄,  现在使用 makefile TODO
+
 
 [官方文档](http://ocaml.org/learn/tutorials/index.zh.html), 但网页引用了 google api, 你需要一个特殊的浏览器才能快速打开这个页面.
 
@@ -92,14 +102,14 @@ API 文件建议参考 cygwin/lib/ocaml 下的 mli 文件, 一些方法会提示
   {a=1; b="hi"} = {a=1; b="hi"}
   ```
 
-* named parameters.类似于可选参数
+* 在定义时可选参数使用 `?` 作背缀, 命名参数使用 `~`(如果一个函数有二个参数最好是只命令一个)
 
   ```ocaml
   let foo ~arg1 = arg1 + 5;;
   foo ~arg1:123;;
   (* Optional named parameters *)
   let odp ?(ftw = "OMG!!") () = print_endline ftw;;
-  odp ~ftw:"hi there" ();;
+  odp ~ftw:"hi there" ();; (* 但是在调用时，还是得用 ~ 来命名参数 *)
   odp ();;
   ```
 

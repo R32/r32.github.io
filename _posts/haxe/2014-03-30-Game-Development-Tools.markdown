@@ -22,7 +22,7 @@ categories: haxe
 
 * [Gimp](http://www.gimp.org/) 高级位图图像编辑器,
 
-  > 该编辑器提供了许多商业软件所包含的功能. 它可以用作简单的画图程序, 
+  > 该编辑器提供了许多商业软件所包含的功能. 它可以用作简单的画图程序,
   >
   > an expert quality photo retouching program, an online batch processing system, a mass production image renderer, an image format converter, etc.
 
@@ -32,8 +32,8 @@ categories: haxe
   > Inkscape 的功能类似于一些商业软件如Adobe Illustrator, CorelDraw, 以及 Xara X. Inkscape 利用了 W3C 标准可缩放矢量图形 (SVG) 文件格式.
   >
   > Inkscape 支持许多高级的 SVG 功能特性（markers, clones, alpha blending, 等） 和非常简化的设计界面.很容易编辑 节点，执行复杂的路径运算，跟踪位图等等。
-	
-	
+
+
 * [Krita](http://www.krita.org/) Krita 是一个免费的数字绘画和插图应用程序,
 
   > Krita offers CMYK support, HDR painting, perspective grids, dockers, filters, painting assistants, and many other features you would expect
@@ -41,13 +41,13 @@ categories: haxe
 
 ### 声音编辑工具
 
-* [bosca-ceoil](https://github.com/TerryCavanagh/boscaceoil/) 音乐编辑器, flash, 
+* [bosca-ceoil](https://github.com/TerryCavanagh/boscaceoil/) 音乐编辑器, flash,
 
   下载 <http://distractionware.com/blog/2013/08/bosca-ceoil/>
 
 * [LMMS](http://lmms.sourceforge.net/) LMMS 是一个免费的跨平台软件，用于制做音乐。
 
-  
+
 * [SFXR](http://www.drpetter.se/project_sfxr.html) SFXR 用于创建于游戏声音特效。比如 跳,打击, pickup/coin
 
 * [BFXR](http://www.bfxr.net/) BFXR 是一个移植于 AS3 SFXR 并改进添加了更多特性.
@@ -67,6 +67,8 @@ categories: haxe
 * (ShoeBox)[http://renderhjs.net/shoebox/] 基于 AIR 的免费应用,它具有许多实用程序,使得资源管理更简单..
 
 * (Texture Packer)[https://www.codeandweb.com/texturepacker] 将多个Sprite 打包成一个图像,容易使用.
+
+* (免费中文字体)[http://zenozeng.github.io/Free-Chinese-Fonts/]
 
 ### 其它
 

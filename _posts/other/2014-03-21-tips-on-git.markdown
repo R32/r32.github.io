@@ -279,15 +279,18 @@ squash 396b4a3 Tests pass
   git format-patch <after_sha>
 
   # 应用 patch(不完整),
+  git apply xxxxx.patch         # 直接应用 patch, 需要自行缓存并提交
   git apply --start xxx.patch		# 检查 patch
   git apply --check xxx.patch		# 是否能应用成功
 
-  git am -s < xxx.patch			# 应用patch
+  git am -s < xxx.patch			    # 应用 patch
   ```
 
 #### submodule
 
 就是当项目需要引入公共的库文件时,不需要每个人都复制一份到源码,而是使用 submodule,
+
+> 注: 一定要将 submodule 所在子目录添加到 .gitignore 文件里去以避免出现混乱
 
 ```bash
 git submodule add 仓库地址 本地存放路径

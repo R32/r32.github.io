@@ -119,19 +119,25 @@ empty
 
 ### cygwin
 
-需要把 cygwin/bin 添加到路径
+如果直接通过命令行调用 bash 时, 如果没有添加 `-l|--login` 那么进入 bash 时的一些配置文件也不会加载, 因此你会丢失 cygwin 自动配置的路径或库，而大多数 IDE  都通过 Process 来调用 bash 的, 因此经常会导致找不到文件的错误提示
 
-* 从 DOS 中直接进入 `bash --login`, 但是目录会跳到 /home/USER 下:
+1. 设置系统环境变量 `CHERE_INVOKING=1`, 这个需要 cygwin 的 chere 插件支持
 
-  - <http://superuser.com/questions/345964/start-bash-shell-cygwin-with-correct-path-without-changing-directory>
-  - 因为如果将 cygwin/bin 添加到路径,那么一些方法会优先使用 DOS 下的如果没有 login, 如 find
+2. 或者在进去 Process 前, 如果有相关 API, 也可以设置上述的环境变量
+
+3. 或者如果你从 DOS 中进去的话
 
   ```bash
   set CHERE_INVOKING=1
   \path\to\bash.exe -l -c command
   ```
 
-  直接从 DOS 中调用命令, 例: `bash -l -c "sass --help"`
+  之后直接调用命令即可, 例: `bash -l -c "pwd"`
+
+
+* 清屏, 虽然按 `ctrl+L` 看上去不错，但这只是把滚动条拉下来而已,
+
+  因此一些版本可以输入: `cmd /c cls`
 
 * makefile 中检测 win 系统, 但这个无法区分是在 DOS 还是 BASH 下,
 
