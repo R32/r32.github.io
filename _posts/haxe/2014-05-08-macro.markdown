@@ -365,15 +365,14 @@ getDisplayPos():Null<{pos:Int, file:String}>
 getOutput():String
 
 /**
- 	这个方法形为像在代码中的 import pack.*;
+ 	这个方法形为类似于代码中的 import pack.*;
  @param rec		归递包含所有子项
  @param ignore	要忽略的类名数组, 包含路径在内的全名.
  @param classPaths pack　(自行查看最新的文档更新).
 */
 include(pack:String, rec:Bool = true, ignore:Array<String> = null, classPaths:Array<String> = null)
 
-// JS 平台. 嵌入 JS 文件到 输出端, 目前 haxe 只提供 jQuery 和 swfObject 二个 JS 文件
-// Embed a JavaScript file at compile time (can be called by `--macro` or within an `__init__` method).
+
 includeFile(fileName:Dynamic):Dynamic;
 
 /**
@@ -390,7 +389,7 @@ includeFile(fileName:Dynamic):Dynamic;
 */
 keep(path:String = null, paths:Array<String> = null, recursive:Bool = true):Void
 
-// 加载 flash 补丁文件, 因该只能用于 flash 端的 http://r32.github.io/{% post_url haxe/2014-05-10-flash %}#patch-files
+// 加载 flash 补丁文件
 patchTypes(file:String):Void
 
 // 移除指定字段

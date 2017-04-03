@@ -25,7 +25,24 @@ categories: haxe
 
 <!-- more -->
 
-[windows 平台编译 haxe 编译器](https://github.com/HaxeFoundation/haxe/issues/5174)
+### 编译
+
+除了官方提供的下载, 或者从 <build.haxe.org> 下载 nightly build 版本, 目前 window 平台（由于 windows 之前安装 ocaml 一直有各种问题）也能容易的自已编译:
+
+这里有一个可直接使用的 zip 文件包 [haxe #6143](https://github.com/HaxeFoundation/haxe/issues/6143) 用于编译 haxe.exe
+
+> 未尝试, 因为我使用的是 cygwin 早就已经安装好了的, 通过 mingw 编译 haxe
+>
+> 由于每次复制通过 git 更新 `haxe/std`到 haxe 的安装目录很麻烦，因此我直接使用 "git haxe repo" 作为 haxe 的路径，
+>
+> 只要设置二个路径即可: `HAXEPATH: D:\fork\haxe\`, `NEKO_INSTPATH: G:\HaxeToolkit\neko`,
+> haxe.exe 所依赖的 dll 文件由 `i686-w64-mingw32\sys-root\mingw\bin` 所提供
+>
+> 当然你还需要 [haxelib](https://github.com/HaxeFoundation/haxelib), 也可以安装一次官方提供的，然后复制出来
+> 放到 "git haxe repo" 里去就可以了
+>
+> 最后我发现其实 flashdevelop 可以设置不同的 haxe sdk 路径, 因此安装一次标准版 haxe (带有neko,haxelib),
+> 然后将 "git haxe repo" 添加到 flashdevelop 更方便
 
 ### 最新改动
 
@@ -1375,7 +1392,7 @@ haxe 3.3 才加入的类, 使得目前除了flash 和 js平台, 其它平台也�
 
 当然, MainLoop 并不是为了实现 delay 而加入的，它最主要是为了游戏引擎的跨平台
 
-* `MainLoop.addThread`: 和 Thread.create 一样只不过它会当主线程退出运行时，会先等待子线程退出。
+* `MainLoop.addThread`:
 
 * `MainLoop.add`: 参考 haxe.Timer 的源码.
 

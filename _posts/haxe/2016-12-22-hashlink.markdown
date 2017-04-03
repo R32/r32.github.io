@@ -44,13 +44,19 @@ gcc -o myapp output.c hlc_main.c -Lhl
 
 ### 编译虚拟机
 
-以下使用 vs2013 社区版:
+以下使用 vs2013 社区版, 需要自已下载 sdl, openal 等放至到 include 目录 (参看各 readme 文件)，
 
-* 需要自已下载 sdl, openal 等放至到 include 目录 (参看各 readme 文件)，
+- [sdl](https://www.libsdl.org/) download the Development Libraries
+
+- [openal](http://openal-soft.org/) Download the Win32 binaries
+
+  > 需要 Openal32.dll（可能需要另外单独下载） 以及 soft_oal.dll（openal-soft-1.17.2-bin.zip内有提供）
+
+- [libuv](https://github.com/libuv/libuv#downloading), 需要翻墙下载 gyp 和安装 python 2.x, 然后参考 vcbuild.bat 作修改
+
+  > [libuv 中文手册](https://github.com/forhappy/uvbook)
 
 * 打开 hl.sln，在 "解决方案配置" 的下拉选项中选择 "release2013"(有"release2013/release/debug"), 最后获取 release2013 目录下的 hl.exe 和所有 .hdll 和 libhl.dll
-
-  > "声音"方面需要 Openal32.dll 以及 soft_oal.dll（openal-soft-1.17.2-bin.zip内有提供）
 
 如果不想自已编译可在 github 上的 release 页面中找到。
 
@@ -173,6 +179,6 @@ haxe 的 anonymous structure or interface instances 以 c 端表现为 `virtual(
 
 ### 其它
 
-> 一个 gbk 编码的转换 <https://github.com/qqee/qqee_clib>, 但是已经用不到了, 因为设置 setlocale 即可（PR已经合并），不需要做转换
+> 一个 gbk 编码的转换 <https://github.com/qqee/qqee_clib>, 但是已经用不到了, 因为设置 setlocale 即可，不需要做转换
 
 **To Be Continued...**

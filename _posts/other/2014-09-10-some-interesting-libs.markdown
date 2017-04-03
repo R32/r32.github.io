@@ -216,6 +216,8 @@ categories: other
 
 * [nginx 源码分析中文](https://github.com/y123456yz/reading-code-of-nginx-1.9.2)
 
+* [libuv 中文手册](https://github.com/forhappy/uvbook)
+
 * [thebookofshaders](https://github.com/patriciogonzalezvivo/thebookofshaders/blob/master/README-ch.md) 选择 zh 后缀的 md 文件阅读
 
 * 使用 word 打印类似于请柬之类的东西, 其实只要用 word 写邮件就可以了, 以下以 word 2007 为示例:
@@ -230,6 +232,8 @@ categories: other
 * [game-off-2016](https://github.com/github/game-off-2016) 看上去有点类似于 LD 游戏大赛
 
 * [值得推荐的C/C++框架和库(转)](http://www.cnblogs.com/kernel0815/p/4624101.html)
+
+* [国内一些开源项目](https://www.zhihu.com/question/29692173)
 
 * [ZeroMQ 中文](https://github.com/anjuke/zguide-cn) 一套用于快速构建的套接字组件
 
@@ -304,8 +308,6 @@ categories: other
 
 c++参考手册: <http://en.cppreference.com/w/>
 
-* [wren](https://github.com/munificent/wren) 一个新的脚本语言
-
 * [nuklear](https://github.com/vurtun/nuklear) A small ANSI C gui toolkit
 
 * [imgui](https://github.com/ocornut/imgui) c++ 的一个 GUI库,挺有意思的
@@ -317,8 +319,6 @@ c++参考手册: <http://en.cppreference.com/w/>
 * [clibs](https://github.com/clibs) 有各种库
 
 * [s2n](https://github.com/awslabs/s2n) an implementation of the TLS/SSL protocols
-
-* [libevent](http://libevent.org/)
 
 * [libuv](https://github.com/libuv/libuv) Cross-platform asychronous I/O  <http://libuv.org/>
 
