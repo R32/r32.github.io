@@ -7,7 +7,7 @@ categories: haxelib
 
 ---
 
-收集的一些 haxe 类库,通常这些库都能在 github 找到.
+收集的一些 haxe 类库,通常这些库都能在 github 找到. **这篇文章可能是过时的**
 
 ### misc
 
@@ -19,9 +19,6 @@ categories: haxelib
 
 * [如何优化你的 haxe 代码](https://github.com/delahee/haxe.opt)
 
-* <https://github.com/anissen/awesome-snowkit>
-
-* [Cross-platform, cross-system game emulator](https://github.com/retrio)
 
 ### 工具
 
@@ -45,15 +42,9 @@ categories: haxelib
 
 * [MarkovNameGenerator](https://github.com/Tw1ddle/MarkovNameGenerator) 随机名字生成器
 
-* [haxe-watchify](https://github.com/lucamezzalira/haxe-watchify) 命令行工具, 监测文件是否发生改动,而做相应处理
+* [hxparse](https://github.com/Simn/hxparse/) haxe Lexer/Parser library 词法分析器
 
-  - 依赖 python2.7, 从 npm 安装,看上去像是用 haxe 写的 nodejs
-
-* **[hxparse](https://github.com/Simn/hxparse/)** haxe Lexer/Parser library 词法分析器
-
-* **[datetime](https://github.com/RealyUniqueName/DateTime)** [Haxe UTC时区处理]({% post_url haxelib/2015-03-17-haxelib-datetime %}#时区处理)
-
-* [unifill](https://github.com/mandel59/unifill) Shim your code to support Unicode across all platforms.
+* [datetime](https://github.com/RealyUniqueName/DateTime) [Haxe UTC时区处理]({% post_url haxelib/2015-03-17-haxelib-datetime %}#时区处理)
 
 * **[dox](https://github.com/dpeek/dox)** API 文档生成
 
@@ -66,8 +57,6 @@ categories: haxelib
 * [HxScout](https://github.com/jcward/hxScout) A free cross-platform Scout alternative, written in Haxe/OpenFL
 
 * [libnoise](https://github.com/memilian/libnoise) This is a haxe port of libnoise, the coherent noise library. The port is almost complete, only the gradient and noise2D utilities are missing.
-
-* ~~[swhx](https://github.com/filt3rek/swhx)~~ 将 swf 嵌入到 exe,但是这个库已经太旧了, 不如使用 AIR
 
 * [mtwin](http://lib.haxe.org/p/mtwin/)  基于neko的各种用于 Web 的工具库,
 
@@ -109,11 +98,6 @@ haxe LD34游戏示例: <http://haxe.io/ld/34/>
 
 * [pixijs-haxe](https://github.com/pixijs/pixi-haxe)
 
-* [mithril-hx](https://github.com/ciscoheat/mithril-hx) JS MVC framework, 看上去挺不错.
-
-  - [js 源项目录](https://github.com/lhorie/mithril.js)
-
-  - [mithril 中文文档](https://justjavac.gitbooks.io/mithriljs/content/content/getting-started.html)
 
 ### UI
 
@@ -124,21 +108,6 @@ haxe LD34游戏示例: <http://haxe.io/ld/34/>
 * **[stablexui](https://github.com/RealyUniqueName/StablexUI)**
 
   > 基于 xml 配置布局和 skin, 简单,高效 移动UI首选
-
-* [jive](https://github.com/ngrebenshikov/jive) A crossplatform UI framework for Haxe
-
-  - [jive-chart](https://github.com/ngrebenshikov/jive-chart) A chart library for Jive UI
-
-  > 从 demo上看感觉加载慢,而且示例 xml 和相对应的 hx代码挺复杂的,
-
-### 语言
-
-* [LuaXe](https://github.com/PeyTy/LuaXe) Lua target for Haxe language
-
-  > hx-lua 是用于动态解析 lua 代码的, 只适用于 cpp/neko, 而这个库是将 haxe 转换为 lua 代码, 但未
-
-### 文章
-
 
 
 ### 未分类

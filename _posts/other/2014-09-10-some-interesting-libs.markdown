@@ -102,6 +102,8 @@ categories: other
 
 这个章节的大多数内容都是用于美化的 CSS 或 Javascript , 大多数似乎在 ie8 中都会报错.
 
+* <https://github.com/knsv/mermaid> 使用类似于 markdown 的语法来画流程图
+
 * <https://github.com/jeff-optimizely/Guiders-JS> 弹出层向导, 兼容性未知
 
 * <http://w3layouts.com/> **NOTE** 网页布局模板

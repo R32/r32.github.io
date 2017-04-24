@@ -9,13 +9,9 @@ categories: other
 
 mithril 是一个轻量级浏览器 Javascript MVC 框架 - 一个将「数据」应用到「模板」的工具，并且支持 virtual dom 智能差异化更新。
 
-* [getting started](http://mithril.js.org/getting-started.html)
-
 * [mithril.js](https://github.com/lhorie/mithril.js)
 
-* [mithril-hx](https://github.com/ciscoheat/mithril-hx) 如果使用 haxe 这已经有一个 extern 库, 但是个人感觉不太好
-
-* [IE 相关的兼容性处理](http://mithril.js.org/tools.html#internet-explorer-compatibility)
+**Note:** 打算使用或自已写一个 virtual dom 的库, 因为这个库的参数对 haxe 来说有些混乱.
 
 <!-- more -->
 
@@ -798,7 +794,7 @@ class Main{
 }
 ```
 
-TODO: 感觉这样的代非常不好读, 但是似乎又没有其它的方法好处理, 假如在 controller 中出现 this 估计错误都不好检察。
+TODO: 感觉这样的代非常不好读, 但是似乎又没有其它的方法好处理, 假如在 controller 中出现 this 估计错误都不好检测。
 
 虽然可以从 controller 返回一个 Object, 但是感觉这种方式又不被推荐， 或者我们需要一个宏来检测 controller 是否有 this 关键字存在
 

@@ -41,14 +41,18 @@ categories: haxe
 > 当然你还需要 [haxelib](https://github.com/HaxeFoundation/haxelib), 也可以安装一次官方提供的，然后复制出来
 > 放到 "git haxe repo" 里去就可以了
 >
-> 最后我发现其实 flashdevelop 可以设置不同的 haxe sdk 路径, 因此安装一次标准版 haxe (带有neko,haxelib),
+> 最后发现其实 flashdevelop 可以设置不同的 haxe sdk 路径, 因此安装一次标准版 haxe (带有neko,haxelib),
 > 然后将 "git haxe repo" 添加到 flashdevelop 更方便
 
 ### 最新改动
 
 一些内容通过参考 [CHANGES](https://github.com/HaxeFoundation/haxe/blob/development/extra/CHANGES.txt) 文件
 
-* all : disabled analyzer optimizations by default, re-enable with -D analyzer-optimize
+* `Foo.js.hx, Foo.hl.hx` 文件都可以定义同一个名为 Foo 的类, 用于跨平台实现某一个类, 而不需要写条件检测。
+
+  > 似乎改动里根本没提起过?
+
+* all : disabled analyzer optimizations by default, re-enable with `-D analyzer-optimize`
 
 * `import haxe.extern.AsVar`: 用于方法的参数类型, 传递给方法的实参将会先赋值给临时变量，再传递到方法上.
 
