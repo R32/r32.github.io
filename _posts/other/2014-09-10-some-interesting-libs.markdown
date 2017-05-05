@@ -216,6 +216,8 @@ categories: other
 
 * [B站视频 线性代数的本质](http://www.bilibili.com/video/av6731067/index_4.html) 描述了矩阵乘法为什么要那样计算?
 
+* [PE文件结构详解](http://blog.csdn.net/evileagle/article/details/11693499) Portable Execute
+
 * [nginx 源码分析中文](https://github.com/y123456yz/reading-code-of-nginx-1.9.2)
 
 * [libuv 中文手册](https://github.com/forhappy/uvbook)

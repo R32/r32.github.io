@@ -233,23 +233,34 @@ haxe -main Main -js bin/main.js --macro includeFile("projDir/path/to/file.js")
 
 ### 模块化编程
 
-extern class 不知从哪个版本开始起允许有函数体(非inline), 这样的话:
+（注: 不推荐使用）因为这种方式会使得代码变得复杂, 而且对于 extern 类来说, 必须显示地声明函数的返回和参数类型。
 
-```haxe
-#if b_js extern #end class A {
-	public function new():Void {
-		trace("new A");
-	}
-}
+  編譯 a.js 的時候加 "-D a_js". 相對的，編譯b.js 的時候加 "-D b_js"
 
-#if a_js extern #end class B {
-	public function new():Void {
-		trace("new B");
-	}
-}
-```
+  ```haxe
+  #if b_js extern #end class A {
+  	public function new():Void {
+  		trace("new A");
+  	}
+  }
 
-編譯 a.js 的時候加 "-D a_js". 相對的，編譯b.js 的時候加 "-D b_js"
+  #if a_js extern #end class B {
+  	public function new():Void {
+  		trace("new B");
+  	}
+  }
+  ```
+
+
+( **注: 推荐** ) 参考: <https://github.com/elsassph/modular-haxe-example>
+
+  其关键是使用 `--macro exclude('SomeClass')` 来排除某一个类或模块（注意必须使用单引号）
+
+  唯一的问题是要在被排除的类上使用 `@:expose` , 但是不可以改名（例如: `@:expose("OtherName")`）
+
+  但是使用 `@:expose` 好像不太美观, 还不如使用: `-D js-classic`，但这却导致不会添加 "use strict".
+
+&nbsp;
 
 ### nodejs
 

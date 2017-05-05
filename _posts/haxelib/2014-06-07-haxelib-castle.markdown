@@ -1,36 +1,31 @@
 ---
 
 layout: post
-title:  castle(可视数据编辑)
+title:  castle(可视化数据编辑)
 date:   2014-06-07 7:26:01
 categories: haxelib
 
 ---
 
-[castleDB] 是游戏 [evoland 2](http://www.evoland2.com/) 的静态数据编辑器
+castle 看上去像是一个电子表格编辑器, 它以 **可视化** 的方式来编辑结构化数据，
+不同的是 castle 的每一个表格(sheet)都有其相应的 "数据模型"
 
-* Why
-
-  - castleDB 用于 **可视化** 的输入结构化静态的的数据
-  - 通常存储于 XML 或 JSON 文件中的数据都可以使用这个工具代替,并且做添加和修改
-  - 比如当你在做一个游戏时, 你可以将所有物品和怪物它们的 名字,描述,逻辑...等等这些属性通过 castleDB 存储
+  > 通常存储于 XML 或 JSON 文件中的数据都可以使用这个工具代替,
+  >
+  > 比如当你在做一个游戏时, 你可以将所有物品和怪物的名字,
+  > 描述, 逻辑...等等这些属性通过 castle 来保存
 
 <!-- more -->
 
-* How
+castle 通过 "数据模型" 来验证用户输入的数据是否有效，极大的避的手工输入容易出错的问题
 
-  - castleDB 看上去像上一个电子表格编辑器, 但castle的每一个表格都有其相对应的"数据模型"
-  - 编辑器通过这个"模型"验证数据,简化用户输入
+castle 文件为一个简单易读的 JSON 格式，很容易被其它程序加载使用.
 
-* 存储格式
+  > 储存格式为 JSON + 换行, 因此 git 或 svn 等版本管理软件更能显示其数据修改差异。
 
-  - castle 存储其"数据模型"和"数据行"为一个简单易读的 JSON 文件
-  - JSON 文件很容易被其它程序加载使用
-  - 它能更简单地处理游戏物品以及怪物的各种数据
+castle 能非常简单地处理文本的 "Localization（本地化）"。
 
-* 协作
-
-  - 由于其储存格式为 JSON + 换行, 因此 git 或 svn 等版本管理软件更能显示其数据修改差异。
+**Note:** 表名(sheet)的首字母使用不要大写，这很重要，否则你可能无法在 haxe 代码中调用它。
 
 ### 安装
 
@@ -100,9 +95,14 @@ castleDB 保存为一个扩展名为 `.cdb` 的文件, 其实它是一个 JSON �
 
 * **Unique Identifier**(唯一标识符): 作为行数据的唯一标识符, 它允许其它表(sheet)或列(column)引用这一行数据. 唯一标识符必须是有效的代码标识符 `[A-Za-z_][A-Za-z0_9_]*`
 
+  注: 一个表(sheet)只能存在一个这种字段，(后边文字将使用 UID 表示这种类型)
+
 * **Text**(文本): 字符串文本。 任意文本,目前不允许多行文本.
 
-  > 有个 Localizable 的选项用于本地化(TODO: ??？仅简单标记这个字段, 程序中通过判断 kind == "localizable" 加后加载本地化文件)
+  > 1. 有个 Localizable 的选项用于本地化, 勾选后可通过 `File->Export Localized Text`
+  > 可导出一个 xml 文件, 然后修改这个导出的文件即可
+  >
+  > 2. 在 haxe 程序中调用 applyLang(file_content) 即可.
 
 * **Boolean**: 可以通过复选框(checkBox)来选择 true 或 false。
 
@@ -116,9 +116,10 @@ castleDB 保存为一个扩展名为 `.cdb` 的文件, 其实它是一个 JSON �
 
 * **Flags**(多项选择): 在给定的多个选项中随意选择多个或者一个都不选.例如: `hasHat, hasShirt, hasShoes`, (添加列(column)时, 用逗号分隔各项值)
 
-* **Reference**(引用):, 通过 Unique Identifier 引用其行数据
+* **Reference**(引用):, 通过 Unique Identifier 引用哪一列的数据（通常用于引用另一个表的数据）
 
-  > 引用`Unique Identifier` 或字段名为 `name` 的文本字段.(编辑器将自动提示这些)
+  > 默认情况下将显示被引用表(sheet)的 UID 字段，用户可在字段名上 `右键-> display column`，
+  > 自定义所显示的字段, 当然并不是所有类型的字段都支持
   >
   > F4 键将跳转到 引用字段, 而 F3 键则显示 **谁** 引用了这个字段的引用
 
@@ -133,6 +134,8 @@ castleDB 保存为一个扩展名为 `.cdb` 的文件, 其实它是一个 JSON �
 * **List** 当类型为 List 将创建一个新的隐藏子表。 [见后边章节描述...](#list-column)
 
 * **Properties** 新增的属性,像是一个可视化的(key/value)的Object类型, 可以方便的通过 UI 输入这些动态值了
+
+  > 可以将一些相关的属性集中于一个字段下.
 
 * **Custom**(自定义): 自定义类型. [见后边章节描述...](#custom-column)
 
@@ -380,28 +383,37 @@ Or(Random(0.1), Fixed) | [3, [1, 0.1], [0]]
 
 ### 图层(Layers)
 
-一个 layer 是包了一组信息的字段存储于 level表中，有如下几种 layer: 注意参考示例文件
+一个 layer 是包了一组信息的字段存储于 level 表中，有如下几种 layer: 注意参考示例文件
 
-* **Tile Layer** 在创建level表后即可创建, 它有一个 name(Text) 与 data(TileLayer)或其它更多自定义字段如 blending
+* **Tile Layer** 在创建 level 表后即可通过点击 "Edit" 按钮创建, tile layer 相当于游戏里的某一图层, 示例中的 "layers" 字段即是是一个 List<Layer>, 通过 "New Layer" 创建的层都会自动添加到 "layers" 下.
 
-  - tile layer 相当于游戏里的某一图层, 示例中的 layers 字段即是是一个 Array<Layer>,
-  - 每个 layer 有一个名字以及可以分配到一个tileset
-  - tile layer 有三种不同的模式: Tiles, Group, Object
+  - 这个字段一般由 IDE 自动创建, tile layer 有三种不同的模式: Tiles, Group, Object
 
-* **List Layer** 如果你添加一个 List 到level表, 当这个 List 包含有 Number 类型的 x 和 y 属性时, 这将是 list layer, 将可以以可视化的方式自动填充 x,y. 当每次当点击 map preview(纯色背景板) 时。
+后边的三种类型都是与 Tile Layer 相对的数据,
 
-  - 示例文件中的 npcs 字段即为 list layer, 比如你需要往游戏里添加 npc 及主角时可以使用这种层
-  - list内可添加额外的属性, 注意: 如果你添加 Reference 引用了另一个表如果其包含有 Tile 或 Image, 这里可以直接放入到地图编辑器中去(将选择最左边的字段, 如果存在多个 tile 或 image)
+* **List Layer** 如果你添加一个 List 到level表, 当这个 List 包含有 Number 类型的 x 和 y 属性时, 这将是 list layer。（这个字段需要手动创建，创建完成后才可以像 "Tile Layer" 一样以可视化的方式来编辑）
 
-* **Index Layers** 如果你想用地图编辑器画一些东西并且储存在一个紧凑数组之中, 可以添加Laye类型字段到level表。 作为一些限制你可能不能定义每个单元格的类型, If you are not on the first layer, the first element of your layer (which has 0 index) will not be displayed and will act as a transparent element.
+  > 示例文件中的 npcs 字段即为 list layer, 除了必须的 x, y 字段外还可添加额外的字段,
+  >
+  > 如果你添加 Reference 引用了另一个表(sheet), 如果被引用的表包含有 Tile 或 Image,
+  > 那么这个 tile 将作为标记用于可视编辑(如果存在多个 tile 或 image, 则选择最左边的字段)，
+  >
+  > 如果 List Layer 没有可引用的 tile 或 image 那么在可视编辑中将使用"颜色块"来标记.
+  >
+  > List Layer 的数据存储其实只是坐标而已（如果没添加其它字段的话）
 
-  - 示例中的 collide 字段, 感觉有点像 list_layer, 只可以在地图编辑器中画数据, 而不可以在表格中修改数据或添加字段
-
-* **Zone Layer** 类似于 list_layer,只是它有额外的 width 和 height 数值属性.在地图编辑器中它将显示为一个区域
+* **Zone Layer** 类似于 List_Layer,只是它有额外的 width 和 height 数值属性.在地图编辑器中它将显示为一个区域
 
   > 示例中的 triggers 字段
 
-index_layers 和 zone_layer 都是可读的数据可以在 layer 后通过按 **`E`** 直接在 layer 上配置其属性
+list_layers 和 zone_layer 都是可读的数据可以在 layer 后通过按 **`E`** 直接在 layer 上配置其属性
+
+* **Index Layers** 使用紧凑数组(base64, width*height)保存数据
+
+  > 在 level 表上指定字段类型为 Data_Layer, 并选择与之关联的一个表即可。
+  > 被关联的表必须有 tile 字段才可以在地图上编辑, 参考示例中的 collide 字段
+
+
 
 #### Layer Display
 
@@ -550,57 +562,50 @@ Borders 有 4个模式: (copy from cdb.TileBuilder.hx)
 
 ### 代码中调用
 
-在 Haxe 中调用. flashdevelop 能很好地提供智能提示,以避免打错字符. 参看 www/index.html 以及 src/test. Test.hx:
-
-Data.hx: 这个类仅只使用宏来解析数据类型,不会加载数据值, 仅提供 sheet name 的智能语法提示.
+参看 www/index.html 以及 src/test. Test.hx:
 
 ```haxe
-// Init 名字随意,
+// Init 名字随意,  test.cdb 的目录可以是: 当前目录, 或 "res" 或 `-D resourcesPath` 定义的目录
 private typedef Init = haxe.macro.MacroType <[cdb.Module.build("test.cdb")]> ;
 ```
 
-如果这行代码放在 Data.hx 下, 那么之后的数据访问都将通过 `Data.xxxxx` 来访问, 如果放在 Other.hx 文件中则通过 `Other.xxxxx` 访问
+如果这行代码放在 Data.hx 文件下, 那么之后的数据访问都将通过 `Data.xxxxx` 来访问
 
-```haxe
-class Test {
-	static function main() {
-		var content: String = .....; // 需要自已将 .cdb 加载进来
-		Data.load(content);
-		// items 为 表名(sheet name), 注意为小写字母开头(工作表不要用大小字母开头命名)
-		// 通过 SheetNameKind 的方式访问可以获得的uid(IDE智能提示)
-		trace(Data.items.get(Data.ItemsKind.Sword).alt.fx);
+> 注: 宏只解析类型, 并不会加载数据, 因此需要自已加载 .cbd 到 `Data.load`
 
-		trace(Data.items.get(sword).alt.test);     // 不推荐的方式
+对于一个名为 price 的表(sheet，注意表名不要大写字母开头)，将自动生成如下类型
 
-		for( s in Data.monsters.resolve("wolf").skills[0].sub )
-			trace(s);
-		// If the sheet does not have an unique identifier, only the all field is available.
-		// If the sheet has an unique identifier, you can access the all field, but also use get (by id) and resolve (by string).
-	}
-}
-```
+* Price: 一个 abstract 类, 你可以通过 `-D dump=pretty` 找到这个类的细节。
 
-对于一个名为 mySheet 的表(sheet，注意表名不要大写字母开头),将自动生成如下类型(IDE智能提示可能需要花些时间解析第一次时):
+  > 当你遍历一个表时（例如当表没有 UID 字段）,这个类能让你知道有哪些属性可访问。
 
-* MySheetDef：通过JSON解析的原始Ojbect类型
-* MySheet：(因此表名不要大写字母开头) 抽象(抽象即不可访问)类型将允许读取字段以及执行一些转换TODO:（后边再详细描述）
-* MySheetKind：包含 mySheet 中的所有 unique identifier(可以用在 mySheet.get 方法参数, 这三个似乎只有这一个有点用)
+* PriceDef：类似于 Price, 只是写成了 `typedef PriceDef = {}` 这种形式
+
+* PriceKind：包含了 price 表中的 UID 字段的所有行。
+
+（实际使用中你不需要关注这三个类型, 按着 IDE 的语法提示选择即可）
+
+如果表格没有 UID 字段，则会有一个 `all` 的字段可以用来遍历所有行数据。
+
+如果存在有 UID 字段, 在数据加载之后, 则可以通过类似于 `Data.price.get(data.PriceKind.xxx)` 的方式来访问所有 Price 的实例（即行数据, 看上去有点麻烦）
+
+上边这些内容描述了普通数据的使用。
 
 #### 类型映射
 
 castleDB 中的数据类型对应 haxe 中相应的类型
 
-* Unique Identifier - SheetNameKind(abstract enum)
+* Unique Identifier - (abstract enum)
 * Text - String
 * Boolean - Bool
 * Integer - Int
 * Float - Float
 * Color - Int
-* Enumeration - SheetName_ColumName(abstract enum)
-* Flags - cdb.Types.Flags<SheetName_ColumName> (abstract enum)
-* Reference - TargetSheetName 当访问时将获取引用的对象, 仅能访问其标识符通过 columnNameId field
-* File - String
-* Image - String(只有MD5值， 这时 image 还未加载)
+* Enumeration - (abstract enum)
+* Flags - (abstract enum)
+* Reference - 当访问时将获得所引用的对象
+* File - String, 只是路径文件名而已.
+* Image - String(只有MD5值， 真实的图像被保存为同文件名下的 .img 下, 以 `md5=>base64` 的格式)
 * Tile - cdb.Types.TilePos(包含 tileset 文件及 size,x/y位置以及可选的 width/height)
 * List - cdb.Types.ArrayRead<SheetName_ColumName>(一个可读的结构数组对象允许 index访问, length,及迭代)
 * Custom - SheetName_ColumName
