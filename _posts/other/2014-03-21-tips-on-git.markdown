@@ -51,6 +51,12 @@ git pull --depth=1 origin master
 
 * 输入: `svn co <URL> <LOCAL_DIR>`, 但这个最近在 github 也变得不适用了
 
+从本地文件系统: (例如 kha 的每个项目都得把 haxelib kha 当成 submodule)
+
+```bash
+# 如果用相对目录则可以不使用指定全局文件路径
+git clone file:///C:/path/to/repo new_dir
+```
 
 #### 更新
 

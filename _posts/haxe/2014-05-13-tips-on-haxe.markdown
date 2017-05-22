@@ -38,8 +38,12 @@ categories: haxe
 > 只要设置二个路径即可: `HAXEPATH: D:\fork\haxe\`, `NEKO_INSTPATH: G:\HaxeToolkit\neko`,
 > haxe.exe 所依赖的 dll 文件由 `i686-w64-mingw32\sys-root\mingw\bin` 所提供
 >
-> 当然你还需要 [haxelib](https://github.com/HaxeFoundation/haxelib), 也可以安装一次官方提供的，然后复制出来
-> 放到 "git haxe repo" 里去就可以了
+> `make libs`: 编译 haxe.exe 之前需要先构建的库
+>
+> `make haxe -f Makefile.win -j4 FD_OUTPUT=1 ADD_REVISION=1`: 获得 windows 平台下的 haxe.exe
+>
+> `make haxelib`: 获得 haxelib.exe, 需要在这个 exe 的当前目录创建一个名为 "lib" 的目录，
+> 或者通过运行 `haxelib config XXX`  指定一个库目录
 >
 > 最后发现其实 flashdevelop 可以设置不同的 haxe sdk 路径, 因此安装一次标准版 haxe (带有neko,haxelib),
 > 然后将 "git haxe repo" 添加到 flashdevelop 更方便
@@ -1402,4 +1406,16 @@ haxe 3.3 才加入的类, 使得目前除了flash 和 js平台, 其它平台也�
 
 参考 EntryPoint 的文档注释可知, 当 haxe.MainLoop 存在时, 这时 `haxe.EntryPoint.run()` 将会被自动插入在 main 函数之后
 
+### XXXXX
+
+* patch
+
+  ```
+  let open_file ctx file =
+  if ctx.curfile <> "" then close_file ctx;
++ if Globals.is_windows then output ctx "\xEF\xBB\xBF"; (* UTF8 BOM *)
+  let version_major = ctx.version / 1000 in
+  let version_minor = (ctx.version mod 1000) / 100 in
+  let version_revision = (ctx.version mod 100) in
+  ```
 <br />

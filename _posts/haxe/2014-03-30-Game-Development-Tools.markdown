@@ -34,7 +34,7 @@ categories: haxe
   > Inkscape 支持许多高级的 SVG 功能特性（markers, clones, alpha blending, 等） 和非常简化的设计界面.很容易编辑 节点，执行复杂的路径运算，跟踪位图等等。
 
 
-* [Krita](http://www.krita.org/) Krita 是一个免费的数字绘画和插图应用程序,
+* [Krita](http://www.krita.org/) 免费的数字绘画和插图应用程序,
 
   > Krita offers CMYK support, HDR painting, perspective grids, dockers, filters, painting assistants, and many other features you would expect
 
@@ -45,21 +45,21 @@ categories: haxe
 
   下载 <http://distractionware.com/blog/2013/08/bosca-ceoil/>
 
-* [LMMS](http://lmms.sourceforge.net/) LMMS 是一个免费的跨平台软件，用于制做音乐。
+* [LMMS](http://lmms.sourceforge.net/) 免费的跨平台软件，用于制做音乐。
 
 
-* [SFXR](http://www.drpetter.se/project_sfxr.html) SFXR 用于创建于游戏声音特效。比如 跳,打击, pickup/coin
+* [SFXR](http://www.drpetter.se/project_sfxr.html) 用于创建于游戏声音特效。比如 跳,打击, pickup/coin
 
-* [BFXR](http://www.bfxr.net/) BFXR 是一个移植于 AS3 SFXR 并改进添加了更多特性.
+* [BFXR](http://www.bfxr.net/) 移植于 AS3 SFXR 并改进添加了更多特性.
 
 
 ### 地图编辑器
 
 * [**ANAmap**](http://deepnight.net/tools/tabletop-rpg-map-editor/) flash, 抽像化的地图编译器, 作出来图片很精美
 
-* [Tiled](http://www.mapeditor.org/) Tiled 是一个通用的 tile 地图编辑器, [DEMO](http://haxeflixel.com/demos/TiledEditor/)
+* [Tiled](http://www.mapeditor.org/) 通用的 tile 地图编辑器, [DEMO](http://haxeflixel.com/demos/TiledEditor/)
 
-* [Ogmo](http://www.ogmoeditor.com/) 是通用级使用 windows 的独立游戏开发人员
+* [Ogmo](http://www.ogmoeditor.com/) windows 的独立游戏开发人员
 
 
 ### 资源

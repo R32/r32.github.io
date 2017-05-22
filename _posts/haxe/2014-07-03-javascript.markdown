@@ -10,18 +10,24 @@ categories: haxe
 
 ### Tips
 
-* 尽量使用 git 版本的 haxe, 可以在 <http://build.haxe.org> 处下载
+* 使用 git 版本的 haxe, 可以在 <http://build.haxe.org> 处下载
 
-* 查看 js.Lib 下的方法
+* js.Lib 下的有些很有用处的方法。 例如访问 JS 中的全局变量:
+
+  `js.Lib.global.MyVal = 100`
 
 * `-debug` 模式将会生成 source map 文件用于调试
 
-* 访问JS中的全局变量, 例: `js.Lib.global.MyVal = 100`.
-  - 如果是浏览器, 那么 global 将等于 window, 如果 nodejs 则为 global
-  - 需要注意的在 nodejs 中, 顶层的 var 变量不可以通过 global.XXX 的方式来访问.
-
 * 当把一个成员方法作为函数参数时传递时, 比如 `addEventListener(onSome)`, 确保 this 的指向是否如预期（haxe 会将把 **成员方法** 自动绑到所属对象上, 但有时候你并不需要这样做）
-  - 因此 haxe 的 function bind 尽量不要用在成员方法上, 静态方法才能获得期待的 Currying 效果.
+
+  因此 haxe 的 function bind 尽量不要用在成员方法上, 或者使用 `(obj: Dynamic).method` 的方式防止 `$bind`:
+
+  ```hx
+    var rqf : Dynamic = (window: Dynamic).requestAnimationFrame ||
+        (window: Dynamic).webkitRequestAnimationFrame ||
+        (window: Dynamic).mozRequestAnimationFrame;
+    // 这里显示地定义 rqf 为 Dynamic, 否则会当成 Bool
+  ```
 
 * 当写 extern class 时, 静态扩展目前将忽略 `@:overload` [#5596](https://github.com/HaxeFoundation/haxe/issues/5596)
 

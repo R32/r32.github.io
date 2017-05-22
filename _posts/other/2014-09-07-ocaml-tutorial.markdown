@@ -30,7 +30,7 @@ categories: other
 
 接下来是 IDE 选择, 最重要的问题是 IDE 在调用命令是必须能调用 `cygwin/bin/bash`(需设置系统环境变量 `CHERE_INVOKING=1`，以防止 --login 时丢失目录),  但是这样做有一个副作用就是: 当从 "开始" 进入 "Cygwin Terminal" 时的当前目录会是 system32 下, 但可以通过可 `cd ~` 切回
 
-* `vscode`: 这个插件需要 ocp-indent, merlin 来产生语法提示,, 幸运的是这二个都不依赖 cygwin 登录环境
+* `vscode`: 这个插件需要 ocp-indent, merlin 来产生语法提示
 
   settings.json:
 

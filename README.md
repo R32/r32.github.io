@@ -9,6 +9,7 @@
 
 * [引用仓库的一些元数据](https://help.github.com/articles/repository-metadata-on-github-pages/)
 
+* jekyll 自带的模板选择 <https://github.com/pages-themes/>
 
 ### 更新
 
