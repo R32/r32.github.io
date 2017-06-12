@@ -5,7 +5,7 @@ date:	2016-12-22 06:55:21
 categories: haxe
 ---
 
-之前神神密密的新平台最近终于有了介绍的文档 <http://hashlink.haxe.org/>
+<http://hashlink.haxe.org/>
 
 ### 简介
 

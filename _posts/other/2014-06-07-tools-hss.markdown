@@ -7,9 +7,9 @@ categories: other
 
 ---
 
- [hss](https://github.com/ncannasse/hss) 是一个类似于 less 或 sass 的 动态样式表语言.但是更加轻量及简单. 基于 neko 平台. 最新的 1.4 版本需要自已编译. 编译参考 Makefile 文件. 如果打算兼容 IE 这个还算是不错的, 
+ [hss](https://github.com/ncannasse/hss) 是一个类似于 less 或 sass 的 动态样式表语言.但是更加轻量及简单。至少你不需要 ruby 环境，也不需要用 nodejs 安装一大堆 less 相关的脚本
 
-一些文件监控工具: 
+一些文件监控工具, 用于自动监控当 hss 文件发生改动时, 自动执行命令将 hss 编译成 css 文件:
 
 * **nodejs**: "chokidar-cli" 底层是基于 libuv 的文件监测, 跨平台
 
@@ -21,24 +21,20 @@ categories: other
 
 * linux - inotifywatch (cygwin 中没有这个命令)
 * win - ???
-  - subline text 3 下, 选择目录,在目录顶层放置 Makefile 是个不错的方法
 * mac - fswatch
 
 <!-- more -->
 
-### 使用方法
+## 使用方法
+
+如果 hss 处理 PATH 中: 可输入 `hss --help` 查看帮助.
 
 ```bash
 # 在与 myfile.hss 相同目录,生成 myfile.css
 hss myfile.hss
-
-
-# 在名为 dir 的目录生成 myfile.css
-# 注意:  目录需要先创建, 目录名必须以斜线 / 结尾
-hss -output dir/ myfile.hss
 ```
 
-### 语法
+## 语法
 
 hss 支持有效的 CSS 语法，所以对于每个在 HSS 文件的解析过程中发生的错误，它将显示错误，指示所在文件和行号。
 
@@ -56,23 +52,24 @@ pre {
 myfile.hss:3: Unexpected '}' maybe missing ;
 ```
 
-#### 属性变量
+### 属性变量
 
 HSS 可以将属性变量添加到 CSS 语法, 变量是很好的方式, 特别在修改颜色值时.
 
 声明一个变量使用关键字 `var`, 引用变量使用 `$` 符号
 
 ```bash
-var mycolor = #1111AA;
+var mycolor = #1111AA;      // 全局变量
 var myfont = "Trebuchet MS", Arial, sans-serif;
 
 body {
+    var myfont = "微软雅黑"; // 局部变量, 将会覆盖同名的全局变量, 当退出当前大括号时, 这个局部变量就不存在了
     color : $mycolor;
     font : $myfont;
 }
 ```
 
-#### 块变量
+### 块变量
 
 块变量是非常有用的用于共享一些无关规则之间的"行为"。他们可以用来提高 CSS 文件的组织的方式，使它更容易测试的样式更改。
 
@@ -85,9 +82,8 @@ pre {
 }
 ```
 
-#### 块嵌套
+### 块嵌套
 
-更新: 添加了 `&` 操作符， 像 scss/less 一样.
 
 ```bash
 .faq {
@@ -135,15 +131,71 @@ pre {
 }
 ```
 
+更复杂的嵌套:
 
+```scss
+a {
+    var color = #0366d6;
+    color: #666;
+    &.disabled, &:disabled {
+        color: lighten($color, 20%);   // 颜色目前函数只有: darken/lighten/saturate/desaturate/invert
+    }
+    &:hover > li {
+        float: left;
+    }
+    > span, ~ i {
+        font-size: 80%;
+    }
+    + a {
+        margin-left: -1px;
+    }
+    &:hover::after {
+        content: "x";
+    }
+    &[href] {
+        color: $color;
+    }
+    &:not([href]):nth-child(2n+1) {
+        text-decoration: none;
+    }
+}
+```
 
-#### 注释
+编译成 css 后为: (和 sass 编译出来的结果一样)
+
+```css
+a {
+	color: #666;
+}
+a.disabled, a:disabled {
+	color: #439AFC;
+}
+a:hover > li {
+	float: left;
+}
+a > span, a ~ i {
+	font-size: 80%;
+}
+a + a {
+	margin-left: -1px;
+}
+a:hover::after {
+	content: "x";
+}
+a[href] {
+	color: #0366d6;
+}
+a:not([href]):nth-child(2n+1) {
+	text-decoration: none;
+}
+```
+
+### 注释
 
 除了 css 默认的 `/* ... */` , 还支持 单行注释 `// ....`
 
 
-
-#### CSS 验证
+### CSS 验证
 
 除了验证语法, HSS 还将会检查 css 属性名 以及 属性值 的有效性.
 
@@ -167,12 +219,11 @@ HSS 还强制一些好的 CSS 做法
 background: [color] [url] [repeat] [scroll|fixed] [horiz.] [vert.]
 ```
 
-#### CSS 规则
+### CSS 规则
 
 HSS 源文件的 Rules.nml 文件中列出的整个的 CSS 属性规则，用于检查属性值的正确性。你可能想要为您自己的需要对其进行修改。
 
-
-#### 选译器
+### 选译器
 
 [CSS 选译器](http://www.w3.org/TR/selectors/#selectors) , [中文 w3school css 选译器](http://www.w3school.com.cn/cssref/css_selectors.asp)
 
@@ -183,13 +234,13 @@ HSS 源文件的 Rules.nml 文件中列出的整个的 CSS 属性规则，用于
 * `E + F`: 支持
 * `DIV.warning`: 支持
 * `E #myid`: 支持
-* `E:first-child, E:link, E:hover` and other CSS2 and 3 pseudo-classes selectors are supported (except the ones that takes an argument)
-* `E[foo], E[foo=value], E[foo|=value], E[foo~=value], E[foo^=value], E[foo$=value], E[foo*=value]`: supported
+* `E:first-child, E:link, E:hover`
+* `E[foo], E[foo=value], E[foo|=value], E[foo~=value], E[foo^=value], E[foo$=value], E[foo*=value]`: 支持
 
 
-#### 自定义的属性
+### 自定义的属性
 
-当使用 **非标准** CSS 属性时,比如添加一些自定义的属性 或用于 IE hack 时.使用 `CSS()`, 小示例:
+当使用 **非标准** CSS 属性时，或者没有添加到 rules 的规则时, 可以使用 `CSS()`:
 
 ```bash
 .image{
@@ -197,7 +248,7 @@ HSS 源文件的 Rules.nml 文件中列出的整个的 CSS 属性规则，用于
 }
 
 
-.page CSS("h1.nth-child(2)"){
+.page CSS("h1:placeholder"){
 	color: red;
 }
 ```
@@ -213,10 +264,7 @@ HSS 源文件的 Rules.nml 文件中列出的整个的 CSS 属性规则，用于
 }
 ```
 
-但是 `CSS("")`目前只用用于值,用在属性如 `CSS("*color"):#fff;` 将会报错..
-
-
-#### 运算符
+### 运算符
 
 注意: 不允许二个不同单位(例如: 50px + 3em) 之间的运算符操作
 
@@ -230,7 +278,7 @@ var scale = 3;
 ```
 
 
-#### hasks
+### hasks
 
  HSS 添加了一些小的 hacks
 
@@ -252,7 +300,4 @@ var scale = 3;
 
 * **note**: hss-width and hss-height: 将生成width和height，将减去 padding 和 border 的值.
 
-* @include('some css string'): 添加 css 字符串. either at the top level or instead of an attribute, this will include raw CSS string in the output, prefixed with the hierarchy classes if any **New in 1.4**
-
-
-
+* `@import(hssfile/file.css)` 插入 hss 文件或者嵌入一个 css 文件, 当省略扩展名时默认为 hss 文件.

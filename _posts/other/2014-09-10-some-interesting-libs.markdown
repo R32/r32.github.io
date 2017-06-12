@@ -264,6 +264,8 @@ categories: other
 
 * [the-art-of-command-line](https://github.com/jlevy/the-art-of-command-line) 正确使用命令行
 
+* [CSS 描述](http://www.css88.com/book/css/) 主要是包含有详细的浏览器兼容性
+
 * [w3school html5](http://www.w3school.com.cn/html5/index.asp)
 
 * **[CSS 各项属性](http://www.runoob.com/cssref/pr-tab-caption-side.html)**

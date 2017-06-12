@@ -54,7 +54,7 @@ categories: haxe
 
 * `Foo.js.hx, Foo.hl.hx` 文件都可以定义同一个名为 Foo 的类, 用于跨平台实现某一个类, 而不需要写条件检测。
 
-  > 似乎改动里根本没提起过?
+  > 似乎根本没提起过?
 
 * all : disabled analyzer optimizations by default, re-enable with `-D analyzer-optimize`
 
