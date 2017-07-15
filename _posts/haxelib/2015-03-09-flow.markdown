@@ -5,23 +5,34 @@ date:	2015-03-09 08:12:18
 categories: haxelib
 ---
 
-flow 是一个基于 nodejs 的项目构建工具, 类似于 makefile 之类的工具 <https://underscorediscovery.github.io/flow/>
+[flow](https://snowkit.github.io/flow/) 目前作为 luxe 项目的构建, 源码是 nodejs 的。
 
-> flow的源码包的 bin 目录下有各平台的 node.exe
->
-> 另 `src/flow/tools` 下包含一个 nodejs 源码的 http 服务器用于调试 web 应用 (其实haxe也自带一个http服务器)
+作为项目构建工具它通过解析当前目录下的 `project.flow` 做如下事情：
 
-flow 通过解析一个 json 配置文件来布署应用. 通常这个 json 文件名为 project.flow, 顺便提下:
+* icons - 嵌入和转换 icons 为所有目标(target)(除了 linux)
 
-* 在 windows 平台 <http://cmder.net/> 是一个出色的 cmd 的替代品
+* package - 快速打包 builds 为 zip 或 tar
 
-* 对于 mac/linux, <http://fishshell.com/> 同样是一个很好的 shell
+* clean - 删除 build 或项目输出, 或全部
+
+* upx - 针对桌面平台, 最终二进制文件可以自动压缩
+
+* files - 灵活的复制和模板系统
+
+* build - 将 haxe 代码生成部署应用
+
+* launch - 使用 flow 自带的 web server 加载, 以文件同步的方式(即修改了源码将立即反应)运行 web app,
 
 <!-- more -->
 
-### 命令行快捷
+### 安装
 
-由于 `haxelib run flow` 这个命令实在有些长, window 平台, 将文件保存为 bat,然后存放于 path 目录.
+1. `haxelib install flow` 即可
+
+2. 通过 git 克隆其源码， 然后以 `haxelib dev flow DIR` 的方式安装
+
+由于 `haxelib run flow` 这个命令实在有些长, 因此你可能想要一个更短的命令。
+对于 window 平台, 将文件保存为 bat,然后存放于 path 目录.
 
 ```bat
 @echo off
@@ -50,113 +61,120 @@ options:
   --json       : 输出 json 值仅用于特别的command及特别的usage选项
 ```
 
-关于 usage 的详细信息可以查看 src/flow/cmd 目录下相应 .md 文件。
+关于 usage 的帮助信息也可以查看 `src/flow/cmd` 目录下相应 .md 文件。
 
-一些命令(command)依赖于当前目录下的 `project.flow` 文件
+首先简单描术 build 和 compile 的区别:
 
-* `flow build [target] [--debug]`: 构建,生成 output 和 output.build (依次执行 clean(如果指定), hooks, 和 files)
+1. compile（编译）指将 haxe 源码转换成目标代码，它对应于 output 目录
+2. 而 build（构建）指使用各平台工具(例如: msvc)编译目标代码, 它对应于 output.build 目录
 
->* options: 任何 clean, hooks, files 命令的 options 都可用
->  * --clean 在构建之前先执行 clean  命令
->  * --output-path <path> 覆盖掉 project.app.output 指定的输出目录
+注: 一些命令将(command)依赖于 `project.flow` 配置文件
 
-* `flow compile [target] --options`: 编译, 仅生成 output 但不包含 output.build
+* `flow build [target] [--debug]`: 编译并且构建, 生成 output 和 output.build
 
->* options: --clean 在编译之前先执行 clean .
+  >* options: 任何 clean, hooks, files 命令的 options 都可用
+  >* --clean 在构建之前先执行 clean  命令
+  >* --output-path <path> 覆盖 project.app.output 所指定的输出目录
+
+* `flow compile [target] --options`: 仅编译, 即仅生成 output
+
+  >* options:
+  >* --clean 在编译之前先执行 clean .
 
 * `flow files [target] --options`: “复制/模板处理”文件到 output 和 output.build,
 
->* options:
->  * --no-build-files 将不会 “复制/模板处理” output.build
->  * --no-files 将不会 “复制/模板处理” output
->  * --no-list
->  * --list-name
->  * --error-on-missing
+  >* options:
+  >* --no-build-files 将不会 “复制/模板处理” output.build
+  >* --no-files 将不会 “复制/模板处理” output
+  >* --no-list
+  >* --list-name
+  >* --error-on-missing
 
-* `flow hooks [target] <--options>`: TODOS ???
+* `flow hooks [target] <--options>`: 执行 `project.flow` 文件中 `project.build.pre` 项所定义的 nodejs 脚本
 
-* `flow icons [target] [--options]`: 如果需要将转换 `project.app.icon` 到 output
+  ```js
+  // 示例来自: src/flow/cmd/hooks/hooks.js
+  pre : {
+      priority : 1,
+      name : 'ios-project-sync',
+      desc : 'checks the ios project project.app flags are synced up',
+      script : 'pre/pre.js',
+  }
+  ```
+
+* `flow icons [target] [--options]`: 转换 `project.app.icon` 到 output
 
 * `flow info [target] [--options]`：解析config文件并返回指定平台的信息
 
->* options: --hxml 仅输出 hxml
+  >* options: --hxml 仅输出 hxml
 
 * `flow launch [target] [--options]`: 将启动最后成功构建的 app
 
->* options: 一些针对平台的特别选项, 自行参考 flow usage launch
->  * --with-files 当仅更新 assets 和 config 时可以不需要编译，直接执行 launch 加上这个参数即可。
+  >* options: 一些针对平台的特别选项, 自行参考 flow usage launch
+  >* --with-files 当仅更新 assets 和 config 时可以不需要编译，直接执行 launch 加上这个参数即可。
 
 * `flow run [target] [--options]` 将依次执行 files, build, launch
 
->* options: 所有依次执行命令的 options
+  >* options: 所有依次执行命令的 options
 
 * `flow package [target] [--options]`: 打包 output 文件夹为压缩文件,默认为 zip
 
->* options:
->  * `--archive <tar, zip>` 指定压缩格式
->  * `--archive-name <target/path/packagename>` 指定打包后的路径及名称
->  * `--archive-root <subfolder>` 指定压缩包的根目录, 默认情况下 output 下的文件将直接位于(archive)下
+  >* options:
+  >* `--archive <tar, zip>` 指定压缩格式
+  >* `--archive-name <target/path/packagename>` 指定打包后的路径及名称
+  >* `--archive-root <subfolder>` 指定压缩包的根目录, 默认情况下 output 下的文件将直接位于(archive)下
 
 * `flow clean [target] --options`: 清除指定目标文件夹,并且不会有任何警告
 
->* options:
->  * --all 清除输出文件夹, 例如: (project)/bin 目录下文件将被完全删除
->  * --clean-build 清除指定目标的输出文件夹下的 build 目录下所有文件
->  * --clean-outout 清除指定目标的输出文件夹下所有文件
+  >* options:
+  >* --all 清除输出文件夹, 例如: (project)/bin 目录下文件将被完全删除
+  >* --clean-build 清除指定目标的输出文件夹下的 build 目录下所有文件
+  >* --clean-outout 清除指定目标的输出文件夹下所有文件
 
 * `flow sync [target] --options` 将执行 files 以及监视文件改变, options 见 files
 
 * `flow config [leaf] [value] [--options]` 只能设置或获得 config 已经定义了的 leaf,
 
->* 当给定 value 时, leaf 的值将被存储到 `.flow.config.json` 文件中去
->* 当没有指定 value 时, 仅输出 leaf 当前的 value,
->* options: --list 当 leaf 值为 Object 类型时,打印它的所有值
+  >* 当给定 value 时, leaf 的值将被存储到 `.flow.config.json` 文件中去
+  >* 当没有指定 value 时, 仅输出 leaf 当前的 value,
+  >* options: --list 当 leaf 值为 Object 类型时,打印它的所有值
 
-如果未指定 target, 则使用你的当前系统, 例如在 mac 中执行 flow build 则表现为 `flow build mac --arch 64`
+target 目前支持如下平台, 如果未指定则使用你的当前系统, 例如在 mac 中执行 flow build 则表现为 `flow build mac --arch 64`
+
+```js
+// src/config.json
+target : {
+    "web"       : "js",
+    "mac"       : "cpp",
+    "windows"   : "cpp",
+    "linux"     : "cpp",
+    "android"   : "cpp",
+    "ios"       : "cpp",
+    "tvos"      : "cpp",
+    "neko"      : "neko"
+}
+```
 
 #### flow config
 
 对于 flow 的配置文件, 分别有:
 
-* 原始 位于"flow/src/config.json"
-* 用户 对于 win7 很可能位于 "C:\Users\USERNAME\.flow.config.json", 如果没有需要自已新建
+* 原始 位于"flow/src/config.json", 这个文件可以看下，在致了解下有些什么
+* 用户 对于 win7 很可能位于 "C:\Users\USERNAME\.flow.config.json", 如果没有需要自已新建。 比如使用这个文件用来配置 android 的 SDK 路径。
 * 项目 当前工作目录下的 "project.flow" 文件
 
 并且这些配置从下往上覆盖, 通常对于一个项目来说 project.flow 是必须的. 一些命令依赖这个文件的配置
 
-### 编辑器支持
-
-我不太确定, 但前边的 **第五步** 实际上已经提供了同样的模板或其它
-
-### 特性
-
-* icons - 嵌入和转换 icons 为所有目标(target)(除了 linux)
-
-* package - 快速打包 builds 为 zip 或 tar
-
-* hooks - 前,后钩子(运行nodejs脚本)
-
-* clean - 删除build和单独的项目输出,或全部
-
-* upx - 针对桌面平台, 最终二进制文件可以自动压缩
-
-* files - 灵活的复制和模板系统
-
-* build - 将haxe代码生成部署应用
-
-* launch - 使用内部的web server,与文件同步(即修改了源码将立即反应)运行app, 以及更多
 
 ### 文件格式
 
-<https://underscorediscovery.github.io/flow/flow.html>
+<https://snowkit.github.io/flow/flow.html> flow 下使用如下约定:
 
-如前所述, flow 文件格式为JSON格式的文本字符串.以下使用如下约定:
+* `node` 指一个对象, 例如: `{}`
 
-* `node` 一个 json 对象,例如: `{}`
+* `list` 表示数组, 例:`[]`
 
-* `list` 数组,例:`[]`
-
-* `key` 为一对key/value ,例: `name:'value'`
+* `key` 为一对key/value ,例: `name: 'value'`
 
 #### Root nodes
 
@@ -200,7 +218,7 @@ if:{
 
 内建的defines
 
-* `dependency` 任何依赖将会成为 define,
+* `dependency` 依赖, 任何依赖将会成为 define,
 
   - 参考 haxelib,只是引用define时,使用下滑线"_"代替减号"-"
 

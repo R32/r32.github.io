@@ -7,19 +7,7 @@ categories: other
 
 比特币结合P2P对等网络技术和密码学原理，来维持发行系统的安全可靠性。与有中心服务器的中央网络系统不同，在P2P网络中无中心服务器，每个用户端既是一个节点，也有服务器的功能，任何一个节点都无法直接找到其他节点,必须依靠其户群进行信息交流。
 
-每个帐户其实就是一对公私匙，有私匙的人就是帐户的主人。如果 A 要给 B 转一笔钱，A 就把钱的数量加上 B 的公匙，用自己的钥匙(TODO: 公还是私,还是二个都?)签名。而 B 看到这个签名，就可以了解，的确是 A 转给了他如数的 BTC http://8btc.com/article-12-1.html
-
 <!-- more -->
-
-专有名词 <http://www.8btc.com/development-guide>
-
-#### 比特币地址和私钥是怎样生成的
-
-原文引用: http://8btc.com/article-135-1.html
-
-比特币使用 椭圆曲线算法 生成 **公钥** 和 **私钥** ，选择的是 secp256k1 曲线。生成的公钥是 33字节 的大数，私钥是 32字节 的大数，钱包文件 wallet.dat 中直接保存了公钥和私钥。在接收或发送比特币时用到的 地址(address) 是 公钥 经过算法处理后得到的，具体过程是 公钥 先经过 SHA-256 处理得到32字节的哈希值，再经 RIPEMED 处理后得到20字节值，再经过字符转换过程得到我们看到的地址。这个字符转换过程与私钥的字符转换过程完成相同，步骤是先把输入的内容（对于公钥就是20字节的摘要结果，对于私钥就是32字节的大数）增加版本号，经过连续两次SHA-256算法，取后一次哈希结果的前4字节作为校验码附在输入内容的后面，然后再经过Base58编码，得到字符串
-
-![btc-gen-key](/assets/img/btc-gen-key.png)
 
 
 ### HxBitcoin
@@ -27,7 +15,7 @@ categories: other
 <https://github.com/cbatson/hxBitcoin> 的 readme 文件内容.
 
 * [BIP0038(encrypted private keys)](https://github.com/bitcoin/bips/blob/master/bip-0038.mediawiki) 私钥格式的一种. 为了实现纸钱包
-	
+
   > 用于加密私钥(private key), 被加密的私钥不需要密码就可以算出 地址(address)
   >
   > 因此没有密码也可以查询余额, 加密后长度不变, 加密和解密非常慢
@@ -35,17 +23,17 @@ categories: other
 * WIF 私钥格式的一种,5开头51位Base58, 可以直接导入各种客户端
 
   > WIFC 可导入钱包的私钥-压缩，K或L开头52位Base58，导入客户端后，通常会生成该私钥对应的压缩地址
-  >	
+  >
   > 其它私钥格式 HEX, B64, B6, MINI ......
 
 * Convert private keys to public keys & addresses
 
-  > 比特币使用 椭圆曲线算法(scrypt) 生成公钥和私钥, 
+  > 比特币使用 椭圆曲线算法(scrypt) 生成公钥和私钥,
 
 * [Base58](http://zh.wikipedia.org/wiki/Base58) Bitcoin 中使用的一种独特的编码方式
 
   > 相对于Base64，Base58不使用数字"0"，字母大写"O"，字母大写"I"，和字母小写"l"，以及"+"和"/"符号
-  >	
+  >
   > 没有标点符号,通常不会从中间分行, 大部分软件支持双击选择整个字符串
   >
   > 由于256不能被58整除，Base58 无法象 Base64 那样转换为 8bits 的二进制后依次取出6bits就可以快速完成转换。因此，Base58编码算法需要除法运算实现，如果被编码的数据较长，则要用特殊的类来处理大数
@@ -71,7 +59,7 @@ categories: other
 * Extensive test suite of over 22,000 individual tests and vectors
 
 * Pure Haxe implementation
- 
+
 * No additional/external dependencies
 
 
@@ -87,9 +75,9 @@ Bitcoin Developer Guide
 
 ### Block Chain
 
-块链(block chain)提供了比特币的公共账单, 一个有序和时间戳的交易记录. 这个系统用于避免双花支付(double spending)和修改历史交易.
+“区块链”(block chain)提供了比特币的公共账单：一个顺序的并带有时间戳的交易记录。 这个系统用于避免双花支付(double spending)和交易历史修改。
 
-比特币网络中的各个节点各自存储块链并且验证块(block)的有效性, 当几个节点拥有一样的块在各自的块链中, 则它们被认为保持一致性。 验证规则这些节点遵守维护保持一致被称为 一致性规则(consensus rules). 这一节描述了许多”一致性规则“的使用在 Bitcoin Core 中.
+比特币网络中的各个“全节点”(full node)各自包含其独立的"区块链"（仅包含该节点验证过了的区块）。 当多个节点具有相同的"区块"时 它们被认为是“一致的”(consensus)。这些节点用来维持一致性的验证规则被称作一致性规则（consensus rules）。
 
 #### Block Chain Overview
 
@@ -115,13 +103,13 @@ merkle root 储存在块头(block header), 同样每个块头还存储着上一�
 * satoshi: 聪; 比特币的最小面值, 1 bitcoin 等于 100,000,000 satoshis.
 
 * coinbase/generation transactions 块中的第一个交易,总是由矿工创建, 它包一个单独 [coinbase]
-   
+
 * coinbase: 一个特殊字段作为 coinbase transactions 的唯一接收(input), coinbase 可以声明 block 奖励并提供 100bytes的任意数据
 
   > 注意这里的 coinbase 不是指的交易网站
-	
+
 * transaction fee 或称为 miner fee,所有剩余的钱,当全部收入交易扣除全部支出交易, 该费用交付给将交易添加到block的矿工, 由矿工将余额返回给花费人.
-	
+
   > 注意区别 Minimum relay fee(最低中转费): 最低费用交易必须被接入到 内存池通过 Bitcoin Core 节点中转
 
 #### Proof Of Work
@@ -178,10 +166,10 @@ block 可以不需要包含 non-coinbase transaction, 但是矿工总是收集�
 
 所有"交易",包括coinbase transaction,都将以二进制rawtransaction格式编码加入到block.
 
-将 rawtransaction 进行哈希计算以创建交易标识(transaction identifier(txid)), 根据这些txids,构造merkle tree.(多个txid将连接然后求哈希,而单txid则只是复制自身). 
+将 rawtransaction 进行哈希计算以创建交易标识(transaction identifier(txid)), 根据这些txids,构造merkle tree.(多个txid将连接然后求哈希,而单txid则只是复制自身).
 
   > merkle tree 的创建参考 [Block Chain Overview](#Block_Chain_Overview) 段落的 白话 merkle
-	
+
 例如: 如果交易刚被加入(未求哈希), 那么5层交易 merkle tree 将看起来如下:
 
 ```
@@ -200,7 +188,7 @@ A  B  C  D  E 	.........各交易(Transactions)
 
 Note: 如果在同一个数据块找到了相同的 txid, 这有可能出现在当 merkle tree 可能会与一些块不一致或由于平衡merkle tree中删除所有重复项的实现(重复的孤独哈希值). 因为它很难有相同txid的单独交易. 这不会造成诚实软件的负担, 但是必须检察如果这块的无效状态被缓存, 否则有效块与重复项消除可以具有相同的merkle root 和块哈希, 但是将被拒绝通过缓存了的无效结果, 导致安全漏洞如 CVE-2012-2459.(TODO:这段原文我也没看明白,似乎是程序Bug?)
 
-* block reward 块奖励. 矿工成功创建block的奖励.等于 block subsidy + transactions fees  
+* block reward 块奖励. 矿工成功创建block的奖励.等于 block subsidy + transactions fees
 
 * block subsidy 块补帖.就是所谓的挖矿奖励,目前是 25btc, 下次减半后将为 12.5btc
 
@@ -306,7 +294,7 @@ Bob的secp256k1签名不仅证明Bob控制着privkey, 同样防止篡改交易�
 
 * signature: 签名, 一个关联到pubkey的值, 只能由拥有创建了这个pubkey的privkey合理的创建, 用于比特币授权花费satoshi之前发送给pubkey.
 
-#### P2PKH Script Validation 
+#### P2PKH Script Validation
 
 验证过程需要scriptSigs和scriptPubKey的计算(evaluation), 在P2PKH支出(output)中, scriptPubKey为:
 
@@ -343,7 +331,7 @@ script语言是故意设计成 Forth-like 基于堆栈无状态和图灵不完�
   > OP_EQUAL 将弹出(从栈顶移除)已经比较过的二个值, 并且将返回值替换掉它们: 0(false),1(true).
   >
   > OP_VERIFY(未显示)检测栈顶的值, 如果值为false, 它将立即终止计算交易将失败 返回true则将true从栈顶移除
-	
+
 * 最后, Alice的 scriptPubKey 执行OP_CHECKSIG, 对当前验证检测Bob的signature和pubkey. 如果签名匹配使用所有所需数据生成的pubkey, OP_CHECKSIG将压入true到栈顶.
 
 在执行了scriptPubKey之后如果false不在栈顶, 这个交易是有效的.(只要没有其它问题)
@@ -382,7 +370,7 @@ P2PKH 是 scriptPubKey 用于将交易发送到一个或多个比特币地址的
 
 ```
 Pubkey script: OP_DUP OP_HASH160 <PubKeyHash> OP_EQUALVERIFY OP_CHECKSIG
-Signature script: <sig> <pubkey> 
+Signature script: <sig> <pubkey>
 ```
 
 ##### Pay To Script Hash
@@ -484,7 +472,7 @@ OP_CHECKSIG提取non-stack参数来自每个signature从它的计算结果, 允�
 * `SIGHASH_SINGLE|SIGHASH_ANYONECANPAY` 仅签名这一个收入(input)以及相匹配的支出(output), 但是同样允许任何人添加或移除其它收入(inputs)
 
 因为每个收入(input)进行了签名, 与多个收入(inputs)的交易可以有多个签名哈希类型各自签名交易的不同部分, 例如: single-input交易签名类型为NONE, 可以有它改变了的支出(output)由矿工将它添加到块链. 另一方面, 如果 two-input 交易, 一个input签名类型为NONE 和另一个input签名类型为ALL, 这 ALL 类型的签字人可以选译 satoshi 将被发送到哪而不需要咨询NONE类型签字人 -- 但是没有其它任何人可以修改这个交易.
- 
+
 
 #### Locktime And Sequence Number
 
@@ -505,9 +493,9 @@ locktime 自身为无符号的4字节整数, 可以被解析为二种方式:
 * 如果低于 500,000,000, locktime 将被解析为一个block height, 交易可以添加到这一高度或更高的任意block.
 
 * 如查大于或等于 500,000,000, localtime 使用 Unix时间戳格式(自1970-01-01距离现在的秒数),交易可以添加到大于这个时间的任意block.
-	
+
   > Sequence Number: 所有交易的部分一些旨在允许未经证实的 time-locked 交易的最终化(finalized)之前更新; 目前未使用除了在交易中禁用 locktime
-	
+
 #### Transaction Fees And Change
 
 交易通常支付交易费基于签名交易的总字节大小.交易费将给矿工，如块链章节所述，所以它是最终由每个矿工来选择最低的交易费.
@@ -535,9 +523,9 @@ Bitcoin Core 0.9, 交易将不计算高优先交易需要支付的最小费用(�
 * 唯一(非重复使用)的P2PKH和P2SH地址保护免受第一种类型攻击通过保持 ECDSA pubkey_hash 隐藏,直到首次发送 satoshis 到地址, 因此攻击实际上是无用的,除非他们可以重建 privkey 在不到二个小时内, 块链将对交易保护得很好.
 
 * 唯一(非重复使用)的privkey保护免受第二种类型攻击通过每个privkey仅生成一个签名,因此攻击者永远不会得到随后的签名在基于比较(comparison-based)的攻击中使用. Existing comparison-based attacks are only practical today when insufficient entropy is used in signing or when the entropy used is exposed by some means, such as a side-channel attack.(TODO: ???entropy)
-	
+
 因此对于隐私和安全, 我们建议(encourage)你建立的你的app应避免pubkey的重复使用,并在可能的情况下,劝阻用户重复地址, 如果你的app需要一个固定的URI向其发送支付, 请参阅之后[bitcoin:URL](#bitcoin_URI)的部分
- 
+
 #### Transaction Malleability
 
 (TODO: 这一节内容都感觉不对)
@@ -632,7 +620,7 @@ First In, First Out (FIFO)
 
 #### Rebilling Recurring Payments
 
-### Operating Modes 
+### Operating Modes
 
 #### Full Node
 

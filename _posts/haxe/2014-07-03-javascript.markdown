@@ -61,6 +61,8 @@ categories: haxe
 
 通过 `-D` 的编译参数
 
+* `shallow-expose`: 将使 `@:expose` 导出的对象会在顶层环境添加一条 `var xxx = $hx_exports[xxxx]`
+
 * `js-classic`: **经典模式**, 即: 不使用闭包和 "strict mode" 包装代码输出.
 
 * `jquery-ver`: The jQuery version supported by js.jquery.*. The version is encoded as an interger. e.g. 1.11.3 is encoded as 11103
@@ -262,7 +264,7 @@ haxe -main Main -js bin/main.js --macro includeFile("projDir/path/to/file.js")
 
   其关键是使用 `--macro exclude('SomeClass')` 来排除某一个类或模块（注意必须使用单引号）
 
-  唯一的问题是要在被排除的类上使用 `@:expose` , 但是不可以改名（例如: `@:expose("OtherName")`）
+  唯一的问题是可以在被排除的类上使用 `@:expose` , 但是不可以改名（例如: `@:expose("OtherName")`）
 
   但是使用 `@:expose` 好像不太美观, 还不如使用: `-D js-classic`，但这却导致不会添加 "use strict".
 

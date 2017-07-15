@@ -52,9 +52,7 @@ gcc -o myapp output.c hlc_main.c -Lhl
 
   > 需要 Openal32.dll（可能需要另外单独下载） 以及 soft_oal.dll（openal-soft-1.17.2-bin.zip内有提供）
 
-- [libuv](https://github.com/libuv/libuv#downloading), 需要翻墙下载 gyp 和安装 python 2.x, 然后参考 vcbuild.bat 作修改
-
-  > [libuv 中文手册](https://github.com/forhappy/uvbook)
+- [libuv 中文手册](https://github.com/forhappy/uvbook)
 
 * 打开 hl.sln，在 "解决方案配置" 的下拉选项中选择 "release2013"(有"release2013/release/debug"), 最后获取 release2013 目录下的 hl.exe 和所有 .hdll 和 libhl.dll
 

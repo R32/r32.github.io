@@ -15,6 +15,8 @@ categories: other
 
 ### Tools
 
+* [sqlyog-community](https://github.com/webyog/sqlyog-community) 不到 4M 的 mysql gui客户端（只是社区版功能有限制）
+
 * [neural-enhance](https://github.com/alexjc/neural-enhance) python3 图片工具
 
 * [fogleman/primitive](https://github.com/fogleman/primitive) go 语言, 输入普通图片生成几何图形, 类似于产生一个滤镜效果的图片, 需要安装 go 语言才能运行的命令行工具, 感觉不太好.
@@ -101,6 +103,8 @@ categories: other
 [design-essentials](https://github.com/showcases/design-essentials)
 
 这个章节的大多数内容都是用于美化的 CSS 或 Javascript , 大多数似乎在 ie8 中都会报错.
+
+* [golden-layout](https://github.com/deepstreamIO/golden-layout) Works in IE8+, Firefox, Chrome, Web app布局
 
 * <https://github.com/knsv/mermaid> 使用类似于 markdown 的语法来画流程图
 
@@ -220,6 +224,8 @@ categories: other
 
 * [libuv 中文手册](https://github.com/forhappy/uvbook)
 
+  > [中文 API 翻译](https://github.com/paohui0117/libuv-)
+
 * [thebookofshaders](https://github.com/patriciogonzalezvivo/thebookofshaders/blob/master/README-ch.md) 选择 zh 后缀的 md 文件阅读
 
 * 使用 word 打印类似于请柬之类的东西, 其实只要用 word 写邮件就可以了, 以下以 word 2007 为示例:
@@ -309,6 +315,8 @@ categories: other
 
 ### CLib
 
+[awesome-c](https://notabug.org/koz.ross/awesome-c) 注: notabug.org 是个什么样的网站？
+
 [C标准头文件](http://stackoverflow.com/questions/2027991/list-of-standard-header-files-in-c-and-c)
 
 c++参考手册: <http://en.cppreference.com/w/>
@@ -327,5 +335,10 @@ c++参考手册: <http://en.cppreference.com/w/>
 
 * [libuv](https://github.com/libuv/libuv) Cross-platform asychronous I/O  <http://libuv.org/>
 
+* [Cross-platform C utility library](https://github.com/rafw/cfly) 国内
+
+* [libcork](http://libcork.readthedocs.io/en/0.14.0/) cross-platform C library
+
+* [foundation_lib](https://github.com/rampantpixels/foundation_lib) Cross-platform public domain foundation library in C
 
 <br />

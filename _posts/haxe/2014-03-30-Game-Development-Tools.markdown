@@ -62,13 +62,6 @@ categories: haxe
 * [Ogmo](http://www.ogmoeditor.com/) windows 的独立游戏开发人员
 
 
-### 资源
-
-* (ShoeBox)[http://renderhjs.net/shoebox/] 基于 AIR 的免费应用,它具有许多实用程序,使得资源管理更简单..
-
-* (Texture Packer)[https://www.codeandweb.com/texturepacker] 将多个Sprite 打包成一个图像,容易使用.
-
-* (免费中文字体)[http://zenozeng.github.io/Free-Chinese-Fonts/]
 
 ### 其它
 
