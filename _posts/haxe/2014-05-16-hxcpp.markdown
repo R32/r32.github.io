@@ -26,6 +26,20 @@ categories: haxe
   > 如果这个文件缺失, hxcpp 将会从 toolchain 目录下自动复制 example.hxcpp_config
 
 
+```
+The easiest way to start would be to just change the "toolchain" files in hxcpp.
+These contain lines like:
+
+<flag value="-O2" tag="release" />
+
+You can just change the "O2" and see if you get the desired result.
+
+If you want to take it a bit further, you could do:
+ <flag value="${MY_OPTIM_FLAG}" tag="release" />
+
+and then set MY_OPTIM_FLAG via something like "haxe -main .... -D MY_OPTIM_FLAG=-O1"
+```
+
 #### `new Foo`
 
 一个简单的示例:

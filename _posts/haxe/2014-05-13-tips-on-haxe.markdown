@@ -52,6 +52,11 @@ categories: haxe
 
 一些内容通过参考 [CHANGES](https://github.com/HaxeFoundation/haxe/blob/development/extra/CHANGES.txt) 文件
 
+* `-D old-error-format`: 如果你使用 flashdevelop 应该加上这个. 在使用 vscode 时则不加这个.
+
+  > HF 中的一员为了使 vscode 能更好地定位 haxe 的语法位置进行过一些改动（大概是由于 vscode 处理 pos 信息时是第一个字节从 1 开始, 而不是 0）
+  > 这个改动导致了 flashdevelop 处理 pos 信息的问题。
+
 * `Foo.js.hx, Foo.hl.hx` 文件都可以定义同一个名为 Foo 的类, 用于跨平台实现某一个类, 而不需要写条件检测。
 
   > 似乎根本没提起过?
@@ -508,31 +513,7 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
 
 #### vscode
 
-vscode 使用了一个特殊的命令(haxe. 3.3新增) `--wait stdio` 来启动 CompletionServer, [#5188](https://github.com/HaxeFoundation/haxe/pull/5188), 但是这个好像只能用于 haxe 的语法提示(`-D didplay-stdin`) 并不能加速源码的编译.
-
-一些快捷键命令:
-
-* `ctrl+shift+p`: 调出vscode命令菜单, 选择 "haxe: initialized VSCode Project" 用于新建项目
-
-  "haxe: Select display Configuration" 用于选择 .hxml 配置文件（即 .vscode 目录下的 settings.json 文件描述, 用于语法提示）
-
-
-* `ctrl+shift+b`: 编译输出由 tasks.json 所指定的
-
-  我感觉通过 `ctrl+~` 来打开命令行窗口更好用???
-
-* `settings.json`: 这个文件下的 haxe.displayConfigurations 下的 hxml 文件是用来产生语法提示的并非 build 时所
-
-总结:
-
-1. 你需要提供多个供于 display 的 display-xxx.hxml 用于语法提示, 指定单独的一个 build.hxml 用来编译
-（为什么不能自动解析 build.hxml 了? 因为这样太麻烦了）
-
-2. 如果能有些按钮什么就更好了. 比如
-
-3. 一些 reference 看上去不错, 但多了之后感觉有些混乱, 特别是连 tyepdef 定义的字段都被标有引用.
-
-在 windows 平台还是使用 flashdevelop 吧...
+似乎非常不错..<https://github.com/vshaxe/vshaxe/wiki/Completion-Cache>
 
 ### 遇见的一些错误
 

@@ -15,6 +15,8 @@ categories: other
 
 ### Tools
 
+* (chromeless)[https://github.com/graphcool/chromeless] 无浏览器, 能更好地代替 PhantomJS, NightmareJS or Selenium
+
 * [sqlyog-community](https://github.com/webyog/sqlyog-community) 不到 4M 的 mysql gui客户端（只是社区版功能有限制）
 
 * [neural-enhance](https://github.com/alexjc/neural-enhance) python3 图片工具
@@ -43,7 +45,7 @@ categories: other
 
 * [daff](https://github.com/paulfitz/daff) align and compare tables 比较二个表格文件（csv）差异
 
-* [svipt](https://github.com/JeriXNet/svipt) 命令行工具图形处理. takes svg file as an input to prepare app icon files for different platforms
+* [svipt](https://github.com/JeriXNet/svipt) haxelib 命令行工具图形处理. takes svg file as an input to prepare app icon files for different platforms
 
 * [fontello](https://github.com/fontello/fontello) This tool lets you combine icon webfonts for your own project.
 
@@ -127,8 +129,6 @@ categories: other
 * [animate.css](https://github.com/daneden/animate.css) css 动画库
 
 * [glfx](https://github.com/evanw/glfx.js) An image effects library for JavaScript using WebGL
-
-* [SVG graphics](https://github.com/adobe-webplatform/Snap.svg) A JavaScript SVG library for the modern web
 
 * [Google Fonts](https://github.com/google/fonts) Font files available from Google Fonts
 
@@ -288,6 +288,8 @@ categories: other
 
 * [编程各种算法-中文](https://github.com/julycoding/The-Art-Of-Programming-By-July/tree/master/ebook/zh)
 
+* [Tools_for_SVG](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Tools_for_SVG) SVG 相关工具.
+
 ### resource
 
 * [awesome-design](https://github.com/gztchan/awesome-design)
@@ -298,6 +300,7 @@ categories: other
 
   <http://fortawesome.github.io/Font-Awesome/examples/>
 
+* [Video Game Music](https://downloads.khinsider.com/game-soundtracks) 一些动漫或游戏的游戏原生音乐
 
 ### misc
 
@@ -322,6 +325,8 @@ categories: other
 c++参考手册: <http://en.cppreference.com/w/>
 
 * [nuklear](https://github.com/vurtun/nuklear) A small ANSI C gui toolkit
+
+* [libs](https://github.com/mattiasgustavsson/libs) Single-file public domain libraries for C/C++ (dual licensed under MIT)
 
 * [imgui](https://github.com/ocornut/imgui) c++ 的一个 GUI库,挺有意思的
 
