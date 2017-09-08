@@ -15,7 +15,9 @@ categories: other
 
 ### Tools
 
-* (chromeless)[https://github.com/graphcool/chromeless] 无浏览器, 能更好地代替 PhantomJS, NightmareJS or Selenium
+* [chromeless](https://github.com/graphcool/chromeless) 无浏览器, 能更好地代替 PhantomJS, NightmareJS or Selenium
+
+  - [puppeteer](https://github.com/GoogleChrome/puppeteer) 无浏览器, google 官方出品 . [example-thal](https://github.com/emadehsan/thal)
 
 * [sqlyog-community](https://github.com/webyog/sqlyog-community) 不到 4M 的 mysql gui客户端（只是社区版功能有限制）
 
@@ -290,6 +292,8 @@ categories: other
 
 * [Tools_for_SVG](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Tools_for_SVG) SVG 相关工具.
 
+* [vscode-tips-and-tricks](https://github.com/Microsoft/vscode-tips-and-tricks) 也许有一天我将会使用 vscode 作为主要的 IDE
+
 ### resource
 
 * [awesome-design](https://github.com/gztchan/awesome-design)
@@ -315,6 +319,8 @@ categories: other
 * [phantomjs](https://github.com/ariya/phantomjs) 没有界面的浏览器,适用于做爬虫
 
 * [Visual Studio 2013](http://community.itbbs.cn/thread/758129/) 旧版本不怎么好找, 7G大小
+
+* [js1k.com](http://js1k.com/2016-elemental/demo/2515) 好多 js 1k 的示例..
 
 ### CLib
 

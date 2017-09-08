@@ -10,10 +10,11 @@ notes: full
 
 * c# 使用 namespace 来管理组织类, haxe 则使用类的所在目录(package) 方式
 
+  c# 的文件名可随意, 而 haxe 的文件名则作为模块名, 路径则为包名.
+
 * c# 可使用 struct 用于创建紧凑数据, haxe 没有相关功能，
 
   > 虽然 haxe 中的"匿名结构"看上去非常像 struct , 但"匿名结构"是一种降低性能的 Dynamic 结构数据，
-  > haxe 中的"匿名结构"只对 js 和 neko 这二个平台没有性能影响
 
 * 对于 c# 中的固定数组, 在 haxe 中 haxe.ds.Vector 是个类似固定数组的容器
 
@@ -24,6 +25,18 @@ notes: full
 下边将使用 `Haxe/Neko` 平台来和 `C#` 对比. 注: 由于在 c# 上我也只是新手, 因此下边 c# 的代码可能写得很烂
 
 <!-- more -->
+
+### links
+
+vscode
+
+* 搜索安装 dotnet core
+
+* 在扩展安装界面输入 "c#" 然后直接选择第一个(by mircosoft).
+
+  > 安装后需要以管理员身份运行一次以安装 OmniSharp for Windows
+
+[c# 中文文档](https://docs.microsoft.com/zh-cn/dotnet/csharp/)
 
 ### HelloWorld
 
