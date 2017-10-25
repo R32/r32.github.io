@@ -52,6 +52,8 @@ categories: haxe
 
 一些内容通过参考 [CHANGES](https://github.com/HaxeFoundation/haxe/blob/development/extra/CHANGES.txt) 文件
 
+* 新的函数类型声明, 允许带参数名字以及支持可选: 例如: `var func: (name: String, ?number: Int) -> Void`
+
 * `-D old-error-format`: 如果你使用 flashdevelop 应该加上这个. 在使用 vscode 时则不加这个.
 
   > HF 中的一员为了使 vscode 能更好地定位 haxe 的语法位置进行过一些改动（大概是由于 vscode 处理 pos 信息时是第一个字节从 1 开始, 而不是 0）
@@ -420,6 +422,9 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
   	return v
   }
   ```
+* 常量作为类型参数, const type param [3450](https://github.com/HaxeFoundation/haxe/commit/d764c9468f2d5465482125130aa145ee9d48b9a3)
+
+  但是好像没有一点实用性, 因为只能把参数转换成字符串, 无法参与计算什么的.
 
 * `Std.int`: 包括 Math.round, Math.floor, Math.ceil 在处理较大数字时, 将超出Int界限
 

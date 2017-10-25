@@ -15,6 +15,8 @@ categories: other
 
 ### Tools
 
+* [rcedit](https://github.com/electron/rcedit) windows exe/dll 资源修改器
+
 * [chromeless](https://github.com/graphcool/chromeless) 无浏览器, 能更好地代替 PhantomJS, NightmareJS or Selenium
 
   - [puppeteer](https://github.com/GoogleChrome/puppeteer) 无浏览器, google 官方出品 . [example-thal](https://github.com/emadehsan/thal)
@@ -307,6 +309,8 @@ categories: other
 * [Video Game Music](https://downloads.khinsider.com/game-soundtracks) 一些动漫或游戏的游戏原生音乐
 
 ### misc
+
+* [emoji-list](https://github.com/caiyongji/emoji-list) github 表情清单, 那有那个 "中文" 的图标蛮有意思的.
 
 * [Webqq 机器人](https://github.com/sjdy521/Mojo-Webqq)
 

@@ -46,6 +46,8 @@ gcc -o myapp output.c hlc_main.c -Lhl
 
 以下使用 vs2013 社区版, 需要自已下载 sdl, openal 等放至到 include 目录 (参看各 readme 文件)，
 
+- directx 丢失了 [d3dcompiler_47.dll](http://www.catalog.update.microsoft.com/Search.aspx?q=KB4019990), 通过链接更新 KB4019990 补丁即可.
+
 - [sdl](https://www.libsdl.org/) download the Development Libraries
 
 - [openal](http://openal-soft.org/) Download the Win32 binaries

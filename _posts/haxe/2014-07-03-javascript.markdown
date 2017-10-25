@@ -50,12 +50,8 @@ categories: haxe
   // 或者在一个函数的内部如:
   untyped Array.prototype.slice.call(__js__("arguments"));
   ```
-* `__instanceof__(o,cl)`: 相当于 JS 的 o instanceof c1,
 
-* `__typeof__(o)`: 相当于 JS 的 typeof o
-
-* `__strict_eq__(a,b) 和 __strict_neq__(a,b)`: 相当于 JS 中的 a===b, a!==b
-
+haxe 4.0 后新增了 js.Syntax 类, 包含了 `instanceof`, `typeof`, `delete`, `===` 以及 `!===`
 
 ### Defines
 
@@ -82,10 +78,6 @@ categories: haxe
 ### Metas
 
 * `@:jsRequire(moduleName,?subModName)` 需要 haxe 3.2+, 在 nodejs 中经常会用到
-
-  > 在 haxe 3.13 时 使用诸如 `@:native("(require('fs'))") extern class Fs{}` 这样很不美观.
-  >
-  > 因此 haxe 3.2+ 添加了这个新的元标记,
 
   ```haxe
   @:jsRequire("fs")
