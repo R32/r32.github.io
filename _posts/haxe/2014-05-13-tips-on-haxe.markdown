@@ -54,6 +54,19 @@ categories: haxe
 
 * 新的函数类型声明, 允许带参数名字以及支持可选: 例如: `var func: (name: String, ?number: Int) -> Void`
 
+* 关于 `haxe.macro.CompilationServer` 可以用来加速编译，通过调用 `--macro server.XXX` 来调用这个类下的字段。
+
+  ```bash
+  # 通知编译器 ???
+  --macro server.setModuleCheckPolicy(['DefaultAssetLibrary'], [CheckFileContentModification])
+
+  # 通知编译器不再监视指定包内的文件
+  --macro server.setModuleCheckPolicy(['flash', 'openfl', 'flixel', 'lime', 'haxe'], [NoCheckShadowing], true)
+  ```
+
+  不过感觉也没什么用，因为一般只要打开了 CompilationServer 就已经够快了。
+
+
 * `-D old-error-format`: 如果你使用 flashdevelop 应该加上这个. 在使用 vscode 时则不加这个.
 
   > HF 中的一员为了使 vscode 能更好地定位 haxe 的语法位置进行过一些改动（大概是由于 vscode 处理 pos 信息时是第一个字节从 1 开始, 而不是 0）
@@ -422,9 +435,18 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
   	return v
   }
   ```
-* 常量作为类型参数, const type param [3450](https://github.com/HaxeFoundation/haxe/commit/d764c9468f2d5465482125130aa145ee9d48b9a3)
+* 常量作为类型参数, 不过由于 haxe 不需要管理内存，因此感觉没有什么地方用得上。
 
-  但是好像没有一点实用性, 因为只能把参数转换成字符串, 无法参与计算什么的.
+  ```
+  @:generic              // 这个必须要加上，由编译器处理类似于 templates 的东西.
+  class Foo<@:const A> { // 使用 @:const 标记常量
+    public function new() {
+        var a = new haxe.ds.Vector<Int>((A: Dynamic)); // (haxe bug. 才需要这样处理)
+    }
+  }
+  ```
+
+
 
 * `Std.int`: 包括 Math.round, Math.floor, Math.ceil 在处理较大数字时, 将超出Int界限
 

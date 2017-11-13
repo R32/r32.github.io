@@ -15,6 +15,18 @@ categories: other
 
 http://superuser.com/questions/511582/how-to-use-bcdedit-to-dual-boot-windows-installations
 
+#### arch
+
+http://www.cnblogs.com/vachester/p/5635819.html
+
+https://mirrors.ustc.edu.cn/
+
+实际上基本所有的方式都是需要 grub 作引导，但是我想保留 windows 的引导器
+
+不使用 U 盘似乎装不了?  看 arch 的 wifi 感觉好像是将 grub 装在 linux 要安装的盘上，之后通过 windows 引导？
+
+搜索: linux with Windows boot loader
+
 
 #### 硬盘安装
 

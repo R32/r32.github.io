@@ -103,7 +103,7 @@ HL 中的字符串由 hl.bytes 构成, 字符串的编码通常为 `wchar_t`, �
 
 * `ret fun(args)`: 在 hl 中为严格的函数类型, 可以是 `closure` 或一个函数。
 
-* `array`: 数组, 低层数组并非严格类型并且无边界检测, 但是有固定长度
+* `array`: 数组, 非严格类型, 无边界检测, 有固定长度
 
 * `object`: 固定了结构, 相当于 haxe 中的 class
 
@@ -165,15 +165,13 @@ haxe 的 anonymous structure or interface instances 以 c 端表现为 `virtual(
 
 ### gc
 
-从 gc 中申请内存（不保证内容的正确性）：
+从 gc 中申请内存： [GC WIKI](https://github.com/HaxeFoundation/hashlink/wiki)
 
-* `hl_gc_alloc_noptr`: 用于基础类型（如字节序节: `unsigned char*`),或者被装箱的基础类型(dynamic), 或者 c 端任意不会被 haxe 所引用的类型
+* `hl_gc_alloc`: vdynamic 兼容, 如 `(vdynobj *), (vvirtual *)`
 
-  实际上 `(vclosure*), (vdynobj_proto*)` 也都是通过这个来申请
+* `hl_gc_alloc_raw`: 不能与 vdynamic 兼容，块内可能包含有指针。
 
-* `hl_gc_alloc`: dynamic, 如 `(vdynobj *), (vvirtual *)`
-
-* `hl_gc_alloc_raw`:
+* `hl_gc_alloc_noptr`: 用于基础类型, 表示被分配的块不包含有 "指针"
 
 * `hl_gc_alloc_finalizer`: 结构的第一个字段必须指向 `(void(*)(void *)` 以便 gc 在清除时调用, 参考 file.c 的 hl_file_open
 

@@ -15,6 +15,8 @@ categories: other
 
 ### Tools
 
+* [把图片解析成几何图形, 随机名字生成](http://samcodes.co.uk/code/)
+
 * [rcedit](https://github.com/electron/rcedit) windows exe/dll 资源修改器
 
 * [chromeless](https://github.com/graphcool/chromeless) 无浏览器, 能更好地代替 PhantomJS, NightmareJS or Selenium
@@ -294,7 +296,7 @@ categories: other
 
 * [Tools_for_SVG](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Tools_for_SVG) SVG 相关工具.
 
-* [vscode-tips-and-tricks](https://github.com/Microsoft/vscode-tips-and-tricks) 也许有一天我将会使用 vscode 作为主要的 IDE
+* [vscode-tips-and-tricks](https://github.com/Microsoft/vscode-tips-and-tricks)
 
 ### resource
 
@@ -314,15 +316,9 @@ categories: other
 
 * [Webqq 机器人](https://github.com/sjdy521/Mojo-Webqq)
 
-* [pomelo](https://github.com/NetEase/pomelo) A fast,scalable,distributed game server framework for Node.js
-
-  > https://github.com/NetEase/pomelo/wiki/Home-in-Chinese
-
 * [minimatch](https://github.com/isaacs/minimatch) a glob matcher in javascript 正则表达式如像 dos下的 `*.txt` 通配符
 
 * [phantomjs](https://github.com/ariya/phantomjs) 没有界面的浏览器,适用于做爬虫
-
-* [Visual Studio 2013](http://community.itbbs.cn/thread/758129/) 旧版本不怎么好找, 7G大小
 
 * [js1k.com](http://js1k.com/2016-elemental/demo/2515) 好多 js 1k 的示例..
 
@@ -332,15 +328,13 @@ categories: other
 
 [C标准头文件](http://stackoverflow.com/questions/2027991/list-of-standard-header-files-in-c-and-c)
 
-c++参考手册: <http://en.cppreference.com/w/>
+* [libu](https://github.com/koanlogic/libu) LibU is a multiplatform utility library written in C, with APIs for handling memory allocation, networking and URI parsing, string manipulation, debugging, and logging in a very compact way, plus many other miscellaneous tasks
 
 * [nuklear](https://github.com/vurtun/nuklear) A small ANSI C gui toolkit
 
 * [libs](https://github.com/mattiasgustavsson/libs) Single-file public domain libraries for C/C++ (dual licensed under MIT)
 
 * [imgui](https://github.com/ocornut/imgui) c++ 的一个 GUI库,挺有意思的
-
-* [duilib](https://github.com/duilib/duilib) Windows下免费开源的 DirectUI 界面库, 看上去需要一些 windows 编程经验
 
 * [stb](https://github.com/nothings/stb) stb single-file public domain libraries for C/C++
 
@@ -350,10 +344,26 @@ c++参考手册: <http://en.cppreference.com/w/>
 
 * [libuv](https://github.com/libuv/libuv) Cross-platform asychronous I/O  <http://libuv.org/>
 
-* [Cross-platform C utility library](https://github.com/rafw/cfly) 国内
-
 * [libcork](http://libcork.readthedocs.io/en/0.14.0/) cross-platform C library
 
 * [foundation_lib](https://github.com/rampantpixels/foundation_lib) Cross-platform public domain foundation library in C
+
+
+### Notes
+
+* 虚拟键盘模拟:
+
+  ```bash
+  winio.dll      # 有说需要插真实 PS 键盘才有会有效.
+  ```
+
+* 逆向工具:
+
+  ```
+  IDA            # 只有 5.0 的免费版，至少可以用来当 PE 查看器。
+  ollydbg        # free, 动态跟踪调试。
+  ```
+
+
 
 <br />

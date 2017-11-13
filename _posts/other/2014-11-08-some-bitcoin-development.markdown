@@ -7,6 +7,8 @@ categories: other
 
 比特币结合P2P对等网络技术和密码学原理，来维持发行系统的安全可靠性。与有中心服务器的中央网络系统不同，在P2P网络中无中心服务器，每个用户端既是一个节点，也有服务器的功能，任何一个节点都无法直接找到其他节点,必须依靠其户群进行信息交流。
 
+一个中文翻译的全的 <http://usyiyi.cn/translate/bitcoin/developer-guide.html>
+
 <!-- more -->
 
 
