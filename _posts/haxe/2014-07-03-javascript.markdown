@@ -20,7 +20,7 @@ categories: haxe
 
 * 当把一个成员方法作为函数参数时传递时, 比如 `addEventListener(onSome)`, 确保 this 的指向是否如预期（haxe 会将把 **成员方法** 自动绑到所属对象上, 但有时候你并不需要这样做）
 
-  因此 haxe 的 function bind 尽量不要用在成员方法上, 或者使用 `(obj: Dynamic).method` 的方式防止 `$bind`:
+  因此如果不想绑定 this, 可使用 `(obj: Dynamic).method` 的方式防止 `$bind`:
 
   ```hx
     var rqf : Dynamic = (window: Dynamic).requestAnimationFrame ||
@@ -28,6 +28,8 @@ categories: haxe
         (window: Dynamic).mozRequestAnimationFrame;
     // 这里显示地定义 rqf 为 Dynamic, 否则会当成 Bool
   ```
+
+  或者将函数定义成变量的形式如: `var sum: (a: Int, b: Int)->Int;`
 
 * 当写 extern class 时, 静态扩展目前将忽略 `@:overload` [#5596](https://github.com/HaxeFoundation/haxe/issues/5596)
 
@@ -90,7 +92,17 @@ haxe 4.0 后新增了 js.Syntax 类, 包含了 `instanceof`, `typeof`, `delete`,
   // 导出JS为: var Barr = require("http").Server;
   ```
 
-* **`@:expose(?Name=Class path)`** 将类或静态方法接到全局对象下（即成为一个全局范围的变量）
+* **`@:expose(?Name=Class path)`** 将"类"或"静态方法"导出到全局对象下（即成为一个全局范围的变量）
+
+  ```haxe
+  // 将类导出到全局, 如果无参数则导出一个同名的类到全局
+  @:expose class App {}
+
+  // 导出静态方法, @:expose 一定要加参数，才可以导出到 JS 为全局函数。
+  class App {
+    @:expose("haha") static function haha() {}
+  }
+  ```
 
   注意和 `@:native`(用来更改输出类名或字段名) 相区别,
 

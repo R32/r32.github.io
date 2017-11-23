@@ -135,9 +135,47 @@ API 文件建议参考 cygwin/lib/ocaml 下的 mli 文件, 一些方法会提示
   let a = 1 and b = 2 in ..
   ```
 
+* “等号” `=`, `==` 和 “不等号”: `<>`, `!=` 的区别: [stackoverflow...](https://stackoverflow.com/questions/1412668/),
+
+  因此除非判断二个变量是否为相同的一个变量，否则一律使用 "=" 和 "<>" 来检测相等。
+
+  ```ocaml
+  (* 在 pervasives.ml 下可找到如下: *)
+  external ( = ) : 'a -> 'a -> bool = "%equal"
+  external ( <> ) : 'a -> 'a -> bool = "%notequal"
+
+  external ( == ) : 'a -> 'a -> bool = "%eq"
+  external ( != ) : 'a -> 'a -> bool = "%noteq"
+
+  1 = 1       (* true  *)
+  1 == 1      (* true  *)
+  1.0 = 1.0   (* true  *)
+  1.0 == 1.0  (* false *)
+  "a" = "a"   (* true  *)
+  "a" == "a"  (* false *)
+  let v = "a"
+  v = v       (* true  *)
+  v == v      (* true  *)
+  ```
+
+* 操作符`|>` 与 `@@`, 通过查看 pervasives.ml 可知
+
+  ```ocaml
+  101 |> print_int  (* 相当于 print_int 101 *)
+
+  let sum a b = a + b in
+  101 |> (fun a -> sum a 202)
+
+  print_int @@ 101  (* print_int 101, 感觉好像没什么用处, 因为不用写 @@ 也没关系 *)
+  let sum a b = a + b in
+  (fun a -> sum a 202) @@ 101
+
+  (* 单个 @ 用来连接二个 List, 相当于 List.concat([1;2;3] [4;5;6]) *)
+  [1; 2; 3;] @ [4; 5; 6]
+  ```
+
 * misc
-  - 对于不等号 ocaml 支持 `!= , <>` 二种型式
-  - 数组和List不一样的是, 数组的值像mutable record 一样可变, 即: `arr.(0) <- 100`
+  - 数组和 List 不一样的是, 数组的值像 mutable record 一样可变, 即: `arr.(0) <- 100`
   - List 下的方法, 大多数 rec_ 为前缀的方法才是 tail-recursive 形式的
   - incr/decr 用于 int ref 为增和减
 

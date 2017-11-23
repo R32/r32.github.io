@@ -465,7 +465,7 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
   >
   > Sys.command 返回 0 表示程序以 exit(0) 的方式正常退出, 非 0 值一般意味着出错,
   >
-  > 如果需要获得 CLI 程序的输出值(stdout \| stderr) 则应该使用 sys.io.Process. 这二个都会等待 CLI程序**完全运行结束**（我只用 nodejs 的 setTimeout 测试过）.
+  > 如果需要获得 CLI 程序的输出值(stdout | stderr) 则应该使用 sys.io.Process. 这二个都会等待 CLI程序**完全运行结束**（我只用 nodejs 的 setTimeout 测试过）.
 
 * stdout
 
@@ -1077,7 +1077,7 @@ Main.main();
 })();
 ```
 
-对于抽象类, haxe 提供了多个 “元标记(metadata)”， 不同 “元标记” 有其各自的意义
+对于抽象类, haxe 提供了多个 “元标签(metadata)”， 不同 “元标签” 有其各自的意义
 
 * `@:enum`: 使得抽象类像 C 语言中的枚举，
 
@@ -1412,7 +1412,7 @@ haxe 3.3 才加入的类, 使得目前除了flash 和 js平台, 其它平台也�
 
 * `MainLoop.add`: 参考 haxe.Timer 的源码.
 
-参考 EntryPoint 的文档注释可知, 当 haxe.MainLoop 存在时, 这时 `haxe.EntryPoint.run()` 将会被自动插入在 main 函数之后
+**注意**: 当 haxe.MainLoop 存在时, 这时 `haxe.EntryPoint.run()` 将会被自动插入在 main 函数之后
 
 ### XXXXX
 

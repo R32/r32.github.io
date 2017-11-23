@@ -15,6 +15,15 @@ categories: other
 
 ### Tools
 
+
+* [知乎上无意看到的](https://www.zhihu.com/question/52157612/answer/260796701)， 它们可能非免费的。
+
+  - Power Map, 微软官方出版的一个3D数据地图插件，包含在线地图+在线演示+制作视频等各项功能
+  - 方方格子Excel插件, 这就是一个Excel偷懒的工具，将一些常用的需要写函数或写宏的功能给封装成现成的按钮
+  - Excel图表插件-EasyChart
+  - Process on，一个在线制作流程图的软件，包括思维导图等
+
+
 * [把图片解析成几何图形, 随机名字生成](http://samcodes.co.uk/code/)
 
 * [rcedit](https://github.com/electron/rcedit) windows exe/dll 资源修改器

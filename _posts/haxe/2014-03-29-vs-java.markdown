@@ -6,7 +6,7 @@ categories: haxe
 notes: full
 ---
 
-下边将使用 `Haxe/Neko` 平台来和 `Java` 对比.因为都是虚拟机
+下边将使用 `Haxe/HL` 平台来和 `Java` 对比.因为都是虚拟机。
 
 <!-- more -->
 
@@ -36,17 +36,29 @@ public class Helo {
 {% highlight js %}
 class Helo {
   public static function main() {
-    Sys.println("Hello,Haxe/Neko");
+    Sys.println("Hello,Haxe/HashLink");
   }
 }
 //文件保存为: Helo.hx
-//编译: > haxe -main Helo.hx -neko Helo.n
-//运行: > neko Helo.n
-//输出: > Hello,Haxe/Neko
+//编译: > haxe -main Helo.hx -hl Helo.hl
+//运行: > hl Helo.hl
+//输出: > Hello,Haxe/HashLink
 {% endhighlight %}
 
   </div>
 </div>
+
+* java 和 haxe 一样, 类名必须以大写字母开始, 文件名需要与类名一致, 并且都可以在一个同一个文件内定义多个类。
+
+  > 同一个文件内， java 仅允许一个类为可标注为 public。
+
+* 在 java 中 `package` 和 `improt` 二个关键字的行为与 haxe 一模一样,
+
+  > 唯一的区别是 java 可能需要将目录中的类(class)显示地声明为 public, 否则外部的类(class) 无法访问它, 而在 haxe 中类(class)默认的是 public
+  >
+  > 因此 java 和 haxe 都有相同编译参数 `-cp`
+  >
+  > 还有就是 haxe 中允许一个空的（不带标识符的） `package;`, 而在 java 中这是不允许的。
 
 <hr />
 
@@ -63,14 +75,11 @@ public class TheClass {
     public TheClass(){
         return;
     }
-    public TheClass(int n){ // 方法重载.
-        return;
-    }
+    // 方法重载
+    public TheClass(int n){}
 
-    //混乱的, 但这只是一个 void 普通方法,而非 构造函数
-    public void TheClass(){
-        return;
-    }
+    // 这只是一个 void 普通方法,而"非构造函数"
+    public void TheClass(){ }
 
     public static void main(String[]a){
         TheClass n = new TheClass();
@@ -88,8 +97,7 @@ class TheClass {
     public function new(){
     }
     // haxe 使用 new 方法作为构造函数
-    // 为了避免混乱 haxe 在语言设计上没有方法重载.
-    // 可选参数 or 函数式变体(enum) 能完成你想要的
+    // 为了避免混乱 haxe 在语言设计上没有方法重载, 而是支持"匹配模式"
 
     public static function main(){
         var inst = new TheClass();
@@ -143,7 +151,7 @@ Void
 {% highlight java %}
 public class Test {
 
-    public Test(){
+    public Test() {
         System.out.println("new instance");
         System.out.println(num + "\n");
 	}
@@ -152,7 +160,7 @@ public class Test {
     public static int num = 100;
 
     // static 代码块, 同样只运行一次
-    static{
+    static {
         num = 200;
         System.out.println("static code block");
     }
@@ -302,8 +310,8 @@ extern class Fs {
 留空以后再添加...
 
 
-
-### 简单记些 Java
+Java 速记
+------
 
 [15分钟　java 快速入门](https://github.com/jdonaldson/learnxinyminutes-docs/blob/master/java.html.markdown)
 
@@ -317,6 +325,7 @@ extern class Fs {
   String str = "Helo";
   Object [] obj = new Object[3]; // 初使化后数组长度必须为已知;
   obj[0] = new Object();
+  // java 中需要明确的声明变量的类型，没有 "自动推导" 的语法糖
   ```
 
 * `java.lang` 这个包不需要导入就可以直接使用.
@@ -347,6 +356,90 @@ extern class Fs {
   }
   // 这个示例同样展示了 Java 可以在 实例化时,写 override 方法
   ```
+
+* 将函数作为参数传递。
+
+  ```haxe
+  // 在 haxe 中定义一个函数类型的方式有:
+  var max: Int -> Int -> Int;
+  var min: (a: Int, b: Int) -> Int;  // since haxe 4.0+
+  var sum: (Int, Int) -> Int;        // 同上
+
+  // java 中不可以把函数作为参数传递, 只能将参数类型定义成类或接口。
+  java.lang.Runnable;
+  java.util.concurrent.Callable;
+  java.security.PrivilegedAction;
+  java.util.Comparator;
+  java.io.FileFilter;
+  java.beans.PropertyChangeListener;
+  ```
+
+  **lambda**
+
+  ```haxe
+  // 在 haxe 可随意定义一个方法, 就像 Javascript 中的一样
+  var sum = function(a, b) {return a + b;}
+  // haxe 箭头语法: （感觉箭头语法可读性不太好）
+  var sum = (a, b) -> areturn a + b;
+
+  // java 箭头语法和 haxe 也一致，细节参考: https://www.cnblogs.com/figure9/archive/2014/10/24/4048421.html
+  (int x, int y) -> x + y;
+  (String s) -> { System.out.println(s); }
+  ```
+
+* 迭代器 iterator
+
+  haxe
+
+  ```haxe
+  var a = [1, 2, 3, 4, 5];
+  for(v in a) {
+    trace(v);
+  }
+  for(i in 0...a.length) {
+    trace(a[i]);
+  }
+  ```
+
+  java:
+
+  ```java
+  int[] a = {1, 2, 3, 4, 5};
+  for(int v: a) {
+    System.out.println(v);
+  }
+  for(int i = 0, len = a.length; i < len; i++) {
+    System.out.println(a[i]);
+  }
+  ```
+
+* `abstract`
+
+  在 haxe 中 `abstract` 的形为有点类似于别名 `typedef`
+
+  在 java 中, 在方法上则表示必须重写这个方法，在类则不可以直接实例，只能用 extends 扩展它。
+
+* enum, java 和 haxe 一样，都不允许给像 c 语言那样给枚举赋值。
+
+  haxe: 使用 ";" 号分隔，（这种在 haxe 中称为 FlatEnum）
+  ```hx
+  enum Color {
+    red;
+    green;
+    blue;
+  }
+  ```
+
+  java: 使用 "," 号分隔每一项。
+  ```java
+  enum Color {
+    red,
+    green,
+    blue,
+  }
+  ```
+
+* `try/catch`, java 中有 `finally` 块，而 haxe 无。
 
 <br />
 
