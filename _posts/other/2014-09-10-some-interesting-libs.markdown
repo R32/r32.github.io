@@ -366,7 +366,7 @@ categories: other
   winio.dll      # 有说需要插真实 PS 键盘才有会有效.
   ```
 
-* 逆向工具:
+* [逆向资源 List of awesome reverse engineering resources](https://github.com/wtsxDev/reverse-engineering): 
 
   ```
   IDA            # 只有 5.0 的免费版，至少可以用来当 PE 查看器。

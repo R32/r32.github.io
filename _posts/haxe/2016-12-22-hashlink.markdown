@@ -5,27 +5,25 @@ date:	2016-12-22 06:55:21
 categories: haxe
 ---
 
-<http://hashlink.haxe.org/>
-
 ### 简介
 
-大致来说由于机制不同，不能简单地把 hl 看成是 neko 的升级版。 <http://haxe.org/blog/hashlink-indepth-part-2/>
+[hashlink](http://hashlink.haxe.org/) 是一个以 c 语言作为底层, 而上层则是 haxe 语言的系统应用平台，你可以把它简单看成是类似于 Java 或 c# 东西。
 
-haxe 代码编译成 `.hl` 字节码然后使用 hl 来运行用于快速开发（development）,
+不同的是 hashlink 不仅可以编译成"字节码"通过其虚拟机来运行, 还可以编译为 c 源码然后再用 c 语言编译器来编译。
+
+编译成"字节码"可以用于快速开发:
 
 ```bash
 # 编译
 haxe -hl output.hl -main MyApp
 
-# 使用 hl虚拟机运行字节码
+# 使用 hashllink虚拟机运行字节码
 hl output.hl
 ```
 
-> 注: 编译成 .hl 字节码或 .c, 需要 haxe 3.3 或更高(推荐下载 github 上的 night build 版本),
-
 <!-- more -->
 
-而发布（release）的时候可以编译成 c 代码以获得更好的性能（我倒是没感觉到有任何性能的提升...）
+而在发布（release）的时候可以编译成 c 代码以获得更好的性能（我倒是没感觉到有任何性能的提升...）
 
 ```bash
 # 生成 c 代码
@@ -39,12 +37,16 @@ gcc -o myapp output.c hlc_main.c -Lhl
 >
 > 3) 设置好 libhl.lib, 例: `#pragma comment(lib, "libhl.lib")`, 4) 将编译出的主 out.c 添加到"源码"
 
-编译现存的 c 库与 hashlink 一起使用则建议参考 include 和 libs 这二个目录的源码
+hashlink 一些其它的特点这里简单描述下:
 
+* 目前并不支持多线程, [GC](https://github.com/HaxeFoundation/hashlink/wiki/Notes-on-Garbage-Collector) 采用的是 mark-and-not-sweep(标记但不清除) 的方式
+* 字符串底层使用 ucs2 编码（JS, Java, c# 也一样）
+* 在实用性方面，目前仅被作为 haxe 的 heaps 游戏框架的底层
+*
 
 ### 编译虚拟机
 
-以下使用 vs2013 社区版, 需要自已下载 sdl, openal 等放至到 include 目录 (参看各 readme 文件)，
+以下使用了 vs2013 社区版, 需要自已下载 sdl, openal 等放至到 include 目录 (参看各 readme 文件)，
 
 - directx 丢失了 [d3dcompiler_47.dll](http://www.catalog.update.microsoft.com/Search.aspx?q=KB4019990), 通过链接更新 KB4019990 补丁即可.
 
@@ -76,10 +78,6 @@ gcc -o myapp output.c hlc_main.c -Lhl
 &nbsp;
 
 ## misc
-
-### 字符串
-
-HL 中的字符串由 hl.bytes 构成, 字符串的编码通常为 `wchar_t`, 即 ucs2.
 
 ### 类型
 
@@ -153,6 +151,7 @@ String  |  string
 Float   |  f64
 Single  |  f32
 Dynamic |  dyn
+char*   |  hl.bytes
 
 haxe 的 anonymous structure or interface instances 以 c 端表现为 `virtual(...)`
 
@@ -163,17 +162,26 @@ haxe 的 anonymous structure or interface instances 以 c 端表现为 `virtual(
 当基础类型以及(`bytes, type, ref, abstract, enum`) 转换到 `dyn`（通过操作码 `todyn`） 类型时将会有 Boxing(装箱操作).
 
 
-### gc
+### C API Documentation
 
-从 gc 中申请内存： [GC WIKI](https://github.com/HaxeFoundation/hashlink/wiki)
+需要写"胶水代码"将现有的 c 库 API 提供给 haxe 来使用. [文档原文](https://github.com/HaxeFoundation/hashlink/wiki/C-API-Documentation)
 
-* `hl_gc_alloc`: vdynamic 兼容, 如 `(vdynobj *), (vvirtual *)`
+首先在 c 语言端的胶水代码中插入一行 `#include <hl.h>`, 即可获得各种可用的 API, 以及一些用来写胶水代码非常方便实用的宏。你可以查看一些示例 [标准库](https://github.com/HaxeFoundation/hashlink/tree/master/src/std)
+和[扩展库](https://github.com/HaxeFoundation/hashlink/tree/master/libs)
 
-* `hl_gc_alloc_raw`: 不能与 vdynamic 兼容，块内可能包含有指针。
 
-* `hl_gc_alloc_noptr`: 用于基础类型, 表示被分配的块不包含有 "指针"
+在写c端的胶水代码时，需要注意的是内存的分配, 即如何从 GC 中申请内存
 
-* `hl_gc_alloc_finalizer`: 结构的第一个字段必须指向 `(void(*)(void *)` 以便 gc 在清除时调用, 参考 file.c 的 hl_file_open
+* `hl_gc_alloc_noptr`: 用于基础类型, 表示被分配的块不会包含有某些相关联的 "指针"， 例如: 字符串, 固定数组 或其它二进制的数据。
+
+* `hl_gc_alloc_raw`: 分配的块可能会包含有 hashlink 指针。
+
+* `hl_gc_alloc_finalizer`: 类似于 noptr ，但是结构的第一个字段必须指向 `(void(*)(void *)` 以便 gc 在清除时调用, 参考 file.c 的 hl_file_open
+
+* `hl_gc_alloc(type, size)`: 分配指定的 haxe 数据类型, 由于 haxe 类型通常在 haxe 端分配，因此大多数情况下你不会使用这个。
+```
+
+之后 haxe 端的胶水代码则就容易多了. 参看几个示例即可...
 
 ### 其它
 

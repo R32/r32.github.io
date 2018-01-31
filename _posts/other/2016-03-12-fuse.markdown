@@ -1,7 +1,7 @@
 ---
 
 layout: post
-title:  fuse(原型设计)
+title:  fuse（Outdated）
 date:   2016-03-12 08:16:22
 categories: other
 

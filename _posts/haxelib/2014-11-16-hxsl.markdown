@@ -9,7 +9,7 @@ categories: haxelib
 AGAL
 -------
 
-很多帮助说明可以在 参考AS3 API 手册的相关 class.  [什么是AGAL](http://www.adobe.com/cn/devnet/flashplayer/articles/what-is-agal.html)
+很多帮助说明可以在 参考AS3 API 手册的相关 class.  [什么是AGAL](http://www.adobe.com/cn/devnet/flashplayer/articles/what-is-agal.html) - TODO: 这个链接似乎已经不存在了.
 
 <!-- more -->
 
@@ -83,7 +83,7 @@ AGAL 限制：每个程序 200 个 opcode。
 
   - **`v<0~7>`**
 
-* **采样:** 片段着色器输入, 读取自使用 Context3D.setTextureAt() 指定的纹理
+* **采样:** 像素着色器输入, 读取自使用 Context3D.setTextureAt() 指定的纹理
   - **`fs<0~7>`** 仅用于 fragmentProgram
 
   ```bash
@@ -109,9 +109,7 @@ AGAL 限制：每个程序 200 个 opcode。
 flash-hxsl
 -------
 
-hxsl 主要适用于 flash 的 AGAL, http://old.haxe.org/manual/hxsl, 你应该多参考 hxsl 库的示例
-
-着色器示例: SRC 其实就是个变量, haxe　宏将会在编译时解析 SRC 的内容最后生成 agal
+hxsl 主要适用于 flash 的 AGAL, http://old.haxe.org/manual/hxsl, 应该多参考 hxsl 库的示例
 
 ```haxe
 class Shader extends hxsl.Shader {
@@ -204,23 +202,25 @@ class MyShader extends hxsl.Shader {
 heaps-hxsl
 -------
 
-heaps 游戏框架所使用的着色器
+heaps 游戏框架所使用的着色器, 可在相关的 wiki 上找到资料。
 
 ```haxe
-class ColorKey extends hxsl.Shader {
-	static var SRC = {
-		@param var colorKey : Vec4;
-		var textureColor : Vec4;
-
-		function fragment() {
-			var cdiff = textureColor - colorKey;
-			if( cdiff.dot(cdiff) < 0.00001 ) discard;
-		}
-	}
-	public function new( v = 0 ) {
-		super();
-		colorKey.setColor(v);
-	}
+class MyShader extends hxsl.Shader {
+    static var SRC = {
+        @input var input : { position : Vec3, normal : Vec3 };
+        var output : { position : Vec4, normal : Vec3, color : Vec4 };
+        var transformedNormal : Vec3;
+        @param var materialColor : Vec4;
+        @param var transformMatrix : Mat4;
+        function vertex() {
+            output.position = vec4(input.position,1.) * transformMatrix;
+            transformedNormal = normalize(input.normal * mat3(transformMatrix));
+        }
+        function fragment() {
+            output.color = materialColor;
+            output.normal = transformedNormal;
+        }
+    };
 }
 ```
 
@@ -232,25 +232,21 @@ class ColorKey extends hxsl.Shader {
 
 ### metas
 
-目前还没有文档介绍这些， 因此不保证下边内容的正确性.
+不保证内容的正确性.
 
-* `@local`: 局部变量?
+* `@local`:
 
-* `@global`: 可以在 shader 方法内部访问，
+* `@global`: 用于在多个 shader 之中共用。
 
-  > 例: Base2d 中的一个 `@global var time:Float;`, 示例并没有给这个 time 赋值, 但它却有值
+* `@var`: 标记将要在"顶点着色器"中写入, 然后在"像素着色器"读取的变量(可选, hxsl 将会自动推导)。类似于 GLSL 中的 varying 类型
 
-* `@var`:
+* `@param`: 在"着色器"中是只读的。 类似于 GLSL 中的 uniform
 
-* `@param`: 估计就是 flash-hxsl 中 vertex() 的参数, 因此可以像类普通的成员一样直接访问和赋值,
-
-  > 估计和 flash-hxsl 一样, fragment() 内访问的类型仅能为 Sampler2D, 其它则 vertex()中赋值然后在 fragment()中读取
-  >
   > 这个变量值可以为 null(空), 而 @const 则必须提供
 
-* `@const`: 形为和 @param 一样, 只是它是必须的参数不可为空(null)
+* `@const`: 如果参数发生改变则将被编译成不同的 shader。
 
-* `@input`: 标记为 input, 对应于"属性寄存器"
+* `@input`:
 
 * `@function`:
 
@@ -271,6 +267,8 @@ class ColorKey extends hxsl.Shader {
 * `@highp`:
 
 * `@ignore`:
+
+* 无标记的变量: 为 `pipeline variables`
 
 
 带有 `:` 的元数据
@@ -336,5 +334,7 @@ class TextDeform extends hxsl.Shader {
 	}
 }
 ```
+
+> TODO: 为什么不直接 `extends Base2d`, 而是采用 `@:import` 的方式？
 
 <br />

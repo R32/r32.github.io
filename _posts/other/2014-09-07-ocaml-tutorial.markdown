@@ -25,6 +25,8 @@ categories: other
 
 * 在 bash 里执行 `make haxe -j4 FD_OUTPUT=1 ADD_REVISION=1 -f Makefile.win` (第一次执行时必须编译 haxelib 因此先去掉 haxe)
 
+* 如需开发 haxe 可以编译成字节码 `make haxe BYTECODE=1` 就可以了
+
 <!-- more -->
 
 
@@ -71,6 +73,8 @@ categories: other
 
   多个文件的编译要使 merlin 正确，先要用 ocamlc -c 编译出来一下, 再 touch 一下文件就好了
 
+  > 可能需要添加 `.merlin` 文件来明确指出位置，格式可以参考 haxe 的源码。
+
   对于 tasks.json 和 launch.json 以后再弄,  现在使用 makefile TODO
 
 
@@ -80,6 +84,21 @@ categories: other
 ### 速记
 
 API 文件建议参考 cygwin/lib/ocaml 下的 mli 文件, 一些方法会提示是否为 tail-recursive
+
+* 值(函数也是值)与类型有不同的命名空间，因此即使名字相同也不会存在冲突。
+
+  ```ocal
+  type haha = int (* 类型， 类型必须是小字母开头, 而变体枚举则必须大写字母开头 *)
+
+  let haha = 101  (* 值(还是叫变量好了，虽然它不可变), 并不会与类型 haha 冲突  *)
+
+  (* "模块名"首字母必须大写, 虽然文件名都是小写。
+     "变体名"首字母必须大写,
+     "类型名"首字母必须小写,
+     "字段名"首字母必须小写, (record 的字段)
+     "模块类型"（sig） 则没有大小写限定。
+  *)
+  ```
 
 * 小括号 `()` 其实就相当于 begin/end, 对于一些嵌套的地方(比如多个 match 表达式)你可能需要使用 begin/end 来划分
 
@@ -173,6 +192,36 @@ API 文件建议参考 cygwin/lib/ocaml 下的 mli 文件, 一些方法会提示
   (* 单个 @ 用来连接二个 List, 相当于 List.concat([1;2;3] [4;5;6]) *)
   [1; 2; 3;] @ [4; 5; 6]
   ```
+* 局部抽像类型: 通过 `(type a)` 声明一个伪参数, 可以创建一个新类型在构造模块时使用。
+
+  ```ocaml
+  let wrap_in_list (type a) (x:a) = [a];;
+
+  module type Comparable = sig
+    type t
+    val compare: t -> t -> int
+  end
+
+  let create_comparable (type a) compare = (module struct
+      type t = a
+      let compare = compare
+    end: Comparable with type t = a)
+
+  (* 更多关于首类模块的示例 *)
+  module type Bumpable = sig
+    type t
+    val bump: t -> t
+  end
+
+  (* 创建首类模块, 注意这里使用的是 let, 使得一个模块被包装成变量。 *)
+  let create_bump (type a) = (module struct
+    type t = a
+    let bump x = x
+  end : Bumpable with type t = a)
+
+  (* 要使用首类模块，需要使用 val 解包为模块: *)
+  module D = (val create_bump: Bumpable with type t = int);;
+  ```
 
 * misc
   - 数组和 List 不一样的是, 数组的值像 mutable record 一样可变, 即: `arr.(0) <- 100`
@@ -202,8 +251,10 @@ ocamlc      # 字节码编译器, 文件扩展名为 cmo, (可添加 -custom 嵌
 ocamlopt    # 原生代码编译器的前端, 生成 .o, .cmx 文件
 
 ocamlbuild  # 用于编译复杂的项目，以 .byte 结尾的会被编译成字节码，而 .native 则为原生代码.
-            # 对于上边示例仅 ocamlbuild a.byte 即可. ocamlbuild -clean 用于清理项目
+            # 并且能自动识别并且处理文件的依赖关系，即只要指定入口文件即可。
+            # 重要: 如果源码发生变化，只需要删除 .byte 或 .native 文件，然后重新用 ocamlbuild 构建即可。
             # 不可以指定 "-o 输出名", 只能通过命令行例如 rename 来完成.
+            # https://github.com/ocaml/ocamlbuild/blob/master/manual/manual.adoc
 
 ocamldebug  #
 
