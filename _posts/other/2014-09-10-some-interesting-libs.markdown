@@ -337,6 +337,8 @@ categories: other
 
 [C标准头文件](http://stackoverflow.com/questions/2027991/list-of-standard-header-files-in-c-and-c)
 
+* [cpu_features](https://github.com/google/cpu_features) A cross platform gnu89 library to get cpu features at runtime.
+
 * [libu](https://github.com/koanlogic/libu) LibU is a multiplatform utility library written in C, with APIs for handling memory allocation, networking and URI parsing, string manipulation, debugging, and logging in a very compact way, plus many other miscellaneous tasks
 
 * [nuklear](https://github.com/vurtun/nuklear) A small ANSI C gui toolkit

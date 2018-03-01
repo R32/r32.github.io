@@ -479,6 +479,8 @@ js-classic             : Don not use a function wrapper and strict mode in JS ou
 # JS ES5 运行时模式
 js-es                  : Generate JS compilant with given ES standard version (default 5)
 
+js-enums-as-objects    : Generate enum representation as object instead of as array
+
 # 创建 source map,即使没有指定 debug 模式
 js-source-map          : Generate JavaScript source map even in non-debug mode
 
@@ -735,7 +737,7 @@ vcproj                 : GenCPP internal
 # JS 将类导出到 window对象 下, 如果 window 未定义,则导出到 export对象(nodejs) 下
 @:expose             : (?Name=Class path)Makes the class available on the window object (js only)
 
-# 表明这个字段为 外部字段, 比如添加语法提示时可以用
+# 用于即使在使用 --no-inline 参数时，这个元标记也能强制使得 inline 能继续有效
 @:extern             : Marks the field as extern so it is not generated
 
 # 作用于 enum, 参看 页尾的示例.

@@ -32,7 +32,7 @@ categories: other
 
 接下来是 IDE 选择, 最重要的问题是 IDE 在调用命令是必须能调用 `cygwin/bin/bash`(需设置系统环境变量 `CHERE_INVOKING=1`，以防止 --login 时丢失目录),  但是这样做有一个副作用就是: 当从 "开始" 进入 "Cygwin Terminal" 时的当前目录会是 system32 下, 但可以通过可 `cd ~` 切回
 
-* `vscode`: 这个插件需要 ocp-indent, merlin 来产生语法提示， 虽然这个插件提示被弃用，但是 reason 我在 windows 配置没有成功。
+* `vscode`: 需要需要使用 opam 安装 ocp-indent 和 merlin 来产生语法提示，选用 reason , 然后将 merlin 所在路径添加到 PATH. 例如: `cygwin/home/NAME/.opam/4.02.3+mingw32c/bin`
 
   settings.json:
 
@@ -46,14 +46,20 @@ categories: other
     "editor.renderWhitespace":"all",
     "editor.insertSpaces": false,
     "haxe.enableCodeLens": true,
-
-    "ocaml.ocpIndentPath": "E:\\cygwin\\home\\mn\\.opam\\4.02.3+mingw32c\\bin\\ocp-indent",
-    "ocaml.merlinPath": "E:\\cygwin\\home\\mn\\.opam\\4.02.3+mingw32c\\bin\\ocamlmerlin",    // 代码智能提示
-    "ocaml.ocamldebugPath": "E:\\cygwin\\home\\mn\\.opam\\4.02.3+mingw32c\\bin\\ocamldebug",
-    "ocaml.replPath.windows": "E:\\cygwin\\home\\mn\\.opam\\4.02.3+mingw32c\\bin\\ocaml.exe",
     "terminal.integrated.shell.windows": "E:\\cygwin\\bin\\bash.exe", // integrated 表示 ctrl+p 中集成的控制台
     "terminal.integrated.shellArgs.windows": ["--login"],
-    "terminal.integrated.rightClickCopyPaste": false
+    "terminal.integrated.rightClickCopyPaste": false,
+
+    "*.mly": "ocaml",
+    "*.ml": "ocaml"
+    },
+    "[ocaml]": {
+      "editor.tabSize": 4
+    },
+    "files.exclude": {
+      "**/_build": true
+    },
+    "reason.server.languages": ["ocaml"]
   }
   ```
 
@@ -84,6 +90,8 @@ categories: other
 ### 速记
 
 API 文件建议参考 cygwin/lib/ocaml 下的 mli 文件, 一些方法会提示是否为 tail-recursive
+
+* 和其它语言不一样的是, 字符串内的字符可以被修改。使用 `Bytes.set`
 
 * 值(函数也是值)与类型有不同的命名空间，因此即使名字相同也不会存在冲突。
 

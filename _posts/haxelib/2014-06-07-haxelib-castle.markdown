@@ -8,7 +8,7 @@ categories: haxelib
 ---
 
 castle 看上去像是一个电子表格编辑器, 它以 **可视化** 的方式来编辑结构化数据，
-不同的是 castle 的每一个表格(sheet)都有其相应的 "数据模型"
+不同的是 castle 的每一个表格(sheet)都有其相应的 "数据模型"。通过 "数据模型" 来验证用户输入的数据是否有效，极大的避的手工输入容易出错的问题
 
   > 通常存储于 XML 或 JSON 文件中的数据都可以使用这个工具代替,
   >
@@ -17,15 +17,17 @@ castle 看上去像是一个电子表格编辑器, 它以 **可视化** 的方�
 
 <!-- more -->
 
-castle 通过 "数据模型" 来验证用户输入的数据是否有效，极大的避的手工输入容易出错的问题
-
-castle 文件为一个简单易读的 JSON 格式，很容易被其它程序加载使用.
+编辑器的输出文件为简单易读的 JSON 格式，很容易被其它程序加载使用。
 
   > 储存格式为 JSON + 换行, 因此 git 或 svn 等版本管理软件更能显示其数据修改差异。
 
-castle 能非常简单地处理文本的 "Localization（本地化）"。
+可简单地处理文本的本地化(Localization)。细节见后边的 Text 字段描述
 
-**Note:** 表名(sheet)的首字母使用不要大写，这很重要，否则你可能无法在 haxe 代码中调用它。
+### Tips
+
+* 表名(sheet name)的首字母使用不要大写，这很重要，否则你可能无法在 haxe 代码中调用它。
+
+* list_layers 和 zone_layer 可在 layer 上当 mouseover 时通过按 **`E`** 直接配置其属性, 而不必通过表格来输入
 
 ### 安装
 
@@ -100,7 +102,7 @@ castleDB 保存为一个扩展名为 `.cdb` 的文件, 其实它是一个 JSON �
 * **Text**(文本): 字符串文本。 任意文本,目前不允许多行文本.
 
   > 1. 有个 Localizable 的选项用于本地化, 勾选后可通过 `File->Export Localized Text`
-  > 可导出一个 xml 文件, 然后修改这个导出的文件即可
+  > 可导出一个 xml 文件, 然后修改这个导出的文件
   >
   > 2. 在 haxe 程序中调用 applyLang(file_content) 即可.
 
@@ -181,6 +183,10 @@ castleDB 保存为一个扩展名为 `.cdb` 的文件, 其实它是一个 JSON �
 * **Dynamic** 可以输入任意 JSON 数据, 不过手工输入这个字段的数据类型有些麻烦.
 
 * **Data/Tile Layer** 包装图层(layer)的数据用于地图编辑器, TODOS
+
+  > 选 Data Layer 字段时, 它会让你选择一个被引用的表。
+  >
+  > 而 Tile Layer 而是普通的图层，这些数据在编辑器作画时自动填充。
 
 
 ### 列存储及默认值
@@ -406,9 +412,7 @@ Or(Random(0.1), Fixed) | [3, [1, 0.1], [0]]
 
   > 示例中的 triggers 字段
 
-list_layers 和 zone_layer 都是可读的数据可以在 layer 后通过按 **`E`** 直接在 layer 上配置其属性
-
-* **Index Layers** 使用紧凑数组(base64, width*height)保存数据
+* **Index Layers** 使用紧凑数组(base64, `width x height`)保存数据
 
   > 在 level 表上指定字段类型为 Data_Layer, 并选择与之关联的一个表即可。
   > 被关联的表必须有 tile 字段才可以在地图上编辑, 参考示例中的 collide 字段
@@ -468,29 +472,25 @@ Size: CDB 默认使用 16x16大小的tile. 可以更改这个数值在各自的 
 
 #### Tile Mode
 
-在这个模式下, 你可以选上 tileset 下方的填充或随机模式
+在这个模式下, 可选 tileset 下方的填充或随机模式。当处于此模式时, 图层数据(layer data)由 `高x宽` 个 tile 组成,
 
 #### Object Mode
 
-Object Mode 通过更复杂的方式存储tiles布局, 当处于Tile Mode时, 图层数据(layer data)由高x宽个tile组成,
+Object Mode 通过更复杂的方式存储 tiles 布局。**对象将依照Y轴排序**(即最下方的 tile 将永远显示在前边挡住上边的)
 
-为了使用 Object Mode, 你需要先创建Object,在右下拉菜单中选中Object, 然后鼠标选中一个或多个tile然后点+或-(或按O键切换)来选中与取消,
+为了使用 Object Mode, 你需要先创建Object: 在右下拉菜单(tile 调色板)中选中Object, 然后鼠标选中一个或多个 tile 然后点 `+` 或 `-` (或按O键切换)来选中与取消,
 
-这样就可以将Object放置于tile_layer, Object的存储将依照Y轴排序(即最下方的tile将永远显示在前边挡住上边的), 因此这不像 Tile Mode 一些块能覆盖别的块.
-
-Object 的坐标将以象素为准非 grid 对齐, 当然你仍然可以要求 grid 对齐通过 **`G`** 键,在往图层上添加Object时,
+Object Mode 的坐标将以象素为准非 grid 对齐, 当然你仍然可以要求 grid 对齐通过 **`G`** 键,在往图层上添加 Object 时,
 
 通过 **`F`** 键可以flip(左右调换)对象, 而 **`D`** 键则可以旋转90度每次
 
-Object_Layer 将为一个base64编码的16位值:
-
-`0xFFFF` 标识选区为Object_Layer, 每个被标识的选区将有下边信息:
+Object_Layer 的数据存储编码为 base64, `0xFFFF` 标记这个图层为 Object_Layer, 接下来由有数据:
 
 * `X` 选区的位置X, 单位为像素
 * `Y` 选区的位置Y, 单位为像素
 * `ID` Object的标识符, 它表示这个对象位于 tileset 的位置
 
-所有这三个值可以有其自身的高位(bit set)的设置: 对象的旋转存放于高位的 X 和 Y, 而 flip 则存放在 ID 上(注: 用得着这样省字节??)
+所有这三个值可以有其自身的高位(bit set)的设置: 对象的旋转存放于高位的 X 和 Y, 而 flip 则存放在 ID 上
 
 #### Ground Mode
 
@@ -532,11 +532,9 @@ Borders 有 4个模式: (copy from cdb.TileBuilder.hx)
 
 #### Per-tile Properties
 
-预定义 tile 的属性, 所有tileset中的tile 将有共享的属性用于各关卡(level)，而不必每次都在图层中去画,
+通过设定关卡表中的 tileProps 字段，预定义 tile 的属性（将显示于右下的弹出菜单中）, 共享所有 tile 属性用于各个关卡(level)，而不必每次都在图层中去画。
 
-可以简单的指定这些值通过 tileProps 字段
-
-例如示例中level表中的 collide 字段它引用了collide表,这将允许我们指定自定义的碰撞(通过点击collide_tile 然后在tileset上操作)
+如示例关卡表中的 collide 字段它引用了collide 表,这将允许我们指定自定义的碰撞(通过点击collide_tile 然后在tileset上操作)
 
 示例中定义了一个 Enumeration类型的 hideHero 字段,也将显示在画板下拉菜单中
 
