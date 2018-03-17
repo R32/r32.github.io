@@ -203,30 +203,26 @@ API 文件建议参考 cygwin/lib/ocaml 下的 mli 文件, 一些方法会提示
 * 局部抽像类型: 通过 `(type a)` 声明一个伪参数, 可以创建一个新类型在构造模块时使用。
 
   ```ocaml
-  let wrap_in_list (type a) (x:a) = [a];;
-
+  let wrap_in_list (type a) (x:a) = [x];;
+  (* 可看成 function<T> wrap_in_list(x: T) return [x]*)
   module type Comparable = sig
     type t
     val compare: t -> t -> int
   end
-
   let create_comparable (type a) compare = (module struct
       type t = a
       let compare = compare
     end: Comparable with type t = a)
-
   (* 更多关于首类模块的示例 *)
   module type Bumpable = sig
     type t
     val bump: t -> t
   end
-
   (* 创建首类模块, 注意这里使用的是 let, 使得一个模块被包装成变量。 *)
   let create_bump (type a) = (module struct
     type t = a
     let bump x = x
   end : Bumpable with type t = a)
-
   (* 要使用首类模块，需要使用 val 解包为模块: *)
   module D = (val create_bump: Bumpable with type t = int);;
   ```

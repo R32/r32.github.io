@@ -5,9 +5,7 @@ date:   2014-11-08 10:7:26
 categories: other
 ---
 
-比特币结合P2P对等网络技术和密码学原理，来维持发行系统的安全可靠性。与有中心服务器的中央网络系统不同，在P2P网络中无中心服务器，每个用户端既是一个节点，也有服务器的功能，任何一个节点都无法直接找到其他节点,必须依靠其户群进行信息交流。
-
-一个中文翻译的全的 <http://usyiyi.cn/translate/bitcoin/developer-guide.html>
+比特币结合P2P对等网络技术和密码学原理，来维持系统的安全可靠性。与有中心服务器的中央网络系统不同，在P2P网络中无中心服务器，每个用户端既是一个节点，也有服务器的功能，任何一个节点都无法直接找到其他节点,必须依靠其户群进行信息交流。
 
 <!-- more -->
 
@@ -22,7 +20,7 @@ categories: other
   >
   > 因此没有密码也可以查询余额, 加密后长度不变, 加密和解密非常慢
 
-* WIF 私钥格式的一种,5开头51位Base58, 可以直接导入各种客户端
+* WIF 私钥格式的一种, 5开头51位Base58, 可以直接导入到各种客户端
 
   > WIFC 可导入钱包的私钥-压缩，K或L开头52位Base58，导入客户端后，通常会生成该私钥对应的压缩地址
   >
@@ -36,9 +34,9 @@ categories: other
 
   > 相对于Base64，Base58不使用数字"0"，字母大写"O"，字母大写"I"，和字母小写"l"，以及"+"和"/"符号
   >
-  > 没有标点符号,通常不会从中间分行, 大部分软件支持双击选择整个字符串
+  > 没有标点符号, 大部分软件支持双击选择整个字符串
   >
-  > 由于256不能被58整除，Base58 无法象 Base64 那样转换为 8bits 的二进制后依次取出6bits就可以快速完成转换。因此，Base58编码算法需要除法运算实现，如果被编码的数据较长，则要用特殊的类来处理大数
+  > 由于256不能被58整除，Base58 无法象 Base64 那样快速地转换为字节序列, 如果被编码的数据较长，则要用特殊的类来处理大数
 
 #### Crypto
 
@@ -70,74 +68,104 @@ Bitcoin Developer Guide
 
 [原文链接](https://bitcoin.org/en/developer-guide#block-chain-overview), (注:下边图片是SVG格式,你需要一个支持的浏览器)
 
-开发指南目的在于提供一些需要理解的信息 Bitcoin 以及构建 Bitcoin-based 的应用程序. 但这并是一个规范. 为了更好的使用这个文档, 你可能想要安装当前版本的 Bitcoin-Core, 从源码或预编译的可执行文件.
+开发指南的目的在于提供一些需要了解的 Bitcoin 信息, 用于构建 Bitcoin-based 的相关应用。但这并不是一个规范，要充分利用本文档，您可能需要从源码或直接下载已编译好的可执行文件安装当前版本的 Bitcoin Core
 
-对于 Bitcoin 的开发 **疑问** 最好的询问对象是 Bitcoin 开发社区. Bitcoin.org 文档的错误或建议可以提交到 bitcoin-documentation 邮件列表.
+对于 Bitcoin 的开发 **疑问** 最好的咨询对象是 [Bitcoin 开发社区](https://bitcoin.org/en/development#devcommunities)。
+
+Bitcoin.org 的文档错误或建议可以提交到 bitcoin-documentation 邮件列表.
 
 
 ### Block Chain
 
-“区块链”(block chain)提供了比特币的公共账单：一个顺序的并带有时间戳的交易记录。 这个系统用于避免双花支付(double spending)和交易历史修改。
+“区块链”(block chain)提供了比特币的公共账本：一个有序的有时间戳的交易记录。 这个系统用于避免重复花费(双花, double spending)和交易历史修改。
 
-比特币网络中的各个“全节点”(full node)各自包含其独立的"区块链"（仅包含该节点验证过了的区块）。 当多个节点具有相同的"区块"时 它们被认为是“一致的”(consensus)。这些节点用来维持一致性的验证规则被称作一致性规则（consensus rules）。
+比特币网络中的每个“全节点”(full node)各自包含其独立的"区块链"（仅包含该节点验证过了的区块）。 当多个节点具有相同的"区块"时 它们被认为是“一致的”(consensus)，用来维持一致性的验证规则被称作一致性规则（consensus rules）。
+
+> 全节点: 指的是下载了比特币的整个链块，通常只有维护网络的矿工才会干这活，因为全节点要下载几十G的交易数据, 用于验证。而比特币网络上的大多数节点都是轻量级的。
 
 #### Block Chain Overview
 
 ![blockchain-overview](/assets/img/bitcoin/en-blockchain-overview.svg)
 
 
-上图显示了一个简化版的块链, 每个块(block)由 块头(block header)和交易数据(transaction data)组成. 一个或多个交易(transactions)组成为块的交易数据部分. 每个交易副本将被哈希(hash) 然后配对,然后再次哈希和配对. 重复哈希,配对直到只剩下一个哈希值, 就是merkle tree的merkle root. [白话 merkle tree 中文](http://www.jianshu.com/p/458e5890662f)
+上图显示了一个简化版的块链, 每个块(block)由 块头(block header)和交易数据(transaction data)组成. 一个或多个交易(transactions)为块的交易数据部分。每个交易将被哈希(hash), 并以 merkle tree 的形式串联在一起，merkle root 储存在块头(block header)。
 
-merkle root 储存在块头(block header), 同样每个块头还存储着上一个块头的哈希值,以链接起这些块. 这确保了交易不能进行修改,而无需修改记录交易数据的块和后续块。
+每个块头还包含了"上一个块头"的哈希值，以链接起所有块（block）。这确保了历史交易数据不会被篡改，因为修改了区块链中任意的一个块, 那么这个块的所有后续块的 Hash 值将变得无效。
 
-交易(Transactions)同样被链接在一起, 比特币钱包给人的印象是"聪"的发送和收入是从钱包到钱包, 但真实情况是从"交易"支出(output)和收入(input). 每个"交易"花费的"聪"来自上一个或更早的"交易", 所以一个"交易"的接收将是上一个"交易"的支出. (注:这里的"交易"是个名词)
+
+交易(Transactions)同样被链接在一起, 比特币钱包给人的印象是"聪"的发送和收入是从钱包到钱包, 但真实情况是在"交易"里支出(output)和收入(input). 每个"交易"花费的"聪"来自上一个或更早的"交易", 所以一个"交易"的"收入"将是上一个"交易"的"支出"。
 
 ![blockchain-overview](/assets/img/bitcoin/en-transaction-propagation.svg)
 
-当发送给多个地址([addresses])时.单一"交易"能创建多个发送(或称为:支出). 但是每个交易支出在块链中只能被接收一次, 其它任何后续的引用都被禁止,称为双花(double spend)- 尝试花费掉二次相同的"聪"
+当发送给多个地址([addresses])时.单一"交易"能创建多个"支出". 但是每个交易支出在块链中只能被接收一次, 其它任何后续的引用都被禁止。
 
 支出(outputs)将绑定交易标识符(TXIDs),它是一个单独交易的哈希值.
 
-每个交易支出(output)只能被花费一次, 所有交易支出包含在块链中将被归类为"未花费的交易支出(UTXOs)"或"已花费交易支出"二者之一. 为使支付有效,必须使用UTXOs用于接收(input).
+每个交易支出(output)只能被花费一次, 所有交易支出包含在块链中将被归类为"未花费的交易支出(UTXOs)" 或 "已花费交易支出"。为使支付有效,必须使用 UTXOs 作为"收入"(input).
 
-先忽略掉[coinbase transactions(稍后说明)], 如果交易支出值超过接收, 交易将被拒绝,但如果接收大于支出,任意差价将被称为[transaction fee],由矿工将交易添加入block. 例如: 在上边图示中每个交易花费10K satoshi要低于其本身收入总合, 因此有效地支付了10K satoshi.
+如果交易的"支出"值大于"收入", 交易将被拒绝, 但如果大于 "支出" 小于 "收入", 那么差价将被称为[transaction fee], 由矿工将交易添加到块。
 
 * satoshi: 聪; 比特币的最小面值, 1 bitcoin 等于 100,000,000 satoshis.
 
-* coinbase/generation transactions 块中的第一个交易,总是由矿工创建, 它包一个单独 [coinbase]
+* `coinbase/generation transaction`: 作为块中的第 1 个交易, 总是由矿工创建, 它包含了 "coinbase"
 
-* coinbase: 一个特殊字段作为 coinbase transactions 的唯一接收(input), coinbase 可以声明 block 奖励并提供 100bytes的任意数据
+* `coinbase`:  一个特殊字段作为 coinbase transactions 的"收入", 它作为块的奖励并且还可写入100字节的任意数据
 
-  > 注意这里的 coinbase 不是指的交易网站
-
-* transaction fee 或称为 miner fee,所有剩余的钱,当全部收入交易扣除全部支出交易, 该费用交付给将交易添加到block的矿工, 由矿工将余额返回给花费人.
+* transaction fee 或称为 miner fee, 所有剩余的钱, 当全部收入交易扣除全部支出交易, 该费用交付给将交易添加到block的矿工, 由矿工将余额返回给花费人.
 
   > 注意区别 Minimum relay fee(最低中转费): 最低费用交易必须被接入到 内存池通过 Bitcoin Core 节点中转
 
 #### Proof Of Work
 
-块链由网络匿名节点共同协作维护, 所以比特币要求创建的每一个块证明其工作量投入,以确保不受信任的支点想要修改历史的工作难度要大于添加新块到块链的诚实点.
+块链由网络匿名节点共同协作维护, 每一个创建的块需要进行大量的计算(目前即使是专业的集成电路板(矿机)都要花费 10 左右分钟才能完成)，才能被网络上的其它节点所认同。
+如果想要篡改某一个块, 那么除了需要重新计算出被篡改块的新 hash, 还得重新计算这个块所有后续块的 hash 值,
+而且必须抢在网络上其它节点完成下一个块之前，这根本就是件不可能完成的任务。
 
-将块连接在一起使得交易不能被修改,并且无需修改后续block. 其结果是想要修改某一特定块的工作量代价随着每个新块添加到块链而随之放大.
+> 即使你的算力能碾压其它矿工，但计算每个块所花费的时间也不符合 time 字段的限制。
 
-比特币的工作量证明利用了明显随机性质加密哈希, 一个好的哈希加密算法将任意数据转换为看上去随机的数字. 如果以任意方式修改数据和重新运行散列函数, 将产生新随机数, 所以没有办法修改数据而使哈希值具有可预测性.
+比特币的工作量证明算法使用了不可逆的 hash 算法: 即对当前块头(block's header)进行二次 SHA256 运算，
+如果其结果比当前"难度值"小，即表示成功, 这个 hash 值的特点是有着多个 0 作为前缀。
 
-为了证明你做了一些额外的工作来创建一个块, 你需要创建一个不超过某一值的块头(block header)的哈希值. 例如: 如果最大可能的哈希值为pow(2,256)-1, 你需要证明你尝试到二次组合所产生的哈希值将小于pow(2,255).
+块头（block’s header）的格式: 80字节
 
-在上面给出的示例中, 在平均的每次尝试中你将成功计算出哈希值,你甚至可以预测一个给定目标阈值的哈希的尝试次数,比特币假定一个线性概率,目标阈值越低,则需要更多次哈希计算尝试.
+  | 字段           |                意义               |         更新时间         | 大小 |
+  |:-------------- | ---------------------------------:| ------------------------:|:----:|
+  | version        |              block version number | 软件升级时其指定的版本号 |   4  |
+  | hashPrevBlock  |   上一个块头的 SHA256 二次后的值  |     新的一个块加入进来时 |  32  |
+  | hashMerkleRoot |  merkle tree 关联了块内所有的交易 |     接受了一个新的交易时 |  32  |
+  | time           | 自1970-01-01T00:00 UTC 以来的秒数 |               每隔几秒钟 |   4  |
+  | bits           |            当前"难度值"的压缩格式 |           挖矿难度调整时 |   4  |
+  | nonce          |                 随机数(从 0 开始) |   A hash is tried (递增) |   4  |
 
-添加到块链的块的哈希值的预期难度需要和设计协议保持一致,每一2016个块,比特币网络使用储存在每个块头(block header)的时间戳, 来计算第一个到最后一个所花费的秒数, 理想的值是 1,209,600 秒(二周)
+  将 hash of prev 和 merkle root 都当成大数字来看那它们全是 little-endian
 
-* 如果2016个块的花费时间少于 2周, 预期的难度值将按比例上调(可高达300%), 以使下一次的2016个块正好在二周完成.
+  ```
+  02000000 ........................... Block version: 2
+
+  b6ff0b1b1680a2862a30ca44d346d9e8
+  910d334beb48ca0c0000000000000000 ... Hash of previous block's header
+  9d10aa52ee949386ca9385695f04ede2
+  70dda20810decd12bc9b048aaab31471 ... Merkle root
+
+  24d95a54 ........................... Unix time: 1415239972
+  30c31b18 ........................... Target: 0x1bc330 * 256**(0x18-3)
+  fe9f0864 ........................... Nonce
+  ```
+
+  time: 区块产生的近似时间, 精度为秒, 必须大于前 11 个区块时间的中值。
+
+  bits: 该数为特殊"浮点数"编码。使用了3字节(24位)作为"尾数", 第1个字节的低5位为"指数", 基数为 256。
+
+  例如: 0x18062776, 则指数(e)为: 0x18, 尾数(c)为: 0x062776。
+
+  根据公式: `难度 = 尾数 * pow(2, 8 * (指数 - 3))` 可计算出:
+
+  难度为: `0x0000000000000000062776000000000000000000000000000000000000000000`, 即找出的 HASH 必须小于或等于此值。
+
+  nonce: 为了找到满足难度目标所设定的随机数
 
 
-* 同样如果花时间超出二周, 预期的难度值将按比例下调(高达75%).
-
-(注: 在比特币核心实现的一次错误(off-by-one error)导致每次2016个块难度调整所使用的时间戳来自第2015个块,创建一个轻微的倾斜)
-
-因为每个block header的哈希值必须低于目标阈值，每个块(block)链接(link)到它之前的块,繁殖一个已修改的块和整个比特币网络从已经创建的原块(对应前边已修改的块)到目前的消耗 需要(平均)同等的哈希算力.只有当你掌握了全网大多数哈希算力，你才能有效地实现对交易历史进行51%的攻击。(尽管应该注意的是: 即使不到 50%的哈希算力仍然具有进行这种攻击的很好机会)
-
-block header提供了几个易于修改的字段, 如专用的一次性字段(dedicated nonce field), 因此获得新哈希不需要等待新交易.(TODO: 好像因果关系联不上???) 此外,仅80字节的block header的哈希值用于POW(proof-of-work)，因此添加更多的交易数据并不会减慢伴有额外I／O的哈希计算速度. 而且添加新的交易数据仅需要重新计算在merkle tree中上边的merkle node的哈希值.
+比特币能根据整个网络的算力自动调整其难度值，确保每 10 分钟左右才会出一个块。这个值在完成 2016 个块后（预期为 2 周）才会调整一次。如果花费的时间低于 2 周那么难度将会上调，超出则下调。
 
 
 #### Block Height And Forking
@@ -196,7 +224,7 @@ Note: 如果在同一个数据块找到了相同的 txid, 这有可能出现在�
 
 #### Consensus Rule Changes
 
-为了维持一致性,block的所有节点验证都使用一致的规则, 然而有些时候引入新特性时使一致性规则已发生改变或为了防止网络滥用. 当新规则实施时,可能将会有一段时间中未升级的节点按照旧规则而已升级的节点则按照新规则, 创建二种一致性会破坏方式:
+为了维持一致性, 比特币网络的全节点使用一致的规则验证, 然而有些时候引入新特性时使一致性规则已发生改变或为了防止网络滥用. 当新规则实施时,可能将会有一段时间中未升级的节点按照旧规则而已升级的节点则按照新规则, 创建二种一致性会破坏方式:
 
 1. 一个 **新特性block** 被 **未升级的节点** 拒绝因为违反了旧的规则.但已升级的节点将理解和接受它,
 
@@ -547,83 +575,4 @@ Bitcoin Core 0.9, 交易将不计算高优先交易需要支付的最小费用(�
 最佳做法进一步规定如果一项交易似乎要从网络中消失和需要重新发布, 重新发布将使丢失的交易无效. 一种方法,将会不停的工作以确保重新发布的交易全都具有相同的支出.
 
 ### Contracts
-
-
-#### Escrow And Arbitration
-
-#### Micropayment Channel
-
-#### CoinJoin
-
-### Wallets
-
-#### Wallet Programs
-
-#### Full-Service Wallets
-
-#### Signing-Only Wallets
-
-##### Offline Wallets
-
-##### Hardware Wallets
-
-#### Distributing-Only Wallets
-
-#### Wallet Files
-
-#### Private Key Formats
-
-##### Wallet Import Format
-
-##### Mini Private Key Format
-
-#### Public Key Formats
-
-#### Hierarchical Deterministic Key Creation
-
-##### Hardened Keys
-
-##### Storing Root Seeds
-
-#### Loose-Key Wallets
-
-### Payment Processing
-
-#### Pricing Orders
-
-#### Requesting Payments
-
-##### Plain Text
-
-##### bitcoin URI
-
-##### QR Codes
-
-##### Payment Protocol
-
-#### Verifying Payment
-
-#### Issuing Refunds
-
-#### Disbursing Income
-
-Disbursing Income (Limiting Forex Risk)
-
-
-##### Merge Avoidance
-
-##### Last In-First Out
-
-Last In, First Out (LIFO)
-
-##### First In-First Out
-
-First In, First Out (FIFO)
-
-#### Rebilling Recurring Payments
-
-### Operating Modes
-
-#### Full Node
-
 

@@ -15,14 +15,12 @@ categories: other
 
 ### Tools
 
-
-* [知乎上无意看到的](https://www.zhihu.com/question/52157612/answer/260796701)， 它们可能非免费的。
-
-  - Power Map, 微软官方出版的一个3D数据地图插件，包含在线地图+在线演示+制作视频等各项功能
-  - 方方格子Excel插件, 这就是一个Excel偷懒的工具，将一些常用的需要写函数或写宏的功能给封装成现成的按钮
-  - Excel图表插件-EasyChart
-  - Process on，一个在线制作流程图的软件，包括思维导图等
-
+* [google page speed](https://developers.google.com/speed/docs/insights/OptimizeImages)
+  - [convert 图片压缩](https://www.imagemagick.org/script/convert.php)
+  - [html-minifier](https://github.com/kangax/html-minifier) minify html
+  - [cssnano](https://github.com/ben-eb/cssnano) minify css
+  - [google closure](https://github.com/google/closure-compiler) minify js
+  - [html-inline](https://github.com/substack/html-inline) 用于将资源内联化,
 
 * [把图片解析成几何图形, 随机名字生成](http://samcodes.co.uk/code/)
 
@@ -122,6 +120,8 @@ categories: other
 这个章节的大多数内容都是用于美化的 CSS 或 Javascript , 大多数似乎在 ie8 中都会报错.
 
 * [golden-layout](https://github.com/deepstreamIO/golden-layout) Works in IE8+, Firefox, Chrome, Web app布局
+
+* [gameicons-font](https://github.com/seiyria/gameicons-font) An icon font for game-icons/icons.
 
 * <https://github.com/knsv/mermaid> 使用类似于 markdown 的语法来画流程图
 
@@ -232,6 +232,24 @@ categories: other
 * <https://github.com/hgoebl/mobile-detect.js> 设备检测
 
 ### article
+
+* [SAL Annotations](https://msdn.microsoft.com/zh-cn/library/ms182032(v=vs.140).aspx) c 语言代码标注，使之更易于理解
+
+  通过 VS 的 `ANALYZE -> Run Code Analysis On Sulotion(Alt + F11)` 可检测出不安全的代码。
+
+  > 但是只有 MSVC 才支持这个, GCC 支持另一种叫做 [Attribute](https://gcc.gnu.org/onlinedocs/gcc/Attribute-Syntax.html) 的东西,
+
+* [detours hook](http://blog.csdn.net/liujiayu2/article/details/50386495)
+
+  > 1. 通过制做一个 dll 文件用于注射
+  >
+  > 2. 通过 `DetourCreateProcessWithDllEx` 注射到指定进程, 参考 sample 中的 withdll.exe
+  > withdll.exe 以加载一个用于注射的 dll 然后启动指定程序的方式来注入。
+  >
+  > sample 下很多给力的工具类
+
+  另一个问题时，如果目标并没有导出某个函数，那么如何找到正确的地址了？
+  用 `IDA Pro 5.0` 显示的地址好像就是最终函数的地址, 比如: MessageBoxW, 它一直总是 0x7663EAE7
 
 * [B站视频 线性代数的本质](http://www.bilibili.com/video/av6731067/index_4.html) 描述了矩阵乘法为什么要那样计算?
 
@@ -368,7 +386,7 @@ categories: other
   winio.dll      # 有说需要插真实 PS 键盘才有会有效.
   ```
 
-* [逆向资源 List of awesome reverse engineering resources](https://github.com/wtsxDev/reverse-engineering): 
+* [逆向资源 List of awesome reverse engineering resources](https://github.com/wtsxDev/reverse-engineering):
 
   ```
   IDA            # 只有 5.0 的免费版，至少可以用来当 PE 查看器。

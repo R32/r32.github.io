@@ -86,7 +86,7 @@ AGAL 限制：每个程序 200 个 opcode。
 * **采样:** 像素着色器输入, 读取自使用 Context3D.setTextureAt() 指定的纹理
   - **`fs<0~7>`** 仅用于 fragmentProgram
 
-  ```bash
+  ```
   # 语法为 fs<n> <flags>, 其中 <flags> 定义为:
 
   纹理维度: 2d, cube
