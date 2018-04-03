@@ -16,7 +16,7 @@ categories: haxe
 
   `js.Lib.global.MyVal = 100`
 
-* `-debug` 模式将会生成 source map 文件用于调试
+* `-debug` 模式将会生成 source map 文件用于调试, release 下也可以使用 `-D source-map` 来强制输出这个文件
 
 * 当把一个成员方法作为函数参数时传递时, 比如 `addEventListener(onSome)`, 确保 this 的指向是否如预期（haxe 会将把 **成员方法** 自动绑到所属对象上, 但有时候你并不需要这样做）
 

@@ -15,12 +15,20 @@ categories: other
 
 ### Tools
 
+* [cssfontstack](https://www.cssfontstack.com/) 一个网站快速能快速查看各种字体的排版情况
+
 * [google page speed](https://developers.google.com/speed/docs/insights/OptimizeImages)
   - [convert 图片压缩](https://www.imagemagick.org/script/convert.php)
   - [html-minifier](https://github.com/kangax/html-minifier) minify html
   - [cssnano](https://github.com/ben-eb/cssnano) minify css
   - [google closure](https://github.com/google/closure-compiler) minify js
   - [html-inline](https://github.com/substack/html-inline) 用于将资源内联化,
+
+* [pngquant](https://github.com/kornelski/pngquant) Lossy PNG compressor. 有 GUI 版, 可选颜色数量，因此压缩率在某些情况下非常高。
+
+* [nconvert](https://www.xnview.com/en/nconvert/) batch image converter, 有 GUI 版,
+
+* [rsvg-convert](https://github.com/miyako/console-rsvg-convert) svg, 原始图像太大的话，好像不能缩小。
 
 * [把图片解析成几何图形, 随机名字生成](http://samcodes.co.uk/code/)
 
@@ -38,8 +46,6 @@ categories: other
 
 * [procrastitracker](https://github.com/aardappel/procrastitracker) windows 上的一款时间跟踪软件, 跟踪你用计算机都做了些什么
 
-  > 老板监视员工的利器？也可以自行标记（label）出哪些是你要做的工作,以提高工作效率..
-
 * [letsencrypt](https://letsencrypt.org/) 国外一个公共的免费SSL项目, 如果需要免费的SSL证书
 
 * [c/c++内存泄漏检测](http://wetest.qq.com/cloud/index.php/index/TMM) 腾迅内部开放工具, （情况未知）
@@ -54,11 +60,9 @@ categories: other
 
 * [lantern](https://github.com/getlantern/lantern) 不解释
 
-* **[wink](http://www.debugmode.com/wink/)** 录屏软件, 录制为flash, 能在某些点自动暂停
+* [wink](http://www.debugmode.com/wink/) 录屏软件, 录制为flash, 能在某些点自动暂停
 
 * [daff](https://github.com/paulfitz/daff) align and compare tables 比较二个表格文件（csv）差异
-
-* [svipt](https://github.com/JeriXNet/svipt) haxelib 命令行工具图形处理. takes svg file as an input to prepare app icon files for different platforms
 
 * [fontello](https://github.com/fontello/fontello) This tool lets you combine icon webfonts for your own project.
 
@@ -66,7 +70,7 @@ categories: other
 
   > 项目源: <https://github.com/gskinner/regexr/>
 
-* [haxe-watchify](https://github.com/lucamezzalira/haxe-watchify) 监视文件是否发生改动,nodejs 项目
+* chokidar-cli 监视文件是否发生改动, nodejs 项目
 
 * [gifshot](https://github.com/yahoo/gifshot) 将视频转换成 gif 图片
 
@@ -80,7 +84,7 @@ categories: other
 
 * [web-bundle](https://github.com/haxorplatform/web-bundle) Tool to pack binary files into a PNG image.
 
-  > 把多个文件打包成 png 图片形式, 然后可以解析这个图片获得文件,图片不受跨域加载的影响,同时减少 http 请求的数据量.
+  > 把多个文件打包成图片格式, 然后可以解析这个图片获得文件,图片不受跨域加载的影响,同时减少 http 请求的数据量.
 
 * [img2xls](https://github.com/Dobiasd/img2xls) Convert images to colored cells in an Excel table. -python
 
@@ -110,6 +114,14 @@ categories: other
 * [elasticsearch](https://github.com/proletariatgames/hxnodejs-elasticsearch) 基于Lucene的搜索服务器,这是 nodejs, haxe extern 版的
 
 ### web
+
+[ie8 css filter 在线](http://samples.msdn.microsoft.com/workshop/samples/author/filter/Alpha.htm) 分别将 Alpha 更改为: `Blur, Glow, DropShadow, Gradient, Wave, Shadow, BasicImage, DropShadow, Compositor`,
+
+  > [关于IE中CSS-filter滤镜小知识](https://www.qianduan.net/guan-yu-ie-zhong-css-filter-lv-jing-xiao-zhi-shi/)
+  >
+  > [IE8 CSS 和 HTML支持...](https://msdn.microsoft.com/library/cc817571.aspx)
+  >
+  > [IE JS 版本信息](https://msdn.microsoft.com/zh-cn/library/s4esdbwz(v=vs.94).aspx)
 
 [awesome-javascript - 中文](https://github.com/rwson/awesome-javascript-cn)**
 
@@ -298,7 +310,6 @@ categories: other
   # 其它
   EXECUTABLE_OUTPUT_PATH: 最终执行文件(release/debug)的所在目录,可通过 SET 更改
   LIBRARY_OUTPUT_PATH: 最终库文件(release/debug)的所在目录, 可通过 SET 更改
-
   ```
 
 * [the-art-of-command-line](https://github.com/jlevy/the-art-of-command-line) 正确使用命令行
@@ -327,13 +338,19 @@ categories: other
 
 ### resource
 
+* [Segoe MDL2 Assets](http://modernicons.io/segoe-mdl2/cheatsheet/) 一张 iconfont 表格, 微软 Win10 专用图标, 字体有版权, 因此你只能用在 win10 开发上。
+
+  - 所有 [png32x32 图标](https://docs.microsoft.com/zh-cn/windows/uwp/design/style/segoe-ui-symbol-font)
+
+  - [UWP 组件](https://docs.microsoft.com/zh-cn/windows/uwp/design/controls-and-patterns/index) 用来参考一下其设计也不错。
+
+* [Google Material icons](https://google.github.io/material-design-icons/)
+
+* [typicons.font](https://github.com/stephenhutchings/typicons.font) 336 pixel perfect, 图标, 有 png 格式和字体。
+
 * [awesome-design](https://github.com/gztchan/awesome-design)
 
 * [图标下载](http://www.easyicon.net/)
-
-* [Font-Awesome](https://github.com/FortAwesome/Font-Awesome/) 矢量图标字体
-
-  <http://fortawesome.github.io/Font-Awesome/examples/>
 
 * [Video Game Music](https://downloads.khinsider.com/game-soundtracks) 一些动漫或游戏的游戏原生音乐
 

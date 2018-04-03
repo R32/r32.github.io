@@ -200,31 +200,68 @@ API 文件建议参考 cygwin/lib/ocaml 下的 mli 文件, 一些方法会提示
   (* 单个 @ 用来连接二个 List, 相当于 List.concat([1;2;3] [4;5;6]) *)
   [1; 2; 3;] @ [4; 5; 6]
   ```
-* 局部抽像类型: 通过 `(type a)` 声明一个伪参数, 可以创建一个新类型在构造模块时使用。
+* 类似于 interface 的东西, 请注意: `with` 的意思类似于局部更新，修改了 IPoint 的定义，使其中的某个类型暴露给外部使用。
+
+  在 ocaml 中 `interface` 称为 `Module_type`, 局部更新的语法为: `<Module_type>: with type <type> = <type'> and <t2> = <t2'>`
 
   ```ocaml
-  let wrap_in_list (type a) (x:a) = [x];;
-  (* 可看成 function<T> wrap_in_list(x: T) return [x]*)
-  module type Comparable = sig
-    type t
-    val compare: t -> t -> int
-  end
-  let create_comparable (type a) compare = (module struct
-      type t = a
-      let compare = compare
-    end: Comparable with type t = a)
-  (* 更多关于首类模块的示例 *)
   module type Bumpable = sig
     type t
     val bump: t -> t
   end
-  (* 创建首类模块, 注意这里使用的是 let, 使得一个模块被包装成变量。 *)
-  let create_bump (type a) = (module struct
-    type t = a
-    let bump x = x
-  end : Bumpable with type t = a)
-  (* 要使用首类模块，需要使用 val 解包为模块: *)
-  module D = (val create_bump: Bumpable with type t = int);;
+
+  module Float_Bumpable = struct
+    type t = float
+    let bump n = n +. 1.0
+  end
+
+  module Int_Bumpable: (Bumpable with type t = int) = struct     (* 修改了类型 t, 使它不再为抽象类型, 即暴露可见 *)
+    type t = int                                                 (* 这里的 t 则是给 struct 内部用 *)
+    let bump n = n + 1
+  end
+
+  module Int32_Bumpble: (Bumpable with type t := int32) = struct (* 注意 :=, 能直接修改, 称为破坏性修改 *)
+    let bump n = Int32.add n 1l
+  end
+
+
+  (* 而函子/仿函数则是如下, 当然这个示例弄得不太好 *)
+  module Make_Bumpble(Bump: Bumpable) = struct
+    type t = Bump.t
+    let bump = Bump.bump
+  end
+  ```
+
+
+* 首类函数:
+
+  ```ocaml
+  (* 使用 let 将 module 与 module_type 绑定 *)
+  let bumps = (module Int_Bumpable: Bumpable)
+
+  (* 使用 val 来引用这个模块 *)
+  module New_Bumpable = (val bumps: Bumpable)
+
+  (* 当然即使指定为 Int_Bumpable 但是并没有暴露其属性给外部，因此要使用它还得: *)
+  let int_bump = (module Int_Bumpable: Bumpable with type t = int)
+
+  module New_Int_Bumpable = (val int_bump: Bumpable with type t = int)
+
+  (* 感觉好像也没什么用处。。。。 *)
+
+
+  (* 局部抽象类型, 通过 `(type a)` 声明一个伪参数, 可以创建一个新类型在构造模块时使用 *)
+  let wrap_in_list (type a) (x:a) = [x];;   (* 感觉可看成 function<T> wrap_in_list(x: T) return [x]*)
+
+  module type Comparable = sig
+    type t
+    val compare: t -> t -> int
+  end
+
+  let create_comparable (type a) compare = (module struct
+      type t = a
+      let compare = compare
+  end: Comparable with type t = a)
   ```
 
 * misc
