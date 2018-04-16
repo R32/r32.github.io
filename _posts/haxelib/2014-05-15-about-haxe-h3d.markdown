@@ -47,21 +47,6 @@ categories: haxelib
   }
   ```
 
-#### comp
-
-这个目录提供一些 2D UI组件, 可以使用 HTML,CSS 来配置这些, 参看 sample/comps 示例.
-
-* **Context**
-
-  ```haxe
-  // 在初使化 h3d 之前可以修改组件默认的 css fileString
-  public static var DEFAULT_CSS = hxd.res.Embed.getFileContent("h2d/css/default.css");
-  // 优先返回缓存 字体
-  public static function getFont( name : String, size : Int ):hxd.Font{}
-  // 优先返回缓存 Tile
-  public static function makeTileIcon( pixels : hxd.Pixels ) : h2d.Tile {}
-  ```
-
 
 ### hxd
 

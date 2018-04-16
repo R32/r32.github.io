@@ -389,18 +389,18 @@ Or(Random(0.1), Fixed) | [3, [1, 0.1], [0]]
 
 ### 图层(Layers)
 
-一个 layer 是包了一组信息的字段存储于 level 表中，有如下几种 layer: 注意参考示例文件
+图层(layer)是 level 表中包含了一组图片布局数据的字段(field)，分别是: (注意参考示例文件)
 
-* **Tile Layer** 在创建 level 表后即可通过点击 "Edit" 按钮创建, tile layer 相当于游戏里的某一图层, 示例中的 "layers" 字段即是是一个 List<Layer>, 通过 "New Layer" 创建的层都会自动添加到 "layers" 下.
+* **Tile Layer** 在创建 level 表后即可通过点击 "Edit" 按钮创建, tile layer 相当于游戏里的某一图层, 示例中的 "layers" 字段即是是一个 List<Layer>, 比如游戏里可以有背景层, 美化层, 物件层等等。 通过 "New Layer" 创建的层都会自动添加到 "layers" 下.
 
   - 这个字段一般由 IDE 自动创建, tile layer 有三种不同的模式: Tiles, Group, Object
 
 后边的三种类型都是与 Tile Layer 相对的数据,
 
-* **List Layer** 如果你添加一个 List 到level表, 当这个 List 包含有 Number 类型的 x 和 y 属性时, 这将是 list layer。（这个字段需要手动创建，创建完成后才可以像 "Tile Layer" 一样以可视化的方式来编辑）
+* **List Layer**: 允许你在可视地图编辑器上引用另一个表(sheet)中的数据。
 
-  > 示例文件中的 npcs 字段即为 list layer, 除了必须的 x, y 字段外还可添加额外的字段,
-  >
+  你需要在 level 表中手动添加一个 `List<{x:Float, y:Float}>` 类型的字段, 参考示例中的 `npcs`
+
   > 如果你添加 Reference 引用了另一个表(sheet), 如果被引用的表包含有 Tile 或 Image,
   > 那么这个 tile 将作为标记用于可视编辑(如果存在多个 tile 或 image, 则选择最左边的字段)，
   >
@@ -412,10 +412,13 @@ Or(Random(0.1), Fixed) | [3, [1, 0.1], [0]]
 
   > 示例中的 triggers 字段
 
-* **Index Layers** 使用紧凑数组(base64, `width x height`)保存数据
+* **Index Layers** 使用紧凑数组(base64, `width x height`)保存一些数据,
 
-  > 在 level 表上指定字段类型为 Data_Layer, 并选择与之关联的一个表即可。
+  > 在 level 表添加一个类型为 Data_Layer 字段 , 并选择与之关联的一个表即可。
+  >
   > 被关联的表必须有 tile 字段才可以在地图上编辑, 参考示例中的 collide 字段
+  >
+  > 当然作为限制你不能像 List Layer 那样能自定义数据。
 
 
 
@@ -466,7 +469,7 @@ Options 菜单:
 
 由 tile_layer 所组成的数据通过单个tileset, tile_layer 有如下属性:
 
-Mode: tile_layer 可工作在三种模式, 模认为 tile, 其它模式后边将详细介绍
+Mode: tile_layer 可工作在三种模式, 默认为 tile, 其它模式后边将详细介绍
 File: 允许更改 tileset 作用于当前 tile layers,
 Size: CDB 默认使用 16x16大小的tile. 可以更改这个数值在各自的 layer(但是同一张底图不可以有不一样的size), 注意需要同时修改 Options 菜单中的 Tile Size 大小
 
@@ -502,44 +505,63 @@ Object_Layer 的数据存储编码为 base64, `0xFFFF` 标记这个图层为 Obj
 
 Borders 有 4个模式: (copy from cdb.TileBuilder.hx)
 
-```
-	Corners
-	┌  ─  ┐		0 1 2
-	│  ■  │		3 8 4
-	└  ─  ┘		5 6 7
 
-	Lower Corners
-
-	┌ ┐		9  10
-	└ ┘		11 12
-
-	U Corners
-
-	   ┌ ┐			XX  13  XX
-	┌       ┐		14  XX  15
-	└       ┘
-	   └ ┘			XX  16  XX
-
-	Bottom
-
-	└ - ┘			17 18 19
-```
 
 
 #### Group Mode
 
 为几个连续的tile定义成一个名字, 示例中定义了一些tile动画.
 
-#### Per-tile Properties
+### Per-tile Properties
 
-通过设定关卡表中的 tileProps 字段，预定义 tile 的属性（将显示于右下的弹出菜单中）, 共享所有 tile 属性用于各个关卡(level)，而不必每次都在图层中去画。
+即在画板中预定义每一个 tile 的属性, 例如: 你可以在画板上直接把一个"石头 tile" 定义成会碰撞不可穿越的块，
+这样就不必在画完图层后, 再去定义每个 tile 的属性。定义的这些属性可以在所有关卡中可用。
 
-如示例关卡表中的 collide 字段它引用了collide 表,这将允许我们指定自定义的碰撞(通过点击collide_tile 然后在tileset上操作)
+下拉菜单:
 
-示例中定义了一个 Enumeration类型的 hideHero 字段,也将显示在画板下拉菜单中
+* tile: 当处于这个选项时，表示你正在作画中, 而非预定义。
+* Object: 当激活时, 可以将多个 tile 组合成 Object, 接下来作画时一次即可选中组合的几个 tile. 快捷键为: `O` 键。
+* Ground: 用于标记一个或一些 tile 为 ground(名字在左上第一个块上), 以配合 `Border` 一起使用。
+* Border: 将某些 tile 标记为 border, 这时你需要选择 border 的相对于 ground 显示位置, 以及样式。
 
-#### 地图编辑器中的快捷键
+  在作画时，你不需要把画 Border, 而当在画 Ground 定义过的 tile 时, IDE 会根据定义自动帮你添加 border.
+  虽然这里描述得非常抽象, 但它是一个非常强力的工具，使你的地图变得相当的专业。
 
+  ```
+  #Corners
+  ┌  ─  ┐   0 1 2
+  │  ■  │   3 8 4
+  └  ─  ┘   5 6 7
+
+  #Lower Corners
+
+  ┌ ┐   9  10
+  └ ┘   11 12
+
+  #U Corners
+
+     ┌ ┐      XX  13  XX
+  ┌       ┐   14  XX  15
+  └       ┘
+     └ ┘      XX  16  XX
+
+  #Bottom
+
+  └ - ┘     17 18 19
+  ```
+
+* Group: 仅用于给一些 tile 取一个名字，例如: 一些动画帧。
+
+  > TODO: 在游戏里如何引用到这个名字的 anim 了?
+
+* 自定义: 可在关卡表中添加一个名为 tileProps 类型是 `List`  的字段，List 内的每一个子字段都会被引用到画板下拉菜单中去， 而 List 内不必有内容(行数据)。
+
+  > 参考示例中: 画板下拉菜单中的 collide(引用) 和 hideHero(枚举)
+
+
+### 地图编辑器中的快捷键
+
+* `S`: 用于移动某一个画布上的块, 按住 `S` 可选择区域, 接下来按住左键可移动。按 ESC 取消这个功能.
 * `右键`, 选择光标下的 tile, (像是从tileset 中选择一样)
 * `Tab` 切换到下一图层
 * `shift+Tab` 切换到前一图层

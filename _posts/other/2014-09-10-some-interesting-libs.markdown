@@ -15,6 +15,8 @@ categories: other
 
 ### Tools
 
+* [color.adobe.com](https://color.adobe.com) 配色方案工具， 例如: [CS04 配色方案](https://color.adobe.com/zh/CS04-color-theme-1994456/)
+
 * [cssfontstack](https://www.cssfontstack.com/) 一个网站快速能快速查看各种字体的排版情况
 
 * [google page speed](https://developers.google.com/speed/docs/insights/OptimizeImages)
@@ -338,17 +340,17 @@ categories: other
 
 ### resource
 
-* [Segoe MDL2 Assets](http://modernicons.io/segoe-mdl2/cheatsheet/) 一张 iconfont 表格, 微软 Win10 专用图标, 字体有版权, 因此你只能用在 win10 开发上。
-
-  - 所有 [png32x32 图标](https://docs.microsoft.com/zh-cn/windows/uwp/design/style/segoe-ui-symbol-font)
-
-  - [UWP 组件](https://docs.microsoft.com/zh-cn/windows/uwp/design/controls-and-patterns/index) 用来参考一下其设计也不错。
-
-* [Google Material icons](https://google.github.io/material-design-icons/)
+* [Google Material icons](https://github.com/google/material-design-icons)
 
 * [typicons.font](https://github.com/stephenhutchings/typicons.font) 336 pixel perfect, 图标, 有 png 格式和字体。
 
 * [awesome-design](https://github.com/gztchan/awesome-design)
+
+* [Segoe MDL2 Assets](http://modernicons.io/segoe-mdl2/cheatsheet/) 一张 iconfont 表格, 微软 Win10 专用图标, 字体有版权, 只能用在 win10 开发上。
+
+  - 所有 [png32x32 图标](https://docs.microsoft.com/zh-cn/windows/uwp/design/style/segoe-ui-symbol-font)
+
+  - [UWP 组件](https://docs.microsoft.com/zh-cn/windows/uwp/design/controls-and-patterns/index) 用来参考一下其设计也不错。
 
 * [图标下载](http://www.easyicon.net/)
 
@@ -371,6 +373,8 @@ categories: other
 [awesome-c](https://notabug.org/koz.ross/awesome-c) 注: notabug.org 是个什么样的网站？
 
 [C标准头文件](http://stackoverflow.com/questions/2027991/list-of-standard-header-files-in-c-and-c)
+
+* [incbin](https://github.com/graphitemaster/incbin) 简单地在 c 语言中嵌入资源, 兼容所有编译器
 
 * [cpu_features](https://github.com/google/cpu_features) A cross platform gnu89 library to get cpu features at runtime.
 

@@ -14,7 +14,10 @@ notes: full
 
 * c# 可使用 struct 用于创建紧凑数据, haxe 没有相关功能，
 
-  > 虽然 haxe 中的"匿名结构"看上去非常像 struct , 但"匿名结构"是一种降低性能的 Dynamic 结构数据，
+  > 虽然 haxe 中的"匿名结构"看上去非常像 struct , 但"匿名结构"是一种低性能的 Dynamic 结构数据，
+  >
+  > c# 中的 struct 无法被 sizeof 识别, 限制非常多，当成 **传值类型** 的 tuple 来用就算了。
+  > 而且虽然有 `fixed` 关键字能在 struct 中定义固定数组, 但属于 unsafe 级别的操作。
 
 * 对于 c# 中的固定数组, 在 haxe 中 haxe.ds.Vector 是个类似固定数组的容器
 
@@ -267,8 +270,7 @@ class TheClass {
 
 c# 的 interface 不可以包含字段, 但是可以定义成 getter/setter, 只是都必须为 public.
 
-而 haxe 中定义 interface 则可以有字段, 但是在 haxe 中 `var id:Int; 与 var id(default, null):Int;`
-并不是同一种东西, 前者称为 field(字段), 后者为 property(属性).
+haxe 中同样也只能有 getter/setter
 
 <div class="row">
  <div class="col-md-6 cs">

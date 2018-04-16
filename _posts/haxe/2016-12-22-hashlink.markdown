@@ -40,9 +40,8 @@ gcc -o myapp output.c hlc_main.c -Lhl
 hashlink 一些其它的特点这里简单描述下:
 
 * 目前并不支持多线程, [GC](https://github.com/HaxeFoundation/hashlink/wiki/Notes-on-Garbage-Collector) 采用的是 mark-and-not-sweep(标记但不清除) 的方式
-* 字符串底层使用 ucs2 编码（JS, Java, c# 也一样）
+
 * 在实用性方面，目前仅被作为 haxe 的 heaps 游戏框架的底层
-*
 
 ### 编译虚拟机
 
@@ -66,13 +65,19 @@ hashlink 一些其它的特点这里简单描述下:
 
 * 如何在 C 中嵌入虚拟机可以参考 `src/main.c` 文件
 
-* 例如 `@:hlNative("fmt","png_decode")`, 表示位于 fmt.hdll 库中的 png_decode 方法, 需要自已参考 `libs/fmt/fmt.c` 的统一格式
+  例如 `@:hlNative("fmt","png_decode")`, 表示位于 fmt.hdll 库中的 png_decode 方法, 需要自已参考 `libs/fmt/fmt.c` 的统一格式
 
-* libs 下有个 sdl 库, 可添加到 haxelib，使用 hlsdl 作为库名
+  在 hl 包下的 haxe 代码, 有时候你可以看到 `$new` 这种以美元字符开头的代码, 可参考 `genhl.ml`
+
+* libs 目录下有一些 haxelib, 例如: `hxsdl`, `hldx` 你需要将它们添加到 haxelib 以使用 heaps 框架
 
 * 对于 hl.UI, 实际上只有 dialog 还算比较实用, WinLog 只是用来测试的(参看 sdl 中的某一函数), 因为它并没有和 MSG 相关东西, 所以应该使用 sdl 来创建窗口， 因为 hl.UI 仅适用于 windows 平台（未来会实现多平台）
 
-* 在 hl 包下的 haxe 代码, 有时候你可以看到 `$new` 这种以美元字符开头的代码, 可参考 `genhl.ml`
+* 字符串底层使用 ucs2 编码（JS, Java, c# 也一样）
+
+  > 注意: 字符串是 ucs2 的，但通过 `haxe.io.Bytes.ofString` 转换 Bytes 时, 将以 utf8 的形式写入
+
+* `hl.Bytes`: 没有检察越界，请小心使用。它与 c 语言的 `void*` 一样.
 
 &nbsp;
 &nbsp;
