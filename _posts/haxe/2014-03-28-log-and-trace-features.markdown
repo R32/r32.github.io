@@ -7,7 +7,7 @@ categories: haxe
 
 ---
 
-haxe 提供一个强力的 trace, 可以在程序的任意处简单地调用 trace 
+haxe 提供一个强力的 trace, 可以在程序的任意处简单地调用 trace
 
 ```haxe
 trace("Hello world!");
@@ -40,7 +40,7 @@ class MyTrace {
 }
 ```
 
-第一个参数 v 为要输出的值, 
+第一个参数 v 为要输出的值,
 
 第二个参数 inf 的类型如下, **PosInfos** 是一个特殊魔法类, 当用这个类型作参数时,编译器会自动帮你填充.
 
@@ -77,9 +77,6 @@ haxe.Log.trace("hello",{
 ### 自动移除
 
 只需要在编译时添加 `--no-traces` 参数, 则所有 trace 语句将被忽略. 这样你不必像 JS 一样 一条一条地注释掉这些语句.
-
-### 更多
-
 
 <br />
 <br />

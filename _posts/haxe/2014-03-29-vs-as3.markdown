@@ -12,8 +12,6 @@ notes: full
 
 * [Haxe IDE选择](http://haxe.org/documentation/introduction/editors-and-ides.html)
 
-* 如果你熟悉 AS3 建议从 [Haxe/openfl](http://www.openfl.org/documentation/) 开始. openfl 提供了跨平台的 Flash API
-
 <!-- more -->
 
 这个文档源文来自: [Haxeflixel's guide](http://haxeflixel.com/documentation/as3-and-haxe-comparison/).
@@ -633,10 +631,6 @@ Haxe 增加了一些 Actionscript 3 没有的语法特性:
 
 ### 个人笔记
 
-have fun!
-
 * [haxe/flash]({% post_url haxe/2014-05-10-flash %})
-
-* [haxe/flash air]({% post_url haxe/2014-05-15-compile-haxe-air %})
 
 <br />

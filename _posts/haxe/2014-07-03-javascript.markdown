@@ -10,17 +10,17 @@ categories: haxe
 
 ### Tips
 
-* 使用 git 版本的 haxe, 可以在 <http://build.haxe.org> 处下载
+* 建议使用 git 版本的 haxe, 可以在 <http://build.haxe.org> 处下载
 
-* js.Lib 下的有些很有用处的方法。 例如访问 JS 中的全局变量:
+* js.Lib 和 js.Syntax 下的有些很有用处的方法。 例如访问 JS 中的全局变量:
 
   `js.Lib.global.MyVal = 100`
 
 * `-debug` 模式将会生成 source map 文件用于调试, release 下也可以使用 `-D source-map` 来强制输出这个文件
 
-* 当把一个成员方法作为函数参数时传递时, 比如 `addEventListener(onSome)`, 确保 this 的指向是否如预期（haxe 会将把 **成员方法** 自动绑到所属对象上, 但有时候你并不需要这样做）
+* 当把一个 **成员方法** 作为函数参数时传递时, haxe 会将把 **成员方法** 与其相关的对象自动绑定
 
-  因此如果不想绑定 this, 可使用 `(obj: Dynamic).method` 的方式防止 `$bind`:
+  如果不想绑定, 则可使用 `(obj: Dynamic).method` 的方式防止它, 例:
 
   ```hx
     var rqf : Dynamic = (window: Dynamic).requestAnimationFrame ||
@@ -48,8 +48,6 @@ categories: haxe
   var a = 1, b = 2;
   js.Syntax.code("var c = {0} + {1}", a, b); // a, b 将分将替换掉 {0}, {1}
   ```
-
-haxe 4.0 后新增了 js.Syntax 类, 包含了 `instanceof`, `typeof`, `delete`, `===` 以及 `!===`
 
 ### Defines
 
@@ -237,26 +235,7 @@ haxe -main Main -js bin/main.js --macro includeFile("projDir/path/to/file.js")
 
 ### 模块化编程
 
-（注: 不推荐使用）因为这种方式会使得代码变得复杂, 而且对于 extern 类来说, 必须显示地声明函数的返回和参数类型。
-
-  編譯 a.js 的時候加 "-D a_js". 相對的，編譯b.js 的時候加 "-D b_js"
-
-  ```haxe
-  #if b_js extern #end class A {
-  	public function new():Void {
-  		trace("new A");
-  	}
-  }
-
-  #if a_js extern #end class B {
-  	public function new():Void {
-  		trace("new B");
-  	}
-  }
-  ```
-
-
-( **注: 推荐** ) 参考: <https://github.com/elsassph/modular-haxe-example>
+参考: <https://github.com/elsassph/modular-haxe-example>
 
   其关键是使用 `--macro exclude('SomeClass')` 来排除某一个类或模块（注意必须使用单引号）
 

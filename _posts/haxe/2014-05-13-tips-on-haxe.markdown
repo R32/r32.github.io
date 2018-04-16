@@ -7,15 +7,9 @@ categories: haxe
 
 一些链接:
 
-* [Haxe3 迁移指南](http://old.haxe.org/manual/haxe3/migration) 以及 [新特性](http://old.haxe.org/manual/haxe3/features)
-
 * [编程参考](http://old.haxe.org/doc)
 
 * [黑魔法](http://old.haxe.org/doc/advanced/magic)
-
-* [windows-installer 最新的开发版下载](http://hxbuilds.s3-website-us-east-1.amazonaws.com/builds/haxe/windows-installer/haxe_latest.tar.gz)
-
-* [如何优化你的 haxe 代码](https://github.com/delahee/haxe.opt)
 
 * **Tips:** 在编译时其实可以不用指定 `-main` 参数, 这样的程序将没有入口像是一个库, 例: `haxe -js lib.js Lib`
 
@@ -29,16 +23,16 @@ categories: haxe
 
 除了官方提供的下载, 或者从 <build.haxe.org> 下载 nightly build 版本, 目前 window 平台（由于 windows 之前安装 ocaml 一直有各种问题）也能容易的自已编译:
 
-这里有一个可直接使用的 zip 文件包 [haxe #6143](https://github.com/HaxeFoundation/haxe/issues/6143) 用于编译 haxe.exe
+这里有一个可直接使用的 zip 文件包 [haxe #6143](https://github.com/HaxeFoundation/haxe/issues/6143) 用于编译
 
 > 未尝试, 因为我使用的是 cygwin 早就已经安装好了的, 通过 mingw 编译 haxe
->
-> 由于每次复制通过 git 更新 `haxe/std`到 haxe 的安装目录很麻烦，因此我直接使用 "git haxe repo" 作为 haxe 的路径，
->
+
+由于每次复制通过 git 更新 `haxe/std`到 haxe 的安装目录很麻烦，因此我直接使用 "git haxe repo" 作为 haxe 的路径，
+
 > 只要设置二个路径即可: `HAXEPATH: D:\fork\haxe\`, `NEKO_INSTPATH: G:\HaxeToolkit\neko`,
 > haxe.exe 所依赖的 dll 文件由 `i686-w64-mingw32\sys-root\mingw\bin` 所提供
 >
-> `make libs`: 编译 haxe.exe 之前需要先构建的库
+> `make libs`: 编译 haxe.exe 之前需要的依赖库
 >
 > `make haxe -f Makefile.win -j4 FD_OUTPUT=1 ADD_REVISION=1`: 获得 windows 平台下的 haxe.exe
 >
@@ -52,35 +46,28 @@ categories: haxe
 
 一些内容通过参考 [CHANGES](https://github.com/HaxeFoundation/haxe/blob/development/extra/CHANGES.txt) 文件
 
-* 新的函数类型声明, 允许带参数名字以及支持可选: 例如: `var func: (name: String, ?number: Int) -> Void`
+* 新的函数类型声明, 允许带参数名字: 例如: `var func: (name: String, ?number: Int) -> Void`
 
-* 关于 `haxe.macro.CompilationServer` 可以用来加速编译，通过调用 `--macro server.XXX` 来调用这个类下的字段。
+* `haxe.macro.CompilationServer` 可以用来加速编译，通过调用 `--macro server.XXX` 来调用这个类下的字段。
 
   ```bash
-  # 通知编译器 ???
+  # 更多细节在这里: https://github.com/HaxeFoundation/haxe/pull/5700
   --macro server.setModuleCheckPolicy(['DefaultAssetLibrary'], [CheckFileContentModification])
-
   # 通知编译器不再监视指定包内的文件
   --macro server.setModuleCheckPolicy(['flash', 'openfl', 'flixel', 'lime', 'haxe'], [NoCheckShadowing], true)
   ```
 
-  不过感觉也没什么用，因为一般只要打开了 CompilationServer 就已经够快了。
-
-
 * `-D old-error-format`: 如果你使用 flashdevelop 应该加上这个. 在使用 vscode 时则不加这个.
 
-  > HF 中的一员为了使 vscode 能更好地定位 haxe 的语法位置进行过一些改动（大概是由于 vscode 处理 pos 信息时是第一个字节从 1 开始, 而不是 0）
-  > 这个改动导致了 flashdevelop 处理 pos 信息的问题。
-
-* `Foo.js.hx, Foo.hl.hx` 文件都可以定义同一个名为 Foo 的类, 用于跨平台实现某一个类, 而不需要写条件检测。
+* 类似于 `Foo.js.hx, Foo.hl.hx` 文件都可以定义同一个名为 Foo 的类, 用于跨平台实现某一个类, 而不需要写条件检测。
 
   > 似乎根本没提起过?
 
-* all : disabled analyzer optimizations by default, re-enable with `-D analyzer-optimize`
+* 优化器目前默认处于关闭状态, 你需添加编译参数 `-D analyzer-optimize` 来开启它。(**推荐开启**)
 
 * `import haxe.extern.AsVar`: 用于方法的参数类型, 传递给方法的实参将会先赋值给临时变量，再传递到方法上.
 
-  或者如果是一些抽象类, 可以添加 `@:analyzer(as_var)`
+  或者是抽象类, 可以添加 `@:analyzer(as_var)`
 
   ```haxe
   @:analyzer(as_var) abstract Ptr(Int) to Int {
@@ -95,10 +82,8 @@ categories: haxe
   ```haxe
   var d:Dynamic = 1;
   d.charCodeAt(0)  // 编译器无法检测这行的正确性, 但运行时一定会出错
-
   var a:Any = 1;
   d.charCodeAt(0); // 编译器不允许访问 Any 类型的 filed
-
   if ((a is String))
   	(d:String).charCodeAt(0) // 除非强制转换成 String
   ```
@@ -275,17 +260,6 @@ neko  : 28.201 ------ anon: 19.601  # 运算前期速度还行，越到后边越
 ```
 
 意外的是 neko 中, anon 竟然快于 class 结构, 而且由于 neko 本身就不适合用于 float 计算
-
-### snippet
-
-[old.haxe.org 的一些代码片段](http://old.haxe.org/doc/snip)
-
-* 以“行”分隔文本字符串: `~/[\r\n]+/g.split(text)`
-
-  - 同上移除所有空格和TAB字符串并: `~/[ \t]+/g.split(lineText)`
-
-  - 再加上 join 方法可用于字符串替换, 如果字符串简单可以直接用 str.split 方法如: `path.split("\\").join("/")`
-
 
 ### 源码布局
 
@@ -542,33 +516,7 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
 
 似乎非常不错..<https://github.com/vshaxe/vshaxe/wiki/Completion-Cache>
 
-### 遇见的一些错误
-
-* Reflect.hasField
-
-  对于类字段这个方法在和 C++ 相关的平台上会返回 false, 需要检测 Reflect.field 的返回值是否为 null 就行了.
-
-* 编译 Nape 目标为 neko 时,报错 `Uncaught exception - std@module_read`.
-
-  通常 neko 编绎不能通过,意味着所有基于 c++ 平台的编绎都将出现异常.
-
-  ```xml
-  <!-- 加入下边这一行将能正常运行 -->
-  <haxeflag name="-dce full" />
-
-  <!-- optional 可选 -->
-  <haxedef name="NAPE_RELEASE_BUILD" />
-
-  <!-- 对于 `haxeflixel` 的 demo 如果添加了 `-dce full`,则需要添加下行 -->
-  <!-- 注意下行的 PlayState 为 flixel-demo 示例中的一个类 -->
-  <haxeflag name="--macro keep(null,['PlayState','flixel.system.FlxAssets','flixel.system.ui','flixel.ui'])" />
-  ```
-
-* hscript 使用类似于 for(i in 0...10) 循环时,(最新版的 haxe 可能已经修复了这个问题)
-
-  ```bash
-  --macro keep('IntIterator')
-  ```
+### 常见错误
 
 
 ### 函数绑定
@@ -1403,27 +1351,6 @@ input或output 默认都是阻塞类型的,
 
 haxe 3.3 才加入的类, 使得目前除了flash 和 js平台, 其它平台也包含有 haxe.Timer.delay 方法
 
-需要注意的是 haxe.Timer.delay 只在存在于主线程，即使你在线程里调用它。因此如果你阻塞了主线程的话，
-那么 haxe.Timer.delay 也会被阻塞。
+当 haxe.MainLoop 存在时, `haxe.EntryPoint.run()` 将会被自动插入在 main 函数之后
 
-当然, MainLoop 并不是为了实现 delay 而加入的，它最主要是为了游戏引擎的跨平台
-
-* `MainLoop.addThread`:
-
-* `MainLoop.add`: 参考 haxe.Timer 的源码.
-
-**注意**: 当 haxe.MainLoop 存在时, 这时 `haxe.EntryPoint.run()` 将会被自动插入在 main 函数之后
-
-### XXXXX
-
-* patch
-
-  ```
-  let open_file ctx file =
-  if ctx.curfile <> "" then close_file ctx;
-+ if Globals.is_windows then output ctx "\xEF\xBB\xBF"; (* UTF8 BOM *)
-  let version_major = ctx.version / 1000 in
-  let version_minor = (ctx.version mod 1000) / 100 in
-  let version_revision = (ctx.version mod 100) in
-  ```
 <br />

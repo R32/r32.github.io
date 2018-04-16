@@ -34,14 +34,20 @@ categories: haxe
   trace("other");
 #end
 
+// 条件和逻辑运算符检测, 注意: 表达式需要使用“小括号”
+// 检测一个 haxelib 的版本, 注意版本号应该是字符串
+#if (csss >= "0.3.2")
+  // do somethings.
+#end
+
+// 检测 haxe 编译器的版本号
+#if(haxe_ver > 3.2)
+  trace("haxe version > 3.2");
+#end
+
 // 检测 flash player 版本
 #if flash11_4
   trace("flash player version >= 11.4"); // 如果目标为flash,且指定的编译版本大于等于 FP11.4
-#end
-
-// 条件和逻辑运算符检测, 注意: 需要使用“小括号”
-#if(haxe_ver > 3.2)
-  trace("haxe version > 3.2");
 #end
 
 #if (neko && debug)
@@ -269,8 +275,6 @@ Context.getType("Void");
   		// 或者 通过 defineModule 构建一个模块,最后返回 null 值. 这样的话 Some 相当于一个空类
   	}
   }
-
-
   // Some.hx
   @:genericBuild(Some.gen())
   class Some{
@@ -291,14 +295,12 @@ Context.getType("Void");
 * 在以链式的方法调用它时, 注意它能会返回 null 值,
 
   ```haxe
-
   class Main{
   	public static function main(){
   		var f = new Foo();
   		f.test();
   	}
   }
-
   // Foo.hx
   #if macro
   	import haxe.macro.Expr;
