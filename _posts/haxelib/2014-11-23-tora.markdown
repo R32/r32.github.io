@@ -1,10 +1,12 @@
 ---
 layout: post
-title:  tora(Comet多线程服务器)
+title:  tora
 date:	2014-11-23 07:50:18
-categories: haxe
+categories: haxelib
 ---
 
+
+(**不推荐使用**, 因为 neko 是过时的了, 建议使用 golang 来做服务器)
 
 Tora 是一个基于 neko 的单进程多线程服务器应用程序，用来作为网站后台程序。它本身并不包含 HTTP 服务器, 而使用代理的方式
 

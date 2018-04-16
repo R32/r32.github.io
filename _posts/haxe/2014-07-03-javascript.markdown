@@ -37,20 +37,16 @@ categories: haxe
 
 ### 黑魔法
 
-首先应该查看 js.Lib 是否已经有需要的方法, 再使用下边这些
+首先应该查看 `js.Lib` 或 `js.Syntax` 类下是否已经有需要的方法
 
-* `__js__` 用于直接嵌入 js 代码
+* `js.Syntax.code` 用于直接嵌入 js 代码
 
   ```haxe
-  var s:String = untyped __js__('Navigator.plugin["Shockwave Flash"]');
+  var s:String = js.Syntax.code('Navigator.plugin["Shockwave Flash"]');
 
-  // 实例上 __js__ 的签名是: __js__("js code", arg1, arg2, argn...)
   // 它使用了类似于 C# 的字符串格式语法
   var a = 1, b = 2;
-  untyped __js__("var c = {0} + {1}", a, b); // a, b 将分将替换掉 {0}, {1}
-
-  // 或者在一个函数的内部如:
-  untyped Array.prototype.slice.call(__js__("arguments"));
+  js.Syntax.code("var c = {0} + {1}", a, b); // a, b 将分将替换掉 {0}, {1}
   ```
 
 haxe 4.0 后新增了 js.Syntax 类, 包含了 `instanceof`, `typeof`, `delete`, `===` 以及 `!===`
@@ -65,15 +61,11 @@ haxe 4.0 后新增了 js.Syntax 类, 包含了 `instanceof`, `typeof`, `delete`,
 
 * `jquery-ver`: The jQuery version supported by js.jquery.*. The version is encoded as an interger. e.g. 1.11.3 is encoded as 11103
 
-* ~~js-es5~~ 默认情况下 haxe 将以 js-es=5 的形式输出代码, 如果你想要兼容旧的浏览器可以指定为 `-D js-es=3`
+* 默认情况下 haxe 将以 js-es=5 的形式输出代码, 如果你想要兼容旧的浏览器可以指定为 `-D js-es=3`
 
-  在未来的 haxe 中(ver: 3.4)， 可以 `-D js-es=6` 以使用最新的JS特性
+  > 例如: `Array.prototype.indexOf`, 如果定义了 js-es=3, 那么 haxe 将会实现它（比如IE8并没有这个方法,因此需要自已实现）
 
-  例如: `Array.prototype.indexOf`, 如果定义了 js-es=3, 那么 haxe 将会实现它（比如IE8并没有这个方法,因此需要自已实现）
-
-* ~~`js-flatten`~~ 平坦模式. haxe 3.2+ 中这将是默认行为
-
-  **`js-unflatten`** 如果想恢复以前旧的模式的化. 例旧模式： `Main.a.b.c`, 而默认的平模模式为: `Main_a_b_c`
+* **`js-unflatten`** 在 haxe 中例如类 `Main.a.b.c` 将会被编译为: `Main_a_b_c`, 如果你想保持 `Main.a.c.c` 这种样式，则可以用这个
 
 * ~~embed-js~~ 已经被移除, 你可以使用 [includeFile](#includeFile) 方法来嵌入想要的文件
 
