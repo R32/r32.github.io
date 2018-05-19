@@ -39,7 +39,7 @@ gcc -o myapp output.c hlc_main.c -Lhl
 
 hashlink 一些其它的特点这里简单描述下:
 
-* 目前并不支持多线程, [GC](https://github.com/HaxeFoundation/hashlink/wiki/Notes-on-Garbage-Collector) 采用的是 mark-and-not-sweep(标记但不清除) 的方式
+* [GC](https://github.com/HaxeFoundation/hashlink/wiki/Notes-on-Garbage-Collector) 采用的是 mark-and-not-sweep(标记但不清除) 的方式
 
 * 在实用性方面，目前仅被作为 haxe 的 heaps 游戏框架的底层
 

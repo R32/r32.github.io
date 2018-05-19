@@ -17,6 +17,8 @@ categories: other
 
 * 照着文档一步一步来(我是参照 Manual Installation 安装的)
 
+<!-- more -->
+
 编译 haxe 源码:
 
 * 在 setup.exe 里选上 `mingw64-i686-zlib` 和 `mingw64-i686-pcre` (参考 Makefile.win 里的 dll 文件搜索)
@@ -26,9 +28,6 @@ categories: other
 * 在 bash 里执行 `make haxe -j4 FD_OUTPUT=1 ADD_REVISION=1 -f Makefile.win` (第一次执行时必须编译 haxelib 因此先去掉 haxe)
 
 * 如需开发 haxe 可以编译成字节码 `make haxe BYTECODE=1` 就可以了
-
-<!-- more -->
-
 
 接下来是 IDE 选择, 最重要的问题是 IDE 在调用命令是必须能调用 `cygwin/bin/bash`(需设置系统环境变量 `CHERE_INVOKING=1`，以防止 --login 时丢失目录),  但是这样做有一个副作用就是: 当从 "开始" 进入 "Cygwin Terminal" 时的当前目录会是 system32 下, 但可以通过可 `cd ~` 切回
 
@@ -91,7 +90,54 @@ categories: other
 
 API 文件建议参考 cygwin/lib/ocaml 下的 mli 文件, 一些方法会提示是否为 tail-recursive
 
+* 整数字面量后缀: `l, L, n` 分别表示为 int32, int64, nativeint.
+
+* Warning 40: 在 ocaml 中, 直接访问某一模块 record 的属性将会弹出这个警告, 例:
+
+  ```ocaml
+  module Foo: sig
+    type point = {
+      x: int;
+      y: int;
+    }
+    val pos_new: int->int->point
+  end = struct
+    type point = {
+      x: int;
+      y: int;
+    }
+    let pos_new x y = {x; y}
+  end
+  let () =
+    let p = Foo.pos_new 11 22 in
+    print_int p.x (** Warning 40: x was selected from type Foo.point. *)
+  ```
+
+  除非你使用 open 将 Foo 包含进来, 例如下边的局部打开:
+
+  ```ocaml
+  let open Foo in
+  let p = Foo.pos_new 11 22 in
+  print_int p.x
+  (* 或者 *)
+  let p = Foo.pos_new 11 22 in
+  print_int Foo.(p.x * p.x + p.y * p.y)
+  ```
+
+* 一些 API（外部库）在编译时需要指定：例如正则表达式匹配
+
+  ```bash
+  ocamlc str.cma hello_world.ml
+  ocamlopt str.cmxa hello_world.ml
+  # 在顶层交互环境，则使用 #load "str.cma" 来打开处部库
+  # 当然使用 ocamlfind 编译时会有更简洁的参数。
+  ```
+
 * 和其它语言不一样的是, 字符串内的字符可以被修改。使用 `Bytes.set`
+
+  > 注: 字符串中间即使遇 `0` 还将继续输出后边的
+  >
+  > TODO: 编译参数 `-unsafe-string` 和 `Bytes.set` 无关
 
 * 值(函数也是值)与类型有不同的命名空间，因此即使名字相同也不会存在冲突。
 
@@ -111,12 +157,6 @@ API 文件建议参考 cygwin/lib/ocaml 下的 mli 文件, 一些方法会提示
 * 小括号 `()` 其实就相当于 begin/end, 对于一些嵌套的地方(比如多个 match 表达式)你可能需要使用 begin/end 来划分
 
   ```ocaml
-  (* 可以尝试将小括号换成 begin/end *)
-  if 1+2 = 3 then (
-	print_string "did you knew that?\n";
-	print_string "amazing!\n"
-  )
-
   let f = function
   | (a, 1) -> (match a with | 1 -> true | _ -> false)
   | _ -> true
@@ -143,6 +183,14 @@ API 文件建议参考 cygwin/lib/ocaml 下的 mli 文件, 一些方法会提示
   {a=1; b="hi"} = {a=1; b="hi"}
   ```
 
+* 函数的参数类型应该要用括号, 如果你要添加的话
+
+  ```ocaml
+  let sum (a:int) (b:int) = a + b
+
+  let sum a b:int = a + b (* 注意这个 :int 指的是返回值类型，非 b 的类型 *)
+  ```
+
 * 可选参数使用 `?` 作前缀, 命名参数使用 `~`(如果一个函数有二个参数最好是只定义一个"命令参数")
 
   ```ocaml
@@ -152,6 +200,15 @@ API 文件建议参考 cygwin/lib/ocaml 下的 mli 文件, 一些方法会提示
   let odp ?(ftw = "OMG!!") () = print_endline ftw;;
   odp ~ftw:"hi there" ();; (* 但是在调用时，还是得用 ~ 来命名参数 *)
   odp ();;
+
+  let sum ~(x:int) ~(y:int) = x + y;;
+  let sum ~x ~y = x + y;;
+  sum ~x:1 ~y:2
+  let x = 1 and y = 2 in sum ~x ~y;;
+
+  (* 别名, 稍了解下就行了，因为会与类型名容易混淆不建议使用 *)
+  let sum ~x:x1 ~y:y1 = x1 + y1;;
+  let sum ~x:(x1:int) ~y:(y1:int) = x1 + y1;;
   ```
 
 * 同时let多个绑定
@@ -287,7 +344,7 @@ ocamlc      # 字节码编译器, 文件扩展名为 cmo, (可添加 -custom 嵌
             # ocamlc -i xxx.ml 可以在控制台输出其文件签名，可通过控制台重定向到一个 .mli 文件.
             # 例: ocamlc -o app.byte c.ml b.ml a.ml
             # 看上去整个编译流程与 c 语言相似, 需要手动指定各个文件, 不过 ocamlbuild 似乎可以解决这一点
-            # -c 参数表示仅编译不链接，（当ocamlmerlin找不到模块，没有语法提示时）
+            # -c 参数表示仅编译不链接，（当 ocamlmerlin 找不到模块，没有语法提示时）
 
 ocamlopt    # 原生代码编译器的前端, 生成 .o, .cmx 文件
 
@@ -302,25 +359,54 @@ ocamldebug  #
 ocamldoc    # 将注释转换成文档, 要使用2个星号作为注释起始, 例如: (**  *) "@" 为特定标记属性.
             # Argot 是另一个改进的 HTML 生成器.
 
-camlp4      # 预处理，例如添加一些特殊的语法，或者像其它语言的"宏"的一样
+camlp4      # 预处理器，例如添加一些特殊的语法, 它是标准 ocaml 安装包的一部分
+            # 例如如果把特殊语法写在 ml 文件内, 则通用 -pp 参数编译, 例:
+            # ocamlc -pp camlp4o -c -o _build/hello.cmo hello.ml
+            # 上边的示例在添加 -dsource 将会显示预处理后的源码。
+            # 假如将特殊语法写在别的文件扩展名内, 则预处理输出, 例:
+            # camlp4o lexer.mll -o lexer.ml
+            # camlp4o parser.mly -o parser.ml
+            # 注意: cygwin 下使用 bash 才会输出正常的文本, 而用 mini bash 会产生一个二进制的输出文件
 
-
+camlp5      # 预处理器, 同 camlp4, 但它并非由标准安装包提供，需要另行下载
+            # 它的关系和现在的 camlp4 非常混乱, 因为它以前就叫做 camlp4, 而现在 camlp4 在之前并不叫做 camlp4
 
 # opam
 ocp-indent  # 格式化源码
 ocamlmerlin # IDE 需要它来提供智能提示
-
 ```
 
-大都数情况下都是使用 `ocamlfind` 来编译项目.
-
-```bash
-ocamlfind ocamlc -c -syntax camlp4 -package
-```
 
 
 ## misc
 
-标准库下的 obj.ml 没有文档，它看上去有点像是 Reflect 之类的东西.
+* ocamlmerlin: 用于产生语法提示
+
+* [oasis](http://oasis.forge.ocamlcore.org/): 用于编译 ocaml 项目
+
+* ocaml 4.02 之后官方宣传使用 `-ppx` 来代替 camlp4 的语法扩展, [a-guide-to-extension-points-in-ocaml](https://whitequark.org/blog/2014/04/16/a-guide-to-extension-points-in-ocaml/)
+
+  > 因为 camlp4 的语法扩展不但缺乏文档, 而且使用非常复杂,
+  >
+  > 感觉有点像 haxe 的宏, 因为它也是从 AST 的层面来介入, 不过在使用上则不如 haxe 的宏方便
+  > 因为它需要先创建一个 CLI 的程序, 用于接收 ocaml 编译器所提供 AST 语法树
+  >
+  > 但是手写 AST 也并不简单，希望未来能提供某一个关键字能像 haxe 的 macro 一样自动转换。
+
+* lexer/parser
+  - genlex: (标准库) 一个简单快速的 lexer 生成器, 自带了几个简单的 token。 依赖 camlp4
+  - camlp4: Recursive-descent parsing(递归下降分析), 使用了 camlp4 流语法扩展: `[< >]`
+  - [ocamllex]: lex 构建命令行工具, ocaml 自带, 通常处理 `.mll => .ml`
+  - ocamlyacc: Grammar-based parsing (基于语法分析) 的命令行工具, ocaml 自带, 通常处理 `.mly => .ml`
+  - ulex: lexer generator for Unicode, 使用的是 camlp4 语法扩展, sedlex 也是这个作者写的
+  - [sedlex]: 同 ulex, 但使用的是 -ppx 语法扩展
+  - [menhir]: 尝试取代 ocamlyacc 的另一个 parser generator
+
+* 标准库的 genlex 是一个非常简单的 lexer 生成器, 依赖 camlp4。
+
+
+[ocamllex]:http://caml.inria.fr/pub/docs/manual-ocaml/lexyacc.html
+[sedlex]:https://github.com/alainfrisch/sedlex
+[menhir]:http://gallium.inria.fr/~fpottier/menhir/
 
 <br />

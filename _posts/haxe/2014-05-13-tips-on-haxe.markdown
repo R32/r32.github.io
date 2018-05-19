@@ -15,21 +15,16 @@ categories: haxe
 
 * 当 `-dce std` 时, 使用 import 可能会使最终输出文件变得很大(使用某一个类一个方法时,可以直接用全名), 因此你可能需要关闭 IDE 的自动导入（Generate Imports）
 
-* 如果一个 .n 是以 haxelib run 来运行的, 那么可以通过检测环境变量 `HAXELIB_RUN` 的值是否为字符串 "1", 因为 haxelib run 运行时会把"当前路径"作为最后一个参数传递给 Sys.args()。 [更多细节...](http://lib.haxe.org/documentation/using-haxelib/#run)
+* 如果一个 .n 文件是以 haxelib run 来运行的, 那么可以通过检测环境变量 `HAXELIB_RUN` 的值是否为字符串 "1", 因为 haxelib run 运行时会把"当前路径"作为最后一个参数传递给 Sys.args()。 [更多细节...](http://lib.haxe.org/documentation/using-haxelib/#run)
 
 <!-- more -->
 
 ### 编译
 
-除了官方提供的下载, 或者从 <build.haxe.org> 下载 nightly build 版本, 目前 window 平台（由于 windows 之前安装 ocaml 一直有各种问题）也能容易的自已编译:
-
-这里有一个可直接使用的 zip 文件包 [haxe #6143](https://github.com/HaxeFoundation/haxe/issues/6143) 用于编译
-
-> 未尝试, 因为我使用的是 cygwin 早就已经安装好了的, 通过 mingw 编译 haxe
-
 由于每次复制通过 git 更新 `haxe/std`到 haxe 的安装目录很麻烦，因此我直接使用 "git haxe repo" 作为 haxe 的路径，
 
 > 只要设置二个路径即可: `HAXEPATH: D:\fork\haxe\`, `NEKO_INSTPATH: G:\HaxeToolkit\neko`,
+>
 > haxe.exe 所依赖的 dll 文件由 `i686-w64-mingw32\sys-root\mingw\bin` 所提供
 >
 > `make libs`: 编译 haxe.exe 之前需要的依赖库
@@ -39,7 +34,7 @@ categories: haxe
 > `make haxelib`: 获得 haxelib.exe, 需要在这个 exe 的当前目录创建一个名为 "lib" 的目录，
 > 或者通过运行 `haxelib config XXX`  指定一个库目录
 >
-> 最后发现其实 flashdevelop 可以设置不同的 haxe sdk 路径, 因此安装一次标准版 haxe (带有neko,haxelib),
+> 其实 flashdevelop 可以设置不同的 haxe sdk 路径, 因此安装一次标准版 haxe (带有neko,haxelib),
 > 然后将 "git haxe repo" 添加到 flashdevelop 更方便
 
 ### 最新改动

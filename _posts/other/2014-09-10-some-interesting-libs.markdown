@@ -117,6 +117,8 @@ categories: other
 
 ### web
 
+[design-blocks](https://github.com/froala/design-blocks) A set of 170+ Bootstrap based design blocks(170+ 基于 bootstrap 的设计片段)
+
 [ie8 css filter 在线](http://samples.msdn.microsoft.com/workshop/samples/author/filter/Alpha.htm) 分别将 Alpha 更改为: `Blur, Glow, DropShadow, Gradient, Wave, Shadow, BasicImage, DropShadow, Compositor`,
 
   > [关于IE中CSS-filter滤镜小知识](https://www.qianduan.net/guan-yu-ie-zhong-css-filter-lv-jing-xiao-zhi-shi/)
@@ -262,8 +264,7 @@ categories: other
   >
   > sample 下很多给力的工具类
 
-  另一个问题时，如果目标并没有导出某个函数，那么如何找到正确的地址了？
-  用 `IDA Pro 5.0` 显示的地址好像就是最终函数的地址, 比如: MessageBoxW, 它一直总是 0x7663EAE7
+  - [mhook](https://github.com/apriorit/mhook) a free alternative to Microsoft Detours.未测试使用.
 
 * [B站视频 线性代数的本质](http://www.bilibili.com/video/av6731067/index_4.html) 描述了矩阵乘法为什么要那样计算?
 
@@ -357,6 +358,8 @@ categories: other
 * [Video Game Music](https://downloads.khinsider.com/game-soundtracks) 一些动漫或游戏的游戏原生音乐
 
 ### misc
+
+* [CWebPage](https://github.com/geoffmcl/CWebPage) 内嵌 IE 浏览器
 
 * [emoji-list](https://github.com/caiyongji/emoji-list) github 表情清单, 那有那个 "中文" 的图标蛮有意思的.
 
