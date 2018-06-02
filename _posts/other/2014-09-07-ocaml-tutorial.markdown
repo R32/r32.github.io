@@ -9,13 +9,13 @@ categories: other
 
 [在线尝试编程](https://try.ocamlpro.com/)
 
-[在 windows 中安装 ocaml](http://fdopen.github.io/opam-repository-mingw/installation/), 因为 linux 中安装简单没什么好说的.
+在 windows 中安装 ocaml
 
 * 不要使用 cygwin 自带的 ocaml, 因为它不包含 **opam**, 也没法编译一些库。
 
 * 使用 cygwin, 但是得把之前通过 setup.exe 安装的 ocaml 和 flexdll 卸载(uninstall) 掉, 如果你有的话.
 
-* 照着文档一步一步来(我是参照 Manual Installation 安装的)
+* 照着 [opam-repository-mingw/installation](http://fdopen.github.io/opam-repository-mingw/installation/) 一步一步来(我个人是参照 Manual Installation 安装的, 那个自动安装包我没尝试过。)
 
 <!-- more -->
 
@@ -29,25 +29,18 @@ categories: other
 
 * 如需开发 haxe 可以编译成字节码 `make haxe BYTECODE=1` 就可以了
 
-* `vscode`: 需要需要使用 opam 安装 ocp-indent 和 merlin 来产生语法提示，选用 reason , 然后将 merlin 所在路径添加到 PATH. 例如: `cygwin/home/NAME/.opam/4.02.3+mingw32c/bin`
+
+### IDE 选择
+
+**`vscode`**: 使用 opam 安装 ocp-indent 和 merlin 来产生语法提示，vscode插件安装 reason , 然后将 merlin 所在路径添加到 PATH. 例如: `cygwin/home/NAME/.opam/4.02.3+mingw32c/bin`
 
   settings.json:
 
   ```json
-  // 将设置放入此文件中以覆盖默认设置
   {
-    "files.trimTrailingWhitespace": true,
-    "git.enabled": false,
-    "update.channel": "none",
-    "emmet.triggerExpansionOnTab": false,
-    "editor.renderWhitespace":"all",
-    "editor.insertSpaces": false,
-    "haxe.enableCodeLens": true,
-    "*.mly": "ocaml",
-    "*.ml": "ocaml"
-    },
-    "[ocaml]": {
-      "editor.tabSize": 4
+    "files.associations": {
+        "*.ml": "ocaml",
+        "*.mli": "ocaml"
     },
     "files.exclude": {
       "**/_build": true
@@ -56,9 +49,9 @@ categories: other
   }
   ```
 
-[官方文档](http://ocaml.org/learn/tutorials/index.zh.html), 但网页引用了 google api, 你需要一个特殊的浏览器才能快速打开这个页面.
-
 ### 速记
+
+[官方文档](http://ocaml.org/learn/tutorials/index.zh.html), 但网页引用了 google api, 你需要一个特殊的浏览器才能快速打开这个页面.
 
 API 文件建议参考 cygwin/lib/ocaml 下的 mli 文件, 一些方法会提示是否为 tail-recursive
 
@@ -67,19 +60,14 @@ API 文件建议参考 cygwin/lib/ocaml 下的 mli 文件, 一些方法会提示
 * Warning 40: 在 ocaml 中, 直接访问某一模块 record 的属性将会弹出这个警告, 例:
 
   ```ocaml
-  module Foo: sig
-    type point = {
-      x: int;
-      y: int;
-    }
-    val pos_new: int->int->point
-  end = struct
+  module Foo = struct
     type point = {
       x: int;
       y: int;
     }
     let pos_new x y = {x; y}
   end
+
   let () =
     let p = Foo.pos_new 11 22 in
     print_int p.x (** Warning 40: x was selected from type Foo.point. *)
