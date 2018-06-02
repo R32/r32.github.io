@@ -140,12 +140,17 @@
 
 ### 错误
 
+* 可在乱掉的目录下尝试 windows 命令: `icacls * /T /Q /C /RESET`
+
+  - 如果这个命令没有权限，则右键属性去修改文件夹
+
 * window 复制的文件,或新建文件由于没有 文件权限,当 `jekyll build` 后,无法打开这些没有权限的文件, 当本地测试时
 
   ```bash
   # 以管理员模式进入 bash, 通过这个命令更改文件权限, 避免本地测试时无法复制。
   chmod -R 755 ./
   ```
+
 ### TODOS:
 
 - [x] 由于 github-pages 将在 5月份不再支持 `redcarpet` 而使用 `kramdown` 来处理 markdown 文件,这个估计要改动很多页面

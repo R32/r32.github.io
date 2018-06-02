@@ -29,8 +29,6 @@ categories: other
 
 * 如需开发 haxe 可以编译成字节码 `make haxe BYTECODE=1` 就可以了
 
-接下来是 IDE 选择, 最重要的问题是 IDE 在调用命令是必须能调用 `cygwin/bin/bash`(需设置系统环境变量 `CHERE_INVOKING=1`，以防止 --login 时丢失目录),  但是这样做有一个副作用就是: 当从 "开始" 进入 "Cygwin Terminal" 时的当前目录会是 system32 下, 但可以通过可 `cd ~` 切回
-
 * `vscode`: 需要需要使用 opam 安装 ocp-indent 和 merlin 来产生语法提示，选用 reason , 然后将 merlin 所在路径添加到 PATH. 例如: `cygwin/home/NAME/.opam/4.02.3+mingw32c/bin`
 
   settings.json:
@@ -45,10 +43,6 @@ categories: other
     "editor.renderWhitespace":"all",
     "editor.insertSpaces": false,
     "haxe.enableCodeLens": true,
-    "terminal.integrated.shell.windows": "E:\\cygwin\\bin\\bash.exe", // integrated 表示 ctrl+p 中集成的控制台
-    "terminal.integrated.shellArgs.windows": ["--login"],
-    "terminal.integrated.rightClickCopyPaste": false,
-
     "*.mly": "ocaml",
     "*.ml": "ocaml"
     },
@@ -61,28 +55,6 @@ categories: other
     "reason.server.languages": ["ocaml"]
   }
   ```
-
-  ```cmd
-  :: 一个 bash.bat 以后也许用得到.
-  @echo off
-  set CHERE_INVOKING=1
-  if not "%1" == "" (
-    E:\cygwin\bin\bash --login -c "%*"
-  ) else (
-    E:\cygwin\bin\bash --login
-  )
-
-  :: 例如把以下文件保存为 ocamlmerlin.bat 放在 dos 的路径文件夹, 但是目前没有一点用处
-  :: E:\cygwin\bin\bash --login -c "ocamlmerlin %*"
-  ```
-
-  多个文件的编译要使 merlin 正确，先要用 ocamlc -c 编译出来一下, 再 touch 一下文件就好了
-
-  > 可能需要添加 `.merlin` 文件来明确指出位置，格式可以参考 haxe 的源码。
-
-  对于 tasks.json 和 launch.json 以后再弄,  现在使用 makefile TODO
-
-
 
 [官方文档](http://ocaml.org/learn/tutorials/index.zh.html), 但网页引用了 google api, 你需要一个特殊的浏览器才能快速打开这个页面.
 

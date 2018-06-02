@@ -24,7 +24,6 @@ categories: other
   - [html-minifier](https://github.com/kangax/html-minifier) minify html
   - [cssnano](https://github.com/ben-eb/cssnano) minify css
   - [google closure](https://github.com/google/closure-compiler) minify js
-  - [html-inline](https://github.com/substack/html-inline) 用于将资源内联化,
 
 * [pngquant](https://github.com/kornelski/pngquant) Lossy PNG compressor. 有 GUI 版, 可选颜色数量，因此压缩率在某些情况下非常高。
 
@@ -177,7 +176,7 @@ categories: other
 
 * [spectrum](https://github.com/bgrins/spectrum) The No Hassle JavaScript Colorpicker, 颜色选择器,**兼容IE6+**
 
-* [awesome-d3](https://github.com/wbkd/awesome-d3)  d3.js 的一些库,而D3.js是当前流行的数据可视化工具
+* [turorial of what i do not understand](https://github.com/danistefanovic/build-your-own-x)
 
 * [braintree](https://github.com/braintree/braintree-web) 表单加密
 
@@ -359,8 +358,6 @@ categories: other
 
 ### misc
 
-* [CWebPage](https://github.com/geoffmcl/CWebPage) 内嵌 IE 浏览器
-
 * [emoji-list](https://github.com/caiyongji/emoji-list) github 表情清单, 那有那个 "中文" 的图标蛮有意思的.
 
 * [Webqq 机器人](https://github.com/sjdy521/Mojo-Webqq)
@@ -373,7 +370,10 @@ categories: other
 
 ### CLib
 
-[awesome-c](https://notabug.org/koz.ross/awesome-c) 注: notabug.org 是个什么样的网站？
+[awesome-c](https://github.com/kozross/awesome-c)
+
+* [COM 组件及 内嵌 IE 示例](https://www.codeproject.com/Articles/Jeff-Glatt#Article) 内嵌 IE 浏览器文档,
+  - [webview](https://github.com/zserge/webview) 单个头文件, 使用了系统自带的浏览器. cross platform
 
 [C标准头文件](http://stackoverflow.com/questions/2027991/list-of-standard-header-files-in-c-and-c)
 
