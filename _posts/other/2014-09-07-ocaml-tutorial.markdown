@@ -336,8 +336,6 @@ ocp-indent  # 格式化源码
 ocamlmerlin # IDE 需要它来提供智能提示
 ```
 
-
-
 ## misc
 
 * ocamlmerlin: 用于产生语法提示
@@ -347,20 +345,16 @@ ocamlmerlin # IDE 需要它来提供智能提示
 * ocaml 4.02 之后官方宣传使用 `-ppx` 来代替 camlp4 的语法扩展, [a-guide-to-extension-points-in-ocaml](https://whitequark.org/blog/2014/04/16/a-guide-to-extension-points-in-ocaml/)
 
   > 因为 camlp4 的语法扩展不但缺乏文档, 而且使用非常复杂,
-  >
-  > 感觉有点像 haxe 的宏, 因为它也是从 AST 的层面来介入, 不过在使用上则不如 haxe 的宏方便
-  > 因为它需要先创建一个 CLI 的程序, 用于接收 ocaml 编译器所提供 AST 语法树
-  >
-  > 但是手写 AST 也并不简单，希望未来能提供某一个关键字能像 haxe 的 macro 一样自动转换。
 
-* lexer/parser
+* lexer
   - genlex: (标准库) 一个简单快速的 lexer 生成器, 自带了几个简单的 token。 依赖 camlp4
-  - camlp4: Recursive-descent parsing(递归下降分析), 使用了 camlp4 流语法扩展: `[< >]`
-  - [ocamllex]: lex 构建命令行工具, ocaml 自带, 通常处理 `.mll => .ml`
-  - ocamlyacc: Grammar-based parsing (基于语法分析) 的命令行工具, ocaml 自带, 通常处理 `.mly => .ml`
+  - [ocamllex]: ocaml 自带的命令行工具, 通常处理 `.mll => .ml`
   - ulex: lexer generator for Unicode, 使用的是 camlp4 语法扩展, sedlex 也是这个作者写的
   - [sedlex]: 同 ulex, 但使用的是 -ppx 语法扩展
-  - [menhir]: 尝试取代 ocamlyacc 的另一个 parser generator
+* parser
+  - ocamlyacc: LALR, ocaml 自带的命令行工具, , 通常处理 `.mly => .ml`
+  - [menhir]: LR(1), 尝试取代 ocamlyacc 的另一个 parser generator
+  - camlp4: LL(1), 使用了 camlp4 流扩展语法: `[< >]`
 
 * 标准库的 genlex 是一个非常简单的 lexer 生成器, 依赖 camlp4。
 

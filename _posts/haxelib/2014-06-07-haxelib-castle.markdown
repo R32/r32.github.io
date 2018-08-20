@@ -644,7 +644,7 @@ castleDB 中的数据类型对应 haxe 中相应的类型
 
 #### in heaps
 
-* 首选用宏解析 .cdb 文件.``
+* 用宏解析 .cdb 文件(只包括类型, 不包含数据)
 
   > 这个 .cdb 文件应该存放于 `-D resourcesPath=SOME_PATH` 所定义的目录下, 默认将为项目文件(hxml或hxproj文件所在文件夹)的 res 目录
 

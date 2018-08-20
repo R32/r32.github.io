@@ -1,57 +1,91 @@
 ---
 
 layout: post
-title:  从 javascript 到 haxe
-date:   2016-03-07 06:55:16
+title: 从 javascript 到 haxe
+date: 2016-03-07 06:55:16
 categories: other
 
 ---
 
-这篇文档用于向 javascript 程序传销 haxe，那么为什么不直接使用纯 js 代码了?
+本文档用于向 javascript 程序传销 [haxe], 学习它需要对 js 有一定的了解。
 
-* 纯 js 非常不好维护，由于代码过于自由，即便同一个人在不同时期写出来的风格是不一样的。
-
-* API 文档的创建有些麻烦，不方便团队交流。
-
-使用 haxe 的优点:
-
-* 因为我不熟悉 typescript 和 coffeescript 还有个叫 dart 的
-
-  > 搜 "typescript vs haxe", 即使 ts 背后虽然是微软, 但也并没有占什么优势
-  >
-  > haxe 的中文文档以及中文社区不如 typescript
-
-* 强类型，但编译器能自已推导变量的类型。
+在文档的最后，我会从编译原理的角度分析 haxe 编译器各个模块的功能。
 
 <!-- more -->
 
-* `-debug` 模式下将会自动创建 source map 文件并相之相关联，以方便定位源文件错误
+[haxe]:https://github.com/HaxeFoundation
+[Editors and IDEs]:https://haxe.org/documentation/introduction/editors-and-ides.html
 
-* 除了 JS 能编译成 flash、hashlink、cpp、neko...
+## 安装
 
-* [在线尝试 haxe](http://try.haxe.org)
+* 首先下载 haxe 编译器, **强烈推荐** 使用 git 自动构建版，可以在 <http://build.haxe.org> 找到。
 
-### 快速指南
-
-这里只是一些 Tips 以避免走太多的弯路, 因为语法其实和 JS 没多少差别,
-
-* [Haxe Foundation 的 github 地址](https://github.com/HaxeFoundation)，通常简称为 **HF**
-
-* 首先下载 haxe, **强烈推荐** Git 自动构建版，可在 <http://build.haxe.org> 找到。
-
-  > 安装包自带了“包管理器(haxelib)”以及一个“简易HTTP服务器”(`nekotools server -h 0.0.0.0 -p 80`)
-
-* 如果 windows 系统, 推荐下载使用 haxedevelop/flashdevelop 作为 IDE。  （这二个是一样的只是名字不同而已）
-
-  > **注**: 推荐在设置里将 `Completion Mode` 设为 `CompletionServer` 用于 “缓存编译”
-
-* 对于 API 手册, 其实 haxedevelop 按 `F4/shift+F4` 就能直接跳转到定义处。当然你也可以下载 dox 来编译
+* [Editors and IDEs]. *对于新学任何一门语言来说, 语法提示是最重要的。*
 
 * 参考文档在 <http://haxe.org/manual/introduction.html>, 如果你觉得英文有困难，建议使用 bing 翻译
 
   > 事实上 <http://old.haxe.org> 也还有蛮多不错的文档可以看
 
-* 建议先慢慢尝试使用 haxe 写一些代码, 而不是马上就让它代替你的源生 js 代码
+* 对于 API 手册, 其实利用 IDE 的跳转功能直接看源码效果会更好。
+
+### IDE 选择
+
+#### haxedevelop/flashdevlop
+
+这是我个人偏爱的 IDE, 当然它只能在 windows 中运行.
+
+> 中文:  "Tools" -> "Program Settings...". 然后左侧选中 "Haxedevelop" 右边则找到 "Locale" 下的 "Selected Locale" 的弹出菜单. 更改后重启 IDE 即可。
+
+1. "项目(Project)" -> "新建项目(New Project...)", 选择 "JS Project" 并填写好其它项后按下 "确定" 即可
+
+2. 按下 F8 (或点击齿轮图标)即可编译
+
+3. 建议打开 CompletionServer 加速编译, 对于大的项目它的效果非常明显.
+
+  > "工具(Tools)" -> "程序设置(Program Settings)", 左侧: "Haxe Context", 右侧的 "Completion Mode" 选 "CompletionServer" 即可.
+
+4. 编译器选项: "项目" -> "属性" -> "编译器选项" 通过 "Additional Compiler Options" 打开一个弹出的输入框
+
+  可以输入下边参数: (这种一行一个参数可以保存为 .hxml 文件, haxedevelop 可以通过设置自动将它导出)
+
+  ```bash
+  -dce full
+  -D analyzer-optimize
+  ```
+
+  `-dce full` 表示强力删除所有未引用的代码. 默认为 `-dce std`
+
+  `-D analyzer-optimize` 表示打开优化器, 由于目前重写了优化器, 因此这项功能目前默认是关闭的
+
+  更多命令行参数参考 `haxe --help`
+
+#### vscode
+
+1. 选择一个空的文件夹
+2. 按下F1, 后选 `haxe:Initialize VS Code Project` 即可新建一个 helloworld 的项目
+3. 下边是默认的 build.hxml, 但它并非是编译为 js 的.
+
+  ```bash
+  -cp src
+  -D analyzer-optimize
+  -main Main
+  --interp
+  ```
+
+  如果想编译到 js 并输出到 out.js 则可修改如下:
+
+  ```bash
+  -cp src
+  -D analyzer-optimize
+  -main Main
+  -js out.js
+  ```
+
+4. 按下 "Ctrl+Shift+B" 编译, 具体的配置你可能需要参考 vscode 的帮助文档.
+
+## 语法
+
+TODO
 
 ### 语法差异
 
@@ -99,19 +133,19 @@ default:
 }
 ```
 
-#### IE 兼容性
+### IE 兼容性
 
-1. 首先, haxe 中的 DOM 对象是基于 W3C 的 IDL 文件自动生成的, 因此操作 DOM 时, 你应该尽量使用 js.jquery.JQuery
+1. 首先, haxe 中的 DOM 对象是使用基于 W3C 的 IDL 文件自动生成的, 因此如果你不熟悉兼容性, 那么在操作 DOM 时, 可以使用 js.jquery.JQuery, 或者自己添加 polyfill。
 
 2. haxe 默认输出为 es5, 如果你想要兼容 ie8 则可添加编译参数 `-D js-es=3`
 
-### 特性
+## 语言特性
 
 目前只想到这些, 其它的未来再补充
 
 * 编译时添加 `--no-traces` 即可擦除所有 console.log 语句
 
-* 条件编译：
+* 支持条件编译：
 
   ```haxe
   #if debug
@@ -119,12 +153,10 @@ default:
   #elseif nodejs
   // for nodejs
   #end
-
   // 或者你使用了一个名字为 heaps 的 haxe 库， 或者通过 -D 定义的自定义参数
   // 条件检测支持逻辑操作符(!, &&, ||)，以及条件运算符(>, <, >= ...)
   #if (heaps || MyDef)
   #end
-
   #if (haxe_ver >= 3.2)
   // 注意使用条件运算符或逻辑操作符一定要用“小括号”将表达式括起来
   #end
@@ -147,7 +179,6 @@ default:
           return this > 0;
     }
   }
-
   class Main {
       static function main() {
           var d = new Direction(js.Browser.window.screenX);
@@ -171,45 +202,16 @@ default:
   })();
   ```
 
-* 常量枚举：`@:enum abstract`
-
-  ```haxe
-  @:enum abstract Week(Int) to Int{
-      var Sun = 0;
-      var Mon = 1;
-  }
-
-  class Main {
-      static function main() {
-          trace(Mon - Sun);
-      }
-  }
-  ```
-
-  编译成 JS， 由于 haxe 会自动计算常量表达式的值, 因此...
-
-  ```js
-  (function () { "use strict";
-  var Main = function() { };
-  Main.main = function() {
-    console.log(1);
-  };
-  Main.main();
-  })();
-  ```
-
 * 静态扩展. 比如你想在某个类上添加一些自定义的方法, 但是又不必修改其源码
 
   ```haxe
   using Main.Foo;  // 第一步, 使用 using 引入 Foo 类, (由于文件名是 Main.hx, 因此默认是 Main 类)
-
   class Main {
       static public function main() {
         var i = 101;
         trace(i.triple()); // 直接调用, 只要 triple 函数的第一个参数类型为 Int.
       }
   }
-
   class Foo{
       public static inline function triple(n: Int){
           return n * 3;
@@ -234,10 +236,11 @@ default:
 
   > 建议新手先跳过这一块。 **tips**: 如果你正在学习它，有一个很重要的编译标志 `-D dump=pretty` 可以让你看到 macro 展开后的代码是什么样
 
-### 其它
+## 编译器模块
 
-[一篇个人 haxe/js 的日志]({% post_url haxe/2014-07-03-javascript %})
+* Compiler-based Completion
 
-国内交流 QQ 群: **30373020**
+* Compilation Cache Server
+
 
 <br />

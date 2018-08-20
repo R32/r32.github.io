@@ -41,6 +41,22 @@ categories: haxe
 
 一些内容通过参考 [CHANGES](https://github.com/HaxeFoundation/haxe/blob/development/extra/CHANGES.txt) 文件
 
+* `enum abstract` 自动赋值, 但不可用于 `extern` 类型的枚举. (注: haxe 4 版, 可以直接使用 `enum abstract` 代替 `@:enum abstract` 来创建枚举值.)
+
+  ```haxe
+  enum abstract IType(Int) {
+    var A;      // 0
+    var B;      // 1
+    var C = 5;  // 5
+    var D;      // 6
+  }
+  // 字符串的也可以自动
+  enum abstract SType(String) {
+    var Head;   // "Head"
+    var Body;   // "Body"
+  }
+  ```
+
 * 新的函数类型声明, 允许带参数名字: 例如: `var func: (name: String, ?number: Int) -> Void`
 
 * `haxe.macro.CompilationServer` 可以用来加速编译，通过调用 `--macro server.XXX` 来调用这个类下的字段。

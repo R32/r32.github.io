@@ -15,6 +15,10 @@ categories: other
 
 ### Tools
 
+* [free BitTorrent client](https://github.com/transmission/transmission) 免费, 无广告的下载工具.
+
+* [domcomp](https://www.domcomp.com/tld/com) 域名服务商价格对比
+
 * [color.adobe.com](https://color.adobe.com) 配色方案工具， 例如: [CS04 配色方案](https://color.adobe.com/zh/CS04-color-theme-1994456/)
 
 * [cssfontstack](https://www.cssfontstack.com/) 一个网站快速能快速查看各种字体的排版情况
@@ -118,7 +122,7 @@ categories: other
 
 [design-blocks](https://github.com/froala/design-blocks) A set of 170+ Bootstrap based design blocks(170+ 基于 bootstrap 的设计片段)
 
-[ie8 css filter 在线](http://samples.msdn.microsoft.com/workshop/samples/author/filter/Alpha.htm) 分别将 Alpha 更改为: `Blur, Glow, DropShadow, Gradient, Wave, Shadow, BasicImage, DropShadow, Compositor`,
+[ie8 css filter](http://www.ssi-developer.net/css/visual-filters.shtml)
 
   > [关于IE中CSS-filter滤镜小知识](https://www.qianduan.net/guan-yu-ie-zhong-css-filter-lv-jing-xiao-zhi-shi/)
   >
