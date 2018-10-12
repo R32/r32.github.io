@@ -41,6 +41,10 @@ categories: haxe
 
 一些内容通过参考 [CHANGES](https://github.com/HaxeFoundation/haxe/blob/development/extra/CHANGES.txt) 文件
 
+在 twitch 上看直播时, 发现在可以在函数加 `@:debug.display` 然后在 output 窗口会有一些信息.
+
+* [统一 Unicode](https://github.com/HaxeFoundation/haxe/pull/7387), 最新版只要通过检测是否存在 `-D utf16` 则可以判定平台的 String 的字符编码.
+
 * `enum abstract` 自动赋值, 但不可用于 `extern` 类型的枚举. (注: haxe 4 版, 可以直接使用 `enum abstract` 代替 `@:enum abstract` 来创建枚举值.)
 
   ```haxe

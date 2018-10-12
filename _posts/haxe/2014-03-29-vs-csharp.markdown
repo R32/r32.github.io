@@ -12,7 +12,7 @@ notes: full
 
   c# 的文件名可随意, 而 haxe 的文件名则作为模块名, 路径则为包名.
 
-* c# 可使用 struct 用于创建紧凑数据, haxe 没有相关功能，
+* c# 可使用 struct 用于创建紧凑数据(从栈上分配), haxe 没有相关功能，
 
   > 虽然 haxe 中的"匿名结构"看上去非常像 struct , 但"匿名结构"是一种低性能的 Dynamic 结构数据，
   >
@@ -24,8 +24,6 @@ notes: full
 * c# 中有 goto 跳转, 而 haxe 中没, 并且 haxe 中的 break 只能跳出当前循环。
 
 * vs 中 `ctrl+K...ctrl+F` 可以格式化选择了的代码, 而 haxe 没有相关工具。
-
-下边将使用 `Haxe/Neko` 平台来和 `C#` 对比. 注: 由于在 c# 上我也只是新手, 因此下边 c# 的代码可能写得很烂
 
 <!-- more -->
 
@@ -162,7 +160,7 @@ int? num = null;
     // TODO: cs 查看一个方法的类型了?
 
 // 2. 委托, 假设在外部有如下定义
-delegate void Log(string s);    // 定义一个 Log 类型的委托
+delegate void Log(string s);    // 定义一个 Log 类型的委托, 类似于 c 语句中声明一个函数类型
 // ......
 Log trace = Console.WriteLine;  // 看上去像函数类型的变量,
 trace += Console.WriteLine;     // 但委托有 +/- 操作符,
@@ -174,7 +172,7 @@ try {
 }catch(System.IO.IOException err){
     // err 必须为 Exception 类型
 }catch(Exception err){
-    // 成能的 err 类型
+
 } finally {
     Console.WriteLine("finally");
 }
@@ -441,7 +439,7 @@ trace("A".code);  // 实际上展开后为: trace(65), 不可用于变量,
  <div class="col-md-6 cs">
  <h4>C#</h4>
 {% highlight cs %}
-// 1. 在 cs 中定义一个（外部可访问, 但不可修改的属性）
+// 1. 在 cs 中定义一个（外部可访问, 但不可修改的属性）需要 "c# 6"
 public string hi{get; private set;}
 
 

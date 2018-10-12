@@ -56,6 +56,14 @@ categories: other
 
 空
 
+#### 在现存插件上扩展
+
+限制非常大, 可以说基本没什么用.
+
+<https://forum.sublimetext.com/t/extending-existing-syntax-definitions/19663/2>
+
+在 <https://github.com/sublimehq/Packages/> 找对相应的然后修改.
+
 ### sublime-build
 
 使用 JSON 文件来配置构建， example:

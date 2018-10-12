@@ -32,26 +32,8 @@ categories: other
   - **Tips:** 如果不需要历史可以加参数 `--depth 1`
 
 
-下载单个文件夹
+使用 svn 工具从 github 上下载单个文件夹已经不可用.
 
-http://stackoverflow.com/questions/600079/is-there-any-way-to-clone-a-git-repositorys-sub-directory-only
-
-```bash
-git init <repo>
-cd <repo>
-git remote add origin <url>
-git config core.sparsecheckout true
-echo "finisht/*" >> .git/info/sparse-checkout
-git pull --depth=1 origin master
-```
-
-但是这样好像仍然下载了整个仓库？？？因此还得使用 svn 命令行工具(cygwin安装界面里搜 subver..)
-
-* 将 github 的 https URL 中的 `/master/tree/` 替换成 `/trunk/`
-
-* 输入: `svn co <URL> <LOCAL_DIR>`, 但这个最近在 github 也变得不适用了
-
-从本地文件系统: (例如 kha 的每个项目都得把 haxelib kha 当成 submodule)
 
 ```bash
 # 如果用相对目录则可以不使用指定全局文件路径

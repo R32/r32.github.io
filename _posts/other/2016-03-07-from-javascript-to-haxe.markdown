@@ -9,8 +9,6 @@ categories: other
 
 本文档用于向 javascript 程序传销 [haxe], 学习它需要对 js 有一定的了解。
 
-在文档的最后，我会从编译原理的角度分析 haxe 编译器各个模块的功能。
-
 <!-- more -->
 
 [haxe]:https://github.com/HaxeFoundation
@@ -18,17 +16,41 @@ categories: other
 
 ## 安装
 
-* 首先下载 haxe 编译器, **强烈推荐** 使用 git 自动构建版，可以在 <http://build.haxe.org> 找到。
+* 首先下载 haxe 编译器, **推荐** 使用 git 自动构建版，可以在 <http://build.haxe.org> 找到。
 
 * [Editors and IDEs]. *对于新学任何一门语言来说, 语法提示是最重要的。*
 
 * 参考文档在 <http://haxe.org/manual/introduction.html>, 如果你觉得英文有困难，建议使用 bing 翻译
 
-  > 事实上 <http://old.haxe.org> 也还有蛮多不错的文档可以看
+  > <http://old.haxe.org> 也还有蛮多不错的文档可以看
 
 * 对于 API 手册, 其实利用 IDE 的跳转功能直接看源码效果会更好。
 
 ### IDE 选择
+
+#### vscode
+
+1. 选择一个空的文件夹
+2. 按下F1, 后选 `haxe:Initialize VS Code Project` 即可新建一个 helloworld 的项目
+3. 下边是默认的 build.hxml, 但它并非是编译为 js 的.
+
+  ```bash
+  -cp src
+  -D analyzer-optimize
+  -main Main
+  --interp
+  ```
+
+  如果想编译到 js 并输出到 out.js 则可修改如下:
+
+  ```bash
+  -cp src
+  -D analyzer-optimize
+  -main Main
+  -js out.js
+  ```
+
+4. 按下 "Ctrl+Shift+B" 编译, 具体的配置你可能需要参考 vscode 的帮助文档.
 
 #### haxedevelop/flashdevlop
 
@@ -57,31 +79,6 @@ categories: other
 
   `-D analyzer-optimize` 表示打开优化器, 由于目前重写了优化器, 因此这项功能目前默认是关闭的
 
-  更多命令行参数参考 `haxe --help`
-
-#### vscode
-
-1. 选择一个空的文件夹
-2. 按下F1, 后选 `haxe:Initialize VS Code Project` 即可新建一个 helloworld 的项目
-3. 下边是默认的 build.hxml, 但它并非是编译为 js 的.
-
-  ```bash
-  -cp src
-  -D analyzer-optimize
-  -main Main
-  --interp
-  ```
-
-  如果想编译到 js 并输出到 out.js 则可修改如下:
-
-  ```bash
-  -cp src
-  -D analyzer-optimize
-  -main Main
-  -js out.js
-  ```
-
-4. 按下 "Ctrl+Shift+B" 编译, 具体的配置你可能需要参考 vscode 的帮助文档.
 
 ## 语法
 
@@ -232,15 +229,24 @@ default:
   ```
 
 
-* **haxe 最强大的特性：宏（macro）**。 通常它用来自动创建，比如你可以分析某个本地或网络文件然后动态创建一个类
+* **宏(macro)**: 通常它用来自动构建，比如你可以分析某个本地或网络文件然后动态创建一个类
 
   > 建议新手先跳过这一块。 **tips**: 如果你正在学习它，有一个很重要的编译标志 `-D dump=pretty` 可以让你看到 macro 展开后的代码是什么样
 
 ## 编译器模块
 
-* Compiler-based Completion
+#### Compiler-based Completion
 
-* Compilation Cache Server
+简单地说就是编译器完成了智能语法提示的功能, IDE 只要简单地把源码中"光标"的所在位置
+传送给编译器就可以获得语法提示.
+
+
+#### Compilation Cache Server
+
+当编译器解析源码时, 会在后台创建一个 socket 连接, 并将编译结果缓存在内存之中,
+那么在下次编译时, 对于那些没有发生过修改的文件则可以直接使用缓存, 而无需再重新编译.
+
+特别对于大的项目, 它所带来的加速效果非常显著. 在 vscode 中这项功能默认是自动打开的.
 
 
 <br />

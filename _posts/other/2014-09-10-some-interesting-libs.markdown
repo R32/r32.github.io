@@ -387,6 +387,8 @@ categories: other
 
 * [libu](https://github.com/koanlogic/libu) LibU is a multiplatform utility library written in C, with APIs for handling memory allocation, networking and URI parsing, string manipulation, debugging, and logging in a very compact way, plus many other miscellaneous tasks
 
+* [raylib](https://github.com/raysan5/raylib) 基于 c99 语法的 opengl ui 库,
+
 * [nuklear](https://github.com/vurtun/nuklear) A small ANSI C gui toolkit
 
 * [libs](https://github.com/mattiasgustavsson/libs) Single-file public domain libraries for C/C++ (dual licensed under MIT)
