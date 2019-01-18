@@ -15,6 +15,8 @@ categories: other
 
 ### Tools
 
+* **[jpexs-decompiler](https://github.com/jindrapetrik/jpexs-decompiler)** JPEXS Free Flash Decompiler(flash 反编译工工具, 非常适合提取旧项目的资源不用再装 Flash)
+
 * [free BitTorrent client](https://github.com/transmission/transmission) 免费, 无广告的下载工具.
 
 * [domcomp](https://www.domcomp.com/tld/com) 域名服务商价格对比
@@ -375,6 +377,10 @@ categories: other
 ### CLib
 
 [awesome-c](https://github.com/kozross/awesome-c)
+
+* [vcpkg](https://github.com/Microsoft/vcpkg) C++ Library Manager for Windows, Linux, and MacOS
+
+* [civetweb](https://github.com/civetweb/civetweb) Embedded C/C++ web server
 
 * [COM 组件及 内嵌 IE 示例](https://www.codeproject.com/Articles/Jeff-Glatt#Article) 内嵌 IE 浏览器文档,
   - [webview](https://github.com/zserge/webview) 单个头文件, 使用了系统自带的浏览器. cross platform

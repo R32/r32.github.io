@@ -931,7 +931,7 @@ public:
 	}
 
 	double sum(){
-		return Vector::sum() + z;   // override, 由于 C++ 允许多继承, 所以其它语言的 super.method 的方式为这样.
+		return Vector::sum() + z;   // override, 由于 C++ 允许多继承, 所以没有 super.method .
 	}
 
 	double volume(){
