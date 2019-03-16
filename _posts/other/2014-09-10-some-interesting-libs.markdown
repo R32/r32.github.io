@@ -122,6 +122,10 @@ categories: other
 
 ### web
 
+[Press+Start+2P](https://fonts.google.com/specimen/Press+Start+2P?selection.family=Press+Start+2P) a bitmap font based on the font design from 1980s Namco arcade games. It works best at sizes of 8px, 16px and other multiples of 8
+
+[NES.css](https://github.com/nostalgic-css/NES.css) 浏览器支持: chrome, firefox, Safari
+
 [design-blocks](https://github.com/froala/design-blocks) A set of 170+ Bootstrap based design blocks(170+ 基于 bootstrap 的设计片段)
 
 [ie8 css filter](http://www.ssi-developer.net/css/visual-filters.shtml)

@@ -93,11 +93,11 @@ API 文件建议参考 cygwin/lib/ocaml 下的 mli 文件, 一些方法会提示
   # 当然使用 ocamlfind 编译时会有更简洁的参数。
   ```
 
-* 和其它语言不一样的是, 字符串内的字符可以被修改。使用 `Bytes.set`
+* 和其它语言不一样的是, ocaml 字符串内的字符默认是可以被修改。使用 `Bytes.set`
 
   > 注: 字符串中间即使遇 `0` 还将继续输出后边的
   >
-  > TODO: 编译参数 `-unsafe-string` 和 `Bytes.set` 无关
+  > 用使编译参数 `-safe-string` 限制 `Bytes.set` 对 string 的更改
 
 * 值(函数也是值)与类型有不同的命名空间，因此即使名字相同也不会存在冲突。
 

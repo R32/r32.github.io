@@ -7,18 +7,13 @@ categories: haxe
 
 ---
 
-
 ### Tips
 
-* 建议使用 git 版本的 haxe, 可以在 <http://build.haxe.org> 处下载
-
-* js.Lib 和 js.Syntax 下的有些很有用处的方法。 例如访问 JS 中的全局变量:
-
-  `js.Lib.global.MyVal = 100`
+* 建议使用 git 版本的 haxe, 可在 <http://build.haxe.org> 下载
 
 * `-debug` 模式将会生成 source map 文件用于调试, release 下也可以使用 `-D source-map` 来强制输出这个文件
 
-* 当把一个 **成员方法** 作为函数参数时传递时, haxe 会将把 **成员方法** 与其相关的对象自动绑定
+* 当把一个 **成员方法** 作为参数时传递时, haxe 会将把 **成员方法** 与其相关的对象自动绑定
 
   如果不想绑定, 则可使用 `(obj: Dynamic).method` 的方式防止它, 例:
 
@@ -44,7 +39,7 @@ categories: haxe
   ```haxe
   var s:String = js.Syntax.code('Navigator.plugin["Shockwave Flash"]');
 
-  // 它使用了类似于 C# 的字符串格式语法
+  //
   var a = 1, b = 2;
   js.Syntax.code("var c = {0} + {1}", a, b); // a, b 将分将替换掉 {0}, {1}
   ```
@@ -96,8 +91,6 @@ categories: haxe
 
   注意和 `@:native`(用来更改输出类名或字段名) 相区别,
 
-* `@:runtime` (since 2.10) 未知, 但是现在的版本移除了 js only 的限制
-
 * **`@:selfCall`** 调用自身, 由于 javascript 没有构造函数, 在写 extern class 时会遇到一些问题
 
   ```haxe
@@ -131,13 +124,13 @@ categories: haxe
 
 ### extern class
 
-由于 Javascript **上下文** 的随意性, 并没有好的工具能自动创建 extern class, 所以需要自已手动为这些外部 JS 文件写 extern class 声明.
+需要自已手动为这些外部 JS 文件写 extern class 声明.
 
 * 从 webidl 文件获得一些类型参考 <https://github.com/mozilla/gecko-dev/tree/master/dom/webidl>
 
   > 实际 HF 有自动解析 webidl 为 extern clsss 的工具, 只是我没成功过 <https://github.com/HaxeFoundation/html-externs>
 
-由于 JS 中方法的参数可以是不同类型, 因此在写 extern class 时,会经常用到 元标签 @:overload
+由于 JS 中方法的参数可以是不同类型, 因此在写 extern class 时,会经常用到: `@:overload`
 
 ```haxe
 extern class JQueryHelper {
@@ -155,7 +148,7 @@ extern class JQueryHelper {
 ```haxe
 class Main {
     static function main() {
-        var dis:Dynamic = untyped __js__('new DisplayToggle("some_id")');
+        var dis:Dynamic = js.Syntax.code('new DisplayToggle("some_id")');
         dis.hide();
     }
 }
@@ -163,8 +156,7 @@ class Main {
 
 #### call/apply
 
-当把一个 extern class 方法作为函数参数传递时, haxe 自动绑定 this 的作用域,
-在编译后代码类似于 `func.call($bind(func,context))`， 这样将导致 call/apply 失效. 因此解决方法为
+当把一个 extern class 的成员方法作为参数传递时, haxe 将会自动绑定 this 指向, 如果想避免则可:
 
 * 可以把方法声明定义成变量形式， 例: `var func:Void-Void`
 
@@ -176,7 +168,7 @@ class Main {
 - top(默认) 将插入到代码输出的顶层,在闭包的外部(如果没有指定 `-D js-classic`)
 - inline 表示插入到这一行
 
-> 如果你仅想以 inline 的方式插入字符串代码可以使用 `__js__` 来完成.
+> 如果你仅想以 inline 的方式插入字符串代码可以使用 `js.Syntax.code` 来完成.
 
 ```haxe
 import haxe.macro.Compiler.includeFile;
@@ -201,13 +193,11 @@ haxe -main Main -js bin/main.js --macro includeFile("projDir/path/to/file.js")
 
 * 枚举值可以使用 `@:enuu abstract` 来指定.
 
-* 不要把成员函数作为参数传递, 除非你将它指定成变量形式.(因为 haxe 会自动绑定上下文, 但很多时候并不需要这样)
+* 将成员函数作为参数传递时, haxe 会自动绑定 this 的指向.
 
 * 使用 `@:native("native_name")` 来指定真实方法或变量名
 
-  如果在需要通过一个类的字段访问 JS 的全局变量如 undefined, 可以指定为 inline 方法或 getter, 可参考: `js.Lib.undefined`
-
-  注: 如果用在 typedef 中的匿名结构上目前暂时不会有任何效果, [#5105](https://github.com/HaxeFoundation/haxe/issues/5105)
+  注: 不可以用在 typedef 所定义的匿名结构上, [#5105](https://github.com/HaxeFoundation/haxe/issues/5105)
 
 * `@:selfCall` 上边已经描述,但是由于 haxe 也会帮 extern clss 绑定上下文会导致一些不方便。
 

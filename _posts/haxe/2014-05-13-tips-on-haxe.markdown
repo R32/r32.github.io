@@ -45,6 +45,8 @@ categories: haxe
 
 * [统一 Unicode](https://github.com/HaxeFoundation/haxe/pull/7387), 最新版只要通过检测是否存在 `-D utf16` 则可以判定平台的 String 的字符编码.
 
+* `@:native("")` 仅适用于 extern 类. 可以使用它来标注全局函数, [#6448](https://github.com/HaxeFoundation/haxe/issues/6448)
+
 * `enum abstract` 自动赋值, 但不可用于 `extern` 类型的枚举. (注: haxe 4 版, 可以直接使用 `enum abstract` 代替 `@:enum abstract` 来创建枚举值.)
 
   ```haxe
