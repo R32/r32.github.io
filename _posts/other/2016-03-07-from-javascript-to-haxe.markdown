@@ -9,88 +9,54 @@ categories: other
 
 本文档用于向 javascript 程序传销 [haxe], 学习它需要对 js 有一定的了解。
 
-<!-- more -->
-
-[haxe]:https://github.com/HaxeFoundation
-[Editors and IDEs]:https://haxe.org/documentation/introduction/editors-and-ides.html
-
 ## 安装
 
-* 首先下载 haxe 编译器, **推荐** 使用 git 自动构建版，可以在 <http://build.haxe.org> 找到。
+首先下载 haxe 编译器, **推荐** 使用 git 版本，可以在 <http://build.haxe.org> 找到, 更新时可以覆盖安装
 
-* [Editors and IDEs]. *对于新学任何一门语言来说, 语法提示是最重要的。*
+<!-- more -->
 
-* 参考文档在 <http://haxe.org/manual/introduction.html>, 如果你觉得英文有困难，建议使用 bing 翻译
+### 编辑器
 
-  > <http://old.haxe.org> 也还有蛮多不错的文档可以看
+选择 vscode, 安装 haxe(haxe language support) 插件即可, [插件文档-英文](https://github.com/vshaxe/vshaxe/wiki/Debugging)
 
-* 对于 API 手册, 其实利用 IDE 的跳转功能直接看源码效果会更好。
+1. 通过 `File->Open Folder`, 打开一个空的文件夹
+2. 按下F1, 后选 `haxe:Initialize VS Code Project` 即可新建一个 haxe 项目
+3. 下边是默认的 build.hxml,
 
-### IDE 选择
+  ```bash
+  -cp src                # 添加 src 目录,
+  -D analyzer-optimize   # 开启优化器
+  -main Main             # 定义入口类
+  --interp               # 通过 "haxe 解释器" 来运行代码
+  ```
 
-#### vscode
-
-1. 选择一个空的文件夹
-2. 按下F1, 后选 `haxe:Initialize VS Code Project` 即可新建一个 helloworld 的项目
-3. 下边是默认的 build.hxml, 但它并非是编译为 js 的.
+  想要输出为 js, 只要将最后一行按如下修改即可
 
   ```bash
   -cp src
   -D analyzer-optimize
   -main Main
-  --interp
+  -js app.js             # 你也可以将 app.js 改成别的文件名, 和指定目录, 如: "bin/app.js"
   ```
 
-  如果想编译到 js 并输出到 out.js 则可修改如下:
+4. 按下 "Ctrl+Shift+B" 编译
 
-  ```bash
-  -cp src
-  -D analyzer-optimize
-  -main Main
-  -js out.js
-  ```
-
-4. 按下 "Ctrl+Shift+B" 编译, 具体的配置你可能需要参考 vscode 的帮助文档.
-
-#### haxedevelop/flashdevlop
-
-这是我个人偏爱的 IDE, 当然它只能在 windows 中运行.
-
-> 中文:  "Tools" -> "Program Settings...". 然后左侧选中 "Haxedevelop" 右边则找到 "Locale" 下的 "Selected Locale" 的弹出菜单. 更改后重启 IDE 即可。
-
-1. "项目(Project)" -> "新建项目(New Project...)", 选择 "JS Project" 并填写好其它项后按下 "确定" 即可
-
-2. 按下 F8 (或点击齿轮图标)即可编译
-
-3. 建议打开 CompletionServer 加速编译, 对于大的项目它的效果非常明显.
-
-  > "工具(Tools)" -> "程序设置(Program Settings)", 左侧: "Haxe Context", 右侧的 "Completion Mode" 选 "CompletionServer" 即可.
-
-4. 编译器选项: "项目" -> "属性" -> "编译器选项" 通过 "Additional Compiler Options" 打开一个弹出的输入框
-
-  可以输入下边参数: (这种一行一个参数可以保存为 .hxml 文件, haxedevelop 可以通过设置自动将它导出)
-
-  ```bash
-  -dce full
-  -D analyzer-optimize
-  ```
-
-  `-dce full` 表示强力删除所有未引用的代码. 默认为 `-dce std`
-
-  `-D analyzer-optimize` 表示打开优化器, 由于目前重写了优化器, 因此这项功能目前默认是关闭的
+5. 调试: 这里仅以 nodejs 为例, 其它环境其实也类似.
+  - 先关掉 "haxe 优化器", 即通过 `#` 符号, 注释掉 `-D analyzer-optimize` 即可
+  - 接下来, 开启 "source.js.map", 通过在 `build.hxml` 中添加一行 `-debug` 或者 `-D js-source-map`
+  - 最后修改 "launch.json",
+    > 在打开 "launch.json" 后, 可以点击窗口右下角的 "Add Configuration..." 按钮,
+    >
+    > 然后在打开的下拉菜单中选 "nodejs: Launch Program"
+    >
+    > 注意某个输出文件如: `app.js` 要和 `build.hxml` 中的输出文件相对应
 
 
 ## 语法
 
-TODO
+建议参考 <http://haxe.org/manual/introduction.html>
 
-### 语法差异
-
-**常量**
-
- javascript | haxe
------------ | -----------
-`const MAX = 100;` | `static inline var MAX = 100;`
+对于 API 手册, 其实利用 IDE 的跳转(`F12`)直接看源码效果会更好
 
 #### for 循环
 
@@ -140,9 +106,9 @@ default:
 
 目前只想到这些, 其它的未来再补充
 
-* 编译时添加 `--no-traces` 即可擦除所有 console.log 语句
+* 通过添加 `--no-traces` 即可擦除所有 console.log 语句
 
-* 支持条件编译：
+* 条件编译：
 
   ```haxe
   #if debug
@@ -229,24 +195,9 @@ default:
   ```
 
 
-* **宏(macro)**: 通常它用来自动构建，比如你可以分析某个本地或网络文件然后动态创建一个类
+* **宏(macro)**: haxe 最强大的特性, 这也是为什么我选择它而不用 typescript 的原因
 
-  > 建议新手先跳过这一块。 **tips**: 如果你正在学习它，有一个很重要的编译标志 `-D dump=pretty` 可以让你看到 macro 展开后的代码是什么样
-
-## 编译器模块
-
-#### Compiler-based Completion
-
-简单地说就是编译器完成了智能语法提示的功能, IDE 只要简单地把源码中"光标"的所在位置
-传送给编译器就可以获得语法提示.
-
-
-#### Compilation Cache Server
-
-当编译器解析源码时, 会在后台创建一个 socket 连接, 并将编译结果缓存在内存之中,
-那么在下次编译时, 对于那些没有发生过修改的文件则可以直接使用缓存, 而无需再重新编译.
-
-特别对于大的项目, 它所带来的加速效果非常显著. 在 vscode 中这项功能默认是自动打开的.
+  > 建议新手先跳过这一块, 但如果你正在学习它，有一个编译参数 `-D dump=pretty` 可以看到宏展开后的代码是什么样
 
 
 <br />

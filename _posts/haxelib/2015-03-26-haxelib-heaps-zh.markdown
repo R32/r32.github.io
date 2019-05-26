@@ -7,7 +7,6 @@ categories: haxelib
 
 ---
 
-尽量保持和 [原文档](https://github.com/ncannasse/heaps/blob/master/doc/ref.html) 的致性, 这个文档也是刚刚被提交上去. 位于 heaps 库的 doc 目录之中.
 
 ### 简介
 

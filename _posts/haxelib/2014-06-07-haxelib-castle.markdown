@@ -137,13 +137,11 @@ castleDB 保存为一个扩展名为 `.cdb` 的文件, 其实它是一个 JSON �
 
 * **Properties** 新增的属性,像是一个可视化的(key/value)的Object类型, 可以方便的通过 UI 输入这些动态值了
 
-  > 可以将一些相关的属性集中于一个字段下.
+  > 可以将一些相关的属性集中于一个字段下. 类似于一个严格类型的 Dynamic,
 
-* **Custom**(自定义): 自定义类型. [见后边章节描述...](#custom-column)
+* **Custom**(自定义): 自定义 enum 类型.
 
-  通过点击 IDE 的右下角的 `edit type` 打开一个空白页面, 示例都是 enum 类型的, 和普通的 Enumeration 比起来,
-
-  Custom Type 的 enum 是带有 构造方法的. 示例如下:
+  通过点击 IDE 的右下角的 `edit type` 打开一个编辑输入框
 
   ```haxe
   enum Super2 {
@@ -208,6 +206,7 @@ File  | 文件的相对(如果可能)或者绝对路径 | `""`(丢失的文件)
 Image | 图像的 Md5 值,(图像的 base64 值分离存储于另一个同名的 .img 文件) | `""`(图像缺失)
 Tile  | 类似于 `{file:"some.png", size: 16, x:5, y:5}` 并带有可选的 width,height 的结构 | `null`(tile缺失)
 List  | 多个结构组成的数组, 了解更多... TODOS | `[]`(空数组)
+Properties  | JSON结构 | 'null'
 Custom | 多个混合类型, 了解更多... TODOS | `null`(缺少类型)
 Dynamic | 自定义的JSON结构数据 | `null`
 Data Layer | width x height 的字节编码为base64格式 | `""`(空图层)
@@ -235,8 +234,6 @@ Tile Layer | 类似于DataLayer或者是结构数组(`Array<Struct>`) | `""`(空
 
 * 使用 `Ctrl+Z` 和 `Ctrl+Y` 撤消/重做。
 
-* 使用 `Tab` 和 `Shift+Tab` 导航到 下一个/上一个 同行单元格。(箭头左和右)
-
 * **!(似乎只有这条值得关值)** 使用 `F4` 跳转至 **被引用** 的单元格, `F3` 则搜索谁引用了这一行数据。
 
 #### 管理表
@@ -249,7 +246,7 @@ Tile Layer | 类似于DataLayer或者是结构数组(`Array<Struct>`) | `""`(空
 
 * 重命名和删除表
 
-* 访问表选项, 如 索引(Index)和组(Group)
+* 访问表选项, 如 ~~索引(Index)~~和分组(Group)
 
 #### 管理列(字段)
 
@@ -295,7 +292,7 @@ CastleDB 提供列类型之间的自动转换， 这个经常用于“复制/粘
 
 - **显示图标**, 参考上行描述，右键点击字段名选 `Display icon`, 图标将作为引用显示
 
-- **索引**, 当你打开 CastleDB 时, 索引基于 0 开始
+- ~~索引~~, 当你打开 CastleDB 时, 索引基于 0 开始 (NOTE: 似乎已经被弃用, 因为目前添加后并不会再像以前一样给每一行数据添加索引值)
 
   > 通常索引不会作为数据导出，但可以通过在表名上右键菜单中选上 `Add Index`, 这时导出的数据将带有索引。
   >
@@ -303,9 +300,9 @@ CastleDB 提供列类型之间的自动转换， 这个经常用于“复制/粘
 
 - **分隔符**, 如果右键单击行数据, 可以在当前行上前边添加分隔符, 双击这个分隔符可以为其命名.
 
-- **添加组**, (依赖分隔符)通过右键点击表格名,选上 `Add Group`, 则将创建一个通过 **分隔符** 简单分离的组,
+- **添加分组**, (依赖分隔符)通过右键点击表格名,选上 `Add Group`, 则将创建一个通过 **分隔符** 简单分离的组
 
-  - 这允许简单分类而无需创建特定的字段来区分
+  这允许简单地分类而无需创建特定的字段, 分组索引从 0 开始.
 
 ### 高级类型
 
@@ -317,7 +314,6 @@ CastleDB 提供列类型之间的自动转换， 这个经常用于“复制/粘
 
 与普通表的区别是这个子表将直接在原表的行上操作, 你可以点击 List 字段的单元格切换到子表。
 
-List 类似于 one-to-many 的数据库关系
 
 #### Image Column
 
@@ -329,48 +325,7 @@ List 类似于 one-to-many 的数据库关系
 
 #### Custom Column
 
-自定义类型建义参考 haxe 语言的中的 enum(或函数式语言中所说的 Variants),
-
-对于自定义类型可以通过点击 IDE 右下角的 `Edit Types`
-
-这是一个示例:
-
-```haxe
-enum MyCustomType {
-	Fixed;
-	Random( v : Float );
-	Monster( ?m : monsters );
-	Or( a : MyCustomType, b : MyCustomType );
-}
-```
-
-在这情形下, 这个自定义类型字段的值可以是:
-
-```haxe
-Fixed
-Random(0.5)
-Monster(MyMonsterId)
-Or(Random(0.1), Fixed)
-```
-
-自定义类型的构造器参数可以使用以下类型:
-
-* `Int, Bool, Float, String`
-
-* `Custom` 任意自定义类型,包括自身
-
-* `SheetName` 创建的任何表名(sheet name)
-
-如果构造器参数带有前缀 `?` 则表示这个参数为可选参数。
-
-自定义类型的保存到 JSON 文件中的格式为数组形式.该数组的第一个元素是此构造器名字的索引值,构造器参数紧随其后.
-
-值示例   | 保存到 JSON 中的格式
-:-------| --------:
-Fixed       | [0]
-Random(0.5) | [1,0.5]
-Monster(MyMonsterId)   | [2, "MyMonsterId"]
-Or(Random(0.1), Fixed) | [3, [1, 0.1], [0]]
+见字段类型小节
 
 <br />
 
@@ -383,23 +338,23 @@ Or(Random(0.1), Fixed) | [3, [1, 0.1], [0]]
 
 ### 创建关卡(Create Level)
 
-在创建一个新表时, 勾选上 `Create Level` 选中即可, IDE 将自动创建 level表所需要字段(以前旧的版本需要自已添加这些字段)。
-
-之后你可以通过点击"行"最左侧的 `edit` 按钮编辑它们
+在创建一个新表时, 勾选上 `Create Level` 选中即可, IDE 将自动创建 level表所需要字段, 之后通过点击"行"最左侧的 `edit` 编辑
 
 ### 图层(Layers)
 
 图层(layer)是 level 表中包含了一组图片布局数据的字段(field)，分别是: (注意参考示例文件)
 
-* **Tile Layer** 在创建 level 表后即可通过点击 "Edit" 按钮创建, tile layer 相当于游戏里的某一图层, 示例中的 "layers" 字段即是是一个 List<Layer>, 比如游戏里可以有背景层, 美化层, 物件层等等。 通过 "New Layer" 创建的层都会自动添加到 "layers" 下.
+* **Tile Layer** 在创建 level 表后即可通过点击 "Edit" 按钮创建, tile layer 相当于游戏里的某一图层,
 
-  - 这个字段一般由 IDE 自动创建, tile layer 有三种不同的模式: Tiles, Group, Object
+  示例中的 "layers" 字段即是是一个 List<Layer>, 比如游戏里可以有背景层, 美化层, 物件层等等。 通过 "New Layer" 创建的层都会自动添加到 "layers" 下.
 
-后边的三种类型都是与 Tile Layer 相对的数据,
+  这个字段一般由 IDE 自动创建, tile layer 有三种不同的模式: Tiles, Group, Object
+
+后边的三种类型都是与 Tile Layer 相对的数据层,
 
 * **List Layer**: 允许你在可视地图编辑器上引用另一个表(sheet)中的数据。
 
-  你需要在 level 表中手动添加一个 `List<{x:Float, y:Float}>` 类型的字段, 参考示例中的 `npcs`
+  你需要在 level 表中手动添加一个 `List<{x:Float, y:Float}>` 类型的字段, 参考示例中的 `npcs` 字段
 
   > 如果你添加 Reference 引用了另一个表(sheet), 如果被引用的表包含有 Tile 或 Image,
   > 那么这个 tile 将作为标记用于可视编辑(如果存在多个 tile 或 image, 则选择最左边的字段)，
@@ -416,7 +371,7 @@ Or(Random(0.1), Fixed) | [3, [1, 0.1], [0]]
 
   > 在 level 表添加一个类型为 Data_Layer 字段 , 并选择与之关联的一个表即可。
   >
-  > 被关联的表必须有 tile 字段才可以在地图上编辑, 参考示例中的 collide 字段
+  > 被关联的表必须有 tile 类型的字段才可以在地图上编辑, 参考示例中的 `collide` 字段
   >
   > 当然作为限制你不能像 List Layer 那样能自定义数据。
 
@@ -462,8 +417,8 @@ index_layers 将总是为 grid-aligned. 其它类型 layers 则可以有更精�
 Options 菜单:
 
 * Tile Size: 属于level层次的, 修改它将自动修改 props 字希中的 tileSize 属性.
-* X/Y Scroll: 滚动
-* Value Scale: 缩放
+* X/Y Scroll: 滚动 (*容易混乱*)
+* Value Scale: 缩放 (*容易混乱*)
 
 #### Tile Layers
 
@@ -475,7 +430,7 @@ Size: CDB 默认使用 16x16大小的tile. 可以更改这个数值在各自的 
 
 #### Tile Mode
 
-在这个模式下, 可选 tileset 下方的填充或随机模式。当处于此模式时, 图层数据(layer data)由 `高x宽` 个 tile 组成,
+单纯的 tile 模式, 可以使用画板(tileset) 下方的填充或随机模式。
 
 #### Object Mode
 
@@ -497,62 +452,58 @@ Object_Layer 的数据存储编码为 base64, `0xFFFF` 标记这个图层为 Obj
 
 #### Ground Mode
 
-这个模式与 tile mode 很相似, 除了你可以配置 Grounds 和 Borders 获得一些自动构建
-
-> 你可以尝试在示例中切换到 ground layer, 观察它与 Tile 的差异.
->
-> border 能自动将定义为 Ground 类型的 tile 使 border 包起来, 只是没有文档介绍如何做
-
-Borders 有 4个模式: (copy from cdb.TileBuilder.hx)
-
-
-
-
-#### Group Mode
-
-为几个连续的tile定义成一个名字, 示例中定义了一些tile动画.
+主要用于构建 background 层, 可以通过 *Per-tile Properties* 所配置的 Ground 和 Border 漂亮地绘制 Ground(地板)
 
 ### Per-tile Properties
 
-即在画板中预定义每一个 tile 的属性, 例如: 你可以在画板上直接把一个"石头 tile" 定义成会碰撞不可穿越的块，
-这样就不必在画完图层后, 再去定义每个 tile 的属性。定义的这些属性可以在所有关卡中可用。
+可以在画板(tileset)为每一个磁贴(tile)定义一些属性, 例如碰撞检测, 事件触发, 或者如何绘制"地板"等,
+
+这些定义的属性可以在所有 levels(关卡) 中共享(仅限于同一个 sheet 内),
+
 
 下拉菜单:
 
 * tile: 当处于这个选项时，表示你正在作画中, 而非预定义。
 * Object: 当激活时, 可以将多个 tile 组合成 Object, 接下来作画时一次即可选中组合的几个 tile. 快捷键为: `O` 键。
-* Ground: 用于标记一个或一些 tile 为 ground(名字在左上第一个块上), 以配合 `Border` 一起使用。
-* Border: 将某些 tile 标记为 border, 这时你需要选择 border 的相对于 ground 显示位置, 以及样式。
+* Ground: 用于标记一个或一些 tile 为 ground(名字在左上第一个块上), 以配合 `Border` 一起使用.
 
-  在作画时，你不需要把画 Border, 而当在画 Ground 定义过的 tile 时, IDE 会根据定义自动帮你添加 border.
-  虽然这里描述得非常抽象, 但它是一个非常强力的工具，使你的地图变得相当的专业。
+  priority: 优先级, 似乎仅当有 border 时才会表现, 而且 border 将不区分所有优先级为 0 的 ground, 
+  例如: 如果 herb, dirt 的优先级都为 0, 那么作用于 herb 上的 border, 同样会被用在 dirt 上. 
+
+* Border: 将一组 tile 标记为 border, 其似乎只被用在 priority(优先级) 大于 0 的 ground 上
+
+  lower: 所有优先级**低于** `In/Out` 下拉菜单所选择的 ground, 因此 `In/Out` 不可以都是 `lower/upper`
+  
+  upper: 所有优先级**高于** `In/Out` 下拉菜单所选择的 ground 
 
   ```
   #Corners
   ┌  ─  ┐   0 1 2
   │  ■  │   3 8 4
   └  ─  ┘   5 6 7
+  IN:  指定与 OUT 相邻的 ground, 即 border 将会把这个 ground 包围起来
+  OUT: border 将会贴在指定 ground 边缘处
 
   #Lower Corners
-
   ┌ ┐   9  10
   └ ┘   11 12
-
+  IN:  border 将会贴在指定 ground 的边角处
+  OUT: 仅指定与 IN 相邻的 ground
+  
   #U Corners
-
      ┌ ┐      XX  13  XX
   ┌       ┐   14  XX  15
   └       ┘
      └ ┘      XX  16  XX
+  IN:  指定与 OUT 相邻的 ground
+  OUT: border 将会贴在指定 ground 的 U 位置处
 
-  #Bottom
 
+  #Bottom , 好像不起作用, 或许是 BUG
   └ - ┘     17 18 19
   ```
 
 * Group: 仅用于给一些 tile 取一个名字，例如: 一些动画帧。
-
-  > TODO: 在游戏里如何引用到这个名字的 anim 了?
 
 * 自定义: 可在关卡表中添加一个名为 tileProps 类型是 `List`  的字段，List 内的每一个子字段都会被引用到画板下拉菜单中去， 而 List 内不必有内容(行数据)。
 
@@ -580,7 +531,7 @@ Borders 有 4个模式: (copy from cdb.TileBuilder.hx)
 * `D` 旋转对象,(仅用于tile_object)
 * `O` 在画板上快速创建tile_object
 
-### 代码中调用
+## 代码中调用
 
 参看 www/index.html 以及 src/test. Test.hx:
 
@@ -611,7 +562,7 @@ private typedef Init = haxe.macro.MacroType <[cdb.Module.build("test.cdb")]> ;
 
 上边这些内容描述了普通数据的使用。
 
-#### 类型映射
+### 类型映射
 
 castleDB 中的数据类型对应 haxe 中相应的类型
 
@@ -638,11 +589,7 @@ castleDB 中的数据类型对应 haxe 中相应的类型
 
   > 可通过 t.data.decode() 来解码，解压的数据为16位值的数组. 如果这个图层为 tile/ground模式将有 width/height值.如果为object模式将可以看到图层选区数据)
 
-### 其它
-
-* 修改 columns 时,别按回车键,因为默认为 `delete`
-
-#### in heaps
+### in heaps
 
 * 用宏解析 .cdb 文件(只包括类型, 不包含数据)
 
@@ -654,3 +601,7 @@ castleDB 中的数据类型对应 haxe 中相应的类型
 
 <br />
 <br />
+
+## 迁移
+
+实际上 castle 的所有功能将会被集成到新的编辑器即 hide 之中, 目前仅 2d 地图的编辑暂时不可用

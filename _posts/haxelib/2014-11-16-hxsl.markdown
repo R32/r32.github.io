@@ -1,10 +1,12 @@
 ---
 layout: post
-title:  HXSL(着色器)
+title:  HXSL(过时的旧文档)
 date:   2014-11-16 13:16:18
 categories: haxelib
 ---
 
+
+过时的旧文档, 关于 HXSL 你可以在 heaps.io 的 WIKI 中找到大致的说明.
 
 AGAL
 -------

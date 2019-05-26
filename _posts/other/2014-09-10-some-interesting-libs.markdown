@@ -13,6 +13,26 @@ categories: other
 
 <!-- more -->
 
+### code
+
+演示如何将脚本所在目录下的 `jar/yuicompressor.jar` 添加到命令行
+
+```bat
+@echo off
+java -jar %~dp0jar\yuicompressor.jar %*
+```
+
+bash, 确保换行符为 `LF`
+
+```bash
+#!/bin/sh
+basedir=`dirname "$0"`
+case `uname` in
+    *CYGWIN*) basedir=`cygpath -w "$basedir"`;;
+esac
+java -jar "$basedir/jar/yuicompressor.jar" "$@"
+```
+
 ### Tools
 
 * **[jpexs-decompiler](https://github.com/jindrapetrik/jpexs-decompiler)** JPEXS Free Flash Decompiler(flash 反编译工工具, 非常适合提取旧项目的资源不用再装 Flash)

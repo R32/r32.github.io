@@ -27,6 +27,7 @@ categories: other
 
    ```bash
    Ruby/ruby: Interperted object-oriented script......
+   Ruby/ruby-devel: Interperted object-oriented script...... # 如果要编译 ffi 接口
    Ruby/rubygems: Ruby module management system
    Ruby/ruby-nokogiri: Ruby HTML/XML/SAX library	# 由于cygwin下无法通过编译这个库 1.6.6.2
    Archive/zip: Info-ZIP compression utility.

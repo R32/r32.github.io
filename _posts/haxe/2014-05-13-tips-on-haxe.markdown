@@ -7,35 +7,34 @@ categories: haxe
 
 一些链接:
 
-* [编程参考](http://old.haxe.org/doc)
+[编程参考-旧文档](http://old.haxe.org/doc)
 
-* [黑魔法](http://old.haxe.org/doc/advanced/magic)
+[黑魔法-旧文档](http://old.haxe.org/doc/advanced/magic)
 
-* **Tips:** 在编译时其实可以不用指定 `-main` 参数, 这样的程序将没有入口像是一个库, 例: `haxe -js lib.js Lib`
+在编译时可以不指定 `-main`, 例: `haxe -js lib.js MyClass`, 但只可以指定一个类.
 
-* 当 `-dce std` 时, 使用 import 可能会使最终输出文件变得很大(使用某一个类一个方法时,可以直接用全名), 因此你可能需要关闭 IDE 的自动导入（Generate Imports）
+当 `-dce std` 时, 使用 import 可能会使最终输出文件变得很大(使用某一个类一个方法时,可以直接用全名), 因此你可能需要关闭 IDE 的自动导入（Generate Imports）
 
-* 如果一个 .n 文件是以 haxelib run 来运行的, 那么可以通过检测环境变量 `HAXELIB_RUN` 的值是否为字符串 "1", 因为 haxelib run 运行时会把"当前路径"作为最后一个参数传递给 Sys.args()。 [更多细节...](http://lib.haxe.org/documentation/using-haxelib/#run)
+如果一个 .n 文件是以 haxelib run 来运行的, 那么可以通过检测环境变量 `HAXELIB_RUN` 的值是否为字符串 "1", [更多细节...](http://lib.haxe.org/documentation/using-haxelib/#run)
 
 <!-- more -->
 
 ### 编译
 
-由于每次复制通过 git 更新 `haxe/std`到 haxe 的安装目录很麻烦，因此我直接使用 "git haxe repo" 作为 haxe 的路径，
+直接使用 "git haxe repo" 作为 haxe 的路径，由于 haxelib 目前依赖于 neko, 因此 neko 也要装上.
 
-> 只要设置二个路径即可: `HAXEPATH: D:\fork\haxe\`, `NEKO_INSTPATH: G:\HaxeToolkit\neko`,
->
-> haxe.exe 所依赖的 dll 文件由 `i686-w64-mingw32\sys-root\mingw\bin` 所提供
->
-> `make libs`: 编译 haxe.exe 之前需要的依赖库
->
-> `make haxe -f Makefile.win -j4 FD_OUTPUT=1 ADD_REVISION=1`: 获得 windows 平台下的 haxe.exe
->
-> `make haxelib`: 获得 haxelib.exe, 需要在这个 exe 的当前目录创建一个名为 "lib" 的目录，
-> 或者通过运行 `haxelib config XXX`  指定一个库目录
->
-> 其实 flashdevelop 可以设置不同的 haxe sdk 路径, 因此安装一次标准版 haxe (带有neko,haxelib),
-> 然后将 "git haxe repo" 添加到 flashdevelop 更方便
+* 设置二个环境变量 : `HAXEPATH: D:\fork\haxe\`, `NEKO_INSTPATH: G:\HaxeToolkit\neko`,
+
+* `make haxe -f Makefile.win -j4 FD_OUTPUT=1 ADD_REVISION=1`: 获得 windows 平台下的 haxe.exe
+
+  > `make libs`: 第一次执行上边命令前, 你可能需要先运行这个, 以获得外部库
+  >
+  > windows 中, haxe.exe 所依赖的 dll 文件可以在 `i686-w64-mingw32\sys-root\mingw\bin` 中找到
+
+* `make haxelib` 以获得 haxelib.exe, 这会在 exe 所在目录创建一个名为 "lib" 的目录，
+  
+  > 或者通过运行 `haxelib config XXX`  指定一个库目录
+
 
 ### 最新改动
 
@@ -43,7 +42,30 @@ categories: haxe
 
 在 twitch 上看直播时, 发现在可以在函数加 `@:debug.display` 然后在 output 窗口会有一些信息.
 
-* [统一 Unicode](https://github.com/HaxeFoundation/haxe/pull/7387), 最新版只要通过检测是否存在 `-D utf16` 则可以判定平台的 String 的字符编码.
+* keyValue 迭代器(KeyValueIterator)
+
+  ```haxe
+  for(key => value in map) {
+    trace(key, value);
+  }
+  // 不是所有数据类型都有 KeyValueIterator, 
+  // 不是所有平台都会优化(如果无优化, 那么这个特性可以说毫无优势)
+  ```
+
+* `utf16`: [#7387](https://github.com/HaxeFoundation/haxe/pull/7387) 表示其字符串编码为 ucs2,  
+  
+  > 注意对于 eval, 其底层虽然为 UTF8(通过 RawNative 的格式写入到 Bytes 内), 但其字符串 API 的形为却与 ucs2 一致  
+  >
+  >`target.unicode`: [#8244](https://github.com/HaxeFoundation/haxe/pull/8244), 感觉和上边有些混淆 
+
+* 一些可以通过 `#if (target.XXXX)` 来检测的 Define, [init_platform](https://github.com/HaxeFoundation/haxe/blob/development/src/context/common.ml#L528)
+
+  `(target.name)` : 定义了 当前目标的名字. 例如: js, lua
+  `(target.static)` 中 `static` : 表示使用了静态类型, 即变量有自己的类型. 为假(即动态类型)的有: JS, Lua, Neko, Php, Python, Eval   
+  `(target.sys)` 或 `sys` : 表示可以调用系统 IO, 为假的有 js(不包括hxnodejs), flash
+  `(target.utf16)` 或 `utf16` : 见前边
+  `(target.unicode)` : 表示当用 `haxe.iterators.StringIteratorUnicode` 是否能正确输出 ucs2 值, 只有 neko, cpp 为假
+  `target.threaded` : 目标是否支持多线程
 
 * `@:native("")` 仅适用于 extern 类. 可以使用它来标注全局函数, [#6448](https://github.com/HaxeFoundation/haxe/issues/6448)
 
@@ -74,7 +96,7 @@ categories: haxe
   --macro server.setModuleCheckPolicy(['flash', 'openfl', 'flixel', 'lime', 'haxe'], [NoCheckShadowing], true)
   ```
 
-* `-D old-error-format`: 如果你使用 flashdevelop 应该加上这个. 在使用 vscode 时则不加这个.
+* `-D old-error-format`: 如果你使用 flashdevelop 应该加上这个. 使用 vscode 则不要加.
 
 * 类似于 `Foo.js.hx, Foo.hl.hx` 文件都可以定义同一个名为 Foo 的类, 用于跨平台实现某一个类, 而不需要写条件检测。
 
@@ -105,7 +127,7 @@ categories: haxe
   	(d:String).charCodeAt(0) // 除非强制转换成 String
   ```
 
-* `is` 操作符，必须和小括号一起使用，其实和 Std.is 是一样的
+* `is` 操作符，必须和小括号一起使用，其实和 Std.is 是一样的, 所有几乎没有人使用
 
 * `haxe.MainLoop` 的引入 <https://github.com/HaxeFoundation/haxe/pull/5017>
 
@@ -353,19 +375,6 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
   var name:SString<10>; // SQL VARCHAR(10)
   ```
 
-* `@:enum abstract`, 除了变量, 还允许 inline 形式的方法
-
-  ```haxe
-  @:enum abstract C(Int) {
-      var X = 0;
-      var Y = 1;
-      var Z = 2;
-      var W = 3;
-      public static inline function ofInt(i:Int) : C return cast i;
-      public inline function getIndex() : Int return this;
-  }
-  ```
-
 * **隐藏包名** 当包名(文件夹名称)以 `_` 作前缀时, 代码编辑器不会智能提示出这个包名, 相当于添加了 `@:noCompletion`
 
 * **重命名导入类名** 通过关键字 `in` 例如: `import pack.path.Cls in ReCls`,
@@ -373,27 +382,6 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
 * ansi code `"A".code` 将会被编译成 65, 注意:只限于单字符
 
 * field 和 property 的区别, field 是用 var 声明的普通变量, 而 property 是带用 setter/getter 的变量
-
-* `__this__`  适用于 js , 小心使用
-
-  > 在 haxe 中即使是局部方法, this 的指向永远为其所在的类,而一些如 JS 或 AS 平台却不是这样. __this__ 必须接在 untyped 之后, 以表式目标平台类的 this, 可以将下列代码编译成 JS,以区别不同之处.
-
-  ```haxe
-  class Foo {
-  	var value:String;
-  	public function new():Void {
-  		value = "ffffffffffff";
-  		var obj1 = { callb: function() { trace(this); } };
-  		var obj2 = { callb: function() { trace(untyped __this__); } };
-
-  		obj1.callb(); // [object Foo]
-  		obj2.callb(); // [object global]
-  	}
-  	static function main() {
-  		new Foo();
-  	}
-  }
-  ```
 
 * **初使化静态变量**  `static function __init__(){}`;
 
@@ -426,7 +414,7 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
   	return v
   }
   ```
-* 常量作为类型参数, 不过由于 haxe 不需要管理内存，因此感觉没有什么地方用得上。
+* 常量作为类型参数, 由于没什么作用, 这项功能可能会被弃用
 
   ```
   @:generic              // 这个必须要加上，由编译器处理类似于 templates 的东西.
@@ -436,7 +424,6 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
     }
   }
   ```
-
 
 
 * `Std.int`: 包括 Math.round, Math.floor, Math.ceil 在处理较大数字时, 将超出Int界限
@@ -451,12 +438,11 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
 
 * Sys.command 和 sys.io.Process
 
-  > Sys.command 可以执行 dos 命令如 `dir`　和 一些 (WIN + R)可以运行的CLI命令, 而 sys.io.Process 只能运行后者.
-  >(注意: 不要运行 cmd 这个命令避免陷入死循环)
+  > Sys.command 可以执行 `dos/bash` 自带的命令如 `dir` 和控制台程序, 而 sys.io.Process 只能运行后者.
   >
   > Sys.command 返回 0 表示程序以 exit(0) 的方式正常退出, 非 0 值一般意味着出错,
   >
-  > 如果需要获得 CLI 程序的输出值(stdout | stderr) 则应该使用 sys.io.Process. 这二个都会等待 CLI程序**完全运行结束**（我只用 nodejs 的 setTimeout 测试过）.
+  > 如果需要获得 CLI 程序的输出值(stdout | stderr) 则应该使用 sys.io.Process.
 
 * stdout
 
@@ -480,29 +466,11 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
 
     ![flashdevelop setting](/assets/img/fd_setter_completionServer.png)
 
-* 何时省略参数类型, 未来也许会修正这个 https://github.com/HaxeFoundation/haxe/issues/2548
-
-  ```haxe
-  class Test {
-  	public static function bar (m){		// 这里最好明确 m 的类型如 bar(m:Foo2)
-          m.doIt();
-      }
-      public static function main () {
-  	// 编译到 cpp 为: m->__Field(HX_CSTRING("doIt"),true)()->__Field(HX_CSTRING("doIt"),true)();
-  	// 如果 bar(m:Foo2) 则为：	m->doIt();
-          bar(new Foo2());
-      }
-  }
-  class Foo2{
-      public function new () {}
-      public function doIt():Foo2 {
-          return this;
-      }
-  }
-  ```
-
 * `haxe.PosInfos` 这个类是一个魔法类, 因为编译器将自动填充它. 你只需要定义就行了, 参看 [Log and Trace Features]({% post_url haxe/2014-03-28-log-and-trace-features %})
 
+#### vscode
+
+<https://github.com/vshaxe/vshaxe/wiki/
 
 #### Flashdevelop
 
@@ -527,14 +495,6 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
 * 缩进 - `Comment Block Indenting`: **NotIndented**, (个人喜好) 注释换行时的 `*` 不缩进
 
 * HaxeContext - `Generate Imports`: 关闭自动导入(import)
-
-
-#### vscode
-
-似乎非常不错..<https://github.com/vshaxe/vshaxe/wiki/Completion-Cache>
-
-### 常见错误
-
 
 ### 函数绑定
 
@@ -570,7 +530,6 @@ class Bind {
 	}
 }
 ```
-
 
 #### extern class
 
@@ -1044,18 +1003,15 @@ Main.main();
 
 对于抽象类, haxe 提供了多个 “元标签(metadata)”， 不同 “元标签” 有其各自的意义
 
-* `@:enum`: 使得抽象类像 C 语言中的枚举，
+* `enum abstract`: 使得抽象类像 C 语言中的枚举
 
   ```haxe
-  @:enum abstract C(Int) {
+  enum abstract C(Int) {
       var X = 0;
-      var Y = 1;
-      var Z = 2;
-      var W = 3;
+      var Y;
+      var Z;
+      var W;
   }
-  // 这里有一个问题是, 这种枚举不能自动增量，当然你可以使用“宏”来实现自动增量
-  // ...
-  trace(W);    // 编译成 JS 后将为: console.log(3);
   ```
 
 对于抽象类，建议大家参考 haxe 中 UInt.hx 的源码。
@@ -1164,123 +1120,12 @@ abstract Score(Int){
 分隔线
 ------
 
+### haxe.MainLoop
 
-### haxe.web.Dispatch
+haxe 3.3 才加入的类, 使得目前除了flash 和 js平台, 其它平台也包含有 haxe.Timer.delay 方法
 
-http://old.haxe.org/manual/dispatch
+当 haxe.MainLoop 存在时, `haxe.EntryPoint.run()` 将会被自动插入在 main 函数之后
 
-```haxe
-var api = { doUser : function() trace("CALLED") };
-haxe.web.Dispatch.run("/user", new Map<String,String>(), api);
-// haxe.web.Dispatch.run(neko.Web.getURI(), neko.Web.getParams(), new Other());
-```
-
-* 最好开启 mod_rewrite 模块做网站单入口, 如果需要多个入口则建议以类似于 `XXX.domain.com` 而不是 `domain.com/XXX` 的形式出现
-
-  - [apache mod_rewrite - 金步国中文文档]http://www.jinbuguo.com/apache/menu22/mod/mod_rewrite.html
-
-* api 内的方法可以为类实例, 但方法得以 "do" 开头, 如果 api 对象中没有找到匹配的 doXXXX 或是根站点("/")则将调用 `doDefault`
-
-  > 如果连 "doDefault" 都没有提供, 则将报错, 注意这个是区分大小写的 "/user" 对应 "doUser"
-
-* 为了处理 GET 变量, do 方法的参数名可设为 `args`
-
-  ```haxe
-  class Api {
-  	function doMultiply( args: { x : Int, y : Int } ) {
-  		trace(args.x*args.y);
-  	}
-  }
-  var params = new Map<String,String>();
-  params.set("x","5");
-  params.set("y","6");
-  Dispatch.run("/multiply", params, new Api());
-  ```
-
-  上边的示例, 如果缺少一个参数将会报异常, 因此参数类型可以设为类似于 `x:Null<Int>` 这样.
-
-  或者要么没有参数要么二个参数必须有 `?args: { x : Int, y : Int }`, **这非常适合处理如果必须的几个参数**
-
-* 如果参数过多不方便使用 args 来获取, 则可以用 Dispatch 作参数类型
-
-  ```haxe
-  function doMultiply( d:Dispatch ) {
-  	if(d.params != null){
-  		trace(d.params);
-  	}else{
-  		trace("no arguments");
-  	}
-  	// d.name => "doMultiply", 所调用的入口API名称
-  	// untyped d.subDispatch => true
-  	// d.cfg => {} 不必理会
-  	// d.parts => [], 例: "/multiply/mod/act" => ["mod", "act"] ;大小写有区别
-  }
-  ```
-
-  当使用 Dispatch 作类型时, 各种 mod, act 参数都可以省略(或者加上也没关系), 因为都可以从这个参数中获取
-
-* `d.dispatch(api)` Sub Dispatch(感觉没有实际应用的意义)
-
-  ```haxe
-  function doMultiply( d:Dispatch, mod:String, act:String) {
-      trace("BEFORE");
-      d.dispatch(this);	// 可以是其它 api 类, 但由于在这里 subDispatch 已经为 ture,
-  						// 因此不会再重复调用 doMultiply, 而是会调用 doDefault
-      trace("AFTER");
-  }
-  Dispatch.run("/multiply/module/act/1")
-  ```
-
-* metadata 处理, onMeta 将在调用方法之前执行用来执行一些检测或设置
-
-* spod 支持
-
-* 编译时, metadata检测, (高级特性), 允许metadata检测宏这将确保metadata的正确声明.
-
-  > 就是自已写一个 checkMeta 的方法然后覆盖掉 Dispatch 自带的那个, 看示例感觉这个有些多余,而且麻烦
-
-### haxe.remoting
-
-远程方法调用 <http://old.haxe.org/doc/remoting>, 主要流程:
-
-1. “远程” 自定义 Api.hx 类, 并使用 .Context 类绑定 new Api;
-
-2. “用户” 定义一个 .Proxy 的子类 **S**, 形参使用上边同一个 Api.hx 文件
-
-  > haxe 编译器将会自动解析 Api.hx 的所有 public 方法
-
-3. “用户” 创建一个 .Connect 实例, 并把它作为 **S** 的构造函数参数，初使化 **S**
-
-------
-
-* Proxy 魔法类,自动包装 Api类的public属性方法, http://old.haxe.org/doc/remoting/proxy
-
-  ```js
-  class MyApi extends Proxy<Api>{}
-  // 而 Api 类则为另一个端的类, MyApi 将被包装成和 Api 具有一样公共方法的类.
-  new MyApi(connection);
-  ```
-
-* Connection
-
-#### haxe.remoting.Context
-
-
-* `addObject( name: String, obj: {}, ?recursive: Bool): Void`
-
-  - name 指定 obj_name
-
-  - obj 任意对象,
-
-  - recursive 是否归递, 默认为 false
-
-* `call( path: Array<String>, params: Array<Dynamic>): Dynamic`
-
-  - path [obj_name, method], 当数组长度大长 2 时，所对应的 obj recursive 必须为 true, 则 [obj_name, sub_obj, method]
-
-  - params 传递给调用方法的参数.
-
-其实, 应该使用 **ContextAll** 替换这个类.
 
 ### haxe.rtti
 
@@ -1319,55 +1164,5 @@ haxe.web.Dispatch.run("/user", new Map<String,String>(), api);
 
 haxe.rtti.XmlParser 还可以用来解释 gen-doc 产生的 xml 文档。 因为它们是一样的类型。
 
-### List
-
-链表, 个人建议只在 neko 这个平台推荐使用它, 至少目前是这样。 其它平台还是使用其它类吧.
-
-```haxe
-var list = new List<Int>();
-for(i in 0...5){
-	list.add(i);
-}
-// 往 list 里添加了 0~4, 5个元素后,这里候 list 其实这像这样
-h = [0, [1, [2, [3, [4, null]]]]]
-q = [4,null]
-```
-
-### sys.io.Socket
-
-input或output 默认都是阻塞类型的,
-
-* `setTimeout(timeout:Float):Void` 设置超时,
-
-适用于服务器端:
-
-* `bind(host:Host, port:Int):Void`
-
-* `listen(connections:Int):Void`
-
-* `accept():Socket`  accept 默认会阻塞进程, 但是 setBlocking(false) 可以修改阻塞
-
-* `host():{port:Int, host:Host}` 服务端socket 信息
-
-* `peer():{port:Int, host:Host}` 连接端socket 信息
-
-适用于客户端:
-
-* `connect(host:Host, port:Int):Void`
-
-其实使用 vm.net.ThreadServer 就好了...
-
-
-### haxe.io.FPHelper
-
-针对 Float 类型 与 Int 类型相互转换的一些方法， doubleToI64/i64ToDouble, floatToI32/i32ToFloat,
-
-形为和 C 语言的  dtoi/itod, ftoi/itof, 一样
-
-### haxe.MainLoop
-
-haxe 3.3 才加入的类, 使得目前除了flash 和 js平台, 其它平台也包含有 haxe.Timer.delay 方法
-
-当 haxe.MainLoop 存在时, `haxe.EntryPoint.run()` 将会被自动插入在 main 函数之后
 
 <br />
