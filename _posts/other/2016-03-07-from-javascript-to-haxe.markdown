@@ -19,9 +19,9 @@ categories: other
 
 选择 vscode, 安装 haxe(haxe language support) 插件即可, [插件文档-英文](https://github.com/vshaxe/vshaxe/wiki/Debugging)
 
-1. 通过 `File->Open Folder`, 打开一个空的文件夹
-2. 按下F1, 后选 `haxe:Initialize VS Code Project` 即可新建一个 haxe 项目
-3. 下边是默认的 build.hxml,
+* 通过 `File->Open Folder`, 打开一个空的文件夹
+* 按下F1, 后选 `haxe:Initialize VS Code Project` 即可新建一个 haxe 项目
+* 下边是默认的 build.hxml,
 
   ```bash
   -cp src                # 添加 src 目录,
@@ -39,9 +39,9 @@ categories: other
   -js app.js             # 你也可以将 app.js 改成别的文件名, 和指定目录, 如: "bin/app.js"
   ```
 
-4. 按下 "Ctrl+Shift+B" 编译
+* 按下 "Ctrl+Shift+B" 编译
 
-5. 调试: 这里仅以 nodejs 为例, 其它环境其实也类似.
+* 调试: 这里仅以 nodejs 为例, 其它环境其实也类似.
   - 先关掉 "haxe 优化器", 即通过 `#` 符号, 注释掉 `-D analyzer-optimize` 即可
   - 接下来, 开启 "source.js.map", 通过在 `build.hxml` 中添加一行 `-debug` 或者 `-D js-source-map`
   - 最后修改 "launch.json",
