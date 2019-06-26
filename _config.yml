@@ -1,32 +1,19 @@
 name: lwm
 
-
-### 但是如果 backticks 混在 html 标签中,还是得用 {% highlight %}
 markdown: kramdown
-
-# http://kramdown.gettalong.org/options.html
 kramdown:
   input: GFM
   hard_wrap: false
+#  auto_ids: true
+#  syntax_highlighter: rouge
 
-## deprecated
-#redcarpet:
-#  extensions: ["no_intra_emphasis", "fenced_code_blocks", "autolink", "tables", "with_toc_data"]
-
-
-
-gems:
+plugins:
   - jekyll-sitemap
 
+# only for local test
 destination: /cygdrive/r/_site
 
-
-
-include: []
-
-exclude: ['*.md','*.less','assets/css/metro-bootstrap.css','assets/css/bootstrap.css','Thumbs.db']
-
-keep_files: ['.git','.svn','_test']
+permalink: /:categories/:year-:month-:day-:title:output_ext
 
 encoding: utf-8
 
@@ -34,36 +21,14 @@ timezone: CN
 
 excerpt_separator: <!-- more -->
 
-
-
 # 计划用这个来实现 别人帮助 编辑
 doc_url_path: https://github.com/R32/r32.github.io/blob/master/
 
 
-
-#permalink: none
-
-
-##### 一些自定义的数据
-##### 目录(dir)不要以 / 结尾
-custom_menu:
-  - dir: /
-    label: 主页
-  - dir: /haxe
-    label: Haxe
-  - dir: /haxelib
-    label: Haxelib    
-  - dir: /other
-    label: 其它
-  - dir: /person
-    label: 个人
-
+##### custom metadatas
 
 powered_by:
   - name: Github Pages
     url: pages.github.com
   - name: Bootstrap v3
     url: v3.bootcss.com
-
-use_cdn: true
-

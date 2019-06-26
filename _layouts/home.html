@@ -23,11 +23,11 @@
 			<div class="bs-warp bg-purple">
 				<div class="container jumbotron bs-container">
 					<div class="row">
-					 <div class="col-sm-5">			
+					 <div class="col-sm-5">
 						<h1>更新中...</h1>
-						<p>写些什么了，或许有照片什么的会更好！</p>	
+						<p>写些什么了，或许有照片什么的会更好！</p>
 					 </div>
-					</div> 
+					</div>
 				</div>
 			</div>
 		</div>
@@ -36,13 +36,8 @@
         </div>
       </div>
       {% include footer.html %}
-{% if site.use_cdn == true %}
 <script src="https://cdn.bootcss.com/jquery/1.11.2/jquery.min.js"></script>
 <script src="https://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-{% else %}
-<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
-<script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
-{% endif %}
 <script type="text/javascript" src="/assets/js/comm.js"></script>
 <script type="text/javascript">
     (function($) {
@@ -59,18 +54,18 @@
             }, obj || {});
 
             if(this.length == 0 && cfg.list.length < 2){
-                return -1; 
+                return -1;
             }
 
             cfg.i = 0;
-            cfg.node = this; 
-            
+            cfg.node = this;
+
             cfg.node.addClass(cfg.list[0]);          // 初使化为第一个 class
 
             return setInterval(function(){
                 var ref = cfg;
                 ref.node.removeClass(ref.list[ref.i]);
-                ref.i += 1; 
+                ref.i += 1;
                 if(ref.i >= ref.list.length){
                     ref.i = 0;
                 }
@@ -85,7 +80,7 @@
 
     $("#banner .bs-warp:first").turnClass({
         list: ["bg-purple","bg-dark"],
-        
+
         // 变换 .active 的 bg-color
         callback: function(i){$("#header li.active a:first").css("background-color", i == 0 ? "#4183c4" : "#6e5494");},
 

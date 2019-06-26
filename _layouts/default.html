@@ -1,21 +1,16 @@
 <!DOCTYPE html>
 <html>
-    {% include head.html %}    
+    {%- include head.html -%}
     <body>
       <div id="wrap">
-          {% include header.html %}
-         <div id="mainContainer" class="container">       
-          {{content}}
-         </div>  
+          {%- include header.html -%}
+         <div id="mainContainer" class="container">
+          {{- content -}}
+         </div>
       </div>
-      {% include footer.html %}
-{% if site.use_cdn == true %}
+      {%- include footer.html -%}
 <script src="https://cdn.bootcss.com/jquery/1.11.2/jquery.min.js"></script>
 <script src="https://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-{% else %}
-<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
-<script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
-{% endif %}
 <script type="text/javascript" src="/assets/js/comm.js"></script>
 <script type="text/javascript">
 jQuery('body').scrollspy({

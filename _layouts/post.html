@@ -54,7 +54,7 @@
   </head>
     <body>
       <div id="wrap">
-          {% include header.html %}
+          {%- include header.html -%}
         <div id="mainContainer" class="container">
           <div class="row">
             <div class="col-md-3">
@@ -63,7 +63,7 @@
             <div class="col-md-9" role="main">
               <h2 class="article-title">{{ page.title }}</h2>
               <p class="text-muted">{{ page.date | date: '%Y年%m月%d日 %H:%MGMT+8' }} <a href="{{site.doc_url_path | append: page.path}}" target="_blank" class="badge doc-edit" data-toggle="tooltip" title=" 如有错误可点击尝试修改 ">改正错误...</a></p>
-              <div class="markdown-body">{{content}}</div>
+              <div class="markdown-body">{{- content -}}</div>
               <!-- 多说评论框 start
               <hr class="gh" />
               <div class="ds-thread" data-thread-key="{{page.path | remove_first:'_posts/' | remove_first:'.markdown'}}" data-title="{{page.title}}" data-url="{{page.url}}"></div>
@@ -72,13 +72,9 @@
           </div>
         </div>
       </div>
-{% include footer.html %}{% if site.use_cdn == true %}
+{%- include footer.html -%}
 <script src="https://cdn.bootcss.com/jquery/1.11.2/jquery.min.js"></script>
 <script src="https://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-{% else %}
-<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
-<script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
-{% endif %}
 <script type="text/javascript" src="/assets/js/comm.js"></script>
 <script type="text/javascript" src="/assets/js/toc.js"></script>
 <script type="text/javascript" src="/assets/js/setImmediate.js"></script>
