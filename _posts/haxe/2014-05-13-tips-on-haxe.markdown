@@ -32,7 +32,7 @@ categories: haxe
   > windows 中, haxe.exe 所依赖的 dll 文件可以在 `i686-w64-mingw32\sys-root\mingw\bin` 中找到
 
 * `make haxelib` 以获得 haxelib.exe, 这会在 exe 所在目录创建一个名为 "lib" 的目录，
-  
+
   > 或者通过运行 `haxelib config XXX`  指定一个库目录
 
 
@@ -48,20 +48,20 @@ categories: haxe
   for(key => value in map) {
     trace(key, value);
   }
-  // 不是所有数据类型都有 KeyValueIterator, 
+  // 不是所有数据类型都有 KeyValueIterator,
   // 不是所有平台都会优化(如果无优化, 那么这个特性可以说毫无优势)
   ```
 
-* `utf16`: [#7387](https://github.com/HaxeFoundation/haxe/pull/7387) 表示其字符串编码为 ucs2,  
-  
-  > 注意对于 eval, 其底层虽然为 UTF8(通过 RawNative 的格式写入到 Bytes 内), 但其字符串 API 的形为却与 ucs2 一致  
+* `utf16`: [#7387](https://github.com/HaxeFoundation/haxe/pull/7387) 表示其字符串编码为 ucs2,
+
+  > 注意对于 eval, 其底层虽然为 UTF8(通过 RawNative 的格式写入到 Bytes 内), 但其字符串 API 的形为却与 ucs2 一致
   >
-  >`target.unicode`: [#8244](https://github.com/HaxeFoundation/haxe/pull/8244), 感觉和上边有些混淆 
+  >`target.unicode`: [#8244](https://github.com/HaxeFoundation/haxe/pull/8244), 感觉和上边有些混淆
 
 * 一些可以通过 `#if (target.XXXX)` 来检测的 Define, [init_platform](https://github.com/HaxeFoundation/haxe/blob/development/src/context/common.ml#L528)
 
   `(target.name)` : 定义了 当前目标的名字. 例如: js, lua
-  `(target.static)` 中 `static` : 表示使用了静态类型, 即变量有自己的类型. 为假(即动态类型)的有: JS, Lua, Neko, Php, Python, Eval   
+  `(target.static)` 中 `static` : 表示使用了静态类型, 即变量有自己的类型. 为假(即动态类型)的有: JS, Lua, Neko, Php, Python, Eval
   `(target.sys)` 或 `sys` : 表示可以调用系统 IO, 为假的有 js(不包括hxnodejs), flash
   `(target.utf16)` 或 `utf16` : 见前边
   `(target.unicode)` : 表示当用 `haxe.iterators.StringIteratorUnicode` 是否能正确输出 ucs2 值, 只有 neko, cpp 为假
@@ -465,8 +465,6 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
   - flashdevelop
 
     ![flashdevelop setting](/assets/img/fd_setter_completionServer.png)
-
-* `haxe.PosInfos` 这个类是一个魔法类, 因为编译器将自动填充它. 你只需要定义就行了, 参看 [Log and Trace Features]({% post_url haxe/2014-03-28-log-and-trace-features %})
 
 #### vscode
 
