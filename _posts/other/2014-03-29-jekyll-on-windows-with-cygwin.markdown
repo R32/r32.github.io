@@ -20,6 +20,8 @@ categories: other
 
 ### 安装 Jekyll
 
+更新: 由于 cygwin 无法安装 `gem install eventmachine`, 因此只能装 `gem install jekyll -v 3.6` 和 `jekyll-sitemap -v 1.2`
+
 1. 运行 Cygwin `setup.exe`. 本人 win7x64 装的 32位版本.
 	![setup cygwin](/assets/img/cygwin-setup.png)
 
@@ -27,9 +29,10 @@ categories: other
 
    ```bash
    Ruby/ruby: Interperted object-oriented script......
-   Ruby/ruby-devel: Interperted object-oriented script...... # 如果要编译 ffi 接口
+   Ruby/ruby-devel: Interperted object-oriented script......
    Ruby/rubygems: Ruby module management system
    Ruby/ruby-nokogiri: Ruby HTML/XML/SAX library	# 由于cygwin下无法通过编译这个库 1.6.6.2
+   Libs/libffi: Portable foreign function interface library # 用于编译 ffi 接口
    Archive/zip: Info-ZIP compression utility.
    Libs/crypt: Encryption/Decrypion utility and library
    Python/python: Python language interpreter.
