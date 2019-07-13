@@ -10,11 +10,14 @@
 		</div>
 		<div class="navbar-collapse collapse">
 			<ul class="nav navbar-nav navbar-right">
+				{%- if page.dir -%}
+					{%- assign page_dir = page.dir -%}
+				{%- else -%}
+					{%- assign page_dir = "/" | append:page.categories[0] | append:"/" -%}
+					{%- comment -%} if this page is from _post {%- endcomment -%}
+				{%- endif -%}
 				{%- for item in site.html_pages -%}
-					{%- if page.dir == item.dir or item.dir != "/" and page.url >= item.dir -%}
-						{%- comment -%}
-							since the page.dir from _post is empty, so here we use page.url.startWidh(dir) to checking
-						{%- endcomment -%}
+					{%- if page_dir == item.dir -%}
 						<li class="active">
 					{%- else -%}
 						<li>
