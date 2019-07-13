@@ -38,14 +38,7 @@ categories: other
 
   ```json
   {
-    "files.associations": {
-        "*.ml": "ocaml",
-        "*.mli": "ocaml"
-    },
-    "files.exclude": {
-      "**/_build": true
-    },
-    "reason.server.languages": ["ocaml"]
+    "reason.path.ocamlmerlin": "ocamlmerlin-server", // 最新版的
   }
   ```
 
