@@ -11,12 +11,15 @@
 		<div class="navbar-collapse collapse">
 			<ul class="nav navbar-nav navbar-right">
 				{%- for item in site.html_pages -%}
-					{%- if page.dir == item.dir -%}
+					{%- if page.dir == item.dir or item.dir != "/" and page.url >= item.dir -%}
+						{%- comment -%}
+							since the page.dir from _post is empty, so here we use page.url.startWidh(dir) to checking
+						{%- endcomment -%}
 						<li class="active">
 					{%- else -%}
 						<li>
 					{%- endif -%}
-					<a href="{{item.dir}}">{{item.title}}</a></li>
+					<a href="{{item.dir}}">{{item.title | downcase}}</a></li>
 				{%- endfor -%}
 			</ul>
 		</div>

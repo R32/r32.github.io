@@ -10,9 +10,6 @@ kramdown:
 plugins:
   - jekyll-sitemap
 
-# only for local test
-destination: /cygdrive/r/_site
-
 permalink: /:categories/:year-:month-:day-:title:output_ext
 
 encoding: utf-8
