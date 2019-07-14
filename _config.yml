@@ -1,11 +1,10 @@
 name: lwm
 
+# docs: https://kramdown.gettalong.org/quickref.html
 markdown: kramdown
 kramdown:
   input: GFM
   hard_wrap: false
-#  auto_ids: true
-#  syntax_highlighter: rouge
 
 plugins:
   - jekyll-sitemap
