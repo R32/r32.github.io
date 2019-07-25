@@ -1,30 +1,16 @@
-<div id="header" class="navbar navbar-inverse navbar-static-top {{include.class}}">
+<div id="header">
 	<div class="container">
-		<div class="navbar-header">
-			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-			</button>
-			<a href="#" class="navbar-brand zh-tf">lwm</a>
-		</div>
-		<div class="navbar-collapse collapse">
-			<ul class="nav navbar-nav navbar-right">
-				{%- if page.dir -%}
-					{%- assign page_dir = page.dir -%}
+		<a href="javascript:void(0)" class="brand">lwm</a>
+		<button type="button" class="menu-btn"><span></span><span></span><span></span></button>
+		<div class="menu-list">
+			{%- for item in site.html_pages -%}
+				{%- if page.kind == item.kind or page.categories[0] == item.kind -%}
+					<a href="{{item.dir}}" class="active">
 				{%- else -%}
-					{%- assign page_dir = "/" | append:page.categories[0] | append:"/" -%}
-					{%- comment -%} if this page is from _post {%- endcomment -%}
+					<a href="{{item.dir}}">
 				{%- endif -%}
-				{%- for item in site.html_pages -%}
-					{%- if page_dir == item.dir -%}
-						<li class="active">
-					{%- else -%}
-						<li>
-					{%- endif -%}
-					<a href="{{item.dir}}">{{item.title | downcase}}</a></li>
-				{%- endfor -%}
-			</ul>
+				{{item.title | downcase}}</a>
+			{%- endfor -%}
 		</div>
 	</div>
 </div>

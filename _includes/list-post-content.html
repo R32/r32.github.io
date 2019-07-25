@@ -1,0 +1,10 @@
+<div>
+	<div class="container">
+		<div id="leftSideBar"></div>
+		<div id="mainContent" class="article">
+			<h2>{{ page.title }}</h2>
+			<p>{{ page.date | date: '%Y年%m月%d日 %H:%MGMT+8' }}</p>
+			<div id="markdown-body">{{- content -}}</div>
+		</div>
+	</div>
+</div>

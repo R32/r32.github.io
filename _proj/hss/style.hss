@@ -1,0 +1,406 @@
+/*   chokidar hss/*.hss style.hss -c "hss style.hss"   */
+
+@import("comm/_vars");
+@import("comm/normalize");
+/* reset */
+h1, h2, h3, h4, h5, h6 {
+	font-family: "Microsoft YaHei", Arial;
+	font-weight: 500;
+	margin-top: int($font-size * 1.25);
+	margin-bottom: int($font-size * 0.625);
+}
+a[href], a[href]:link, a[href]:visited {
+	color: $primary;
+}
+
+@import("comm/_button");
+
+body {
+	font-family: $text-font;
+	font-size: $font-size;
+	color: $text-color;
+	background-color: $bg-color;
+}
+
+div.container {
+	box-sizing: border-box;
+	width: 100%;
+	max-width: $container-xl;
+	padding-left: $container-padding-lr;
+	padding-right: $container-padding-lr;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+/* layout */
+var padding-tb      = $font-size;
+var padding-tb-half = $padding-tb * 0.5;
+
+#header {
+	font-family: $label-font; /* 当排成一行时, 必须使用相同的字体, 才能保证高度的间距一致, 特别是有中英文混合时 */
+	$clear-after;
+	border-bottom: $border-solid-gray;
+
+	.brand {
+		text-decoration: none;
+		display: inline-block;
+		color: $text-color-secondary;
+		font-weight: 600;
+		padding: $padding-tb 0;
+	}
+
+	.menu-btn {
+		display: none;
+		float: right;
+		padding: $padding-tb-half * .875;
+		margin-top: $padding-tb-half * 1.125;
+		var color = lighten($gray, 15%);
+		color: $color;
+		border: 1px solid $color;
+		background-color: transparent;
+		cursor: pointer;
+		> span {
+			display: block;
+			width: $font-size;
+			height: 2px;
+			margin-top: ($font-size - (2px * 3)) * .5;
+			pointer-events: none;
+			background-color: $color;
+			border-radius: 2px;
+			&:first-child {
+				margin-top: 0;
+			}
+		}
+	}
+
+	.menu-list {
+		float: right;
+		> a {
+			text-decoration: none;
+			display: inline-block;
+			padding: $padding-tb $padding-tb * 1.5;
+			color: $text-color;
+			background-color: transparent;
+			&:hover {
+				color: darken($gray, 10%);
+				background-color: darken($light, 5%);
+			}
+			&.active {
+				color: $primary;
+				font-weight: 600;
+				padding-bottom: $padding-tb - 2;
+				border-bottom: 2px solid $primary;
+				background-color: transparent;
+			}
+		}
+	}
+
+	/* for mobile */
+	@media (max-width: $breakpoint-md) {
+		.menu-btn {
+			display: block;
+		}
+		.menu-list {
+			display: none;
+			&.active {
+				display: block;
+			}
+			float: none;
+			list-style: none;
+			margin-left: -$container-padding-lr;
+			margin-right: -$container-padding-lr;
+			> a {
+				display: list-item;
+				var padding = $padding-tb * .75;
+				padding: $padding $container-padding-lr;
+				margin: 0;
+				&.active {
+					color: $white;
+					background-color: $primary;
+					border-bottom: 0;
+					padding-bottom: $padding;
+				}
+			}
+		}
+	}
+}
+
+/* mainContainer */
+#header + div {
+	border-top: $border-solid-light;
+	padding-top: $font-size;
+	$clear-after;
+}
+
+var left-sidebar-xl = 16 * $font-size;
+var left-sidebar-lg = 12 * $font-size;
+
+#leftSideBar {
+	box-sizing: border-box;
+	width: $left-sidebar-xl; /* 1. percentage width will cause "fixed" confusion */
+	position: fixed;
+	background-color: $light;
+	overflow: hidden;
+	list-style: none;
+	> li {
+		padding: 0;
+		margin: 0;
+		ul {
+			list-style: none;
+			margin: 0;
+			padding: 0;
+		}
+	}
+	> li > ul > li > a {
+		padding-left: 1.2 * $font-size;
+	}
+	> li > ul > li > ul > li > a {
+		padding-left: 2.5 * $font-size;
+	}
+	a {
+		font-size: $font-size-md;
+		display: list-item;
+		color: $text-color-secondary;
+		text-decoration: none;
+		padding: int($font-size * .35) 0;
+		border-right: 2px solid $light;
+		&:hover {
+			background-color: darken($light, 3%);
+			color: $primary;
+			text-decoration: underline;
+		}
+		&.active {
+			color: $primary;
+			border-right-color: $primary;
+			font-weight: bold;
+		}
+	}
+
+	@media (max-width: $breakpoint-lg) and (min-width: $breakpoint-md + 1) {
+		width: $left-sidebar-lg;
+	}
+
+	@media (max-width: $breakpoint-md) {
+		width: 100%;
+		position: static;
+		a {
+			font-size: $font-size;
+			text-decoration: underline;
+		}
+	}
+}
+
+#mainContent {
+	box-sizing: border-box;
+	margin-left: $left-sidebar-xl + $font-size;
+	> .section {
+		&:first-child {
+			padding-top: 0;
+		}
+		padding-top: $font-size;
+		> a {
+			font-family: $label-font;
+			font-size: int($font-size * 1.25);
+			//font-weight: 600;
+			color: lighten(desaturate($text-color, 10%), 5%);
+			text-decoration: none;
+			&:hover {
+				color: $primary;
+				text-decoration: underline;
+			}
+		}
+		> div {
+			color: $text-color-secondary;
+			margin: $font-size-half 0 0 $font-size;
+			font-size: $font-size-md;
+			line-height: 1.2;
+			a {
+				color: darken($text-color-secondary,5%);
+			}
+			> :first-child {
+				margin-top: 0;
+			}
+			> .more {
+				vertical-align: top;
+				font-family: $label-font;
+				font-size: $font-size * 1.5;
+				text-decoration: none;
+				line-height: 0;
+				&:hover {
+					color: $primary;
+					text-decoration: underline;
+				}
+			}
+		}
+	}
+
+	@media (max-width: $breakpoint-lg) and (min-width: $breakpoint-md + 1) {
+		margin-left: $left-sidebar-lg + $font-size;
+	}
+
+	@media (max-width: $breakpoint-md) {
+		margin-left: 0;
+		margin-top: $font-size;
+	}
+	
+	&.article {
+		> p {
+			color: $text-color-secondary;
+			font-size: $font-size-md;
+		}
+		/* TODO: generate tags */
+	}
+	
+	/* content */
+	pre{
+		display:block;
+		padding:9.5px;
+		margin:0 0 10px;
+		font-size: $font-size-md;
+		line-height:1.42857143;
+		color: darken($text-color-secondary,3%);
+		word-break:break-all;
+		word-wrap:break-word;
+		background-color: $light;
+		border:1px solid #ccc;
+		border-radius:4px;
+		overflow: auto;
+		code {
+			padding:0;
+			font-size:inherit;
+			color:inherit;
+			white-space:pre-wrap;
+			background-color:transparent;
+			border-radius:0
+		}
+	}
+	code {
+		padding: 2px 4px;
+		font-size: 90%;
+		color: $code-color;
+		background-color: #f9f2f4;
+		border-radius: 4px;
+	}
+	kbd {
+		font-weight: 600;
+		background-color: #f9f2f4;
+	}
+}
+
+#footer {
+	padding-top: $font-size;
+	padding-bottom: $font-size;
+	font-size: $font-size * .75;
+}
+
+/* home.html, simple grid */
+#top-wrap {
+	var background-color = $dark;
+	background-color: $background-color;
+	color: $light;
+	min-height: 360px;
+
+	#header {
+
+		border-bottom: 0;
+
+		.brand {
+			color: lighten($background-color, 10%);
+			transition: color 2s;
+			&:hover {
+				color: $light;
+			}
+		}
+		.menu-list > a {
+			color: darken($light, 5%);
+			&.active, &:hover {
+				color: $light;
+				border-bottom-color: $light;
+				background-color: transparent;
+			}
+			@media (max-width: $breakpoint-md) {
+				border-bottom: 0;
+				&.active, &:hover {
+					background-color: $primary;
+				}
+				color: $light;
+			}
+		}
+	}
+	#header + div {
+		border-top: 0;
+		padding-top: 0;
+		> .container {
+			padding: $font-size * 3 $container-padding-lr;
+			h1 {
+			margin: 0;
+				font-size: $font-size * 4;
+				font-weight: normal;
+				font-family: "Microsoft YaHei", Arial;
+			}
+		}
+	}
+}
+body > .project {
+	margin: $font-size * 1.5 auto;
+	color: $dark;
+	$clear-after;
+	> div {
+		float: left;
+	}
+	> div.col-5-2 {
+		width: 40%;
+	}
+	> div.col-5-3 {
+		width: 60%;
+		> h2 {
+			font-size: $font-size * 1.75;
+		}
+		> h2 + p {
+			color: $code-color;
+		}
+		> p {
+			font-size: $font-size-md;
+			margin: 0 0 int($font-size * 0.625) 0;
+		}
+		> .btn {
+			margin-top: $font-size;
+		}
+	}
+	@media (max-width: $breakpoint-md) {
+		> div {
+			float: none;
+			width: 100% !important;
+		}
+		> .only-desktop {
+			display: none !important;
+		}
+	}
+}
+#nsf_player {
+	margin: int($font-size * 1.25)+2 $font-size 0 0;
+	border: 0;
+}
+
+
+/* media print */
+@media print {
+	#header{
+		display: none;
+	}
+
+	#footer{
+		display:none;
+	}
+
+	#leftSideBar{
+		display: none;
+	}
+
+	#mainContent {
+		width: 100%;
+	}
+}
+
+/* extra */
+@import("markdown");

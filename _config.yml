@@ -17,6 +17,8 @@ timezone: CN
 
 excerpt_separator: <!-- more -->
 
+exclude: ["README.md"]
+
 # 计划用这个来实现 别人帮助 编辑
 doc_url_path: https://github.com/R32/r32.github.io/blob/master/
 

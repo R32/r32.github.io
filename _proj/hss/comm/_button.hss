@@ -1,0 +1,48 @@
+@import("_vars");
+
+/* simple button */
+var button-base = {
+	position: relative;
+	display: inline-block;
+	vertical-align: middle;
+	cursor: pointer;
+	user-select: none;
+	white-space: nowrap;
+	padding: $padding-tb $padding-lr;
+	font-size: $font-size;
+	color: $text-color !important;
+	background-color: $background-color;
+	border: 1px solid $border-color;
+	text-decoration: none;
+	font-weight: 500;
+	appearance: none;
+	
+	&:hover {
+		background-color: darken($background-color, 3%);
+		border-color: darken($border-color, 3%);
+		color: lighten($text-color, 3%);
+	}
+}
+
+.btn {
+	/* @mixin */
+	$button-base( 
+		background-color = $border-color-light;
+		border-color = $border-color-gray; 
+		padding-tb = $font-size-half; 
+		padding-lr = $font-size;
+		color = $text-color;
+	);
+}
+
+.btn.btn-primary {
+	background-color: $primary;
+	border-color: $primary;
+	color: $light !important;
+	&:hover {
+		var background-color = darken(desaturate($primary, 10%), 10%);
+		background-color: $background-color;
+		border-color: $background-color;
+		color: $white;
+	}
+}

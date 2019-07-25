@@ -1,0 +1,7 @@
+-dce full
+-cp src
+-D analyzer-optimize
+-D no_stack_trace
+-lib no-vdom
+-main Main
+--js ../_site/assets/all.js

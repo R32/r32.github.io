@@ -1,0 +1,94 @@
+/* bootsrrap 4 color */
+var blue       =  #007bff;
+var indigo     =  #6610f2;
+var purple     =  #6f42c1;
+var pink       =  #e83e8c;
+var red        =  #dc3545;
+var orange     =  #fd7e14;
+var yellow     =  #ffc107;
+var green      =  #28a745;
+var teal       =  #20c997;
+var cyan       =  #17a2b8;
+var white      =  #fff;
+var gray       =  #6c757d;
+var gray-dark  =  #343a40;
+var primary    =  $blue;
+var secondary  =  $gray;
+var success    =  $green;
+var info       =  $cyan;
+var warning    =  $yellow;
+var danger     =  $red;
+var light      =  #f8f9fa;
+var dark       =  $gray-dark;
+
+
+var bg-color             = $white;
+var text-color           = $dark;
+var text-color-secondary = $gray;
+var haxe-primary         = #ea8220;
+var code-color           = darken(desaturate($red, 25%), 8%);
+@if haxe
+	var primary    =  $haxe-primary;
+@end
+
+var border-color-gray   = darken($light, 10%);
+var border-color-light  = darken($light, 2%);
+var border-solid-gray   = 1px solid $border-color-gray;
+var border-solid-light  = 1px solid $border-color-light;
+
+/* font */
+var font8      = 8px;
+var font16     = 16px;
+var font-size  = $font16;
+var font-size-md = int($font16 * .875);
+var font-size-half = $font-size * .5;
+
+var mono-font  = SFMono-Regular, Consolas, monospace;
+
+/* exlucde "sans-serif" for chinese
+
+宋体: simsun
+黑体: SimHei
+微软雅黑: Microsoft YaHei
+新宋体: NSimSun
+幼圆：YouYuan
+ */
+
+var text-font  = -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, Helvetica, simsun;
+
+var label-font = "Microsoft YaHei", simsun;
+
+/* container */
+var container-padding-lr = 15px;
+var breakpoint-xl = 1200px;
+var breakpoint-lg = 992px;
+var breakpoint-md = 768px;
+var breakpoint-sm = 576px;
+@if ver3
+	var container-xl  = 1170px;
+	var container-lg  = 970px;
+	var container-md  = 750px;
+	var container-sm  = 540px;
+@else
+	var container-xl  = 1140px;
+	var container-lg  = 960px;
+	var container-md  = 720px;
+	var container-sm  = 540px;
+@end
+
+
+/* utils */
+var clear-after = {
+	&:after {
+		display: table;
+		clear: both;
+		content: "";
+	}
+}
+
+var opacity = {
+@if ie8
+	filter: alpha(opacity=$alpha*100);
+@end
+	opacity: $alpha;
+}

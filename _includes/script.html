@@ -1,0 +1,4 @@
+{%- assign ajs  = include.js  | split: "," -%}
+{%- for js in ajs %}
+	<script src="{{js}}"></script>
+{%- endfor -%}

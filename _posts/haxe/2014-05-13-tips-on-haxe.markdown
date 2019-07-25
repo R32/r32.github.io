@@ -462,31 +462,17 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
     >
     > 另一个窗口 连接前边绑定: `haxe --connect 6000 --times build.hxml`
 
-  - flashdevelop
-
-    ![flashdevelop setting](/assets/img/fd_setter_completionServer.png)
-
 #### vscode
 
-<https://github.com/vshaxe/vshaxe/wiki/
+<https://github.com/vshaxe/vshaxe/wiki/>
 
 #### Flashdevelop
-
-关于 fd 的一些类似于 `$(CompilerPath)` 的变量, 可以在 `项目属性 -> 编译（选项卡） -> 鼠标点开 (编译...)` 就能看到很多值
-
-* `项目属性 -> 输出(选项卡) -> 平台[下拉菜单]` 选择 hxml, 可用 hxml 来编译
-
-  ???但是这样将不会使用编译缓存, 可以找到 命令行预编译 在 `${output}` 的前边加上 `--connect 6000`
-
-* 这是一个 fd 的模板源码 <https://github.com/Chman/Snowkit-FD>
 
 一些快速设置:
 
 * HaxeContext - `Completion Mode`: **CompletionServer** (强烈推荐)缓存编译以加速编译速度(只编译有修改过文件)
 
 * 格式化 - `Trim Trailing Whitespace`: **True**, 当保存代码时将自动清除空行用行尾的空格字符
-
-  github 上提交 PR 时, 为了使代码更整洁,绝大多数都会有这个要求, 同时也会对 Tab 的格式有要求(可设置)
 
 * 缩进 - `Coding Style Type`: **BracesOnLine**, (个人喜好)将 `{` 放在行尾,而不是另起一行
 

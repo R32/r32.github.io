@@ -1,32 +1,24 @@
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="description" content="{{page.title}}" />
+{%- assign acss = include.css | split: "," -%}
+{%- assign ajs  = include.js  | split: "," -%}
+{%- assign ie8_acss = include.ie8_css | split: "," -%}
+{%- assign ie8_ajs  = include.ie8_js  | split: "," %}
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta http-equiv="X-UA-Compatible" content="ie=edge" />
 	<title>{{page.title}}</title>
-	<link rel="stylesheet" type="text/css" href="/assets/css/bootstrap.min.css" />
-	<link rel="stylesheet" type="text/css" href="/assets/css/custom.css" />
-	{%- if page.layout == 'post' -%}
-	<style type="text/css">
-	@media all and (min-width: 1200px) {
-  		.container {
-    		width: 970px;
-  		}
-	}
-	div.post{
-		font-size:15px;
-		margin-top: 1.6em;
-	}
-	div.post blockquote p {
-		color:#666666;
-		font-size: 14px
-	}
-	div.post li{
-		margin: 15px 0;
-	}
-	</style>
-	{%- endif -%}
-	<!--[if lt IE 9]>
-		<script type="text/javascript" src="/assets/js/lt-ie9.js"></script>
-	<![endif]-->
-</head>
+{%- for css in acss %}
+	<link rel="stylesheet" href="{{css}}" />
+{%- endfor -%}
+{%- for js in ajs %}
+	<script src="{{js}}"></script>
+{%- endfor -%}
+{%- if include.ie8_css or include.ie8_js %}
+<!--[if lt IE 9]>
+{%- for css in ie8_acss %}
+	<link rel="stylesheet" href="{{css}}" />
+{%- endfor -%}
+{%- for js in ie8_ajs %}
+	<script src="{{js}}"></script>
+{%- endfor %}
+<![endif]-->
+{%- endif -%}
