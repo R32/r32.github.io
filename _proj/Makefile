@@ -24,7 +24,7 @@ $(CSS): hss/style.hss hss/markdown.hss $(wildcard hss/comm/*.hss)
 	hss -output $(OUTPUT) -D ie8 $<
 
 $(JS): $(wildcard src/*.hx)
-	haxe -dce full -cp src -D analyzer-optimize -D no_stack_trace $(addprefix -lib , $(HXLIBS)) --main Main --js $@
+	haxe -dce full -cp src -D analyzer-optimize -D js-es=3 $(addprefix -lib , $(HXLIBS)) --main Main --js $@
 
 $(POLYFILL): $(wildcard polyfill/*.js)
 	closure --js_output_file $@ --compilation_level WHITESPACE_ONLY --js $^

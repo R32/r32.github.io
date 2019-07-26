@@ -1,7 +1,7 @@
 -dce full
 -cp src
 -D analyzer-optimize
--D no_stack_trace
+-D js-es=3
 -lib no-vdom
 -main Main
 --js ../_site/assets/all.js

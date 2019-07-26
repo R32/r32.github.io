@@ -76,7 +76,7 @@
 
 * 2019-07-26: 移除了 bootstap, jquery, 保持极简模式.
 
-  - TODO:  页面左边的 scrollspy 后续再实现.
+  - [x] ~~TODO:  页面左边的 scrollspy 后续再实现~~
 
 ### 主要设计结构
 
