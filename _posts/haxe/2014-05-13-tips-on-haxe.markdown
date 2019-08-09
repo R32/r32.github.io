@@ -13,28 +13,25 @@ categories: haxe
 
 在编译时可以不指定 `-main`, 例: `haxe -js lib.js MyClass`, 但只可以指定一个类.
 
-当 `-dce std` 时, 使用 import 可能会使最终输出文件变得很大(使用某一个类一个方法时,可以直接用全名), 因此你可能需要关闭 IDE 的自动导入（Generate Imports）
-
 如果一个 .n 文件是以 haxelib run 来运行的, 那么可以通过检测环境变量 `HAXELIB_RUN` 的值是否为字符串 "1", [更多细节...](http://lib.haxe.org/documentation/using-haxelib/#run)
 
 <!-- more -->
 
-### 编译
+### 使用开发版本
 
-直接使用 "git haxe repo" 作为 haxe 的路径，由于 haxelib 目前依赖于 neko, 因此 neko 也要装上.
+(*新人推荐*)可直接从 <https://build.haxe.org> 处下载, 然后直接覆盖安装(Windows)即可.
 
-* 设置二个环境变量 : `HAXEPATH: D:\fork\haxe\`, `NEKO_INSTPATH: G:\HaxeToolkit\neko`,
+此外, 下边将介绍如何在 Windows 上编译源码, 用于开发环境:
 
-* `make haxe -f Makefile.win -j4 FD_OUTPUT=1 ADD_REVISION=1`: 获得 windows 平台下的 haxe.exe
+1. 将 haxe 编译器的源码目录添加到*路径*, 因为我们将使用编译出来的 `haxe.exe`, 另外要装上 neko, 因为 haxelib 依赖它
 
-  > `make libs`: 第一次执行上边命令前, 你可能需要先运行这个, 以获得外部库
-  >
-  > windows 中, haxe.exe 所依赖的 dll 文件可以在 `i686-w64-mingw32\sys-root\mingw\bin` 中找到
+  - 设置二个环境变量 : `HAXEPATH: D:\fork\haxe\`, `NEKO_INSTPATH: G:\HaxeToolkit\neko`
 
-* `make haxelib` 以获得 haxelib.exe, 这会在 exe 所在目录创建一个名为 "lib" 的目录，
+2. 如何在 Windows 中编译 haxe 可参考 [ocaml-日志]({% post_url other/2014-09-07-ocaml-tutorial %})
 
-  > 或者通过运行 `haxelib config XXX`  指定一个库目录
+  - 编译出的 haxe.exe 所依赖的 dll 文件可在 `i686-w64-mingw32\sys-root\mingw\bin` 中找到(*或将其添加到路径*).
 
+  - 如果你不喜欢 `make tools` 所创建的 `lib` 目录, 可以执行 `haxelib config XXX` 另外指定
 
 ### 最新改动
 
@@ -42,14 +39,16 @@ categories: haxe
 
 在 twitch 上看直播时, 发现在可以在函数加 `@:debug.display` 然后在 output 窗口会有一些信息.
 
-* keyValue 迭代器(KeyValueIterator)
+* `@:noClosure`: 作用在类或字段上, 用于禁止将方法作为值传递
+
+* keyValue 迭代器(KeyValueIterator),
 
   ```haxe
   for(key => value in map) {
     trace(key, value);
   }
   // 不是所有数据类型都有 KeyValueIterator,
-  // 不是所有平台都会优化(如果无优化, 那么这个特性可以说毫无优势)
+  // 不是所有平台都会优化
   ```
 
 * `utf16`: [#7387](https://github.com/HaxeFoundation/haxe/pull/7387) 表示其字符串编码为 ucs2,
@@ -60,16 +59,16 @@ categories: haxe
 
 * 一些可以通过 `#if (target.XXXX)` 来检测的 Define, [init_platform](https://github.com/HaxeFoundation/haxe/blob/development/src/context/common.ml#L528)
 
-  `(target.name)` : 定义了 当前目标的名字. 例如: js, lua
+  `(target.name)`    : 定义了 当前目标的名字. 例如: js, lua
   `(target.static)` 中 `static` : 表示使用了静态类型, 即变量有自己的类型. 为假(即动态类型)的有: JS, Lua, Neko, Php, Python, Eval
-  `(target.sys)` 或 `sys` : 表示可以调用系统 IO, 为假的有 js(不包括hxnodejs), flash
-  `(target.utf16)` 或 `utf16` : 见前边
+  `(target.sys)`   或 `sys`     : 表示可以调用系统 IO, 为假的有 js(不包括hxnodejs), flash
+  `(target.utf16)` 或 `utf16`   : 见前边
   `(target.unicode)` : 表示当用 `haxe.iterators.StringIteratorUnicode` 是否能正确输出 ucs2 值, 只有 neko, cpp 为假
-  `target.threaded` : 目标是否支持多线程
+  `(target.threaded)`: 目标是否支持多线程
 
 * `@:native("")` 仅适用于 extern 类. 可以使用它来标注全局函数, [#6448](https://github.com/HaxeFoundation/haxe/issues/6448)
 
-* `enum abstract` 自动赋值, 但不可用于 `extern` 类型的枚举. (注: haxe 4 版, 可以直接使用 `enum abstract` 代替 `@:enum abstract` 来创建枚举值.)
+* `enum abstract` 现在可以自动增长, 但不可用于 `extern` 类型的枚举. (*旧 haxe 版本是 @:enum abstract*)
 
   ```haxe
   enum abstract IType(Int) {
@@ -182,21 +181,6 @@ categories: haxe
 
   > `@:keep` only has an effect if the type is actually compiled to begin with. The compiler doesn't eagerly read all your .hx files, so you have to make sure the types in question are referenced somewhere. This can be done in code or via command line: For single classes you can just specify their path (without -main), for entire packages you can use `--macro include("package.path")`.
 
-* haxe.ds.Either 二个类型, 这样可以让一个函数返回二种类型
-
-  ```haxe
-  typedef MyResult = Either<Error, String>;
-
-  var result:MyResult = Left(new Error("something smells"));
-
-  var result:MyResult = Right("the answer is 42");
-
-  // haxe.ds.Option 注意和 Either 区别
-  function foo(i:Int):Option<Int>{
-  	return i < 0 ? None : Some(i);
-  }
-  ```
-
 * 处理 extern 类 haxe.extern.EitherType; 和  haxe.extern.Rest;
 
   ```haxe
@@ -276,7 +260,7 @@ categories: haxe
   - `interface IMap<K,V>`
 
 
-* 转义字符串, haxe 识别的转义字符有限, 如仅能识别 "\n", "\t" 之类的, 但可使用 `"\000"`(八进制) 或 `"\x00"`(十六进制) 或 `"\u4E2D"`
+* 转义字符串, haxe 识别的转义字符有限, 如仅能识别 "\n", "\t" 之类的, 但可使用 `"\000"`(八进制) 或 `"\x00"`(十六进制) 或 `"\u4E2D"`, `\u{4E2D}`
 
  > 可参考 [ast.ml](https://github.com/HaxeFoundation/haxe/blob/development/src/syntax/ast.ml) 中 `unescape` 的实现
 
@@ -482,7 +466,7 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
 
 ### 函数绑定
 
-haxe 3.每个方法或函数都有一个 bind 的方法, 用于包装一个函数：
+haxe 每个方法或函数都有一个 bind 的方法, 用于包装一个函数：(*请注意区别 js 的 .bind*)
 
 ```haxe
 function foo(a:Int, b:Int):Int{
@@ -517,7 +501,8 @@ class Bind {
 
 #### extern class
 
-用于声明 这个类是外部的,也就是源生平台类, 因此只要提供外部类的各字段以及方法的类型说明就可以了, 不需要写方法体. 下边是一个 JS 端的示例: 你应该注意到了 get_JTHIS 有方法体,
+用于声明 这个类是外部的,也就是源生平台类, 因此只要提供外部类的各字段以及方法的类型说明就可以了,
+不需要写方法体. 下边是一个 JS 端的示例: 你应该注意到了 get_JTHIS 有方法体,
 
 * 类声明为 extern class
 
@@ -530,7 +515,7 @@ class Bind {
   }
   ```
 
-特殊的带有 方法体的 extern class, 但必须为 inline, 这样转接到别的不是同名的方法上. TODO: `@:runtime` 表示什么了?
+特殊的带有 方法体的 extern class, 但必须为 inline, 这样转接到别的不是同名的方法上.
 
 ```haxe
 // python/_std/Array.hx
@@ -575,54 +560,6 @@ var muline = '
   line 3 > ......
 ';
 ```
-
-
-### Dynamic
-
-<http://haxe.org/manual/types-dynamic.html>
-
-Dynamic类型变量可以赋值给其它任何变量, 也可以将任意值赋值给 Dynamic类型变量.
-
-```haxe
-// Dynamic类型变量可以赋值给其它任何变量, 因此 被赋值的 json 类型也不明确将为 Unknown<0>
-var json = haxe.Json.parse([1,2,3]);
-$type(json);	// Unknown<0>(即:Monomorphs)
-```
-
-把一个 [匿名结构](http://haxe.org/manual/types-anonymous-structure.html) 赋值给声明为 Dynamic类型变量
-
-* Parameterized Dynamic Variables
-
-  ```haxe
-  // 通常解析一个结构不明确的 xml 文件时会用到.
-  // xml 的数据全是 String 类型.
-  var att : Dynamic<String> = xml.attributes;
-  att.name = "Nicolas";
-  att.age = "26";
-  //...
-  ```
-
-* [Implementing Dynamic](http://haxe.org/manual/types-dynamic-implemented.html)
-
-  ```haxe
-  class C implements Dynamic<Int> {
-      public var name : String;
-      public var address : String;
-  }
-  var c = new C();
-  var n : String = c.name; // ok
-  var a : String = c.address; // ok
-  var i : Int = c.phone; // ok : use Dynamic
-  var c : String = c.country; // ERROR
-  // c.country is an Int because of Dynamic<Int>
-
-  // 参考 haxe.xml.Fast.hx 文件
-  // 可以实现接口的 resolve 方法,当访问属性时会自动转接到 resolve 上.
-  ```
-
-### 正则表达式
-
-Haxe has built-in support for [**regular expressions**](http://haxe.org/manual/std-regex.html).
 
 ### 静态扩展(Static Extension)
 
@@ -683,8 +620,6 @@ function foo<T>(eu:Enum<T>):Void {} // foo(Lang);
 对于 `EnumValue` 类型的数据
 
 > `EnumValue` 包含有 :`getName(),getIndex(),getParameters(),equals()`,来自 `haxe.EnumValueTools`.
-
-
 
 
 ### switch

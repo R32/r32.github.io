@@ -23,12 +23,23 @@ categories: other
 
 * 在 setup.exe 里选上 `mingw64-i686-zlib` 和 `mingw64-i686-pcre` (参考 Makefile.win 里的 dll 文件搜索)
 
-* 通过 opam 安装 camlp4, 需要注意的是应该使用 mintty 来代替 bash 以防止乱码.
+* 通过 opam 安装 camlp5, *(可用 mintty 来代替 bash 以防止乱码)*.
 
-* 在 bash 里执行 `make haxe -j4 FD_OUTPUT=1 ADD_REVISION=1 -f Makefile.win` (第一次执行时必须编译 haxelib 因此先去掉 haxe)
+* 参考 Makefile 文件, 执行 `make -f Makefile.win` 即可
 
-* 如需开发 haxe 可以编译成字节码 `make haxe BYTECODE=1` 就可以了
+  ```bash
+  # 构建 c 语言外部库
+  make libs
 
+  # 构建 haxe 编译器, 可附加: ADD_REVISION=1
+  make haxe -f Makefile.win
+
+  ##
+  # 对于 haxe 编译器快速开发, 编译成字节码似乎更合适: make haxe BYTECODE=1
+
+  # 构建 haxelib
+  make tools
+  ```
 
 ### IDE 选择
 
