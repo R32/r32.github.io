@@ -46,7 +46,7 @@ Main.makeHeaders = function(side) {
 	while(_g < hds.length) {
 		var hd = hds[_g++];
 		var lvl = Std.parseInt(HxOverrides.substr(hd.nodeName,1,1));
-		var li = dt.make("li",null,[dt.make("a",{ href : "#" + hd.getAttribute("id")},hd.textContent)]);
+		var li = dt.h("LI",null,[dt.h("A",{ href : "#" + hd.getAttribute("id")},hd.textContent)]);
 		while(last != li) {
 			var len = lvlStack.length;
 			if(len == 0 || last == null) {
@@ -61,7 +61,7 @@ Main.makeHeaders = function(side) {
 						last.parentElement.appendChild(li);
 					}
 				} else if(lvl > lastLvl) {
-					var ul = dt.make("ul");
+					var ul = dt.h("UL");
 					ul.appendChild(li);
 					last.appendChild(ul);
 					lvlStack.push(lvl);
@@ -165,7 +165,7 @@ Std.parseInt = function(x) {
 	return v;
 };
 var dt = function() { };
-dt.make = function(name,attr,dyn) {
+dt.h = function(name,attr,dyn) {
 	var dom = window.document.createElement(name);
 	if(attr != null) {
 		for(var k in attr) dom.setAttribute(k, attr[k]);

@@ -3,7 +3,7 @@ import Macros.one;
 import js.Browser.document;
 import js.html.Node;
 import js.html.DOMElement;
-import nvd.Dt.make as m;
+import Nvd.HXX;
 
 @:nullSafety
 class Main {
@@ -46,9 +46,7 @@ class Main {
 		for (hd in hds) {
 			var hd = (cast hd: js.html.DOMElement);
 			var lvl:Int = @:nullSafety(Off) Std.parseInt(hd.nodeName.substr(1, 1));
-			var li = m("li", null, [
-				m("a", {href: "#" + hd.getAttribute("id")}, hd.textContent)
-			]);
+			var li = HXX( <li> <a href='{ "#" + hd.getAttribute("id") }'>{{ hd.textContent }}</a> </li> );
 			while (last != li) {
 				var len = lvlStack.length;
 				if (len == 0 || last == null) {
@@ -62,7 +60,7 @@ class Main {
 						else
 							last.parentElement.appendChild(li);
 					} else if (lvl > lastLvl) { // h3 > h2
-						var ul = m("ul");
+						var ul = HXX("<ul/>");
 						ul.appendChild(li);
 						last.appendChild(ul);
 						lvlStack.push(lvl);

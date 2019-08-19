@@ -4,4 +4,4 @@
 -D js-es=3
 -lib no-vdom
 -main Main
---js ../_site/assets/all.js
+--js ../assets/all.js
