@@ -30,7 +30,7 @@ var user = u.unserialize(bytes, User);
 
 一些细节可参考[hxbit 原文档](https://github.com/HeapsIO/hxbit)
 
-* 版本化(Versioning): 简单的化其实只要直接调用 `hxbit.Serializer.save/load` 这二个静态函数即可..
+* 版本化(Versioning): 简单的话其实只要直接调用 `hxbit.Serializer.save/load` 这二个静态函数即可..
 
 * 自定义: 某些不支持的数据类型可通过 `customSerialize/customUnserialize` 来自定义
 

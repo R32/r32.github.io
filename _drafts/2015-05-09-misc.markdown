@@ -40,18 +40,116 @@ chrome app 的简单用法 http://ju.outofmemory.cn/entry/61944
 	}
 	```
 
- * packaged app 最接近普通桌面程序, 
+ * packaged app 最接近普通桌面程序,
 
-	```json	
+	```json
 	"app":{
 		"background": {
 			"scripts": ["js/background.js"]
-		} 
+		}
 	}
 	```
 
 ### chrome extension
 
+
+
+### hashlink gc 分析
+
+
+#### 标记
+
+* `mark_before()`: 这里将做一些重置工作
+
+  为所有页申请出一个大的 BMP 块,
+  *变量 `mark_bytes` 的大小将会是 1024 的整倍数,  是 `gc_stats.mark_bytes` 的对齐值*
+
+  按系列遍历PAGE链表头, 当PAGE不为NULL时, 划分 BMP,
+
+  重置 `FREE_PAGES[]=页头`, `PAGE.NEXT_BLOCK` 和 `FEE_BLOCKS = 0`
+
+* `mark()`:
+
+  函数将会扫描 root 以及线程的当前栈, mutator 并不能精确地区分指针与数值,
+  对于一个值, 它首先通过位移算法找到其 PAGE:
+
+  ```c
+  LVL1 = (PTR >> (16 + 8))
+  LVL2 = (PTR >> 16) & ((1 << 8) - 1)
+  PAGE = ALL_PAGE[LVL1][LVL2];    // 如果值为 NULL, 则表示"非指针"
+  ```
+
+  接下来再通过检测"页"的一些属性值来计算:
+
+  ```c
+  int offset = PTR - PAGE
+  if (offset % PAGE.BLOCK_SIZE != 0)      // 如果不是整倍数, 则 "非指针"
+      return;
+  int bid = offset / PAGE.BLOCK_SIZE;
+  if (PAGE.SIZES && PAGE.SIZES[bid] == 0) // 如果没有从 SIZE 中找到"长度",则 "非指针"
+      return bid; // 由于 PAGE 不为 NULL, 则说明 PAGE.SIZES 也不会为 NULL
+
+  // 然后通过获得的 bid 值, 进行标记 (建议从右往左画内存地址图容易理解)
+  PAGE.BMP[bid>>3] |= 1 << (bid&7)
+  ```
+
+* `mark_after()`:
+
+  `call_finalizers()` 并在成功后使其相应的 `PAGE.SIZES[bid]` 置 0
+
+
+
+### 分配
+
+当指针大小为 32 位时: (如果 64位, 则高32位会被清 0)
+
+```
+LVL1 = 8bits 取值范围为 (0 ~ 255)
+LVL2 = 8bits 取值范围为 (0 ~ 255)
+PAGE = ALL_PAGE[LVL1][LVL2];  单个页至少会有(64Kb)16bits大小, 或者为 64KB 的整倍数
+```
+
+在为"页"分配内存时, 将使用 `VirtualAlloc` 或者 `mmap` 来完成, 这允许将地内存限制在 32 位以下
+
+当 PAGE 为 NULL 时, 相关分配顺序:
+
+```
+base = VirtualAlloc // 64KB 整倍数
+
+[ PAGE_HAEDER = POOL_NEXT => malloc(100 * sizeof) ]
+
+LVL1[] = malloc(256+) // 256 的整倍数
+
+if (可变块)
+	if (块数量 <= 8)
+		PAGE.SIZES = &PAGE.INT64
+	else
+		PAGE.SIZES = PAGE.base + 块数量; (以字节为单位, 因此某个块的所占的长度不会超过 255 )
+
+接下来, PAGE.START_POS 将会对齐到整块大小的位置, 至少是 8byte, 因为只有可变块有 `PAGE.SIZES`
+
+在执行 mark() 时, 计算出全部页的 bmp 长度 从 VirtualAlloc 处申请, 大小同样为 64KB 整倍数
+这时可变块的 PAGE.BMP 将不为 NULL
+```
+
+### 改进
+
+* [x]移除没有用处的代码, 如 `free_blocks` 以及 alloc_var 处将 next_block 重置的几行
+
+* [] 除了 4M 的大块, 确保 max_block 为 32 的整倍, 就可以移除 allc_var 中一些用于检测的代码以保持干净,
+
+  ```c
+  if (max_block < 32) { // 由于 64KB 是以左位移来增长的, 如果 ((s64KB << N) / (block_size)) >= 32, 那么 (N+1) 也一定 >= 32
+      scanning_sizes
+  } else {
+      scanning_bits
+  }
+  ```
+
+* [x] 只检测大的页或者 包含有 finalizer 的对它们进行移除操作
+* [x] 不需要每次都重置 next_block. 因为 `mark_before()` 已经做了
+
+* [x] 使用 free_list 收集, 反正它们会在 mark_before 时重部重置, 因此不用担心性能问题
 
 <br />
 <br />

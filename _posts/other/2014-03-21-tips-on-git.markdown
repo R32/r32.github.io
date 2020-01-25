@@ -13,6 +13,8 @@ categories: other
 
 [github 上传大型文件](https://git-lfs.github.com/)
 
+在 github url 结尾添加 `.patch` 或 `.diff` 可下载单个 patch, 例:  `https://github.com/foo/bar/commit/${SHA}.patch`
+
 <!-- more -->
 
 ### 简单

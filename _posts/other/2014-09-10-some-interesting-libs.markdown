@@ -35,6 +35,8 @@ java -jar "$basedir/jar/yuicompressor.jar" "$@"
 
 ### Tools
 
+* [minime](https://sourceforge.net/projects/minime-tool/) 最小化隐藏任务栏
+
 * **[jpexs-decompiler](https://github.com/jindrapetrik/jpexs-decompiler)** JPEXS Free Flash Decompiler(flash 反编译工工具, 非常适合提取旧项目的资源不用再装 Flash)
 
 * [free BitTorrent client](https://github.com/transmission/transmission) 免费, 无广告的下载工具.
@@ -198,10 +200,6 @@ java -jar "$basedir/jar/yuicompressor.jar" "$@"
 
 * [angular-schema-form](https://github.com/Textalk/angular-schema-form) JSON 生成表单HTML元素
 
-* [jsonform](https://github.com/joshfire/jsonform) Build forms from JSON Schema. Easily template-able. Compatible with Twitter Bootstrap out of the box.
-
-  - 使用 JSON 数据来生成表单控件, 已经3年未更新了, 使用的是 bootstrap v2,
-
 * [underscore](https://github.com/jashkenas/underscore) 一个工具库,跨浏览器, [中文文档](http://javascript.ruanyifeng.com/library/underscore.html#)
 
 * [spectrum](https://github.com/bgrins/spectrum) The No Hassle JavaScript Colorpicker, 颜色选择器,**兼容IE6+**
@@ -284,7 +282,7 @@ java -jar "$basedir/jar/yuicompressor.jar" "$@"
 
   > 但是只有 MSVC 才支持这个, GCC 支持另一种叫做 [Attribute](https://gcc.gnu.org/onlinedocs/gcc/Attribute-Syntax.html) 的东西,
 
-* [detours hook](http://blog.csdn.net/liujiayu2/article/details/50386495)
+* [detours](https://github.com/microsoft/detours)
 
   > 1. 通过制做一个 dll 文件用于注射
   >
@@ -292,8 +290,6 @@ java -jar "$basedir/jar/yuicompressor.jar" "$@"
   > withdll.exe 以加载一个用于注射的 dll 然后启动指定程序的方式来注入。
   >
   > sample 下很多给力的工具类
-
-  - [mhook](https://github.com/apriorit/mhook) a free alternative to Microsoft Detours.未测试使用.
 
 * [B站视频 线性代数的本质](http://www.bilibili.com/video/av6731067/index_4.html) 描述了矩阵乘法为什么要那样计算?
 
@@ -402,6 +398,8 @@ java -jar "$basedir/jar/yuicompressor.jar" "$@"
 
 [awesome-c](https://github.com/kozross/awesome-c)
 
+* [mimalloc](https://github.com/microsoft/mimalloc) 用于覆盖 malloc
+
 * [vcpkg](https://github.com/Microsoft/vcpkg) C++ Library Manager for Windows, Linux, and MacOS
 
 * [civetweb](https://github.com/civetweb/civetweb) Embedded C/C++ web server
@@ -450,6 +448,7 @@ java -jar "$basedir/jar/yuicompressor.jar" "$@"
 
   ```
   IDA            # 只有 5.0 的免费版，至少可以用来当 PE 查看器。
+  ghidra         # 听说开源类似于 IDA 
   ollydbg        # free, 动态跟踪调试。
   ```
 

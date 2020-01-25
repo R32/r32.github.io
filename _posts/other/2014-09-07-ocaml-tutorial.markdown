@@ -28,7 +28,7 @@ categories: other
 * 参考 Makefile 文件, 执行 `make -f Makefile.win` 即可
 
   ```bash
-  # 构建 c 语言外部库
+  # 构建 c 语言外部库, ** 这项已经被移除, 如果是旧项目, 需要在 libs 目录下执行一次 make clean **
   make libs
 
   # 构建 haxe 编译器, 可附加: ADD_REVISION=1
