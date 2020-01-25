@@ -13,9 +13,9 @@ categories: other
 
 ## hello world
 
-[这里应该是模板链接]
+这里应该是模板链接
 
-[IDE 选择(估计只有 vscode)]
+IDE 选择(估计只有 vscode)
 
 <!-- more -->
 
@@ -31,3 +31,4 @@ categories: other
 ## misc
 
 `ngx.say` 相对于 `ngx.print` 会多输出一个 "\n", 相当于 `ngx.println`
+

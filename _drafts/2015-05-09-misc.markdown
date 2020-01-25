@@ -136,7 +136,7 @@ if (可变块)
 
 * [x]移除没有用处的代码, 如 `free_blocks` 以及 alloc_var 处将 next_block 重置的几行
 
-* [] 除了 4M 的大块, 确保 max_block 为 32 的整倍, 就可以移除 allc_var 中一些用于检测的代码以保持干净,
+* [ ] 除了 4M 的大块, 确保 max_block 为 32 的整倍, 就可以移除 allc_var 中一些用于检测的代码以保持干净,
 
   ```c
   if (max_block < 32) { // 由于 64KB 是以左位移来增长的, 如果 ((s64KB << N) / (block_size)) >= 32, 那么 (N+1) 也一定 >= 32
