@@ -16,6 +16,7 @@ http://www.wowinterface.com/downloads/index.php  开发工具
 http://www.wowwiki.com/Making_a_macro 基础宏
 
 http://wenku.baidu.com/link?url=FAy226htPhXpU_7r_WUMvNCOtUjhf90KJpYRmTY449cEkxxSL0JLHjZ-LJK4zL8-oGZK9mbD2XQBypdKjKcEHkFqmoWrp-7B152q1EfZcFi
+
 <!-- more -->
 
 https://github.com/cmangos/issues 这里有一些仿的源码.
@@ -23,7 +24,7 @@ https://github.com/cmangos/issues 这里有一些仿的源码.
 
 ### 工具
 
-网上能找到的基本都过期了, http://www.wowwiki.com/AddOn_Studio_2010, 未测
+https://wow.gamepedia.com/AddOn_Studio
 
 * 开发环境 - ?? 只能使用 `/dump` 来调试各种 API
 
@@ -31,12 +32,12 @@ https://github.com/cmangos/issues 这里有一些仿的源码.
 
   ```bash
   # http://wowwiki.wikia.com/wiki/Blizzard_DebugTools
-  /dump EXPRESSION	# 相当于JS的在浏览器上输入 console.log(...)
-  /run ReLoadUI()		# 重载插件
+  /dump expr  # 相当于JS的在浏览器上输入 console.log(...)
+  /reload     # 重载插件
 
-  /fstack #显示鼠标处 frame 的相关信息
+  /fstack     #显示鼠标处 frame 的相关信息
 
-  /etrace [start|stop] #发生了什么事件
+  /etrace [start|stop|[number]] #事件追踪 [开始, 停止, 达到某数量自动停止]
   ```
 
 * 可视化布局IDE -
@@ -44,6 +45,8 @@ https://github.com/cmangos/issues 这里有一些仿的源码.
 * LUA 编辑器 - 似乎 Notepad++ 是个不错的选择, 装上 XML 查错工具
 
 * BLP图片处理 - http://www.xnview.com/en/nconvert/
+
+  - 手动计算 texcoord https://wowwiki.fandom.com/wiki/XML/TexCoords
 
 * [mpq 解压工具 C#](https://github.com/WoW-Tools/MpqTool), 用于导出 FrameXML, 针对旧的 WOW版本没有 `exportInterfaceFiles` 命令
 
@@ -288,7 +291,7 @@ http://www.cnblogs.com/apexaddon/articles/1507772.html
 
 	元素: (一些内容过长的自已去 WIKI看) http://wowwiki.wikia.com/wiki/XML_properties
   - Size: 定义元素的尺寸, 通常由其子标签 `<AbsDimension x="64" y="64" />` 来定义.
-  - Anchors: 定义元素的位置
+  - Anchors: 定义元素的位置, 或者大小(类似于 top, left, right, bottom)
   - TitleRegion: 定义一个用作拖动的点击区域
   - Backdrop: 定义此元素的背景
   - HitRectInsets: 更改用户可点击此元素的区域

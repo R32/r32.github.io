@@ -35,6 +35,8 @@ java -jar "$basedir/jar/yuicompressor.jar" "$@"
 
 ### Tools
 
+* Trojan
+
 * [minime](https://sourceforge.net/projects/minime-tool/) 最小化隐藏任务栏
 
 * **[jpexs-decompiler](https://github.com/jindrapetrik/jpexs-decompiler)** JPEXS Free Flash Decompiler(flash 反编译工工具, 非常适合提取旧项目的资源不用再装 Flash)
@@ -276,6 +278,8 @@ java -jar "$basedir/jar/yuicompressor.jar" "$@"
 
 ### article
 
+* [The Linux Kernel](https://www.kernel.org/doc/)
+
 * [SAL Annotations](https://msdn.microsoft.com/zh-cn/library/ms182032(v=vs.140).aspx) c 语言代码标注，使之更易于理解
 
   通过 VS 的 `ANALYZE -> Run Code Analysis On Sulotion(Alt + F11)` 可检测出不安全的代码。
@@ -294,10 +298,6 @@ java -jar "$basedir/jar/yuicompressor.jar" "$@"
 * [B站视频 线性代数的本质](http://www.bilibili.com/video/av6731067/index_4.html) 描述了矩阵乘法为什么要那样计算?
 
 * [nginx 源码分析中文](https://github.com/y123456yz/reading-code-of-nginx-1.9.2)
-
-* [libuv 中文手册](https://github.com/forhappy/uvbook)
-
-  > [中文 API 翻译](https://github.com/paohui0117/libuv-)
 
 * [thebookofshaders](https://github.com/patriciogonzalezvivo/thebookofshaders/blob/master/README-ch.md) 选择 zh 后缀的 md 文件阅读
 
@@ -396,18 +396,21 @@ java -jar "$basedir/jar/yuicompressor.jar" "$@"
 
 ### CLib
 
+[C标准头文件](http://stackoverflow.com/questions/2027991/list-of-standard-header-files-in-c-and-c)
+
 [awesome-c](https://github.com/kozross/awesome-c)
 
-* [mimalloc](https://github.com/microsoft/mimalloc) 用于覆盖 malloc
+* [picohttpparser](https://github.com/h2o/picohttpparser) HTTP 工具库
+
+* [rizz](https://github.com/septag/rizz) Small C game development framework
+
+* [mimalloc](https://github.com/microsoft/mimalloc) 用于覆盖 malloc, 支持 *first-class heaps*
+
+* [rpmalloc](https://github.com/mjansson/rpmalloc) 同上, 但源码只有 3 个文件
 
 * [vcpkg](https://github.com/Microsoft/vcpkg) C++ Library Manager for Windows, Linux, and MacOS
 
 * [civetweb](https://github.com/civetweb/civetweb) Embedded C/C++ web server
-
-* [COM 组件及 内嵌 IE 示例](https://www.codeproject.com/Articles/Jeff-Glatt#Article) 内嵌 IE 浏览器文档,
-  - [webview](https://github.com/zserge/webview) 单个头文件, 使用了系统自带的浏览器. cross platform
-
-[C标准头文件](http://stackoverflow.com/questions/2027991/list-of-standard-header-files-in-c-and-c)
 
 * [incbin](https://github.com/graphitemaster/incbin) 简单地在 c 语言中嵌入资源, 兼容所有编译器
 
@@ -435,7 +438,6 @@ java -jar "$basedir/jar/yuicompressor.jar" "$@"
 
 * [foundation_lib](https://github.com/rampantpixels/foundation_lib) Cross-platform public domain foundation library in C
 
-
 ### Notes
 
 * 虚拟键盘模拟:
@@ -447,11 +449,39 @@ java -jar "$basedir/jar/yuicompressor.jar" "$@"
 * [逆向资源 List of awesome reverse engineering resources](https://github.com/wtsxDev/reverse-engineering):
 
   ```
-  IDA            # 只有 5.0 的免费版，至少可以用来当 PE 查看器。
-  ghidra         # 听说开源类似于 IDA 
-  ollydbg        # free, 动态跟踪调试。
+  IDA            # 有 7.0 的 free 版本, 偏向于静态
+  ollydbg        # free, 偏向于动态
+  Cheat Engine   #
+
+  ghidra         # 听说开源类似于 IDA
+  r2ghidra-dec   # 同上
   ```
 
+  微信
+
+  ```
+  微信窗口使用的是 `msftedit.dll` 组件,
+
+  对于消息的监听似乎是在写入本地数据库时, 但写入与读出的数据应该都是已经加密的
+  ```
+
+#### ollydbg
+
+`Ctrl+G`: Go to address or value of expression 用于跟随某个公开的API函数, 例如: `CreateFileW`
+
+对于 command line 比较常用的是:
+
+* `2+2` - calculate value of this expression;
+* `AT [EAX+10]` - disassemble at address that is the contents of memory doubleword at address EAX+0x10;
+* `BP KERNEL32.GetProcAddress` - set breakpoint on API function. Note that you can set breakpoint in system DLL only in NT-based operating systems;
+* `BPX GetProcAddress` - set breakpoint on every call to external function GetProcAddress in the currently selected module;
+* `BP 412010,EAX==WM_CLOSE` - set conditional breakpoint at address 0x412010. Program pauses when EAX is equal to WM_CLOSE.
+
+插件集合:
+
+<https://github.com/romanzaikin/OllyDbg-v1.10-With-Best-Plugins-And-Immunity-Debugger-theme->
+
+<https://github.com/JackAston/OllyDbg1plugins>
 
 
 <br />

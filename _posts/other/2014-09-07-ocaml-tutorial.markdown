@@ -23,6 +23,27 @@ categories: other
 
 * 在 setup.exe 里选上 `mingw64-i686-zlib` 和 `mingw64-i686-pcre` (参考 Makefile.win 里的 dll 文件搜索)
 
+  ```bash
+  #通过参考 haxe/.github/workflows/main.yml
+  make
+  git
+  zlib-devel
+  rsync
+  patch
+  diffutils
+  curl
+  unzip
+  tar
+  m4
+  perl
+  libpcre-devel
+  mbedtls-devel
+  mingw64-$($env:MINGW_ARCH)-zlib
+  mingw64-$($env:MINGW_ARCH)-gcc-core
+  mingw64-$($env:MINGW_ARCH)-pcre
+  perl-IPC-System-Simple
+  ```
+
 * 通过 opam 安装 camlp5, *(可用 mintty 来代替 bash 以防止乱码)*.
 
 * 参考 Makefile 文件, 执行 `make -f Makefile.win` 即可

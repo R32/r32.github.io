@@ -7,19 +7,20 @@ categories: haxelib
 
 ---
 
-castle 看上去像是一个电子表格编辑器, 它以 **可视化** 的方式来编辑结构化数据，
-不同的是 castle 的每一个表格(sheet)都有其相应的 "数据模型"。通过 "数据模型" 来验证用户输入的数据是否有效，极大的避的手工输入容易出错的问题
+castle 看上去像是一个电子表格编辑器，其每一个表格(sheet)都有相应的 "数据模型"。
 
-  > 通常存储于 XML 或 JSON 文件中的数据都可以使用这个工具代替,
-  >
-  > 比如当你在做一个游戏时, 你可以将所有物品和怪物的名字,
-  > 描述, 逻辑...等等这些属性通过 castle 来保存
+castle 通过 “数据模型” 来验证用户的数据输入，以避免不必要的输入失误。
+
+> 通常存储于 XML 或 JSON 中的数据都可以使用此工具来代替
+>
+> 比如当你在做一个游戏时，你可以将所有物品和怪物的名字，
+> 描述，逻辑...等等这些属性通过 castle 来保存
 
 <!-- more -->
 
 编辑器的输出文件为简单易读的 JSON 格式，很容易被其它程序加载使用。
 
-  > 储存格式为 JSON + 换行, 因此 git 或 svn 等版本管理软件更能显示其数据修改差异。
+> 储存格式为 JSON + 换行, 因此 git 或 svn 等版本管理软件更能显示其数据修改差异。
 
 可简单地处理文本的本地化(Localization)。细节见后边的 Text 字段描述
 
@@ -65,83 +66,66 @@ castle 看上去像是一个电子表格编辑器, 它以 **可视化** 的方�
 
 - **帮助文档** 在解压包的 www 目录中
 
-### 数据模型
-
-castleDB 保存为一个扩展名为 `.cdb` 的文件, 其实它是一个 JSON 文件。
-
-```json
-"sheets": [
-	{
-		"name": "items",
-		"columns": [{
-			"typeStr": "0",
-			"opt": false
-			"name": "id"
-		},{
-			"typeStr": "14",
-			"opt": true
-			"name": "name"
-		}],
-	//......
-]
-```
-
-* 一个 `.cdb` 文件由一个或多个工作表(sheet)所组成， 每个工作表为"结构化对象"的集合。
-* 每个表包含多个列(columns), 列表示存储数据对象字段(fields)
-* 每个列都有一个给定的"类型"表示此列中存储数据的种类
-* castle 处理列(columns)的重命名,删除及列类型之间的转换
-
 ### 列类型
 
-下边为可用的"列(字段)"类型:
+- **`Unique Identifier`**：将作为 “行数据” 的唯一标识符。*后边文字将使用 UID 表示这种类型*
 
-* **Unique Identifier**(唯一标识符): 作为行数据的唯一标识符, 它允许其它表(sheet)或列(column)引用这一行数据. 唯一标识符必须是有效的代码标识符 `[A-Za-z_][A-Za-z0_9_]*`
+  如果同一表格(sheet)出现同名的 UID “行数据”，将会产生一个错误: `#DUP(...)`
 
-  注: 一个表(sheet)只能存在一个这种字段，(后边文字将使用 UID 表示这种类型)
+  同一个表格只可以有一个 UID 类型的字段(column)
 
-* **Text**(文本): 字符串文本。 任意文本,目前不允许多行文本.
+- **`Text`**: 文本字符串，不允许有换行。
 
-  > 1. 有个 Localizable 的选项用于本地化, 勾选后可通过 `File->Export Localized Text`
-  > 可导出一个 xml 文件, 然后修改这个导出的文件
-  >
-  > 2. 在 haxe 程序中调用 applyLang(file_content) 即可.
+  1. 有个 Localizable 的选项用于本地化, 勾选后可通过 `File->Export Localized Text`
+  可导出一个 xml 文件, 然后修改这个导出的文件
 
-* **Boolean**: 可以通过复选框(checkBox)来选择 true 或 false。
+  2. 在 haxe 程序中调用 applyLang(file_content) 即可.
 
-* **Integer** 整数, 没有小数
+- **`Boolean`**: 可以通过复选框(checkBox)来选择 true 或 false。
 
-* **Float** 任意数
+- **`Integer`**: 整数, 没有小数
 
-* **Color** 表示 RGB 的整形数值.
+- **`Float`**: 任意数字
 
-* **Enumeration**(单项选择): 在给定的多个选项中必须并且只能选择一个。 (添加列(column)时, 用逗号分隔各项值)
+- **`Color`** 表示 RGB 的整形数值. (`TColor`)
 
-* **Flags**(多项选择): 在给定的多个选项中随意选择多个或者一个都不选.例如: `hasHat, hasShirt, hasShoes`, (添加列(column)时, 用逗号分隔各项值)
+- **`Enumeration`**: 类似于"单项选择", (`TEnum( [A,B,C ...] )`) *(添加列(column)时, 用逗号分隔各项值)*
 
-* **Reference**(引用):, 通过 Unique Identifier 引用哪一列的数据（通常用于引用另一个表的数据）
+- **`Flags`**: 类似于"多项选择" (`TFlags( [A, B, C ...] )`)
 
-  > 默认情况下将显示被引用表(sheet)的 UID 字段，用户可在字段名上 `右键-> display column`，
-  > 自定义所显示的字段, 当然并不是所有类型的字段都支持
-  >
-  > F4 键将跳转到 引用字段, 而 F3 键则显示 **谁** 引用了这个字段的引用
+- **`Reference`**: 引用, 可通过 UID 引用另一个表的某一“行数据”. (`TRef( sheetname )`)
 
-* **File**(文件): 目标文件或图片的相对或绝对路径
+  可在字段名上 `右键-> display column`，更改默认显示
 
-* **Image** 要显示的图片,
+  可通过 `F4` 键将跳转到引用, 而 `F3` 键则显示 **谁** 引用了当前“行数据”
 
-  > JSON格式: 这个列的值为一个图片的 md5 值, 这时和 `.cdb` 会存在一个同名的 .img 后缀的 JSON 文件, 文件格式类似于 `{"md5string": "data:image/png;base64,........"}`
+- **`File`**: 文件或图片的相对或绝对路径. (`TFile`)
 
-* **Tile** 类似于图片,一张图片上存放多个 Tile
+- **`Image`**: 图片. (`TImage`)
 
-* **List** 当类型为 List 将创建一个新的隐藏子表。 [见后边章节描述...](#list-column)
+  其值将保存为图片的 md5 值,
+  并且会在 .img 后缀的 JSON 文件中以 base64 字符串的形式保存所选择的图片
 
-* **Properties** 新增的属性,像是一个可视化的(key/value)的Object类型, 可以方便的通过 UI 输入这些动态值了
+- **`Tile`**: 类似于图片,一张图片上存放多个 Tile. (`TTilePos`)
 
-  > 可以将一些相关的属性集中于一个字段下. 类似于一个严格类型的 Dynamic,
+  其值的保存将类似于:
 
-* **Custom**(自定义): 自定义 enum 类型.
+  ```json
+  {
+    file: "path_to_file", // 这个文件必须相对于 .cdb 存在于目录之中
+	size: 32,
+	x: 0,
+	y: 0
+  }
+  ```
 
-  通过点击 IDE 的右下角的 `edit type` 打开一个编辑输入框
+- **`List`**: 将会创建一个"隐藏的子表"用于验证输入. (`TList`)(注: 行数据并不会保存在这个"隐藏的子表"中)
+
+- **`Properties`**: 类似于一个可视化的(key/value)的 Object 类型. (`TProperties`)
+
+  底层其实与 `List` 一样, 将创建一个隐藏的子表用以验证输入, 不同的是 `Properties` 只有一行数据
+
+- **`Custom`**: 自定义 enum 类型. (`TDynamic( name )`) *(通过点击 IDE 的右下角的 `edit type` 打开一个编辑输入框)*
 
   ```haxe
   enum Super2 {
@@ -151,22 +135,22 @@ castleDB 保存为一个扩展名为 `.cdb` 的文件, 其实它是一个 JSON �
   }
 
   enum Effect2 {
-      // 构造参数可以添加前缀 `?`, 这意味着参数为可选参数可省略
       Poison( time : Float, ?power : Float );
       Check( a : Super2 );
       Monster( m : monsters );
+	  Or( a : Effect2, b : Effect2 );
   }
 
-  // custom 类型的构造参数使用下列类型:
+  // "custom" 的构造参数类型如下:
   // Int:
   // Bool:
   // Float:
   // String:
-  // CustomType: 自身
+  // CustomType: 自身, 例如上边 Or() 的参数类型.
   // SheetName: 任意 sheet name
   ```
 
-  custom 类型的储存原型为混合数组类型(`Array<Dynamic>`), 数组的第一个元素为索引:
+  custom 类型的储存底层为数组(`Array<Dynamic>`), 数组的第一个元素为索引:
 
   ```
   Value example				Stored value
@@ -178,14 +162,13 @@ castleDB 保存为一个扩展名为 `.cdb` 的文件, 其实它是一个 JSON �
 
   编辑器将严格验证 Custom 类型 的输入
 
-* **Dynamic** 可以输入任意 JSON 数据, 不过手工输入这个字段的数据类型有些麻烦.
+- **`Dynamic`**: 任意 JSON 数据, 不过只能手工输入有些麻烦.
 
-* **Data/Tile Layer** 包装图层(layer)的数据用于地图编辑器, TODOS
+- **`Data/Tile Layer`**: 图层
 
-  > 选 Data Layer 字段时, 它会让你选择一个被引用的表。
-  >
-  > 而 Tile Layer 而是普通的图层，这些数据在编辑器作画时自动填充。
+  Tile Layer(`TTileLayer`): 是普通的图层，这些数据在编辑器作画时自动填充。
 
+  Data Layer(`TLayer`): 需要选择一个被引用的表, 参见后边的 `Index Layers`
 
 ### 列存储及默认值
 
@@ -210,11 +193,12 @@ Properties  | JSON结构 | 'null'
 Custom | 多个混合类型, 了解更多... TODOS | `null`(缺少类型)
 Dynamic | 自定义的JSON结构数据 | `null`
 Data Layer | width x height 的字节编码为base64格式 | `""`(空图层)
-Tile Layer | 类似于DataLayer或者是结构数组(`Array<Struct>`) | `""`(空图层)
+Tile Layer | 类似于DataLayer, 但底层数据为数组(`Array<Struct>`) | `""`(空图层)
 
 #### 可选字段(Optional Column)
 
-如果取消复选框Required, 那么在创建/修改字段时,默认的数据将为 `null`, 此外如果这个字段没有任何数据,存储时将被删除.
+如果取消复选框Required, 那么在创建/修改字段时, 默认的数据将为 `null`,
+此外如果这个字段没有任何数据, 存储时将被删除.
 
 ### 使用 CastleDB
 
@@ -288,21 +272,20 @@ CastleDB 提供列类型之间的自动转换， 这个经常用于“复制/粘
 
 - **显示字段**,如果你右键单击某一列(Text字段)并选 `Display Column`（字段字体将变为斜体）, 那么这个字段将替代"唯一标识符"显示在被引用的地方
 
-  > 这可以用于显示更易读的名字而不是唯一标识符, 数据的存储依然是使用唯一标识符。这个选项只影响 CastleDB编辑器的显示方式
+  > 这个选项只影响 CastleDB 编辑器的显示方式
 
-- **显示图标**, 参考上行描述，右键点击字段名选 `Display icon`, 图标将作为引用显示
+- **显示图标**, 同上，右键点击字段名选 `Display icon`, 图标将作为引用显示
 
-- ~~索引~~, 当你打开 CastleDB 时, 索引基于 0 开始 (NOTE: 似乎已经被弃用, 因为目前添加后并不会再像以前一样给每一行数据添加索引值)
+- **添加索引(Add Index)**, 给"行数据"添加索引值, (注: 索引值不会保存到 .cdb)
 
-  > 通常索引不会作为数据导出，但可以通过在表名上右键菜单中选上 `Add Index`, 这时导出的数据将带有索引。
-  >
-  > 对于 List 类型字段,索引将作为字段唯一
+  在宏自动创建成 haxe 类时, 如果选中了 `Add Index` 将会创建成员字段: `index`
+  同样如果选中了 `Add Group` 则将创建成员字段: `group`
 
-- **分隔符**, 如果右键单击行数据, 可以在当前行上前边添加分隔符, 双击这个分隔符可以为其命名.
+  索引值的作用是避免通过遍历的方式来获取其于数组中的位置
 
-- **添加分组**, (依赖分隔符)通过右键点击表格名,选上 `Add Group`, 则将创建一个通过 **分隔符** 简单分离的组
+- **分隔符**, 如果右键单击"行数据", 可以在当前行上前边添加分隔符, 双击这个分隔符可以为其命名.
 
-  这允许简单地分类而无需创建特定的字段, 分组索引从 0 开始.
+- **添加分组(Add Group)**, 给"行数据"添加分组值, (需要有分隔符存在), 值将从 0 开始.
 
 ### 高级类型
 
@@ -334,7 +317,8 @@ CastleDB 提供列类型之间的自动转换， 这个经常用于“复制/粘
 
 可以在下载包中的 www 目录找到一个名为 `sample.zip` 的示例文件。后边将使用其作为参考。
 
- * 使用 CastleDB 创建 Level(关卡)和其它IDE的差异是: 你可以关联每个 images/tiles 到其它的数据，使得你有一个统一的框架来创建游戏的全部内容。
+使用 CastleDB 创建 Level(关卡)和其它 IDE 的差异是:
+你可以关联每个 images/tiles 到其它的数据，使得你有一个统一的框架来创建游戏的全部内容。
 
 ### 创建关卡(Create Level)
 
@@ -342,7 +326,7 @@ CastleDB 提供列类型之间的自动转换， 这个经常用于“复制/粘
 
 ### 图层(Layers)
 
-图层(layer)是 level 表中包含了一组图片布局数据的字段(field)，分别是: (注意参考示例文件)
+图层(layer)是 level 表中包含了一组图片布局数据的字段(field)，分别为:
 
 * **Tile Layer** 在创建 level 表后即可通过点击 "Edit" 按钮创建, tile layer 相当于游戏里的某一图层,
 
@@ -356,47 +340,46 @@ CastleDB 提供列类型之间的自动转换， 这个经常用于“复制/粘
 
   你需要在 level 表中手动添加一个 `List<{x:Float, y:Float}>` 类型的字段, 参考示例中的 `npcs` 字段
 
-  > 如果你添加 Reference 引用了另一个表(sheet), 如果被引用的表包含有 Tile 或 Image,
-  > 那么这个 tile 将作为标记用于可视编辑(如果存在多个 tile 或 image, 则选择最左边的字段)，
-  >
-  > 如果 List Layer 没有可引用的 tile 或 image 那么在可视编辑中将使用"颜色块"来标记.
-  >
-  > List Layer 的数据存储其实只是坐标而已（如果没添加其它字段的话）
+  如果引用了另一个表(sheet), 如果被引用的表包含有 Tile 或 Image,
+  那么这个 tile 将作为标记用于可视编辑(如果存在多个 tile 或 image, 则选择最左边的字段)，
+
+  如果 List Layer 没有可引用的 tile 或 image 那么在可视编辑中将使用"颜色块"来标记.
+
+  List Layer 的数据存储其实只是坐标而已（如果没添加其它字段的话）
 
 * **Zone Layer** 类似于 List_Layer,只是它有额外的 width 和 height 数值属性.在地图编辑器中它将显示为一个区域
 
-  > 示例中的 triggers 字段
+  示例中的 triggers 字段
 
-* **Index Layers** 使用紧凑数组(base64, `width x height`)保存一些数据,
+* **Index Layers** 参考示例 `levelData` 表的 `collide` 字段, 它使用紧凑数组(base64, `width x height`)保存一些数据,
 
-  > 在 level 表添加一个类型为 Data_Layer 字段 , 并选择与之关联的一个表即可。
-  >
-  > 被关联的表必须有 tile 类型的字段才可以在地图上编辑, 参考示例中的 `collide` 字段
-  >
-  > 当然作为限制你不能像 List Layer 那样能自定义数据。
+  在 level 表添加一个类型为 `Data Layer` 字段 , 并选择与之关联的一个表即可。
 
-
+  被关联的表必须有 tile 类型的字段才可以在地图上编辑, 而且不可以添加自定义的数据
 
 #### Layer Display
 
-layer 将从引向（reference）的目标取得一些信息
+layer 将从"被引用"的目标取得一些信息
 
-* 如果 reference 的字段有类型 Image, 将使用这 图片 用于显示
+* 如果 "被引用" 的字段有类型 Image, 将使用这 图片 用于显示
 
-* 如果 reference 的字段有有类型 Color, 将使用这 颜色 用于显示
+* 如果 "被引用" 的字段有类型 Color, 将使用这 颜色 用于显示
 
-* 如果无有效信息, 你可以在编辑器上自定义这个层的颜色
+* 如果没有有效信息, 则可在编辑器上自定义这个层的颜色
 
 #### Grid and Precise coords
 
-index_layers 将总是为 grid-aligned. 其它类型 layers 则可以有更精确的位置, 如果使用Float类型代替Int作为位置(x,y)类型, 即使这种情况下你仍然可以激活 Lock Grid 选项.
+index_layers 将总是为 grid-aligned. 其它类型 layers 则可以有更精确的位置,
+如果使用 Float 类型代替 Int 作为位置 (x,y) 类型, 即使这种情况下你仍然可以激活 Lock Grid 选项.
 
 默认的 grid size 为 16 像素, 可以在 level 选项中修改.
 
 
 #### Layer Compression
 
-在默认时, layer数据并未压缩, 如果你创建过多的 tile/index levels 这将导致最终输出的文件非常大, 你可以开启/关闭(enable/disalbe)压缩这些layers通过 选择/反选 File/Enable Compression. 这将使用 LZ4 压缩算法处理, 因为它的解压非常简单和快速.
+默认时, layer数据并未压缩, 如果你创建过多的 tile/index levels 这将导致最终输出的文件非常大,
+你可以开启/关闭(enable/disalbe)压缩这些layers通过 选择/反选 File/Enable Compression.
+这将使用 LZ4 压缩算法处理, 因为它的解压非常简单和快速.
 
 #### Common layers options
 
@@ -406,7 +389,7 @@ index_layers 将总是为 grid-aligned. 其它类型 layers 则可以有更精�
 * lock: 锁定防止修改直到解锁
 * alpha: 更改当前图层透明度, 这个数据将会保存到 .cdb 文件中去.
 
-可以在图层tab上"右键"获得如下选项:
+可以在各图层的名字(tab)上通过 "右键" 获得如下选项:
 
 * show Only: 将隐藏除当前图层的其它所有图层
 * show all: 恢复所有图层为显示
@@ -422,7 +405,7 @@ Options 菜单:
 
 #### Tile Layers
 
-由 tile_layer 所组成的数据通过单个tileset, tile_layer 有如下属性:
+由 tile_layer 所组成的数据通过单个 tileset, tile_layer 有如下属性:
 
 Mode: tile_layer 可工作在三种模式, 默认为 tile, 其它模式后边将详细介绍
 File: 允许更改 tileset 作用于当前 tile layers,
@@ -467,37 +450,30 @@ Object_Layer 的数据存储编码为 base64, `0xFFFF` 标记这个图层为 Obj
 * Object: 当激活时, 可以将多个 tile 组合成 Object, 接下来作画时一次即可选中组合的几个 tile. 快捷键为: `O` 键。
 * Ground: 用于标记一个或一些 tile 为 ground(名字在左上第一个块上), 以配合 `Border` 一起使用.
 
-  priority: 优先级, 似乎仅当有 border 时才会表现, 而且 border 将不区分所有优先级为 0 的 ground, 
-  例如: 如果 herb, dirt 的优先级都为 0, 那么作用于 herb 上的 border, 同样会被用在 dirt 上. 
+  priority: 更低的值表示其处于更低的层, 用于配合 `Border` 一起使用.
 
-* Border: 将一组 tile 标记为 border, 其似乎只被用在 priority(优先级) 大于 0 的 ground 上
+  对于 priority 值的设定要有概念, 例如: `草 > 石头 > 泥土 > 水`, 后边操作 `Border` 时才不会混乱.
 
-  lower: 所有优先级**低于** `In/Out` 下拉菜单所选择的 ground, 因此 `In/Out` 不可以都是 `lower/upper`
-  
-  upper: 所有优先级**高于** `In/Out` 下拉菜单所选择的 ground 
+* Border: 将一组 tile 标记为 border
+
+  在程序的内部, 是通过 Ground.piro 来确认 border 的位置的,
+  而 Ground.name 只是相当于一个 piro 的别名
 
   ```
   #Corners
   ┌  ─  ┐   0 1 2
   │  ■  │   3 8 4
   └  ─  ┘   5 6 7
-  IN:  指定与 OUT 相邻的 ground, 即 border 将会把这个 ground 包围起来
-  OUT: border 将会贴在指定 ground 边缘处
 
   #Lower Corners
   ┌ ┐   9  10
   └ ┘   11 12
-  IN:  border 将会贴在指定 ground 的边角处
-  OUT: 仅指定与 IN 相邻的 ground
-  
+
   #U Corners
      ┌ ┐      XX  13  XX
   ┌       ┐   14  XX  15
   └       ┘
      └ ┘      XX  16  XX
-  IN:  指定与 OUT 相邻的 ground
-  OUT: border 将会贴在指定 ground 的 U 位置处
-
 
   #Bottom , 好像不起作用, 或许是 BUG
   └ - ┘     17 18 19

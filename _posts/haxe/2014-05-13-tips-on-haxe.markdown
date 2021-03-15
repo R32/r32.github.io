@@ -113,6 +113,7 @@ categories: haxe
         this = i;
     }
   }
+  // 更多参数见: https://github.com/HaxeFoundation/haxe/blob/master/src/optimization/analyzerConfig.ml
   ```
 
 * `Any` 类型的引入，<https://github.com/HaxeFoundation/haxe-evolution/blob/master/proposals/0001-any.md>
@@ -320,20 +321,6 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
       return true;
   // output: Warning: Bool
   }));
-  ```
-
-* 如果一属性(Property)为(get,set), 那么在 set 中可以不需要给这个属性赋值, 否则需要加上 `@:isVar`
-
-  ```haxe
-  public var id(get,set):Int;
-  function get_id():Int{
-      return 100;
-  }
-  function set_id(v:Int):Int{
-  //  do something
-  //  return this.id = v;  // 如果这样做, 则需要加上 @:isVar
-      return v;             // good
-  }
   ```
 
 * 字面量初使化 Map 的格式为:  `var map = [ 1 => 10, 2 => 20, 3 => 30]`

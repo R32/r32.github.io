@@ -1,6 +1,10 @@
 [blog](http://r32.github.io)
 ----
 
+
+TODO: 需要把代码块的 `haxe` 替换成别的比如 js, 因为无法通过本地编译了, 或者以后等更新了.
+
+
 ### 参考
 
 * [Liquid](https://github.com/Shopify/liquid/wiki/Liquid-for-Designers)
