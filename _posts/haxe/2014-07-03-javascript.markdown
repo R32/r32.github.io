@@ -36,7 +36,7 @@ categories: haxe
 
 * `js.Syntax.code` 用于直接嵌入 js 代码
 
-  ```haxe
+  ```js
   var s:String = js.Syntax.code('Navigator.plugin["Shockwave Flash"]');
 
   //
@@ -66,7 +66,7 @@ categories: haxe
 
 * `@:jsRequire(moduleName,?subModName)` 需要 haxe 3.2+, 在 nodejs 中经常会用到
 
-  ```haxe
+  ```js
   @:jsRequire("fs")
   extern class Fooo {}
   // 导出JS为: var Fooo = require("fs");
@@ -79,7 +79,7 @@ categories: haxe
 
 * **`@:expose(?Name=Class path)`** 将"类"或"静态方法"导出到全局对象下（即成为一个全局范围的变量）
 
-  ```haxe
+  ```js
   // 将类导出到全局, 如果无参数则导出一个同名的类到全局
   @:expose class App {}
 
@@ -93,7 +93,7 @@ categories: haxe
 
 * **`@:selfCall`** 调用自身, 由于 javascript 没有构造函数, 在写 extern class 时会遇到一些问题
 
-  ```haxe
+  ```js
   @:jsRequire("myapp")
   extern class MyApp {
       @:selfCall function new();
@@ -132,7 +132,7 @@ categories: haxe
 
 由于 JS 中方法的参数可以是不同类型, 因此在写 extern class 时,会经常用到: `@:overload`
 
-```haxe
+```js
 extern class JQueryHelper {
 	@:overload(function(j:JQuery):JQuery{})
 	@:overload(function(j:DOMWindow):JQuery{})
@@ -145,7 +145,7 @@ extern class JQueryHelper {
 
 如果觉得创建 extern 类太麻烦, 可以像下边这样, 但是没有智能语法提示:
 
-```haxe
+```js
 class Main {
     static function main() {
         var dis:Dynamic = js.Syntax.code('new DisplayToggle("some_id")');
@@ -170,7 +170,7 @@ class Main {
 
 > 如果你仅想以 inline 的方式插入字符串代码可以使用 `js.Syntax.code` 来完成.
 
-```haxe
+```js
 import haxe.macro.Compiler.includeFile;
 class Main {
 	static function main() {
@@ -201,7 +201,7 @@ haxe -main Main -js bin/main.js --macro includeFile("projDir/path/to/file.js")
 
 * `@:selfCall` 上边已经描述,但是由于 haxe 也会帮 extern clss 绑定上下文会导致一些不方便。
 
-  ```haxe
+  ```js
   class Main {
       static function main() {
           var zoom = new Zoom();

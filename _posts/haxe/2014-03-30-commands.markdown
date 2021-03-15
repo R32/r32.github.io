@@ -1040,7 +1040,7 @@ lime build flash --connect 6000 --times
 
 #### 一些简单的示例
 
-```haxe
+```js
 //@:fakeEnum(Int) 示例
 
 #if (haxe_ver > 3.100)

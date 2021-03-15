@@ -196,7 +196,7 @@ target : {
 
 在 haxe 代码常见的 defines 条件检测:
 
-```haxe
+```js
 #if desktop
   desktop_code();
 #else

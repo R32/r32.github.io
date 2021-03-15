@@ -44,7 +44,7 @@ and then set MY_OPTIM_FLAG via something like "haxe -main .... -D MY_OPTIM_FLAG=
 
 一个简单的示例:
 
-```haxe
+```js
 class Main {
 	static function main() {
 		var foo = new Foo();
@@ -114,7 +114,7 @@ void Foo_obj::__construct(){}
 * `__cpp__` 直接在 haxe 代码中嵌入 cpp 源码.　<https://github.com/HaxeFoundation/haxe/pull/2875>
 
 
-  ```haxe
+  ```js
   // __cpp__ 后边的 字符串不支持　字符串连接变量, 只是直接常量字符串
   untyped __cpp__('printf("hello world!")');
 
@@ -141,7 +141,7 @@ void Foo_obj::__construct(){}
 
   这个 meta 加在 extern class 上将没有作用.
 
-  ```haxe
+  ```js
   @:structAccess
   @:nativeGen
   class Foo {
@@ -171,7 +171,7 @@ void Foo_obj::__construct(){}
 
 * `@:native` 和其它平台的差异，特别是写 extern class 时. 在 cpp 中如果用在静态字段上，将不带类名。例:
 
-  ```haxe
+  ```js
   extern class Foo {
 	  @:native("cpp")
       static function hi():Void;
@@ -272,7 +272,7 @@ In order to [improve support for interacting](http://haxe.1354130.n2.nabble.com/
 
 * 无法以 new 的方式来创建外部 cpp 类, 因为它返回的是一个指针, 只能用　静态方法创建
 
-  ```haxe
+  ```js
   @:native("new RGB")
   public static function create(r:Int, g:Int, b:Int):Pointer<RGB>;
   ```
@@ -325,7 +325,7 @@ cpp.Float64    double
 * **cpp.NativeArray** C 语言中所描述的数组, 即同类型连续排列的内存引用
   - hxarray.(`__unsafe_get, __unsafe_set, __get, __set`) 带 unsafe 的方法没有做边界检测.
 
-  ```haxe
+  ```js
   // Pointer<T>, T 的类型和 数组类型一致
   var pa:cpp.Pointer<Int> = cpp.Pointer.arrayElem([1,2,3], 0 )
   var pa2:cpp.Pointer<Float> = cpp.NativeArray.address([1.0, 2.0, 3.0], 0);
@@ -333,7 +333,7 @@ cpp.Float64    double
 
 * **cpp.NativeString**, 转换成 `char*` 也可以调用 `var cstr:ConstPointer<Char> = untyped hxstr.__s`
 
-  ```haxe
+  ```js
   using cpp.NativeString;
   //......
   var str:String = "haxeString2CString";
@@ -349,7 +349,7 @@ cpp.Float64    double
 build.xml 用来配置 hxcpp 如何编译　haxe 源码。查看 `hxcpp/tools/hxcpp/BuildTool.hx` 的源码,所调用相关的类都在同目录下.
 
 
-```haxe
+```js
 // 不需要理会这段代码
 var mDefines:StringMap<String>;        // 通过 "-D" 的定义和 "环境变量" 和 <set /><unset /> 设定的值
 var mCurrentIncludeFile:String;        //
@@ -712,7 +712,7 @@ The "ABI" allows for differences between "stdcall" and "cdecl" which is importan
 
 下边的示例是展示如何直接调用 cpp 中的全局方法的.
 
-```haxe
+```js
 @:cppFileCode("void Func(int x) { printf(\"%d\\n\", x); }")
 class Test {
    static function takeCallback(f:cpp.Callable<Int->cpp.Void>) f.call(10);
@@ -725,7 +725,7 @@ class Test {
 
 CFFI 以 Prime 的形式从 NDLL 中加载方法的原型类似于:
 
-```haxe
+```js
 static var add:cpp.Callable<Int -> Int -> Int> = cast cpp.Prime._loadPrime("NDLL_NAME", "addInts", "iii", false);
 ```
 

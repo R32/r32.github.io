@@ -10,7 +10,7 @@ categories: haxelib
 
 haxe 标准库带有一个轻量级模板类 `haxe.Template`, 这里所说的"模板"是指一个包含占位符的字符串或文本文件. 下边是一个简单模板应用示例：
 
-```haxe
+```js
 class Main {
   static function main() {
     var sample = "My name is <strong>::name::</strong>, <em>::age::</em> years old";
@@ -102,7 +102,7 @@ var data = {
 
 可以将一个模板计算返回的结果作为参数传递到另一个模板的 execute 方法,
 
-```haxe
+```js
 var users = [{name:"Mark", age:30}, {name:"John", age:45}];
 
 var userTemplate = new haxe.Template("::foreach users:: ::name::(::age::) ::end::");
@@ -120,7 +120,7 @@ trace(output);
 
 就是使用函数来代替变量值，至于为什么要叫 macro,我也不太清楚.
 
-```haxe
+```js
 class Main {
   static function main() {
     new Main();
@@ -185,7 +185,7 @@ Usage : temploc [options] <files>
 
 * 在 haxe 项目中调用 templo 目录下的 `Loader.hx`(这个文件通过Process执行temploc.exe)
 
-  ```haxe
+  ```js
   // 注意默认情况下以 haxe 的输出文件夹为目录顶层,通常为 bin
   // 所有目录名必须以 / 结尾, 目录必须自行建立,如果不存在则出错
 
@@ -233,7 +233,7 @@ Usage : temploc [options] <files>
 
 * switch, 如果你包含有下边 enum, 注: EnumValue 的值不能为 null,则表报错,你可传 **非** EnumValue对应的数字值,如 -1 或任意字符串.
 
-  ```haxe
+  ```js
   enum QuestItem{
   	ITEM(id:Int);
   	MONEY(amount:Int);

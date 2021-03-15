@@ -248,7 +248,7 @@ int main (){
 
 inline 内联替换,常用于对性能有要求的小代码块,或常在宏替换中出现.
 
-```haxe
+```c++
 using namespace std;
 #include <iostream>
 #include <cmath>
@@ -267,7 +267,7 @@ int main (){
 
 try,catch,throw
 
-```haxe
+```c++
 using namespace std;
 #include <iostream>
 #include <cmath>

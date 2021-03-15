@@ -127,7 +127,7 @@ castle 通过 “数据模型” 来验证用户的数据输入，以避免不�
 
 - **`Custom`**: 自定义 enum 类型. (`TDynamic( name )`) *(通过点击 IDE 的右下角的 `edit type` 打开一个编辑输入框)*
 
-  ```haxe
+  ```js
   enum Super2 {
       A;
       B;
@@ -511,7 +511,7 @@ Object_Layer 的数据存储编码为 base64, `0xFFFF` 标记这个图层为 Obj
 
 参看 www/index.html 以及 src/test. Test.hx:
 
-```haxe
+```js
 // Init 名字随意,  test.cdb 的目录可以是: 当前目录, 或 "res" 或 `-D resourcesPath` 定义的目录
 private typedef Init = haxe.macro.MacroType <[cdb.Module.build("test.cdb")]> ;
 ```

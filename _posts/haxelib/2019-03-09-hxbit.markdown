@@ -10,7 +10,7 @@ hxbit 简单来说是一个序列化库, 相对于标准库的 `haxe.Serializer/
 
 它的使用也非常简单, 只要使用 `@:s` 标记字段即可:
 
-```haxe
+```js
 class User implements hxbit.Serializable {
     @:s public var name : String;
     @:s public var age : Int;

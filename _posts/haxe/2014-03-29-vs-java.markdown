@@ -359,7 +359,7 @@ Java 速记
 
 * 将函数作为参数传递。
 
-  ```haxe
+  ```js
   // 在 haxe 中定义一个函数类型的方式有:
   var max: Int -> Int -> Int;
   var min: (a: Int, b: Int) -> Int;  // since haxe 4.0+
@@ -376,7 +376,7 @@ Java 速记
 
   **lambda**
 
-  ```haxe
+  ```js
   // 在 haxe 可随意定义一个方法, 就像 Javascript 中的一样
   var sum = function(a, b) {return a + b;}
   // haxe 箭头语法: （感觉箭头语法可读性不太好）
@@ -391,7 +391,7 @@ Java 速记
 
   haxe
 
-  ```haxe
+  ```js
   var a = [1, 2, 3, 4, 5];
   for(v in a) {
     trace(v);

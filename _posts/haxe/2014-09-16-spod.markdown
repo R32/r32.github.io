@@ -25,7 +25,7 @@ SPOD 建立在 SQLite 或 Mysql 上. 全称为 Simple Persistent Object Database
 
 `sys.db.Types.hx` 文件 中包含了对应的 SQL 类型所对应的 Haxe 类型:
 
-```haxe
+```js
 package sys.db;							// 注释内容为对应的 SQL 数据类型
 
 /** int with auto increment, SId将会被声明为主键(primary key),在insert之后将自动赋值,并且动自增长 **/
@@ -148,7 +148,7 @@ typedef SEnum<E:EnumValue> = Null<E>	// 允许存储不具有参数, 简单的in
 
 * `@:id(field1,field2,...)`： 指定表的主键字段。例如下面的类并没有一个唯一的 id 与自动递增，但两个字段组成 联合主键
 
-  ```haxe
+  ```js
   @:id(uid,gid)
   class UserGroup extends sys.db.Object {
   	public var uid : SInt;
@@ -169,7 +169,7 @@ typedef SEnum<E:EnumValue> = Null<E>	// 允许存储不具有参数, 简单的in
 
 通过继承 `sys.db.Object`, 后续将这个类称为SPOD类, **这个类对应为一个数据库表, 而类实例则为表中的一行数据**,
 
-```haxe
+```js
 import sys.db.Types;
 
 class User extends sys.db.Object {
@@ -184,7 +184,7 @@ class User extends sys.db.Object {
 
 连接数据库并初始化表格.
 
-```haxe
+```js
 var cnx : sys.db.Connection;
 if( !useMysql )
 	cnx = sys.db.Sqlite.open("mydatabase_file.db");
@@ -289,7 +289,7 @@ sys.db.Connection 实例具有如下方法: 源码参见 各实现平台包如: 
 
 当你需要实现一些特殊的表格操作时,可以自定义一个 manager, 由于 Manager 类是基于宏的, 因此定义一个 manager 并没有那么简单
 
-```haxe
+```js
 class User extends sys.db.Object {
 	//......
 	public static var manager = MyManager<User>(User);
@@ -301,7 +301,7 @@ class User extends sys.db.Object {
 
 如果需要插入新的 SPOD, 可以简单的执行以下操作:
 
-```haxe
+```js
 var u = new User();
 u.name = "Random156";
 u.birthday = Date.now();
@@ -314,7 +314,7 @@ u.insert();
 
 为了找到你的 SPOD 实例(SQL 表的一行数据), 可以通过使用 对象的唯一标识符(主键) 调用 manager.get 方法:
 
-```haxe
+```js
 var u = User.manager.get(1);
 if(u == null) throw "User #1 not found!";
 trace(u.name);
@@ -322,7 +322,7 @@ trace(u.name);
 
 如果主键具有多个值, 则可以使用下行:
 
-```haxe
+```js
 var ug = UserGroup.manager.get({ uid : 1, gid : 2 });
 ```
 
@@ -330,7 +330,7 @@ var ug = UserGroup.manager.get({ uid : 1, gid : 2 });
 
 当修改过 SPOD 实例的字段之后通过调用 .update() 将更改发送到数据库:
 
-```haxe
+```js
 var u = User.manager.get(1);
 if( u.phoneNumber == null ) u.phoneNumber = "+3360000000";
 u.update();
@@ -338,7 +338,7 @@ u.update();
 
 使用 .delete() 来从数据库中删除
 
-```haxe
+```js
 var u = User.manager.get(1);
 if( u != null ) u.delete();
 ```
@@ -347,7 +347,7 @@ if( u != null ) u.delete();
 
 使用 manager.search 方法:
 
-```haxe
+```js
 var minId = 10;
 for( u in User.manager.search($id < minId) ) {
     trace(u);
@@ -358,7 +358,7 @@ for( u in User.manager.search($id < minId) ) {
 
 上边的搜索查询语句在编译时将自动变成:
 
-```haxe
+```js
 unsafeSearch("SELECT * FROM User WHERE id < "+Manager.quoteInt(minId));
 ```
 
@@ -386,7 +386,7 @@ unsafeSearch("SELECT * FROM User WHERE id < "+Manager.quoteInt(minId));
 
 可以使用 匿名对象以匹配某些字段的确切值 (similar to previous SPOD but typed :)
 
-```haxe
+```js
 User.manager.search({ id : 1, name : "Nicolas" })
 // same as :
 User.manager.search($id == 1 && $name == "Nicolas")
@@ -396,7 +396,7 @@ User.manager.search($id == 1 && { name : "Nicolas" })
 
 同样可以使用基于 haxe 变量的 if 条件表达式用于生成 不同的SQL(在 if 条件测试表达式中不能使用数据库字段). 个人注: 感觉好混乱啊
 
-```haxe
+```js
 function listName( ?name : String ) {
     return User.manager.search($id < 10 && if( name == null ) true else $name == name);
 }
@@ -449,7 +449,7 @@ User.manager.search($name in ["a","b","c"]);
 
 在搜索查询之后, 你可以指定一些搜索选项:
 
-```haxe
+```js
 User.manager.search(true, {orderBy : name, limit : 20 });
 ```
 
@@ -467,19 +467,19 @@ User.manager.search(true, {orderBy : name, limit : 20 });
 
 不同于 search, 你可以使用 manager.select 方法, 它将只返回　第一个结果对象:
 
-```haxe
+```js
 var u = User.manager.select($name == "John");
 ```
 
 使用 manager.count 方法对匹配的搜索查询进行　计数统计:
 
-```haxe
+```js
 var n = User.manager.count($name.like("J%") && $phoneNumber != null);
 ```
 
 删除给定的查询匹配的所有 行(或 SPOD 实例)
 
-```haxe
+```js
 User.manager.delete($id > 1000);
 ```
 
@@ -487,7 +487,7 @@ User.manager.delete($id > 1000);
 
 可以声明使用的数据库之间的关系通过 `@:relation` 元标记:
 
-```haxe
+```js
 class User extends sys.db.Object {
     public var id : SId;
     // ....
@@ -512,7 +512,7 @@ class UserGroup extends sys.db.Object {
 
 当使用事务, 关系默认为没有锁定, 你能进行 **行锁定** (SQL SELECT...FOR UPDATE)通过添加 lock 如下:
 
-```haxe
+```js
 @:relation(uid,lock) public var user : User;
 ```
 
@@ -522,7 +522,7 @@ class UserGroup extends sys.db.Object {
 
 如果你想要可为空的强制约束类型的关系字段, 可以如下添加 cascade:
 
-```haxe
+```js
 @:relation(uid,cascade) var user : Null<User>;
 ```
 
@@ -532,7 +532,7 @@ class UserGroup extends sys.db.Object {
 
 You can search a given relation by using either the relation key or the relation property
 
-```haxe
+```js
 var user = User.manager.get(1);
 var groups = UserGroup.manager.search($uid == user.id);
 // same as :
@@ -546,7 +546,7 @@ var groups = UserGroup.manager.search($user == user);
 
 如果你想要建立在运行时精确值的搜索条件, 可以使用 manager.dynamicSearch, 它将生成基于 SQL 值的查询:
 
-```haxe
+```js
 var o = { name : "John", phoneNumber : "+818123456" };
 var users = User.manager.dynamicSearch(o);
 ```
@@ -557,7 +557,7 @@ var users = User.manager.dynamicSearch(o);
 
 为了在 SPOD对象中存储任意数据, 可以使用 SData　类型, 例如:
 
-```haxe
+```js
 import sys.db.Types
 enum PhoneKind {
     AtHome;

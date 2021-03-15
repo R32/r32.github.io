@@ -43,7 +43,7 @@ categories: haxe
 
 * keyValue 迭代器(KeyValueIterator),
 
-  ```haxe
+  ```js
   for(key => value in map) {
     trace(key, value);
   }
@@ -70,7 +70,7 @@ categories: haxe
 
 * `enum abstract` 现在可以自动增长, 但不可用于 `extern` 类型的枚举. (*旧 haxe 版本是 @:enum abstract*)
 
-  ```haxe
+  ```js
   enum abstract IType(Int) {
     var A;      // 0
     var B;      // 1
@@ -107,7 +107,7 @@ categories: haxe
 
   或者是抽象类, 可以添加 `@:analyzer(as_var)`
 
-  ```haxe
+  ```js
   @:analyzer(as_var) abstract Ptr(Int) to Int {
     public inline function new(i:Int) {
         this = i;
@@ -118,7 +118,7 @@ categories: haxe
 
 * `Any` 类型的引入，<https://github.com/HaxeFoundation/haxe-evolution/blob/master/proposals/0001-any.md>
 
-  ```haxe
+  ```js
   var d:Dynamic = 1;
   d.charCodeAt(0)  // 编译器无法检测这行的正确性, 但运行时一定会出错
   var a:Any = 1;
@@ -133,7 +133,7 @@ categories: haxe
 
 * `@:resolve` 可用于 abstract 类, 这样当你访问不存在的字段时, 将自动转到 resolve 方法上 `#3753`
 
-  ```haxe
+  ```js
   private abstract A(Map<String, String>) from Map<String, String> {
   	@:resolve function resolve(name:String) {
   		return this[name];
@@ -146,7 +146,7 @@ categories: haxe
 
 * `extern` 现在可以用在 abstract 类以及 @:enum abstract上了. [#4862](https://github.com/HaxeFoundation/haxe/issues/4862)
 
-  ```haxe
+  ```js
   @:native("http_status")
   @:enum extern abstract HttpStatus(Int) {
       var Ok;
@@ -158,7 +158,7 @@ categories: haxe
 
 * `@:structInit`: <https://github.com/HaxeFoundation/haxe/issues/4526>
 
-  ```haxe
+  ```js
   @:structInit class MyStruct {
       public var a:Int;
       public var b:String;
@@ -184,7 +184,7 @@ categories: haxe
 
 * 处理 extern 类 haxe.extern.EitherType; 和  haxe.extern.Rest;
 
-  ```haxe
+  ```js
   import haxe.extern.Rest;
   import haxe.extern.EitherType;
 
@@ -211,7 +211,7 @@ categories: haxe
   - FlatEnum 用来限制 Enum 的类型.
 
 
-  ```haxe
+  ```js
   var onclick : haxe.Constraints.Function;
 
   // 但是这个就不好理解了,
@@ -238,7 +238,7 @@ categories: haxe
 
   - `Constructible<T>` ???用于参数类型, 表示为一个可实例化的类型
 
-  ```haxe
+  ```js
   private class A {
   	public function new() {}
   }
@@ -307,7 +307,7 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
 
 * 泛形, 返回类型或者Void, 参考 haxe.Time 的 measure 方法源码如下:
 
-  ```haxe
+  ```js
   public static function measure<T>( f : Void -> T, ?pos : PosInfos ) : T {
       var t0 = stamp();
       var r = f();
@@ -341,7 +341,7 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
 
 * `typedef SString<Const> = String`. <http://haxe.org/manual/macro-generic-build.html#const-type-parameter>
 
-  ```haxe
+  ```js
   //这行在 sys.db.Type.hx 文件中.于是可以有如下定义
   var name:SString<10>; // SQL VARCHAR(10)
   ```
@@ -356,7 +356,7 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
 
 * **初使化静态变量**  `static function __init__(){}`;
 
-  ```haxe
+  ```js
   //注意 和 区分直接赋值的先后顺序.
   class Foo{
   	public static var value:String = "var";
@@ -374,7 +374,7 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
 
 * 泛型构造方法中有 new Some<T>() 这样的创建泛型实例时, 除了 JS 之外, 最好加上 `@:generic` 元数据.
 
-  ```haxe
+  ```js
   // 如果这个方法是 new Array<T>(),倒是没什么错误, 但是
   // Vector 在实例化时需要 默认类型来填充各单元, 所以不加 @:generic 时将报错,或得到的值不正确
   @:generic function vec<T>(n:T){
@@ -455,7 +455,7 @@ haxe 源码位于 `HaxeToolkit\haxe\std\` 目录之下
 
 haxe 每个方法或函数都有一个 bind 的方法, 用于包装一个函数：(*请注意区别 js 的 .bind*)
 
-```haxe
+```js
 function foo(a:Int, b:Int):Int{
 	return a+b;
 }
@@ -471,7 +471,7 @@ inline function warp():Int{
 
 有时候我们只想固定其中一个值, 则可以使用下划线 `_` 来作为填充值
 
-```haxe
+```js
 class Bind {
 	static public function main() {
 		var map = new Map<Int,String>();
@@ -495,7 +495,7 @@ class Bind {
 
 * 方法没有方法体(特殊除外),以及方法的参数及返回类型必须是显示声明的
 
-  ```haxe
+  ```js
   extern class Math{
       static var PI(default,null) : Float;
       static function floor(v:Float):Int;
@@ -504,7 +504,7 @@ class Bind {
 
 特殊的带有 方法体的 extern class, 但必须为 inline, 这样转接到别的不是同名的方法上.
 
-```haxe
+```js
 // python/_std/Array.hx
 @:native("list")
 @:coreApi
@@ -537,7 +537,7 @@ extern class Array<T> implements ArrayAccess<T> extends ArrayImpl {
 
 Haxe 中可以用 **单** 或 **双** 引号来包话字符.使用 **单** 引号时可以定义多行字符串,还可以用 `${}` 嵌入一些变量或表达式
 
-```haxe
+```js
 // 想要输出 $ 需要用 2 个 $$ 符号
 var a = 2;
 var b = 9;
@@ -554,7 +554,7 @@ var muline = '
 
 通过静态扩展使得 代码：`x.f4().f3().f2().f1()` 比 `f1(f2(f3(f4(x))))` 更直观,
 
-```haxe
+```js
 using Main.IntExtender;
 class IntExtender {
 	static public function triple(i:Int) {
@@ -575,7 +575,7 @@ class Main {
 
 haxe 中的 enum 其实和 ocaml 或其它函数式编程语言的 Variants 一样. 并非 C 语言的 enum, 配合 EnumFlags,将 enum 用作于多项选译, 如下描述一个人能说几种语言, .
 
-```haxe
+```js
 enum Lang{
 	EN;
 	FR:
@@ -615,7 +615,7 @@ function foo<T>(eu:Enum<T>):Void {} // foo(Lang);
 
 > 匹配总是从顶部到底部. _ 匹配任何字符，所以case _： 相当于 default:
 
-```haxe
+```js
 enum Tree<T> {
 	Leaf(v:T);
 	Node(l:Tree<T>, r:Tree<T>);
@@ -747,7 +747,7 @@ class Main {
 
 但是 如果使用 as3hx 转换 AS3 的源码时,就会经常碰到这样的代码.
 
-```haxe
+```js
 class Helo{
 	// Class<Dynamic>
 	var t:Class<Dynamic>; //需要指定 Class 类型,比如 Class<Helo>
@@ -776,7 +776,7 @@ class Helo{
 
 * 类型多个限定, 参考下边示例, T 必须 **同时满足** `Iterable<String>, 和 Measurable`
 
-  ```haxe
+  ```js
   static function test<T:(Iterable<String>, Measurable)>(a:T) {
   }
   ```
@@ -789,7 +789,7 @@ class Helo{
 
 除了编译器内建的, haxe 允许自定义元数据, 格式为 `@` 字符作前缀(编译器内建的以 `@:` 为前缀, 当然你也能定义以 `@:` 作前缀的元数据, 这只是规范,　并没有强制要求). 例: `@some`. 可以通过 haxe.rtti.Meta 在运行时访问这些元数据内容,
 
-```haxe
+```js
 #if !macro @:build(Foo.build()) #end
 @author("Nicolas") @debug class MyClass {
 	@values( -1, 100) var x:Int;
@@ -843,7 +843,7 @@ typedef 象是一种别名的工具.像定义了一个接口,但是不需要写 
 
 * 如果你想把一个 直接结构量`{x:0,y:0,width:`100}` 赋值给一个变量, typedef struct 是最好的选择了.
 
-```haxe
+```js
 typedef Abc = {
 	var name:String;
 	function f():Void;
@@ -875,7 +875,7 @@ var w:Window = {x:0,y:0};
 看上去像是使用 `typedef` 定义了一个别名， 但不同的是抽象类可以在这个别名上添加各种方法， 绝大多数情况下
 这些方法都为 inline 类型， 因为编译器在底层只是将抽象类做一些名字替换而已。例:
 
-```haxe
+```js
 @:analyzer(no_const_propagation)   // 这个参数是防止编译器对常量优化
 class Main {
 	static public function main() {
@@ -911,7 +911,7 @@ Main.main();
 
 * `enum abstract`: 使得抽象类像 C 语言中的枚举
 
-  ```haxe
+  ```js
   enum abstract C(Int) {
       var X = 0;
       var Y;
@@ -928,7 +928,7 @@ Main.main();
 
 [隐式转换...](http://haxe.org/manual/types-abstract-implicit-casts.html), 直接与底层类型转换可以简单地使用 from 和 to.
 
-```haxe
+```js
 abstract Score(Int) from Int to Int{
 	inline public function pass(score:Int):Bool {
 		return score >= 60;
@@ -942,7 +942,7 @@ abstract Score(Int) from Int to Int{
 
 如果想要隐式地转换成其它类型， 则可以使用： `@:from, @:to`
 
-```haxe
+```js
 abstract Score(Int){
 	inline public function new(i:Int){
 		this = i;
@@ -972,7 +972,7 @@ abstract Score(Int){
 
 * `@:commutative`: 应用用抽象类的运算符重载，你可以参考 UInt.hx 的源码
 
-  ```haxe
+  ```js
   @:commutative @:op(A + B) private static inline function addWithFloat(a:UInt, b:Float):Float {
   	return a.toFloat() + b;
   }
@@ -986,7 +986,7 @@ abstract Score(Int){
 
 [索引器...](http://haxe.org/manual/types-abstract-array-access.html)，通过在抽象类上添加 `@:arrayAccess`
 
-```haxe
+```js
 abstract AString(String) {
   inline public function new(s) this = s;
   @:arrayAccess inline function getInt1(k:Int) {
@@ -1006,7 +1006,7 @@ abstract AString(String) {
 实际上对于抽象类， 编译器在底层将提升成员方法为“静态”，因此你也可以直接定义成静态方法, 语法类似于 “静态扩展”，
 只要静态函数的第一个参数类型为抽象类的底层类型(underlying type)即可，有点像是编译器自动帮你使用了 "using" 一样。
 
-```haxe
+```js
 // 这里仍旧使用上边的示例, 只是把 pass 改成了静态方法,
 abstract Score(Int){
 	inline public function new(i:Int){
@@ -1041,7 +1041,7 @@ haxe 3.3 才加入的类, 使得目前除了flash 和 js平台, 其它平台也�
 这个字段为一个 xml 的字符串包含了所有这个类的信息, 可以通过 `haxe.rtti.XmlParser` 来分析。
 将获得个 [RTTI Structure]()的数据结构。
 
-```haxe
+```js
 @:rtti class Main {
   var x:String;
   static function main() {
@@ -1059,7 +1059,7 @@ haxe 3.3 才加入的类, 使得目前除了flash 和 js平台, 其它平台也�
 
 * `haxe.rtti.XmlParser`: 用于解析 __riit 字段, 见 API 文档
 
-  ```haxe
+  ```js
   var rtti:String = untyped SomeClass.__rtti;
   var t = new haxe.rtti.XmlParser().processElement( Xml.parse(rtti).firstElement() );
   switch(t){

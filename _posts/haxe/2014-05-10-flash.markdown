@@ -258,7 +258,7 @@ haxe -main Test -swf-lib libname.swc -swf Test.swf
 [问题解决原文](http://labe.me/en/blog/posts/2012-12-17-flash-haxe-gaming-sdk.html#.U4dTP3Y3mcM),　需要建一个 patch　文件如:
 
 
-```haxe
+```js
 // haxe 调用 starling.swc 示例
 // 将这个文件 保存为 Starling.patch 或其它任意文件名.
 // 项目中添加 haxeflag 编译选项 --macro "patchTypes('Starling.patch')"
@@ -279,7 +279,7 @@ haxe -main Test -swf-lib libname.swc -swf Test.swf
 
 但在某些情况下你可能必须创建 patch file, patch file 将修改 flash库中已经存在类的字段类型,
 
-```haxe
+```js
 // Removes a class field from Haxe definition
 -flash.accessibility.Accessibility.new
 
@@ -329,7 +329,7 @@ You can use a patch file with --macro patchTypes('patchFile')
 
 覆盖 flash 的 setter 时要注意 返回值类型应该为 Void, 而 Haxe 的 setter 却应返回对应类型.
 
-```haxe
+```js
 class LEByteArray extends ByteArray{
 	public function new(len:UInt) {
 		super();

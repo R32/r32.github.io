@@ -62,7 +62,7 @@ categories: other
 
 haxe 中没有 `for(var i=0; i < len; i++){}` 这种语法, 取而代之的是:
 
-```haxe
+```js
 for(i in 0...10){ // js: for(var i=0; i < 10;  i++)
 }
 
@@ -110,7 +110,7 @@ default:
 
 * 条件编译：
 
-  ```haxe
+  ```js
   #if debug
   // do somethins here..
   #elseif nodejs
@@ -129,7 +129,7 @@ default:
 
   > haxe 中的抽象类的形为实际上得有些像 inline, 与其它语言如 java 或 C# 中所谓的抽象类完全是不同的概念,
 
-  ```haxe
+  ```js
   // 小括号中的 Int 我们称之为 底层原型(underlying type)
   abstract Direction(Int){
       inline public function new(i:Int){
@@ -167,7 +167,7 @@ default:
 
 * 静态扩展. 比如你想在某个类上添加一些自定义的方法, 但是又不必修改其源码
 
-  ```haxe
+  ```js
   using Main.Foo;  // 第一步, 使用 using 引入 Foo 类, (由于文件名是 Main.hx, 因此默认是 Main 类)
   class Main {
       static public function main() {

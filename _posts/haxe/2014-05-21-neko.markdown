@@ -44,7 +44,7 @@ options: -interp  关闭 jit再执行
 
 #### neko.Lib
 
-```haxe
+```js
 
 // 从NDLL库中加载 Neko primitive 方法
 public static function load( lib : String, prim : String, nargs : Int ) : Dynamic;
@@ -91,7 +91,7 @@ public inline static function bytesReference( s : String ) : haxe.io.Bytes;
 
 * `sendMessage( msg : Dynamic ):Void` 注意简单数据类型传拷贝,复杂类型传引用. 你可以直接传递线程
 
-  ```haxe
+  ```js
   var t1 = Thread.create(fn);
   t1.sendMessage(Thread.current());
 
@@ -108,7 +108,7 @@ public inline static function bytesReference( s : String ) : haxe.io.Bytes;
 
 **重要:** `pop(block)` 当 block 为 true, 将为阻塞模式, 也就是说调用 pop(true) 时, 当没有元素可用于pop( *类似于调用空数组的pop方法* ), 将阻塞当前进程直至有元素可以弹出. 用于多线程编程.
 
-```haxe
+```js
 var q = new Deque<Int>();
 Thread.create(function() { trace(q.pop(true)); });
 Thread.create(function() { trace(q.pop(true)); });
@@ -127,7 +127,7 @@ Sys.sleep(1)
 
 `wait(?sec)`用于阻塞进程.直到已经到了指定时间或者其它进程调用了 `release()`. 示例显示了 wait 的时间已过而退出 阻塞,
 
-```haxe
+```js
 var lk = new Lock();
 Thread.create(function() {
 	Sys.sleep(2);
@@ -154,7 +154,7 @@ Sys.sleep(3);
 
 在单个线程中轮询多个 **非阻塞** socket, <http://old.haxe.org/api/neko/net/poll>
 
-```haxe
+```js
 class Poll {
 	var readIndexes: ArrayAccess<Int>;	// 如果指定的索引不存在则会返回 -1
 	var writeIndexes: ArrayAccess<Int>;

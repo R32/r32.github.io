@@ -267,7 +267,7 @@ Api.hx 中的全部为静态方法及静态属性:
 
 参考 tora/test 中的示例, Queue 需要 Protocol 绕过 Apache直接连接 tora. 而 Protocol 依赖于 flash的Socket.
 
-```haxe
+```js
 class Queue<T> {
 	var name(default,null) : String;
 	// 调用后防止与客户端断开连接,即使 index.n 已经退出. 这样才能实现消息推送。
@@ -281,7 +281,7 @@ class Queue<T> {
 
 * A-client 通过 addHandler 监听服务器消息推送（Socket 长连接）,
 
-  ```haxe
+  ```js
   // (实验性)交互, 由于服务器端只能获得 params 或 headers,因此对于已经连接的 Protocol
   p.reset();	// 重置所有请求参数, 但是要注意当出现 disconnect 时, 需要重新连接.
   m.addHeader("Key1", "Value1");
@@ -315,7 +315,7 @@ class Queue<T> {
 
 flash + index.n 端:
 
-```haxe
+```js
 #if neko
 typedef Msg = { n : Int, cl : Int };
 class TestHandler extends tora.Handler<Msg> {
@@ -451,7 +451,7 @@ class Test {
 
 example:
 
-```haxe
+```js
 @:rtti
 class MyClass {
       public var content : Array<Int>;
@@ -463,7 +463,7 @@ class MyClass {
 
 App
 
-```haxe
+```js
 class App {
 
     static var share    = new tora.Share<MyClass>( "test", function() {

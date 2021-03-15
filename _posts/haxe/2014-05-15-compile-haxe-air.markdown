@@ -197,7 +197,7 @@ adt -command options
 
 <http://help.adobe.com/zh_CN/air/html/dev/WS5b3ccc516d4fbf351e63e3d118666ade46-7eb3.html>
 
-```haxe
+```js
 package;
 import flash.display.StageAlign;
 import flash.display.StageScaleMode;
