@@ -1,0 +1,142 @@
+---
+
+layout: post
+title:  编译 c 到 wasm
+date:   2021-05-01 09:27:10
+categories: other
+
+---
+
+编译 c 代码到 wasm, 不使用 emscripten sdk.
+
+<!-- more -->
+
+### 参考
+
+<https://surma.dev/things/c-to-webassembly/>
+
+一些需要用到的工具库, 使用 7zip 打开安装包或压缩档进行提取.
+
+* `clang.exe` : 编译器
+
+* `wasm-ld.exe` : 链接器, 提取自 [LLVM] 用于链接生成 wasm 或者打包成 .bc 库
+
+  > 但是其 --help 里并没有提到 .bc 文件如何打包?
+
+* `wasm-opt.exe` : 优化器, 提取自 [WebAssembly/binaryen] 用于 wasm 文件
+
+* `wasm2wat.exe` : 提取自 [WebAssembly/wabt], 用于反编译 wasm 查看一些细节
+ 
+  这个工具需要 `vcruntime140_1.dll`, 你可以在 llvm 安装包里找到
+
+我用的是 cygwin, 主要是因为要使用 Makefile 来辅助编译,
+只是这些 exe 工具只接受 windows 路径, 传递路径时需要转换
+
+> cygwin 提供了 cygpath 命令可以将路径相互转换
+
+当我谈到 wasm 头文件时, 指的是 [emscripten] 中 system 目录下的 c/c++ 文件
+
+### wasm 内存模型
+
+```c
+|__memory_base 
+|    |__global_base
+|    |          |__data_end     |__heap_base
+--------------------------------------------------
+| 空 |          |               |                |
+| 白 |  数据区  |    Stack <--- | ---> heap 区   |
+| 处 |          |               |                |
+--------------------------------------------------
+// wasm 有内置几个变量, 可以使用 & 的形式访问, 如
+// extern int __data_end;
+// extern int __heap_base;
+printf("data end: %d, heap base: %d, stack size: %d\n", 
+	&__data_end, &__heap_base, &__heap_base - &__data_end
+);
+
+// 当使用 --export-all --allow-undefined 链接时, js 端看到这几个内置变量, 如下:
+__global_base : Global  // 数据段的起始点(我猜的), 这个值一般是 1024 
+__data_end    : Global  // 数据段的结束点, 即 stack 的最顶端
+__heap_base   : Global  // 堆的起始点
+__memory_base : Global  // 这个值一直是 0, 似乎表示的是整个内存的起始点?
+__table_base  : Global  // 未知.
+__dso_handle  : Global  // 出现在 emscripten_tls_init.h 中, 似乎与多线程有关
+
+__wasm_call_ctors : fn  // 未知, 这个函数也许是 wasm 用于做某些初使化,
+```
+
+如果要实现 malloc/free, 可以先拿到 heap_base 的值, 那么
+
+问题 1: 如何在 c 端直接获得整个内存的大小?
+
+  从 heap.h 文件可知, emscripten 就是通过调用 js 函数获得的, 
+  因此似乎没有别的方法了.
+
+问题 2: c 能直接调用 js 的 .grow() 函数吗? (不使用 EM_ASM 宏)
+
+
+### 交互
+
+wasm 默认使用 **env** 字段用于传递 js 数据到 c, 
+
+在头文件 em_macros.h 中有, 用于导入一个 js 函数到 c 
+
+```c
+#define EM_IMPORT(NAME) __attribute__((import_module("env"), import_name(#NAME)))
+```
+
+这个宏说明了我们可以自定义 module name.
+
+例如当你使用 `--import-memory` 时, 你需要将 js 生成的 Memory 传递给 env.memory.
+
+```js
+var mem = new Memory({initial: 10}); // 64K * 10
+var lib = new Instance(mod, {
+	env : {
+		memory : mem,
+		
+		// 传递 js 函数 给 c, 在 c 端则: EM_IMPORT(random) double random(); 
+		random : Math.random,
+	}
+});
+```
+
+还有一个用于导出 c 函数到 js 的宏为:
+
+```c
+#define EM_EXPORT(name) __attribute__((used, export_name(#name)))
+
+// e.g: 
+EM_EXPORT(square) int arbitrary_name(int n) {
+	return n * n;
+}
+```
+
+#### 数据类型转换:
+
+对于基础的 bool, int, double 类型, 应该是直接传递, 不需要做任何包装或转换
+
+当从 c 传递或返回指针给 js 时, 其值将为 Memory 的偏移值,
+(和以前的 flash alchemy 一样).
+
+因此可推导出, 当你传递字符串到 c 时, 由于 js 字符串并没有位于 js.Memory 内,
+因此你需要先把 js string 自己复制到 Memory 上, 再将偏移值传递进去.
+
+其它复杂的数据同上. 这需要一个 malloc/free 来获得可用的偏移值
+
+使用上边这些可以编译纯 c 代码到 wasm, 但是由于没有标准库, 
+因此除了一些简单的运算, 你什么也做不了, 因此你需要一个自己编译 c/c++ 标准库
+否则你将无法编译现存的任何 c 语言写的库.
+
+### 问题
+
+1. 多个 wasm 他们之间如何共享内存了?
+
+  只能通过 js 间接地从 a 模块复制到 b 模块.
+
+
+[emscripten](https://github.com/emscripten-core/emscripten)
+[WebAssembly/binaryen]:(https://github.com/WebAssembly/binaryen)
+[WebAssembly/wabt]:(https://github.com/WebAssembly/wabt)
+[LLVM]:(https://releases.llvm.org/download.html)
+[LLVM __attribute__]:(https://clang.llvm.org/docs/AttributeReference.html)
