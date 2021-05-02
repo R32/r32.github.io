@@ -39,6 +39,10 @@ categories: haxe
 
 在 twitch 上看直播时, 发现在可以在函数加 `@:debug.display` 然后在 output 窗口会有一些信息.
 
+* `@:semantics(variable|reference|value)`: [#7463](https://github.com/HaxeFoundation/haxe/pull/7463)
+
+* `@:astSource`: [#3285](https://github.com/HaxeFoundation/haxe/issues/3285) 不过其实没什么用, 因为是个半成品
+
 * `@:noClosure`: 作用在类或字段上, 用于禁止将方法作为值传递
 
 * keyValue 迭代器(KeyValueIterator),

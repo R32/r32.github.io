@@ -22,7 +22,8 @@ C++ 的 `#include` 在引用头文件时, 不需要添加头文件扩展名 `.h`
 ```cpp
 using namespace std;
 #include <iostream>        // This is a key C++ library
-#include <cmath>           // 标准 C 库 math.h
+#include <cmath>           // c++ 引用标准 C 库
+// #include <math.h>       // c 语言形式则是以 .h 结尾
 
 int main (){
    double a;
@@ -32,8 +33,6 @@ int main (){
    return 0;
 }
 ```
-
-对于引用 C 库, 个人还是更喜欢使用 C 的方式,即 `#include <math.h>`;
 
 ### 输入和输出
 
@@ -1123,15 +1122,16 @@ class TriVector: public Vector, public Number{
   px = x;			//等同于 px = &x[0]
   ```
 
-* 结构体的初使化，各编译器似乎有些不一致
+* 结构体的初使化
 
   ```cpp
   struct Person{
     int id;
     int phone;
   };
-
-  struct Person p = {10, 101};  // 兼容 MSVC,GCC
+  // 以下各编译器兼容
+  struct Person p1 = {10, 101};
+  struct Person p2 = {.id = 10, .phone = 101};
   ```
 
 * `#ifdef __cplusplus` 一些源码能常见到的.

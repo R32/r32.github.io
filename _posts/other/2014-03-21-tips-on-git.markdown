@@ -317,66 +317,9 @@ $ git submodule split [--url submodule_repo_url] submodule_dir \
 
 #### subtree
 
-subtree 是 1.8 之后的新命令, 和 submodule 的区别是: [百度文库](http://wenku.baidu.com/link?url=ola85Z5tIXJpxCjLTk-dcO81ayXLs68_y6dsmXIa0niF8vWlnAtnEEiZTGlzCNk1G_g36UYNHUBpu9oszONFNB54LNzo3rX7W_ULJg-P-eG)
+subtree 是 1.8 之后的新命令
 
-* 仓库 clone 下来不需要 init 和 update
-
-* 不会产生像 .gitmodule 之类的文件
-
-* git submodule 删除起来比较费劲, 以及一些团队协作时的尴尬问题
-
-创建新的远程 subtree, 这个示例比较兼容旧的 git 版本 <https://help.github.com/articles/about-git-subtree-merges/>
-
-* 首先以正常的方式创建一个 repo
-
-  ```bash
-  mkdir test
-  cd test
-  git init
-  touch .gitignore
-  git add .gitignore
-  git commit -m "initial commit"
-  ```
-
-* 添加新仓库为 subtree
-
-  1 添加新的远程 git URL
-
-  ```
-  $ git remote add -f spoon-knife git@github.com:octocat/Spoon-Knife.git
-  updating spoon-knife
-  warning: no common commins
-  ....
-  ```
-
-  2 合并 spoon-knife 项目到本地Git仓库,(-s ours 表示只 fetch 分支头信息, 但不改变当前分支状态)
-
-  ```bash
-  $ git merge -s ours --no-commit spoon-knife/master
-  Automatic merge went well; stopped before committing as requested
-  ```
-
-  3 创建新目录,这里示例为 spoon-knife , 以及将 spoon-knife 项目的历史复制进去
-
-  ```bash
-  $ git read-tree --prefix=spoon-knife/ -u spoon-knife/master
-  ```
-
-  4 提交更改以保证它们安全
-
-  ```bash
-  $ git commit -m "Subtree meged in spoon-knife"
-  [master fe0ca25] Subtree merged in spoon-knife
-  ```
-
-可以添加数量的任意子项目, Tips: 如果在这个本地repo上创建新克隆, 你需要再次使用 `git remote add` 新子项目添加到新克隆.
-
-**同步更新远程库**
-
-```
-# git pull -s subtree REMOTENAME BRANCHNAME
-$ git pull -s subtree spoon-knife master
-```
+TODO
 
 #### cherry-pick
 

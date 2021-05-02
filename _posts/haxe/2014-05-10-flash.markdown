@@ -269,9 +269,10 @@ haxe -main Test -swf-lib libname.swc -swf Test.swf
 -starling.core.Starling.contentScaleFactor
 ```
 
-**错误 2:** 当调用 flash alchemy 打包的 swc 库时,将会出错,但使用 `-debug` 编绎选项却能通过. [问题#1976](https://github.com/HaxeFoundation/haxe/issues/1976), 所以目前只能以 loader 的形式加载 swf [示例](https://github.com/R32/HelloWorld/blob/Older/test/as3/stringecho/hx-proj/EchoTestLoader.hx)
+**错误 2:** 当调用 flash alchemy 打包的 swc 库时,将会出错,
+但使用 `-debug` 编绎选项却能通过. [问题#1976](https://github.com/HaxeFoundation/haxe/issues/1976)
 
-
+此问题已经解决, 只是还没合并
 
 #### patch files
 

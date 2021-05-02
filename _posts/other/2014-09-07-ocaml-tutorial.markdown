@@ -76,7 +76,8 @@ categories: other
 
 ### 速记
 
-[官方文档](http://ocaml.org/learn/tutorials/index.zh.html), 但网页引用了 google api, 你需要一个特殊的浏览器才能快速打开这个页面.
+[官方文档](http://ocaml.org/learn/tutorials/index.zh.html), 但网页引用了 google api,
+你需要一个特殊的浏览器才能快速打开这个页面.
 
 API 文件建议参考 cygwin/lib/ocaml 下的 mli 文件, 一些方法会提示是否为 tail-recursive
 
