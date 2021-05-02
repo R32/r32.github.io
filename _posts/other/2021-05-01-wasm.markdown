@@ -135,8 +135,8 @@ EM_EXPORT(square) int arbitrary_name(int n) {
   只能通过 js 间接地从 a 模块复制到 b 模块.
 
 
-[emscripten](https://github.com/emscripten-core/emscripten)
-[WebAssembly/binaryen]:(https://github.com/WebAssembly/binaryen)
-[WebAssembly/wabt]:(https://github.com/WebAssembly/wabt)
-[LLVM]:(https://releases.llvm.org/download.html)
-[LLVM __attribute__]:(https://clang.llvm.org/docs/AttributeReference.html)
+[emscripten]:https://github.com/emscripten-core/emscripten
+[WebAssembly/binaryen]:https://github.com/WebAssembly/binaryen
+[WebAssembly/wabt]:https://github.com/WebAssembly/wabt
+[LLVM]:https://releases.llvm.org/download.html
+[LLVM __attribute__]:https://clang.llvm.org/docs/AttributeReference.html
