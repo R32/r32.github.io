@@ -115,17 +115,6 @@ if phase > (2 * pi) then
 -]]
 ```
 
-```js
-function generate( base ) {
-	var ret = [base];
-	for (i in 1...13)
-		ret.push(base * Math.pow(2, i / 12));
-	return ret;
-}
-
-generate(440.0) // [440,466.16376151,493.88330125,523.25113060,...]
-```
-
 一些波形生成示例: [flash-wave/src/Wave.hx](https://github.com/R32/haxe-proj-template/blob/master/flash-wave/src/Wave.hx)
 
 其它
@@ -159,10 +148,6 @@ PCM 是最常用、最简单的波形编码。它是一种直接、简单地把�
 
   > `声道数 * 采样位数 * 取样频率 * 秒 = PCM 即 WAV 文件的大小`
 
-
-### NSF
-
-FC/NES(或Family Computer,Famicom,任天堂,红白机……)的音乐（含效果音）格式
 
 ### 参考链接
 

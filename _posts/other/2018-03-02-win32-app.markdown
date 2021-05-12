@@ -1,0 +1,27 @@
+---
+layout: post
+title:  Win32 桌面应用开发
+date:   2018-03-02 11:55:12
+categories: other
+---
+
+
+Windows 程序开发(第五版)
+
+<!-- more -->
+
+### Tools
+
+* [control-spy] 用于查看各种控件它们看来的样子
+
+  你可能会注意到 ControlSpyV6 应用了主题(theme), 可参考 [Enabling Visual Styles]
+
+* [mctrl](http://www.mctrl.org/tools.php) 同样也提供了一个类似上边的工具
+
+
+* 在 visual studio 的监视窗口中输入 `@err,hr` 可以查看错误值
+
+
+[control-spy]:https://docs.microsoft.com/en-us/windows/win32/controls/control-spy
+
+[Enabling Visual Styles]:https://docs.microsoft.com/en-us/windows/win32/controls/cookbook-overview

@@ -457,14 +457,6 @@ java -jar "$basedir/jar/yuicompressor.jar" "$@"
   r2ghidra-dec   # 同上
   ```
 
-  微信
-
-  ```
-  微信窗口使用的是 `msftedit.dll` 组件,
-
-  对于消息的监听似乎是在写入本地数据库时, 但写入与读出的数据应该都是已经加密的
-  ```
-
 #### ollydbg
 
 `Ctrl+G`: Go to address or value of expression 用于跟随某个公开的API函数, 例如: `CreateFileW`
