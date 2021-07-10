@@ -25,27 +25,20 @@ categories: other
 
 一些需要用到的工具库, 使用 7zip 打开安装包或压缩档进行提取.
 
-* `clang.exe` : 编译器
-
-* `wasm-ld.exe` : 链接器, 提取自 [LLVM] 用于链接生成 wasm 或者打包成 .bc 库
-
-  如果要归档则可以提取出 `llvm-ar.exe`
+* `clang.exe`(编译器), `wasm-ld.exe`(链接器), `llvm-ar.exe`(归档工具) : 提取自 [LLVM]
 
 * `wasm-opt.exe` : 优化器, 提取自 [WebAssembly/binaryen] 用于 wasm 文件
 
-* ~~`wasm2wat.exe`~~ : `wasm-opt.exe --print x.wasm` 一样能查看
+* `wasm2wat.exe` : (可选), 因为使用 `wasm-opt.exe --print NAME.wasm` 也能查看
 
-我用的是 cygwin, 主要是因为要使用 Makefile 来辅助编译,
-只是这些 exe 工具只接受 windows 路径, 传递路径时需要转换
-
-> cygwin 提供了 cygpath 命令可以将路径相互转换
-
+> 我用的是 cygwin, 主要是因为我用 Makefile
+> 但由于只是这些 exe 工具只接受 windows 路径, 因此传递路径时需要转换
 
 ### wasm 内存模型
 
 可以使用 `-z stack-size=<bytes>` 指定 stack 的大小
 
-而 `--initial-memory=<bytes>` 指定的是整个内存的大小.
+或者使用 `--initial-memory=<bytes>` 指定的是整个内存的大小.
 
 例如在 Makefile 中, `-z stack-size=$$((1024*64*10))` 将指定 640K 大小的 stack.
 
@@ -57,15 +50,17 @@ categories: other
 // |    |          |__data_end     |__heap_base
 // --------------------------------------------------
 // | 空 |          |               |                |
-// | 白 |  数据区  |    Stack <--- | ---> heap 区   |
+// | 白 |   Data   |    Stack <--- |  ---> Heap     |
 // | 处 |          |               |                |
 // --------------------------------------------------
+
 // wasm 有内置几个变量, 可以使用 & 的形式访问, 如
-// extern int __data_end;
-// extern int __heap_base;
+extern int __data_end;
+extern int __heap_base;
 printf("data end: %d, heap base: %d, stack size: %d\n",
 	&__data_end, &__heap_base, &__heap_base - &__data_end
 );
+
 
 // 当使用 --export-all --allow-undefined 链接时, js 端看到这几个内置变量, 如下:
 __global_base : Global  // 数据段的起始点(我猜的), 这个值一般是 1024
@@ -78,23 +73,24 @@ __dso_handle  : Global  // 出现在 emscripten_tls_init.h 中, 似乎与多线�
 __wasm_call_ctors : fn  // 未知, 这个函数也许是 wasm 用于做某些初使化,
 ```
 
-如果要实现 malloc/free, 可以先拿到 heap_base 的值, 那么
+如果要实现自己的 malloc/free, 有几个需要注意的变量, 以及内置函数,
 
-1. 如何在 c 端直接获得整个内存的大小?
+* `&__heap_base`: 你的内存管理程序应该将这个值作为 "起始值"
 
-  `__builtin_wasm_memory_size`
+* `int __builtin_wasm_memory_size(int index);` : 返回指定"内存块"的页面数, 每页为 64K 大小.
 
-2. c 能直接调用 js 的 .grow() 函数吗? (不使用 EM_ASM 宏)
+  注: 参数 index 目前为 0, 因为 wasm 目前只使用了 1 个内存块.
 
-  `__builtin_wasm_memory_grow`
+* `void __builtin_wasm_memory_grow(int index, int pages);` : 扩展指定的"内存块"到指定的页面数
+
+我自己实现了一个 [200 行左右的 `malloc/free`](https://github.com/R32/wasm-c/blob/master/src/_malloc.c)
 
 
-指令集里有个 memory.copy, 但是却没有相关的 c 语言宏,
+> 指令集里还有个 __builtin_memcpy_inline, 我猜测应该是 clang 提供的一个宏, 用于复制已知大小的小结构
 
-```c
-// 虽然有下边这个, 但感觉就是 clang 语言内置的, 因为最后一个必须要是常量
-__builtin_memcpy_inline(dst, src, const int);
-```
+  ```c
+  __builtin_memcpy_inline(dst, src, const int);
+  ```
 
 ### 交互
 
@@ -106,16 +102,13 @@ wasm 默认使用 **env** 字段用于传递 js 数据到 c,
 // 这个宏说明了我们可以自定义 module name.
 ```
 
-当你使用 `--import-memory` 时, 需要将 js 生成的 Memory 传递给 env.memory.
+当有编译参数: `--import-memory` 时, 需要由 js 提供 Memory 并传递给 env.memory.
 
 ```js
 var mem = new Memory({initial: 10}); // 64K * 10
 var lib = new Instance(mod, {
 	env : {
 		memory : mem,
-
-		// 传递 js 函数 给 c, 在 c 端则: EM_IMPORT(random) double random();
-		random : Math.random,
 	}
 });
 ```
@@ -133,39 +126,7 @@ EM_EXPORT(square) int arbitrary_name(int n) {
 
 #### 数据类型转换:
 
-wasm 只接受 i32, i64, f32, f64 这几个类型.
-
-当从 c 传递或返回指针给 js 时, 其值将为 Memory 的偏移值,
-(和以前的 flash alchemy 一样).
-
-因此可推导出, 当你传递字符串到 c 时, 由于 js 字符串并没有位于 js.Memory 内,
-因此你需要先把 js string 自己复制到 Memory 上, 再将偏移值传递进去.
-
-其它复杂的数据同上. 这需要一个 malloc/free 来获得可用的偏移值
-
-使用上边这些可以编译纯 c 代码到 wasm, 但是由于没有标准库,
-因此除了一些简单的运算, 你什么也做不了, 因此你需要一个自己编译 c/c++ 标准库
-否则你将无法编译现存的任何 c 语言写的库.
-
-### 问题
-
-1. 多个 wasm 他们之间如何共享内存了?
-  似乎只能通过 js 间接地从 a 模块复制到 b 模块.
-
-2. c 如何访问 js 传递过来的 Global 类型数据?
-  ```wat
-  ; 这是 wat 的源码, 它定义了要从 js.global 导入
-  ; 但是 c 要如何做了? EM_IMPORT 只能用在函数上.
-  ; 或者 c 根本就没有相关的定义.
-  (module
-   (global $g (import "js" "global") (mut i32))
-   (func (export "getGlobal") (result i32)
-        (global.get $g))
-   (func (export "incGlobal")
-        (global.set $g
-            (i32.add (global.get $g) (i32.const 1))))
-  )
-  ```
+wasm 只允行将 i32, f32, f64 这 3 种类型与 js 交互
 
 [emscripten]:https://github.com/emscripten-core/emscripten
 [WebAssembly/binaryen]:https://github.com/WebAssembly/binaryen

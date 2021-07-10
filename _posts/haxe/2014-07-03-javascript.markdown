@@ -11,6 +11,17 @@ categories: haxe
 
 * 建议使用 git 版本的 haxe, 可在 <http://build.haxe.org> 下载
 
+* 由于 haxe 4 支持模块内的函数/变量, 而且 extern 可以直接用于字段,
+
+  ```js
+  // 例如可添加类似于如下代码到任何类, 之后通过 import.hx 引入即可
+  @:native("console") extern var console : js.html.ConsoleInstance;
+  @:native("document") extern var document : js.html.Document;
+  @:native("window") extern var window : js.html.Window;
+  ```
+
+<!-- more -->
+
 * `-debug` 模式将会生成 source map 文件用于调试, release 下也可以使用 `-D source-map` 来强制输出这个文件
 
 * 当把一个 **成员方法** 作为参数时传递时, haxe 会将把 **成员方法** 与其相关的对象自动绑定
@@ -28,7 +39,6 @@ categories: haxe
 
 * 当写 extern class 时, 静态扩展目前将忽略 `@:overload` [#5596](https://github.com/HaxeFoundation/haxe/issues/5596)
 
-<!-- more -->
 
 ### 黑魔法
 

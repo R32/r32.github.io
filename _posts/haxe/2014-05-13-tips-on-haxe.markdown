@@ -107,19 +107,6 @@ categories: haxe
 
 * 优化器目前默认处于关闭状态, 你需添加编译参数 `-D analyzer-optimize` 来开启它。(**推荐开启**)
 
-* `import haxe.extern.AsVar`: 用于方法的参数类型, 传递给方法的实参将会先赋值给临时变量，再传递到方法上.
-
-  或者是抽象类, 可以添加 `@:analyzer(as_var)`
-
-  ```js
-  @:analyzer(as_var) abstract Ptr(Int) to Int {
-    public inline function new(i:Int) {
-        this = i;
-    }
-  }
-  // 更多参数见: https://github.com/HaxeFoundation/haxe/blob/master/src/optimization/analyzerConfig.ml
-  ```
-
 * `Any` 类型的引入，<https://github.com/HaxeFoundation/haxe-evolution/blob/master/proposals/0001-any.md>
 
   ```js
@@ -184,7 +171,12 @@ categories: haxe
 
 * Compiler.keep 的行为发生了改变 https://github.com/HaxeFoundation/haxe/issues/4111
 
-  > `@:keep` only has an effect if the type is actually compiled to begin with. The compiler doesn't eagerly read all your .hx files, so you have to make sure the types in question are referenced somewhere. This can be done in code or via command line: For single classes you can just specify their path (without -main), for entire packages you can use `--macro include("package.path")`.
+  > `@:keep` only has an effect if the type is actually compiled to begin with. 
+  > The compiler doesn't eagerly read all your .hx files, so you have to
+  > make sure the types in question are referenced somewhere. This can be done in code or via command line: 
+  > For single classes you can just specify their path (without -main), 
+  > for entire packages you can use `--macro include("package.path")`.
+ 
 
 * 处理 extern 类 haxe.extern.EitherType; 和  haxe.extern.Rest;
 
@@ -577,7 +569,8 @@ class Main {
 
 ### enum
 
-haxe 中的 enum 其实和 ocaml 或其它函数式编程语言的 Variants 一样. 并非 C 语言的 enum, 配合 EnumFlags,将 enum 用作于多项选译, 如下描述一个人能说几种语言, .
+haxe 中的 enum 其实和 ocaml 或其它函数式编程语言的 Variants 一样. 并非 C 语言的 enum, 
+配合 EnumFlags,将 enum 用作于多项选译, 如下描述一个人能说几种语言, .
 
 ```js
 enum Lang{
@@ -588,18 +581,7 @@ enum Lang{
 // EnumFlags 的定义
 abstract EnumFlags<T:EnumValue>(Int) {}
 
-// 为什么这里的类型 Lang 为 EnumValue
-var f = new EnumFlags<Lang>();
-
-// 这个示例显示 如果 Lang 作为类型参数时, 将等于 EnumValue, 只是用来限定包含哪些有字段
-var en:Lang = EN;
-var fr:EnumValue = FR;
-
-// 而 尖括号(EnumFlags<Lang>) 中的 Lang ,这里是用于表示 类型, 而不是把 Lang 作为值传递
-// 任何时候 尖括号中的值都是用来表类型.
-
-var t:Enum<Dynamic> = Lang;	// 或 t:Enum<Lang> = Lang; 这里才是把 Lang 作值传递, 这里和 Class<Dynamic> 那里一致
-function foo<T>(eu:Enum<T>):Void {} // foo(Lang);
+// 任何 Enum instance 都可以将其类型转换为 EnumValue
 ```
 
 配合 switch , 用于描述抽像的数据类型,感觉像是单项选译, 详情见官方文档.
