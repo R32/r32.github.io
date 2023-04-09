@@ -91,7 +91,11 @@ java -jar "$basedir/jar/yuicompressor.jar" "$@"
 
 * [lantern](https://github.com/getlantern/lantern) 不解释
 
-* [wink](http://www.debugmode.com/wink/) 录屏软件, 录制为flash, 能在某些点自动暂停
+* [Captura](https://github.com/MathewSachin/Captura) 录屏
+
+* [ScreenToGif](https://github.com/NickeManarin/ScreenToGif) 录屏到 gif (之前我用的好像就是这个)
+
+* [wink](http://www.debugmode.com/wink/) 录屏到 flash, 能在某些点自动暂停
 
 * [daff](https://github.com/paulfitz/daff) align and compare tables 比较二个表格文件（csv）差异
 
@@ -237,10 +241,6 @@ java -jar "$basedir/jar/yuicompressor.jar" "$@"
 * [modernizr](https://github.com/Modernizr/Modernizr) 检测浏览器的 html5 和 css3 支持情况
 
 * [html5 boilerplate](https://github.com/h5bp/html5-boilerplate) 一套专业的前端模版,用以开发快速、健壮、适应性强的app或网站
-
-* [zeroclipboard](https://github.com/zeroclipboard/zeroclipboard) 利用了 flash 来复制
-
-  > 不过 github 上的那个复制按扭好像没有用 flash 来实现,
 
 * **[intro.js](https://github.com/usablica/intro.js)**
 

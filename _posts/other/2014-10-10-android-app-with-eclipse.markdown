@@ -40,20 +40,20 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 public class Helo extends Activity {
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState){
-		
+
 		super.onCreate(savedInstanceState);
 
 		TextView tv = new TextView(this);
-		
+
 		tv.setText("Hello Android!");
-		
+
 		this.setContentView(tv);
 	}
 
-	
+
 }
 ```
 
@@ -66,17 +66,17 @@ import android.app.Activity;
 import android.os.Bundle;
 
 public class Helo extends Activity {
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState){
-		
+
 		super.onCreate(savedInstanceState);
-		
+
 		// activity_helo 名为自定义,当在 res/layout 目录上右键时, 会自动提示完成这些
-		this.setContentView(R.layout.activity_helo);　 
+		this.setContentView(R.layout.activity_helo);　
 	}
 
-	
+
 }
 
 ```
@@ -95,7 +95,7 @@ public class Helo extends Activity {
 
 ### 其它
 
-* [中文API](http://androidbox.sinaapp.com/), 这个链接有其它更多不错的内容. 
+* [中文API](http://androidbox.sinaapp.com/), 这个链接有其它更多不错的内容.
 
 #### Activity
 
@@ -103,7 +103,7 @@ public class Helo extends Activity {
 
 #### i18n(国际化)
 
-res/values 目录下的 strings.xml 文件, 如果想支持中文, 复制 values 目录,并将 目录名称改为 `values-zh-rCN`, 然后修改 strings.xml 中对应的值. eclipse 将会自动把这些值写到 R.java 中去. 
+res/values 目录下的 strings.xml 文件, 如果想支持中文, 复制 values 目录,并将 目录名称改为 `values-zh-rCN`, 然后修改 strings.xml 中对应的值. eclipse 将会自动把这些值写到 R.java 中去.
 
 在 xml 文件里 使用 @string/字符串资源名称 的形式调用.如: @string/app_name ,通常 eclipse 有更智能的自动完成.
 
@@ -129,7 +129,7 @@ Theme.Light
 ; 白色背景
 
 Theme.Black
-; 黑色背景, 黑得更彻底. 
+; 黑色背景, 黑得更彻底.
 
 Theme.NoTitleBar
 ; 无标题栏

@@ -40,7 +40,7 @@ var user = u.unserialize(bytes, User);
 
 一个 server 与 多个 clients,
 
-server 与 clients 全都要有 `NetworkSerializable` 作为传输的数据, `NetworkHost` 则作为连接器, 
+server 与 clients 全都要有 `NetworkSerializable` 作为传输的数据, `NetworkHost` 则作为连接器,
 也就是说, server 与 clients 将要共用这些代码
 
 

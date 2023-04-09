@@ -19,7 +19,14 @@ http://wenku.baidu.com/link?url=FAy226htPhXpU_7r_WUMvNCOtUjhf90KJpYRmTY449cEkxxS
 
 <!-- more -->
 
-https://github.com/cmangos/issues 这里有一些仿的源码.
+[Console_variables](https://wowpedia.fandom.com/wiki/Console_variables)
+
+  ```bash
+  /console ShowClassColorInFriendlyNameplate 0
+
+  # 如果你感觉弄乱了，可以重置
+  /console cvar_default
+  ```
 
 
 ### 工具
@@ -37,7 +44,9 @@ https://wow.gamepedia.com/AddOn_Studio
 
   /fstack     #显示鼠标处 frame 的相关信息
 
-  /etrace [start|stop|[number]] #事件追踪 [开始, 停止, 达到某数量自动停止]
+  /etrace [start|stop|[number]] # 事件追踪 [开始, 停止, 达到某数量自动停止]
+
+  /tinspect [globalname]        # table inspect, 未指定参数则审查光标下的 UI
   ```
 
 * 可视化布局IDE -
@@ -51,6 +60,11 @@ https://wow.gamepedia.com/AddOn_Studio
 * [mpq 解压工具 C#](https://github.com/WoW-Tools/MpqTool), 用于导出 FrameXML, 针对旧的 WOW版本没有 `exportInterfaceFiles` 命令
 
 * .....
+
+  ```bash
+  # 显示 lua 错误
+  /console scriptErrors 1
+  ```
 
 ### Extracting interface files
 
@@ -123,7 +137,13 @@ Bob.lua
 
 ```
 ## Interface: 60100
+
+#
+## Interface-Classic: 11403
+## Interface-Wrath: 30400
 ```
+
+在游戏内可以通过 `/dump select(4, GetBuildInfo())` 获得当前版本。
 
 #### Title
 
@@ -227,9 +247,10 @@ Bob.lua
 
 ### XML
 
-https://github.com/tekkub/wow-ui-source
+https://www.townlong-yak.com/framexml/latest/UI.xsd
 
 http://wowwiki.wikia.com/wiki/XML_elements
+
 
 其实感觉这个文件是通过XML文件来生成Lua文件, 因为一些布局方式的代码如果直接用Lua实现会有些复杂,
 
@@ -258,7 +279,7 @@ http://www.cnblogs.com/apexaddon/articles/1507772.html
 
   - hidden(boolean) - 默认为ture, 元素加载后将隐藏
 
-  - alpha(float) 0值为全完透明, 1 为透时.
+  - alpha(float) 0值为全完透明, 1 为不透明.
 
   - parent(elementName) 定义这个元素的父元素，例如各种插件都会选择挂在相应的父元素上.比如 Minimap, 通常都设为 "UIParent"
 
@@ -376,6 +397,14 @@ http://www.cnblogs.com/hewei2012/p/3552797.html
 
 http://www.lua.org/manual/5.1/
 
+
+```lua
+-- 很多 库的第一行如下, 可以猜到 NAME 为插件的名称，
+-- 而 S 则为 table 类型，(TODO)
+
+local NAME, S = ...
+local VERSION = GetAddOnMetadata(NAME, "Version")
+```
 
 ## 其它
 

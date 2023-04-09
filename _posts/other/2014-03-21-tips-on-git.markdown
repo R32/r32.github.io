@@ -124,6 +124,9 @@ squash c964dea Getting closer
 squash 06cf8ee Something changed
 squash 396b4a3 Tests pass
 
+# 可以多个 pick 跟随多个 squash, 如果失败了那么那么肯定是有冲突, 按照提示手动修改即可
+# 警告: 不要删除其中的某一行，否则 commit 会丢失 除非你明确要那样做
+
 # VIM 交互模式下 "保存并退出" (ESC + :wq)
 # 这时 VIM 将会重新加载一个 commit message 列表，所有非注释内容会被当成提交
 # VIM 交互模式下 "保存并退出" (ESC + :wq)

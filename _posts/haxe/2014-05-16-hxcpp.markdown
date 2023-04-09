@@ -109,7 +109,7 @@ void Foo_obj::__construct(){}
 
 <https://github.com/HaxeFoundation/hxcpp-debugger/wiki/Getting-started>
 
-#### 黑魔法
+#### 直接嵌入 c++ 代码
 
 * `__cpp__` 直接在 haxe 代码中嵌入 cpp 源码.　<https://github.com/HaxeFoundation/haxe/pull/2875>
 
@@ -131,43 +131,11 @@ void Foo_obj::__construct(){}
 
 重先先介绍几个重要的:
 
-* `@:nativeGen`: 表示不使用 hxcpp 带的 GC，并且没有其它如 Reflect 的代码
+* `@:nativeGen`: 将以纯 c++ 的形式构建类, 主要用于你是用 haxe 来写 cpp 代码供外部使用
 
-  但是这是这种类，在 haxe 源码里不要使用 new 来来初使化它, 因为 `new Foo()` 将会变成 `Foo_obj::__new()`
+  在 haxe 使用它需要和 @:structAccess 一起使用，因为在 haxe 中初始化它时将会再栈上分配内存
 
-  加上后，将不能直接在类上初使化变量属性值，如果有静态变量将无法通过编译（受 `__boot__.cpp` 影响）
-
-  `__main__.cpp` 总是类似于这样调用 `Main_obj::main`, 但可以通过 `@:headerCode("#define Main_obj Main")` 绕过去.
-
-  这个 meta 加在 extern class 上将没有作用.
-
-  ```js
-  @:structAccess
-  @:nativeGen
-  class Foo {
-  	public var i:Int;
-
-  	@:extern @:native("Foo")
-  	static public function fromStack():Foo {
-  		return null;
-  	}
-
-  	@:extern @:native("new Foo")
-  	static public function fromHeaps():cpp.Star<Foo> {
-  		return null;
-  	}
-
-  	static public inline function destory(ptr:cpp.Star<Foo>):Void{
-  		untyped __cpp__("delete {0}; {0} = 0", ptr);
-  	}
-
-  	static public inline function isNull(ptr:cpp.Star<Foo>):Bool{
-  		return untyped __cpp__("{0} == 0", ptr);
-  	}
-  }
-  ```
-
-  **结论:** 上边示例看上去非常麻烦，因此还不如直接用 cpp 代码写好，在 haxe 端写 extern class 就好了
+  由于是在栈上分配，所以不能把它的值传递出去, 由于不能传递, 因此没什么用
 
 * `@:native` 和其它平台的差异，特别是写 extern class 时. 在 cpp 中如果用在静态字段上，将不带类名。例:
 

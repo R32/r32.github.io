@@ -1,0 +1,135 @@
+---
+
+layout: post
+title:  luajit
+date:   2022-09-22 09:21:22
+categories: other
+
+---
+
+luajit 的个人日志
+
+<!-- more -->
+
+### Tips
+
+```lua
+local args = {...}  -- table
+local a, b = ...    --  arg1, arg2
+
+local a = x64       --
+```
+
+### lua state
+
+即 `lua_State`, 用于表示某个创建的 lua 虚拟机, 下边将用用 L 字符表示其实例
+
+### registry table
+
+保存了全局变量和函数:
+
+  可以在这里定义某些全局变量以供 lua 使用
+
+  也可用于在 c 端获得 lua 中的变量或函数
+
+### virtual stack
+
+虚拟栈，用于 c 和 lua 的交互，当想传数据给 lua 时，
+你可以放数据上去，或者获得 lua 的返回值
+
+再调用 lua 中的函数时，你需要**先**把数据放到 stack 之中，
+
+例如:
+
+```c
+// 如何在 `registry table` 中添加一个 lua 变量:
+lua_pushstring(L, "http://localhost:8000") // 将 字符串压入栈中
+lua_setglobal(L, "WEBSITE_URL")  // 设置 WEBSITE_URL 并移除刚才压入的字符串
+```
+
+
+栈操作函数， `lj_api.c`
+
+idx : (-n 和 1) 表示栈底(base)的第一个， (n 和 -1)表示栈顶(top)的那个
+
+lua_gettop(L) : `L->top - L->base` 或的栈的大小
+
+lua_settop(L, idx) : 设置"栈"的大小到指定 idx, 可能会 grows, 也可能会 shrinks
+
+lua_remove(L, idx) : 移除 idx 所在的值，(内部的块将会左移，如果不是栈顶的话)
+
+lua_replace(L, idx) : 把栈顶元素覆盖到 idx 位置，然后 `L->top--`(将栈顶元素弹出)
+
+lua_copy(L, fromidx, toidx) : `*to_idx_block = *from_idx_block`
+
+lua_pushvalue(L, idx) : 复制 idx 处的位置的块，并压入到栈顶 (通过这种方式以避免初始化块？)
+
+> 注源码中的 copy_slot(L, SRC, DST) 而 copyTV(L, DST, SRC)
+
+
+Object 操作函数
+
+lua_gettable (L, idx) : idx 应该指向 obj 所在的位置, 而 key 则需要在栈顶, 才能调用这个方法
+
+执行后, obj[key] 将替代 key 出现在栈顶, 这个方法会触发 meta 的元方法。
+
+
+
+lua_setfield(L, idx, char*) : 做一个等价于 t[k] = v 的操作， 这里 t 是给出的索引处的值， 而 v 是栈顶的那个值。
+
+### 问题
+
+如何制作如 `require(mylib)` 的包？即当 lua 使用了 `local mylib = require(mylib)` 时, c 端会发生什么？
+
+1. 制作 mylib.dll 这种方式, 参考 lib_package 是如何加载的
+
+2. 但 ffi 这个库却没有 ffi.dll 又是如何被加载进去的了？
+
+  将 某个 package 内嵌入 exe 而不是另外打包成 dll 这种方式的优缺点
+
+
+```c
+#define LJ_LIB_REG(L, regname, name) \
+  lj_lib_register(L, regname, lj_lib_init_##name, lj_lib_cf_##name)
+```
+
+----------
+
+LUA_REGISTRYINDEX
+LUA_ENVIRONINDEX
+LUA_GLOBALSINDEX
+
+
+确保使用luaL_newstate。避免使用 lua_newstate，因为它使用系统中（较慢的）默认内存分配器（在 64 位架构上不支持此功能）。
+确保使用luaL_openlibs而不是直接调用luaopen_base等的旧 Lua 5.0 风格
+
+-------
+
+
+```
+lua.h
+  一些基本的操作,
+
+
+lua_init.c
+  luaL_openlibs(L) : 通过查看源码发现加载了 base, package, table, io, os,
+string, math, debug, bit, jit, 即可以直接使用的变量, 例如 math.randon
+
+还加载了 ffi, 到 "_PRELOAD", 需要通过 require() 才能使用的包
+
+
+lib_aux.c  lauxlib.h
+
+  luaL_openlib(L, libname, luaL_Reg, index) : 用于单独加载某个包
+
+  但是这个函数如何加载
+
+
+```
+
+通过查看
+
+
+## 其它
+
+https://blog.csdn.net/mango9126/article/details/77897263

@@ -6,7 +6,7 @@ categories: haxe
 ---
 
 
-bresenham 是一种相当常见的算法, 几个月以前我发现一些非常有用的用途. [原文链接](http://deepnight.net/bresenham-magic-raycasting-line-of-sight-pathfinding/) 
+bresenham 是一种相当常见的算法, 几个月以前我发现一些非常有用的用途. [原文链接](http://deepnight.net/bresenham-magic-raycasting-line-of-sight-pathfinding/)
 
 这种算法基本上用于基于网格空间在二点之间画一条线(ie:像素单位). 其结果是完美的像素线条, 但该算法还具有很多其它有趣的用法:
 
@@ -124,7 +124,7 @@ function checkLine(x0:Int,y0:Int, x1:Int,y1:Int, rayCanPass:Int->Int->Bool) {
 	if( swapXY )
 		// Y / X
 		for ( x in x0 … x1+1 ) {
-			if(!rayCanPass(y,x)) return false;	
+			if(!rayCanPass(y,x)) return false;
 			error -= deltay;
 			if ( error < 0 ) {
 				y = y + ystep;
@@ -157,7 +157,7 @@ checkLine(mob.x,mob.y, player.x, player.y, function(x, y){
 
 #### 寻路优化
 
-当你写寻路算法(如A星)时, 你知道它在游戏中非常耗时, 所以每一次你最好是避免调用寻路方法, 使用上一个示例, 如果你的答案是: 当 mob(坏人)看见玩家时, 
+当你写寻路算法(如A星)时, 你知道它在游戏中非常耗时, 所以每一次你最好是避免调用寻路方法, 使用上一个示例, 如果你的答案是: 当 mob(坏人)看见玩家时,
 
 #### 寻路平滑
 

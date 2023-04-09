@@ -8,7 +8,7 @@ categories: other
 ---
 
 ...........
- 
+
 <!-- more -->
 
 #### 引导系统
@@ -43,7 +43,7 @@ https://mirrors.ustc.edu.cn/
 	```ini
 	# 注意 ubuntu-14.10-desktop-amd64.iso 需要替换成相应文件名
 	title ubuntu-14.10 live CD
-	find --set-root /ubuntu-14.10-desktop-amd64.iso 
+	find --set-root /ubuntu-14.10-desktop-amd64.iso
 	kernel /vmlinuz.efi boot=casper iso-scan/filename=/ubuntu-14.10-desktop-amd64.iso locale=zh_CN.UTF-8
 	initrd /initrd.lz
 	```
@@ -53,10 +53,10 @@ https://mirrors.ustc.edu.cn/
 
 	```ini
 	/	20G
-	/boot	256M	
+	/boot	256M
 	/home	20G
-	/swap	2G	#这个在选择文件类型那里改. EXT4 那个选项	
-	/tmp	5G	
+	/swap	2G	#这个在选择文件类型那里改. EXT4 那个选项
+	/tmp	5G
 	```
 
  * 安装完成之后，删除 `C:\` 下的文件复制，并且将 boot.ini 改回来.

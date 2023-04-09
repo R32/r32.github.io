@@ -17,11 +17,15 @@ categories: other
 
 * 照着 [opam-repository-mingw/installation](http://fdopen.github.io/opam-repository-mingw/installation/) 一步一步来(我个人是参照 Manual Installation 安装的, 那个自动安装包我没尝试过。)
 
+  目前我使用: `ocaml-variants.4.07.1+mingw64c` 版本 ocaml-variants.4.07.0+mingw64c
+
 <!-- more -->
 
 编译 haxe 源码:
 
-* 在 setup.exe 里选上 `mingw64-i686-zlib` 和 `mingw64-i686-pcre` (参考 Makefile.win 里的 dll 文件搜索)
+* 在 setup.exe 里选上 `mingw64-x86_64-zlib` 和 `mingw64-x86_64-pcre` (参考 Makefile.win 里的 dll 文件搜索)
+
+  注意: 对于 mingw64, x86_64 是 64 位版本的, i686 是 32 位
 
   ```bash
   #通过参考 haxe/.github/workflows/main.yml
@@ -44,14 +48,13 @@ categories: other
   perl-IPC-System-Simple
   ```
 
+  代理设置修改 `.bash_profile` 文件, 添加 `export http_proxy=http://127.0.0.1:49308`
+
 * 通过 opam 安装 camlp5, *(可用 mintty 来代替 bash 以防止乱码)*.
 
 * 参考 Makefile 文件, 执行 `make -f Makefile.win` 即可
 
   ```bash
-  # 构建 c 语言外部库, ** 这项已经被移除, 如果是旧项目, 需要在 libs 目录下执行一次 make clean **
-  make libs
-
   # 构建 haxe 编译器, 可附加: ADD_REVISION=1
   make haxe -f Makefile.win
 
@@ -62,17 +65,20 @@ categories: other
   make tools
   ```
 
-### IDE 选择
+### vscode
 
-**`vscode`**: 使用 opam 安装 ocp-indent 和 merlin 来产生语法提示，vscode插件安装 reason , 然后将 merlin 所在路径添加到 PATH. 例如: `cygwin/home/NAME/.opam/4.02.3+mingw32c/bin`
+~~opam 需要安装 merlin 来产生语法提示，vscode 插件安装 reason~~
 
-  settings.json:
+  > ~~需要将 ocamlmerlin 所在路径添加到 PATH. ~~
+  >
+  > ~~或者设置 reason 的 ocamlfind, ocamlmerlin, opam 的真实路径~~
 
-  ```json
-  {
-    "reason.path.ocamlmerlin": "ocamlmerlin-server", // 最新版的
-  }
-  ```
+
+vscode 安装 `Ocaml Platform` 插件，这个插件需要从 cygwin 控制台输入 "code ." 进入 vsdode
+
+  - (必须)`opam install ocaml-lsp-server`
+  - (可选)`opam install ocamlformat`
+
 
 ### 速记
 
@@ -80,6 +86,8 @@ categories: other
 你需要一个特殊的浏览器才能快速打开这个页面.
 
 API 文件建议参考 cygwin/lib/ocaml 下的 mli 文件, 一些方法会提示是否为 tail-recursive
+
+* 和 c 语言一样, 函数参数的传递是从右到左
 
 * 整数字面量后缀: `l, L, n` 分别表示为 int32, int64, nativeint.
 
@@ -116,7 +124,7 @@ API 文件建议参考 cygwin/lib/ocaml 下的 mli 文件, 一些方法会提示
   ocamlc str.cma hello_world.ml
   ocamlopt str.cmxa hello_world.ml
   # 在顶层交互环境，则使用 #load "str.cma" 来打开处部库
-  # 当然使用 ocamlfind 编译时会有更简洁的参数。
+  # 当然使用 ocamlfind 编译时会有更简洁的参数, 可以用 -linkpkg -package str,bigarray,...
   ```
 
 * 和其它语言不一样的是, ocaml 字符串内的字符默认是可以被修改。使用 `Bytes.set`
@@ -315,7 +323,7 @@ API 文件建议参考 cygwin/lib/ocaml 下的 mli 文件, 一些方法会提示
 
 ### opam
 
-ocaml 的包管理器。 在 windows 中，并不是所有库都可以成功安装，例如: 书中的 Core 库就无法安装。
+ocaml 的包管理器。
 
 
 ### 命令行
@@ -357,10 +365,23 @@ camlp4      # 预处理器，例如添加一些特殊的语法, 它是标准 oca
 camlp5      # 预处理器, 同 camlp4, 但它并非由标准安装包提供，需要另行下载
             # 它的关系和现在的 camlp4 非常混乱, 因为它以前就叫做 camlp4, 而现在 camlp4 在之前并不叫做 camlp4
 
+ocamldeps   # 依赖
+
+#########
 # opam
+#########
 ocp-indent  # 格式化源码
-ocamlmerlin # IDE 需要它来提供智能提示
+ocamlmerlin # (重要): IDE 需要它来提供智能提示
+ocamlfind   # 常用工具 https://ocaml.org/learn/tutorials/compiling_ocaml_projects.html
+dune        # ocaml 专用的编译工具
 ```
+
+## dune
+
+目前 ocaml 最流行的编译工具
+
+`dune-project` 作为整个项目的"根"
+
 
 ## misc
 

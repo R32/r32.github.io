@@ -23,6 +23,20 @@ hl output.hl
 
 <!-- more -->
 
+最新:
+
+`@:packed` : 用于某个字段, 字段必须是 `@:struct` 标记过的,
+表示字段将以 struct 的形式加入, 而不是指针
+
+`hl.CArray` : 一片连续的大块内存 (TODO: 那么和普通的定长数组的区别是什么了？)
+
+  只有 DX12Driver 中用了这个类，来处理了 `@:struct VertexBufferView` 之类的数据
+
+  CArray is a compact array where all objects are memory aligned and stored as a single GC block
+
+  这个注释说明 CArray 是单独的 GC 块, 而普通数组则是在普通的 GC 块上划分内存
+
+
 而在发布（release）的时候可以编译成 c 代码以获得更好的性能（我倒是没感觉到有任何性能的提升...）
 
 ```bash
@@ -33,7 +47,7 @@ haxe -hl output.c -main MyApp
 gcc -o myapp output.c hlc_main.c -Lhl
 ```
 
-> 使用 vs2013 1) 从已存在文件新建项目，选择 console 程序。2) 将 hl/src, 和编译出的 c 文件的目录添加到 include.
+> 使用 vs2017 1) 从已存在文件新建项目，选择 console 程序。2) 将 hl/src, 和编译出的 c 文件的目录添加到 include.
 >
 > 3) 设置好 libhl.lib, 例: `#pragma comment(lib, "libhl.lib")`, 4) 将编译出的主 out.c 添加到"源码"
 
@@ -45,7 +59,7 @@ hashlink 一些其它的特点这里简单描述下:
 
 ### 编译虚拟机
 
-以下使用了 vs2013 社区版, 需要自已下载 sdl, openal 等放至到 include 目录 (参看各 readme 文件)，
+以下使用了 vs2017 社区版, 需要自已下载 sdl, openal 等放至到 include 目录 (参看各 readme 文件)，
 
 - directx 丢失了 [d3dcompiler_47.dll](http://www.catalog.update.microsoft.com/Search.aspx?q=KB4019990), 通过链接更新 KB4019990 补丁即可.
 
@@ -187,9 +201,3 @@ haxe 的 anonymous structure or interface instances 以 c 端表现为 `virtual(
 ```
 
 之后 haxe 端的胶水代码则就容易多了. 参看几个示例即可...
-
-### 其它
-
-> 一个 gbk 编码的转换 <https://github.com/qqee/qqee_clib>, 但是已经用不到了, 因为设置 setlocale 即可，不需要做转换
-
-**To Be Continued...**

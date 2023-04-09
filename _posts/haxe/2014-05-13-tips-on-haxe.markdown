@@ -29,11 +29,14 @@ categories: haxe
 
 2. 如何在 Windows 中编译 haxe 可参考 [ocaml-日志]({% post_url other/2014-09-07-ocaml-tutorial %})
 
-  - 编译出的 haxe.exe 所依赖的 dll 文件可在 `i686-w64-mingw32\sys-root\mingw\bin` 中找到(*或将其添加到路径*).
+  - 编译出的 haxe.exe 所依赖的 dll 文件可在 `x86_64-w64-mingw32\sys-root\mingw\bin` 中找到(*或将其添加到路径*).
 
   - 如果你不喜欢 `make tools` 所创建的 `lib` 目录, 可以执行 `haxelib config XXX` 另外指定
 
 ### 最新改动
+
+
+* [所接受的提议 2021-11-13](https://haxe.org/blog/evolution-meeting-2021/)
 
 一些内容通过参考 [CHANGES](https://github.com/HaxeFoundation/haxe/blob/development/extra/CHANGES.txt) 文件
 
@@ -171,12 +174,12 @@ categories: haxe
 
 * Compiler.keep 的行为发生了改变 https://github.com/HaxeFoundation/haxe/issues/4111
 
-  > `@:keep` only has an effect if the type is actually compiled to begin with. 
+  > `@:keep` only has an effect if the type is actually compiled to begin with.
   > The compiler doesn't eagerly read all your .hx files, so you have to
-  > make sure the types in question are referenced somewhere. This can be done in code or via command line: 
-  > For single classes you can just specify their path (without -main), 
+  > make sure the types in question are referenced somewhere. This can be done in code or via command line:
+  > For single classes you can just specify their path (without -main),
   > for entire packages you can use `--macro include("package.path")`.
- 
+
 
 * 处理 extern 类 haxe.extern.EitherType; 和  haxe.extern.Rest;
 
@@ -272,7 +275,7 @@ categories: haxe
 
 flash : 11.728 ------ anon: 45.306  # flash player debug, 非 debug 的能提升到 5 秒内
 js    : 0.6359 ------ anon: 0.6479  # nodejs
-js    : 1.2219 ------ anon:	1.2426  # chrome browser js 平台基本一致
+js    : 1.2219 ------ anon: 1.2426  # chrome browser js 平台基本一致
 cpp   : 0.6921 ------ anon: 16.614
 java  : 低于1秒 ------ anon: 11.    # 低于1秒,有时候为 1 有时候为 0 , 不能显示小数部分
 c#    : 0.5050 ------ anon: 6.8803
@@ -569,7 +572,7 @@ class Main {
 
 ### enum
 
-haxe 中的 enum 其实和 ocaml 或其它函数式编程语言的 Variants 一样. 并非 C 语言的 enum, 
+haxe 中的 enum 其实和 ocaml 或其它函数式编程语言的 Variants 一样. 并非 C 语言的 enum,
 配合 EnumFlags,将 enum 用作于多项选译, 如下描述一个人能说几种语言, .
 
 ```js
