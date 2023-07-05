@@ -64,19 +64,3 @@ https://mirrors.ustc.edu.cn/
  * 修改 `/etc/default/grub`, 使 windows 为默认启动
 
 <br />
-
-apt
-------
-
-ubuntu 基本都是使用 apt 命令来维护软件。
-
- * 添加右键命令行: 完成之后需要注销下系统
-
-	```bash
-	apt-get install nautilus-open-terminal
-	```
-
-
-
-
-

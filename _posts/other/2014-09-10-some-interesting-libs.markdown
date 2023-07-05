@@ -33,9 +33,30 @@ esac
 java -jar "$basedir/jar/yuicompressor.jar" "$@"
 ```
 
+### chrome extension
+
+选择 ungoogled chromium
+
+- Header Editor
+
+  ```
+  name : reCAPTCHA
+  Rule type : Redirect request
+  match type : URL prefix
+  match rules : https://www.google.com/recaptcha/api.js
+
+  Execute type : normal
+  Redirect to : https://recaptcha.net/recaptcha/api.js
+  ```
+
 ### Tools
 
 * Trojan
+
+* [nQuantCpp](https://github.com/mcychan/nQuantCpp) 颜色量化(Color quantization) 转换图片，通过颜色数量比如 256 色，称为
+
+  颜色数量小的图片所占用的空间相对小很多，适合像素类的游戏，
+  不过游戏里像素类型的图片转化后也通常不好看，并不是因为这工具的问题
 
 * [minime](https://sourceforge.net/projects/minime-tool/) 最小化隐藏任务栏
 
@@ -413,6 +434,8 @@ java -jar "$basedir/jar/yuicompressor.jar" "$@"
 * [civetweb](https://github.com/civetweb/civetweb) Embedded C/C++ web server
 
 * [incbin](https://github.com/graphitemaster/incbin) 简单地在 c 语言中嵌入资源, 兼容所有编译器
+
+  这个工具库对于 msvc 似乎不可用，对于 cygwin 也一样。
 
 * [cpu_features](https://github.com/google/cpu_features) A cross platform gnu89 library to get cpu features at runtime.
 

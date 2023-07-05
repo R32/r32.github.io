@@ -40,7 +40,7 @@ https://wow.gamepedia.com/AddOn_Studio
   ```bash
   # http://wowwiki.wikia.com/wiki/Blizzard_DebugTools
   /dump expr  # 相当于JS的在浏览器上输入 console.log(...)
-  /reload     # 重载插件
+  /reload     # 重载插件, 对于 1.12 版本则为 /console reloadui
 
   /fstack     #显示鼠标处 frame 的相关信息
 

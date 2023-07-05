@@ -9,6 +9,15 @@ categories: other
 
 [在线尝试编程](https://try.ocamlpro.com/)
 
+**(现在 ocaml 官网有新的安装包可以尝试下，还有就是对于 fdopen 的安装包可能需要添加仓库作为备选)**
+
+  ```bash
+  # 对于 fdopen 添加第二个仓库，作为备选仓库
+  opam repo add <NAME> https://github.com/ocaml/opam-repository.git
+
+  # 之后才可以可以 opam upgrade luv 到 0.5.12 版本
+  ```
+
 在 windows 中安装 ocaml
 
 * 不要使用 cygwin 自带的 ocaml, 因为它不包含 **opam**, 也没法编译一些库。
@@ -40,11 +49,11 @@ categories: other
   tar
   m4
   perl
-  libpcre-devel
+  libpcre2-devel
   mbedtls-devel
   mingw64-$($env:MINGW_ARCH)-zlib
   mingw64-$($env:MINGW_ARCH)-gcc-core
-  mingw64-$($env:MINGW_ARCH)-pcre
+  mingw64-$($env:MINGW_ARCH)-pcre2
   perl-IPC-System-Simple
   ```
 

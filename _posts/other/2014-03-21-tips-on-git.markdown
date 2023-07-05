@@ -435,3 +435,119 @@ GIT Server
 
 <http://ju.outofmemory.cn/entry/16893>
 
+
+------
+
+
+gpg
+============
+
+感觉对于 github 来说没什么必要，因为已经有 ssh 了，但是对于 linux 系统来说
+由于很多地方都要用到它来作为密钥
+
+[参考](https://www.howtogeek.com/816878/how-to-back-up-and-restore-gpg-keys-on-linux/)
+
+照着 github 的步骤创建密钥, 一些信息可能不同, 我使用的是 2.2.9 版本的 gpg
+由于 gpg 不同版本的原因，因此在多个机器上共享密钥最正确的方式是:
+
+- 使用 `--export-secret-key` 导出，再通过 `--import` 导入即可
+
+问题: 如何只导入子密钥用于通信加密了？
+
+```
+.gnupg/
+	openpgp-revocs.d/   # 存放着"撤销证书"
+		AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA.rev
+
+	private-keys-v1.d/  # 存放着"私钥"
+		BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB.key
+		CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC.key
+
+	pubring.kbx         # 加密了的公钥库
+
+	pubring.kbx~        # pubring.kbx 的自动备份文件
+
+	trustdb.gpg         # 一些信任数据
+```
+
+简单的文件结构
+
+```
+# gpg --version
+gpg (GnuPG) 2.2.29
+
+# gpg --list-secret-keys --keyid-format=long
+/c/Users/NAME/.gnupg/pubring.kbx
+---------------------------------
+#     rsa长度/KEY_ID         创建时间   [能力]      # 注意 KEY_ID 只是名字
+sec   rsa3072/4EC5303865FDEB06 2023-07-03 [SC]      # (src)表示主密钥
+      0BB53B3692D6890765E503F94EC5303865FDEB06      # 指纹, 撤销证书使用它作为文件名
+uid         [ultimate] YOUR_NAME <YOUR_EMAIL@WHAT.EVER>  # 用户信息
+sub   rsa3072/DB2DB20C38DF35B9 2023-07-03 [E]       # 子密钥
+
+# 使用 --list-keys 看到的和 --list-secret-keys 的几乎一样就是 sec 变成了 pub
+pub   rsa3072/4EC5303865FDEB06 2023-07-03 [SC]      # 同一对公钥和密钥的 KEY_ID 值是一样的
+```
+
+### 导出/导入
+
+导出 "私钥" 主要用于备份，而导出 "公钥" 一般用于将它发送出去,
+当然由于公钥包含了别人发给你的，因此也需要备份。
+因此如果是备份的话只要导出密钥即可，(至于"撤销证书"则要自己已文件的形式拷贝(未验证))
+
+公钥
+
+```
+# 备份机器所有公钥
+gpg --export --export-options backup --output public.gpg
+
+# 备份指定了目标
+gpg --export --export-options backup --output public.gpg YOUR_EMAIL@WHAT.EVER
+
+# 导入公钥
+gpg --import public.gpg
+
+# 对于旧版本 gpg 生成的 pubring.gpg 文件 参考 GPG-Configuration 的导入方式
+
+##
+# 导出提交到 github，使用 邮箱名和 KEY_ID 导出的结果是一样的，即使的是 ssb 的 KEY_ID
+gpg  --armor --export YOUR_MAIL@WAHT.EVER
+
+# 关联 git 提交的一些设置
+git config --global user.signingkey [YOUR_EMAIL@WHAT.EVER | KEY_ID]
+
+# 每次 commit 时自动签名, 但是感觉签名很麻烦每个项目都要输密码还好可以在项目上单独关闭
+git config --global commit.gpgsign true
+```
+
+密钥
+
+```
+# 导出机器所有密钥，需要密码才可以
+gpg --export-secret-keys --export-options backup --output private.gpg
+
+# 导入密钥和导入公钥一样，只是需要输入密码
+gpg --import private.gpg
+```
+
+信任数据
+
+```
+# 备份信任数据
+gpg --export-ownertrust > trust.gpg
+
+# 导入信任数据
+gpg --import-ownertrust trust.gpg
+```
+
+至于 "撤销证书" 直接复制文件么？根据 [gnupg 文档](https://www.gnupg.org/documentation/manuals/gnupg/GPG-Configuration.html)
+的描述需要你自己备份 `openpgp-revocs.d/` 目录下的所有文件
+
+  网上关于导出证书的那些操作实际上是在执行撤销动作 ID
+
+  ```bash
+  # 制作
+  gpg --output revoke.asc --gen-revoke key-ID
+  # 导入
+  gpg --import revoke.asc
+  ```
