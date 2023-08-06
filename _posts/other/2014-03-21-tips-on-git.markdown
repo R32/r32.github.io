@@ -17,6 +17,19 @@ categories: other
 
 <!-- more -->
 
+同用户下配置多个密钥: https://superuser.com/questions/232373/how-to-tell-git-which-private-key-to-use/912281#912281
+
+```
+# git 2.10.0 +
+# 克隆的时候使用, 由于 -i 可能会覆盖 /.ssh/config 文件因此这里使用了 -F /dev/null 参数
+git clone -c "core.sshCommand=ssh -i ~/.ssh/id_rsa_example -F /dev/null" git@github.com:example/example.git
+
+# 如果已经存在了，则下边命令用于单个项目，
+git config core.sshCommand "ssh -i ~/.ssh/id_rsa_example -F /dev/null"
+
+# 使用 -F /dev/null 是为了防止将配置保存到 .git/config 中去
+```
+
 ### 简单
 
 中文 git文档: <https://git-scm.com/book/zh/v2>
@@ -90,6 +103,23 @@ git clone file:///C:/path/to/repo new_dir
 
 * `git pull` 这个命令执行了 git fetch 和 git merge 二个操作, 方便快速更新.
 
+####  额外
+
+修改作者和邮箱
+
+```
+# 首先通过 git config 配置单个 repo 的 作者和邮箱
+
+# --root 将从第一条 commit 开始
+git rebase -i --root
+
+# 之后修改所有的 pick 为 edit, 保存后关闭
+
+# 为每条 commit 执行如下
+git commit --amend --author="John Doe <john@doe.org>" --no-edit
+git rebase --continue
+```
+
 #### 上传
 
 * 本地提交后点 `上传` 就行了
@@ -111,6 +141,9 @@ git rebase --abort
 
 # 进入交互模式，(尝式将 AFTER_COMMIT_HASH(即不包括这个) 之后的 commit 合并成一个)
 git rebase -i [AFTER_COMMIT_HASH]
+
+# 如果是第一条 commit 那么使用 --root
+git rebase -i --root
 
 # 这时会进入到 VIM 的交互模式，可使用其它 IDE 编辑，但是你仍然需要了解几个 VIM 命令
 pick 16b5fcc Code in, tests not passing
@@ -277,6 +310,9 @@ squash 396b4a3 Tests pass
   git apply --check xxx.patch		# 是否能应用成功
 
   git am -s < xxx.patch			    # 应用 patch
+
+
+  # 可以使用 --directory=<root> 修改目录
   ```
 
 #### submodule
