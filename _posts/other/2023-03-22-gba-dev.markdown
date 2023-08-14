@@ -1,0 +1,948 @@
+---
+
+layout: post
+title:  gba 个人开发日志
+date:   2023-03-22 09:21:22
+categories: other
+
+---
+
+本日志为 [libtonc docs](https://www.coranac.com/tonc/text/toc.htm) 的个人理解，不保证内容正确性
+
+其它参考文档：
+
+- [mgba 模拟器所提供的 gba 文档](https://mgba-emu.github.io/gbatek/) 使用的寄存器名没有 REG 前缀。
+
+- [gba docs](https://github.com/gbadev-org/gbadoc)
+
+- [libtonc files](https://www.coranac.com/files) 有很多下载。
+
+<!-- more -->
+
+### GBA Basics
+
+文档使用的 `DKP` 表示的是 devkitPro，DKA 则为 devkitARM。
+
+**multiboot** 是 GBA BIOS 中一个函数的名字，用于通过连接线加载游戏到 GBA RAM 里运行。
+GBA 的单卡带多人游戏使用 multiboot，在编译链接时需要使用 `-specs=gba_mb.specs`
+
+### GBA 硬件
+
+GBA 使用的 CPU 是 ARM7tdmi(16.78MHz, 2 ^ 24 周期/秒)精简指令集(RISC)，
+支持 THUMB(16位)/ARM(32位)双指令集
+
+devkitARM gcc 编译参数：
+
+- `-mthumb` : THUMB 指令集
+- `-marm`   : (默认)ARM 指令集
+- `-mthumb-interwork` : 允许混合 THUMB 和 ARM 指令集 (devkitARM 专用)
+
+libtonc 文档推荐的是：普通的代码使用 THUMB 指令集放 ROM 中，
+而对性能有要求的则使用 ARM 指令集，并将代码放置到 IWRAM 之中，
+但要汇编语言才能定义代码所处的代码段(code section)，见 `tonc_asminc.h`，
+对于 c 语言可以使用 `tonc_types.h` 中的 `IWRAM_DATA 或 IWRAM_CODE` 宏
+
+通过 7zip 可以打开 elf 文件，可以查看到各分段，下边是某个示例：
+
+```bash
+偏移   分段                大小    #注释
+0      NULL                   0
+0      .bss                   0
+4096   .crt0                528    # 在 main 函数执行之前，用于 c 语言
+4624   .init                 12
+4636   .text                528    # 程序代码段
+5164   .fini                 12
+5176   .rodata             5600    # rom? 估计用于取代 .data
+10776  .eh_frame              4
+12324  .init_array            4
+12328  .fini_array            4
+16384  .pad                   8
+16392  .comment              35
+16392  .ctors                 0
+16392  .data                  0    # 静态初始化的数据，但这里的大小是 0，估计被 .rodata 取代了
+16392  .dtors                 0
+16392  .ewram                 0
+16392  .gcc_except_table      0
+16392  .iwram                 0    # IWRAM 区域
+16392  .iwram0                0
+16392  .iwram1                0
+16392  .iwram2                0
+16392  .iwram3                0
+16392  .iwram4                0
+16392  .iwram5                0
+16392  .iwram6                0
+16392  .iwram7                0
+16392  .iwram8                0
+16392  .iwram9                0
+16392  .plt                   0
+16392  .sbss                  0
+16427  .ARM.attributes       44
+16472  .symtab             2368    # 符号表
+18840  .shstrtab            271    # section 表
+20007  .strtab             1167    # 字符串表
+```
+
+或者在使用 gcc 链接时添加 `-Wl,-Map,filename.map` 可获得一个链接的信息(`-Wl` 用于gcc传递参数给链接器, 参数用逗号分隔)
+
+> 实际上 gba 社区都是直接使用 gcc 来链接，（我尝试过 `ld.exe` 但是报错了）
+
+更多的 CPU 细节建议单独搜索下 ARM 的文档，很多都是一样的。
+
+#### CPU 寄存器
+
+共 16 个 32位核心寄存器（r0-r15），可以通过模拟器的 `Tools -> Disassembly` 可以查看，
+
+- r0-r12  : 通用。
+
+- r13(SP) : 堆栈指针，由 BIOS 初始化，默认值因当前模式而异：
+
+  ```
+  User/System:  0x03007F00
+  IRQ:          0x03007FA0
+  Supervisor:   0x03007FE0
+  ```
+
+- r14(LR) : 链接寄存器，建议单独参考 ARM 的文档。
+
+- r15(PC) : 程序计数器，建议同上
+
+- CPSR : 程序当前状态（The Current Program Status Register）。
+
+  ```
+           10000 - User mode
+           10001 - FIQ mode
+           10010 - IRQ mode
+  0-4    : 10011 - Supervisor mode  (SVC)
+           10111 - Abort mode       (ABT)
+           11011 - Undefined mode   (UND)
+           11111 - System mode
+
+  5(T)   : Thumb 状态，只读。
+  6(F)   : 置 1 将禁用 FIQ
+  7(I)   : 置 1 将禁用 IRQ。当进入 IRQ 模式后，GBA 默认将此值置 1。
+  8-27   : 保留
+  28(V)  : 溢出(Overflow condition code)
+  29(C)  : 进位/借位/???(Carry/Borrow/Extend)
+  30(Z)  : 相等(Zero/Equal condition code)
+  31(N)  : 小于(Negative/Less than condition code)
+
+  处理器模式
+  User   : 用户模式，此模式下某些被保护的系统资源是不能被访问的
+  System : 特权模式，
+  IRQ    : 普通中断模式，GBA 中所有中断都在此模式下运行
+  FIQ    : 快速中断模式，GBA 没有使用这个模式
+  SVC    : 管理模式，是CPU上电后默认模式，用用来做系统的初始化。或者进入软中断(Software interrupt)调用时
+  ABT    : 终止模式，当获取数据或指令失败时，比如访问非法地址，没有权限
+  UND    : 未定义模式，当执行未定义的指令时，(用于支持硬件协处理器的软件仿真)
+  ```
+
+IO-RAM 映射寄存器才是我们需要关心的，对于 libtonc 可以在 tonc_memmap.h 中找到。
+
+**Tips** ： 通过模拟器的 `Tools -> IO-Viewer` 可以查看所有 IO-RAM 寄存器的值。
+
+#### GBA 内存分区
+
+   区域    |    起始    |    结束    | 长度  | port-size | 简述
+---------- | ---------- | ---------- | ----- | ------ | --------------------
+System ROM | 0000:0000h | 0000:3FFFh |  16Kb | 32 bit | BIOS, 可执行但不可读
+EWRAM      | 0200:0000h | 0203:FFFFh | 256Kb | 16 bit | External Work RAM，可用于代码和数据
+IWRAM      | 0300:0000h | 0300:7FFFh |  32Kb | 32 bit | Internal Work RAM，用于代码和数据，32位总线宽度，适合 ARM 指令集代码<br/>位于 CPU 内部，速度最快
+IO RAM     | 0400:0000h | 0400:03FFh |   1Kb | 16 bit | Memory-mapped IO registers，控制图形，声音，按钮和其他功能的地方
+PAL RAM    | 0500:0000h | 0500:03FFh |   1Kb | 16 bit | Palettes RAM，2个调色板，分别用于 BG 和 Sprite
+VRAM       | 0600:0000h | 0601:7FFFh |  96Kb | 16 bit | Video RAM
+OAM        | 0700:0000h | 0700:03FFh |   1Kb | 32 bit | Object Attribute Memory 用于控制 Sprite。
+PAK ROM    | 0800:0000h | 变化的     | 变长  | 16 bit | 游戏卡带。 除非是 multiboot，那么这里将是游戏所在位置以及游戏运行的地方。<br/>最大限制为 32M，16位总线宽度适合 THUMB 指令集的代码
+Cart RAM   | 0E00:0000h | 变化的     | 变长  |  8 bit | 用于保存游戏进度，长度虽非固定，但 64KB 已经足够。
+
+所有 RAM（除了 Cart RAM）在启动时将由 BIOS 清 0。
+
+**问题**：GBA 运行的内存堆栈有多大了？
+
+#### misc
+
+
+显示：
+
+- 240x160像素, 每像素颜色为 15 位
+- 3 种 bimap 模式和 3 种 tile/map 模式
+- 变换效果有: 旋转, 缩放以及斜切(skew).
+- 特殊效果有: 马赛克, 图层混合(blend)
+
+声音：
+
+6通道分别为：4 个波形通道(2方波 + general wave + noise)，
+2 个 directsound 通道用于播放样本和音乐
+
+其它：
+
+- 10 个按钮
+- 14 个硬件中断
+- 通过连接线最多支持 4 个玩家
+
+### 开发环境配置
+
+可从 [devkitpro installer](https://github.com/devkitPro/installer) 项目处下载
+
+devkitpro 基于 MSys2 环境，为了防止和 cygwin 冲突, 需要删除 devkitpro 对于 PATH 的添加。
+
+[Programmer's Notepad 2](https://github.com/simonsteele/pn) 代码编辑器
+
+### 第一个 GBA 示例
+
+参考 （0-first）
+
+### 视频规格介绍
+
+GBA 有一个 240 像素宽，160 像素高的 LCD 屏幕，能够显示 32768（15位）颜色，
+刷新率略低于每秒 60 帧（59.73 Hz）。
+可以有 5 个图层：4 个背景（BG）和一个 Sprite 图层，
+能够产生一些特殊效果，包括图层混合(blend)和马赛克，当然还有旋转和缩放。
+
+#### 绘制和空白期间(Draw and blank periods)
+
+CPU 每秒执行 `2^24`, 因此 CPU 运行 280896 个周期需要 `280896 / (2^24) = 0.0167`秒，
+反过来就是每秒接近 60帧。
+
+subject  |     length     |  cycles
+-------- | -------------- | --------
+pixel    | 1(1像素为2字节)| 4, 绘制 1 个像素需要 4 个时钟周期
+HDraw    | 240px          | 960 = 4 x 240
+HBlank   | 68px           | 272, 水平空白期间
+Scanline | HDraw + HBlank | 1232
+VDraw    | 160 x Scanline | 197120
+VBlank   | 68 x Scanline  | 83776, 垂直空白期间
+refresh  | VDraw + VBlank | 280896
+
+在绘制下一条扫描线（scanline）之前，会有一个 `68 x 1`像素宽度的 “水平空白期间(HBlank)”，
+同样在绘制完 160 扫描线后，同样会有 `68x(240+68)` 的“垂直空白期间(VBlank)”。
+
+扫描线空白期间意味着 CPU 处于空闲状态，因此适合在此时填充某些游戏数据或检测按键并执行相关动作
+游戏的 MainLoop 应该在 VBlank 期间运行，而对于 HBlank 估计只有那些追求极致的程序才会用到。
+
+libtonc 或 libgba 都提供了 VBlankIntrWait 的函数。
+
+```c
+// libtonc 的方式
+
+int main() {
+	irq_init(NULL);           // 初始化中断请求
+	irq_add(II_VBLANK, NULL); // 启用 VBlank
+	// 这里放其它初始化的代码。
+	// ...
+	while (1) {
+		VBlankIntrWait();
+		// 将 mainloop 的代码放在这里，
+		// ...
+	}
+}
+
+// libgba 的方式
+int main() {
+	irqInit();             // 初始化中断请求
+	irqEnable(IRQ_VBLANK); // 启用 VBlank
+	// 这里放其它初始化的代码。
+	// ...
+	while (1) {
+		VBlankIntrWait();
+		// 将 mainloop 的代码放在这里，
+		// ...
+	}
+	return 0;
+}
+```
+
+#### 显示寄存器
+
+- `REG_DISPCNT((vu32*) 0400:0000h)` : 用于[显示控制...](https://gbadev.net/gbadoc/registers.html#REG_DISPCNT)，是一个文档会频繁提到的寄存器
+
+  ```
+   F | E | D | C | B | A | 9 | 8 | 7 | 6 | 5 | 4 | 3 | 2 ~ 0
+  ---+---+---+---+---+---+---+---+---+---+---+---+---+------
+   OW| W1| W0|Obj|BG3|BG2|BG1|BG0| FB| OM| HB| PS| GB| Mode
+
+  Mode   : video 模式。0, 1, 2 为 tile/map 模式, 3, 4, 5 则为 bitmap 模式
+  GB     : 0=GBA, 1=GBC; 只读, 由 BIOS 设置。
+  PS     : 用于 (bitmap 模式 4 或 5)，通过切换 0, 1 以实现页面交换(page flipping)
+  HB     : 1=允许访问 OAM 当扫描线处于 HBlank 时，通常当处于 VDraw 时 OAM 是锁定的
+  OM     : Sprite 映射模式。 0=2D, 1=1D 控制 GBA 根据 Sprite 第一个 tile 的位置，自动选择剩余的 tiles
+  FB     : 1=使屏幕变空白，可用于节省电量当不需要屏幕时。在强制空白期间将提高传输到 VRAM 的速率。
+  BG0~3  : 1=启用相应的图层
+  Obj    : 1=启用 Sprite 图层
+  W0~O1  : 1=启用相应的窗口, 窗口用于遮盖某些区域(例如塞尔达中的灯)
+  OW     : 1=启用 Sprite 窗口。
+
+  不同 video 模式时的一些影响：
+  Mode Sca/Rot BG0-BG3       Size        Tiles      Colors    Features
+   0     No     0123  256x256...512x512   1024  16/16...256/1  SFMABP
+   1     Mixed  012-  (BG0, BG1 同上，BG2 同下)
+   2     Yes    --23  128x128...1024x1024  256       256/1     S-MABP
+   3     Yes    --2-        240x160          1       32768     --MABP
+   4     Yes    --2-        240x160          2       256/1     --MABP
+   5     Yes    --2-        160x128          2       32768     --MABP
+
+  关于 video 模式的选择，通过模拟器打开 “缩小帽”：
+  发现一直处于 tile/map 的 0 模式也就是说没使用 Sca/Rot(Affine) 变换。
+  OBJ：人物, 发光的壁炉，桌子，水桶 似乎是有碰撞检测的，包括门和门梁。
+  BG0: 文本对白框，生命条，宝石袋                                    （prio: 0）
+  BG1：宝箱, 墙上的画，大树，屋顶                                     (prio: 1)
+  BG2：背景，地上会动的花也是这图层的，如何做到的了？                 (prio: 2)
+  BG3：半透明的云阴影, 当角色走到云下也会受影响                       (prio: 1)
+  除了 OBJ 发现 BG1, BG2 也是有碰撞检测的，说明外部大概有个不可见的 “碰撞层”
+
+  “塞尔达” 对图层的使用比 “缩小帽” 准确。
+  OBJ:
+  BG0: 文本层
+  BG1: 一些遮盖，比如房顶的后边，大树的树叶都能遮住主角，
+  BG2: 背景层，
+  BG3: 特效覆盖图层，下雨, 雨点水花
+  - 查看地图有使用了 Sca/Rot(Affine) 图层，看起来像是 3D 的
+  - 使用了 64x64 的大图层
+  - 标题背景只用了一个图层就做出了那种近景快，远景慢移的效果
+  ```
+
+- `REG_DISPSTAT((vu16*) 0400:0004h)` : 显示状态，用于显示中断。
+
+  ```
+   F E D C B A 9 8 |7 6| 5 | 4 | 3 | 2 | 1 | 0
+  -----------------+---+---+---+---+---+---+-----
+         VcT       | - |VcI|HbI|VbI|VcS|HbS|VbS
+
+  VbS     : VBlank status, read only. Will be set inside VBlank, clear in VDraw.
+  HbS     : HBlank status, read only. Will be set inside HBlank
+  VcS     : VCount trigger status. Set if the current scanline matches the scanline trigger ( REG_VCOUNT == REG_DISPSTAT{8-F} )
+  VbI     : VBlank interrupt request. If set, an interrupt will be fired at VBlank.
+  HbI     : HBlank interrupt request.
+  VcI     : VCount interrupt request. Fires interrupt if current scanline matches trigger value
+  VcT     : VCount trigger value. If the current scanline is at this value, bit 2 is set and an interrupt is fired if requested.
+  ```
+
+- `REG_VCOUNT((vu16*) 0400:0006h)` : 扫描线计数器
+
+  ```
+   F E D C B A 9 8 | 7 6 5 4 3 2 1 0
+   ----------------+----------------
+          -        |       Vc
+
+  Vc       : 扫描线计数器。取值范围: 0-227 (160 + 68)
+  ```
+
+#### 垂直同步 1(VSyncing Part 1)
+
+本小节的内容只用于探讨 GBA 中实现 VSync 的各种方式，可以跳过直接使用 `VBlankIntrWait()`。
+
+有多种方式实现 vsync，最常用的 2 种方法分别为：1) 在循环中检测 REG_VCOUNT 或者 REG_DISPSTAT。
+例如：由于 VBlank 开始于第 160 行扫描线，因此可以通过检测 REG_VCOUNT：
+
+```c
+#define REG_VCOUNT *(u16*)0x04000006
+void vid_vsync()
+{
+	while(REG_VCOUNT < 160);
+}
+```
+
+可惜上边代码存在一些问题：首先由于 REG_VCOUNT 是被外部由硬件修改的，
+但编译器认识不到这点。因此要使用 `volatile`。
+
+其次，仅仅等待 VBlank 是不够的，当处于 VBlank 中再次调用 vid_vsync() 时，
+将导致 BUG，使得不能同步到 60 帧，因此还需要等待下一次的 VDraw。
+修改后代码类似于：
+
+```c
+// 注意 u16 -> vu16, 而实际上 tonc 库中已经改成了 vu16 形式
+#define REG_VCOUNT *(vu16*)0x04000006
+
+void vid_vsync()
+{
+	while(REG_VCOUNT >= 160);   // wait till VDraw
+	while(REG_VCOUNT < 160);    // wait till VBlank
+}
+
+// 这几行和 tonc.video.h 中的一样，但目前不推荐使用这个函数。
+// 这里 CPU 将使用“中断” 异步修改 REG_VCOUNT。
+```
+
+上边只是其中的一种方法，而另一种方法是：2) 检测 REG_DISPSTAT 的 0 位.
+
+虽然这两种方法实现了简单的 vsync, 但却是很糟糕的，
+尽管在 while 循环中什么也没做，但仍旧浪费了大量的电池。
+推荐的 vsync 方法是在完成后使 CPU 进入低电模式，之后使用中断恢复。
+
+### Bitmap 模式
+
+位图模式适合 gba 入门，因为内存和屏幕像素存在着一对一的关系。
+
+位图是一个 `width x height` 的颜色矩阵（或颜色索引矩阵）。
+像素可以使用坐标 `(x, y)` 来表示，（0, 0）表示位图的**左上角**。
+位图在内存中与一维数组相对应。
+
+bpp（Bits Per Pixel）表示每像素颜色的位数，bpp 的值将会影响图像的字节宽度（pitch 或 stride）。
+
+> 注：原文使用了“扫描线宽度”一词，会让人误以为是 240 + 68 相对应的字节宽度
+
+设置 VRAM 的控制寄存器 REG_DISPCNT 为 3, 4, 5 为 bitmap 模式：
+
+
+mode |   W x H   | bpp |   size   | 页面交换
+---- | --------- | --- | -------- | ------------------
+ 3   | 240 x 160 | 16  | 1x12C00h | 不支持，因为只有一个 page
+ 4   | 240 x 160 |  8  | 2x9600h  | 支持
+ 5   | 240 x 128 | 16  | 2xA000h  | 支持
+
+bitmap 模式只有一个图层作为背景层（因为 VRAM 尺寸的限制），
+并且不能使用硬件滚动（scroll），所以不适合用于绝大多数游戏。
+
+示例（1-bitmap-mode3）使用了模式 3 并启用 BG2 作为示例（只能选择 BG2）。
+
+模式 4 是另一种 bitmap 模式，同样有着 `240x160` 的帧缓冲区（VRAM），
+只是使用 8bpp 颜色深度。8bpp 在这里将表示为调色板的颜色索引。
+
+使用 8bpp 意味着可以有 2 个页面，因此可以使用“页面交换”来平滑视频输出。
+
+需要注意的是：帧缓冲区（VRAM）要求双字节对齐，不支持直接写入单个字节。
+包括 PALRAM，OAM 也同样有这个限制。因此 libtonc 中 m4_plot(SetPixel) 函数如下：
+
+```c
+INLINE void m4_plot(int x, int y, u8 clrid)
+{
+	u16 *dst= &vid_page[(y*M4_WIDTH+x)/2];    // Division by 2 due to u8/u16 pointer mismatch!
+	if(x&1)
+		*dst= (*dst& 0xFF) | (clrid<<8);  // odd pixel
+	else
+		*dst= (*dst&~0xFF) |  clrid;      // even pixel
+}
+```
+
+模式 4 有个示例（目录 2-bitmap-mode4-pageflip）演示了如何交换页面。
+
+------
+
+GBA 没有文件系统，意味着你需要把 图片，音乐，文本等这些文件已二进制的形式
+嵌入到 ROM 当中。有很多方法可以做到这一点：
+
+最常见的方式是将文件转换成 c 语言的数组形式，然后通过 `#include` 引入它们
+
+- [incbin](https://github.com/graphitemaster/incbin) 一个 c 头文件，使用了汇编指令嵌入文件
+
+虽然 GBA 没有本地文件系统，但是可以自己实现，一个比较常见的是由 GBADev 社区维护的 GBFS（只是有点难用）。
+
+实际上，现在已经有文件系统了，自 2006 年由 Chishm 实现的 libfat，
+一个 FAT-like 的文件系统可用于 GBA 和 NDS，你可以在 libgba 里找到它。
+
+------
+
+编写将二进制文件转换为 C 或 asm 数组的工具相对容易。
+实际上，devkitARM 已经提供了这两个：`raw2c.exe` 和 `bin2s.exe`，
+可以在 `devkitPro/tools/bin` 找到。另外还提供了 `gbfs.exe` 用于打包多个文件
+
+能够将二进制文件附加到游中只是其中的一部分，还有其它要做的，
+例如一个图片，需要转换成 GBA 能识别的格式（r5_g5_b5 的颜色值）。
+目前有很多格式转换工具用于 GBA，例如：
+
+- [grit](https://github.com/devkitPro/grit) ：转换 bmp 到 gba
+
+- [Usenti](https://www.coranac.com/projects/#usenti) 一个简单的图形编辑器
+
+游戏通常包含着大量的数据，而 EWRAM(256K) 似乎不够用。
+因此需要使用压缩来处理合适的文件，GBA BIOS 自身带有 LZ77 和 Huffman 解码程序，
+一些文件转换工具应该能执行相应的压缩
+
+（原文档这里讲的是 makefile，这里就不复述了）
+
+------
+
+还有一个要注意的是地址对齐，在 RISC 中很重要，将会导致某些写内存操作失效，
+
+要注意的是在 `THUMB` 状态下，内存默认按 2字节对齐，一些地方可能需要使用 ALIGN 宏来对齐 4字节。
+还有 struct 中的字段，以及 struct 的大小，以及 c 语言默认对齐 struct 变量内 sizeof 最大的字段。
+
+memcpy 的快速复制需要 SRC 和 DST 必须是 4字节对齐，并且长度至少 16 字节。
+对于 2字节对齐的地址可以使用 `memcpy16`
+
+memset 其实是单字节的，可以使用 tonc 库中更快的 16, 32位的汇编语言版本。
+
+### GBA 按键
+
+`REG_KEYINPUT((vu16*) 0400:0130h)`: 按键状态
+
+ F - A |  9  |  8  |  7  |  6  |  5  |  4  |  3  |  2   |  1  |  0
+-------|-----|-----|-----|-----|-----|-----|-----|------|-----|-----
+   -   |  L  |  R  | down|  up | left|right|start|select|  B  |  A
+
+需要注意的是 REG_KEYINPUT 的默认值是 `0x03FF`，也就是说当某个键按下时相应的键位将会被设置为 0
+
+
+`REG_KEYCNT((vu16*) 0400:0132h)` : 按键控制，用于按键中断，类似于显示中断的 REG_DISPSTAT。
+
+  F  |  E  | D C B A  |  9  |  8  |  7  |  6  |  5  |  4  |  3  |  2   |  1  |  0
+-----|-----|----------|-----|-----|-----|-----|-----|-----|-----|------|-----|-----
+  Op |  I  |    -     |  L  |  R  | down|  up | left|right|start|select|  B  |  A
+
+要使用它首先需要了解中断的相关编程。
+
+bits | name | desc
+-----|------|-------------
+ 0-9 | keys | 检测按键用于引发按键中断 （KEY_x）
+  E  |  I   | 是否启用按键中断         （KCNT_IRQ）
+  F  |  Op  | 布尔运算符用于“确定”是否引发按键中断，0 = OR，有“一个”指定的键按下就引发。 1 = AND，“所有”指定的键按下才引发。
+
+（通过模拟器发现，按键没有按下时值为 0，和 REG_KEYINPUT 相反，
+或者要启用某些开关比如 REG_IE 和 REG_IEM 才能观察
+）
+
+------
+
+libtonc 对按键的处理有几个地方感觉非常不错：
+
+1. 使用 `curr_input OP prev_input` 的方式检测按键的多种状态。
+
+   ```c
+   ( curr ^  prev) & key  // 按键刚更改了状态，比如按键刚刚按下或刚刚释放，
+
+   ( curr &  prev) & key  // 按键保持按下状态至少 2 帧。u32 key_held(u32 key)
+
+   ( curr & ~prev) & key  // 按键刚按下,                u32 key_hit(u32 key)
+
+   (~curr &  prev) & key  // 按键刚释放,                u32 key_released(u32 key)
+   ```
+
+   那么如何检测例如 A 和 B 同时刚刚按下的那个状态了？`(curr & ~prev) & (A | B)` ???
+
+2. 通过判断诸如 `LEFT - RIGHT` 获得的三种状态： -1, 0, 1
+
+
+### Sprite 和 Tile 背景概述
+
+先简单看下 1KB 大小的调色板(PAL-RAM)，由于 BG 和 Sprites 各独立占用 512 字节，因此：
+
+```
+512 = 2(15颜色深度) *  16种颜色 * 16个调色板，(简称为：4bpp 或 16/16)
+或
+512 = 2(15颜色深度) * 256种颜色 *  1个调色板，(简称为：8bpp 或 256/1)
+```
+由于 BG 只能占用 512 字节，那么问题来了，如果 BG 既要支持 4bpp 又要支持 8bpp，
+那么只能混合放一起，也就是说对于 BG 调色板 4bpp 和 8bpp 是重叠在一起的。
+这样的话，在选取调色板颜色时就有点麻烦了。
+
+如果打算制作调色板方面的工具可以参考一些如：颜色量化(Color Quantization)，双边滤波(Bilateral Filtering)
+
+<br/>
+
+这里只讨论 REG_DISPCNT 的 tile/map 模式，这个模式之所以使用了 2 个单词，
+是因为在此模式下 VRAM 除了存放图层数据到BG0-BG3(screenblocks) 还要把 charblocks 也塞进去。
+由于 charblocks 分为 2 个区域分别用于 BG 和 Sprites 因此 VRAM 将被划分为 3 个区域：
+
+```
+06000000-0600FFFF    64KB    BG-charblock 和 screenblock 重叠。
+06010000-06017FFF    32KB    Sprite-charblock（Sprite-screenblock 则独立存放于 OAM 之中）
+
+REG_BG0CNT-REG_BG3CNT寄存器分别对应 4 个图层（BG）：
+Bits     Desc
+ 0-1    优先级          （0-3，0=最高(前)，如果优先级相同则 BG0 排最前(高)）
+ 2-3    charblock 偏移  （0-3，以16KB为单位，addr = base + [0-3] * 16KB）
+ 4-5    未使用，必须为 0
+ 6      马赛克特效      （0=关闭）
+ 7      调色板选项      （0=4bpp，1=8bpp）
+ 8-12   screenblock 偏移（0-31，以2KB为单位, addr = base + [0-31] * 2KB）
+ 13     对于 BG0/BG1， 未使用 （似乎 NDS 有使用）
+ 13     对于 BG2/BG3， 图层混合 0=透明，1=包围（Wraparound）
+ 14-15  screenblock 尺寸
+
+ screenblock 又分为 2 种类型分别为 text BG 和 Sca/Rot(Affine)-BG.
+ text-BG 的 screenblock 尺寸
+ 00 =  32 x 32 tiles
+ 01 =  64 x 32 tiles
+ 10 =  32 x 64 tiles
+ 11 =  64 x 64 tiles
+
+ Affine-BG 的 screenblock 尺寸
+ 00 =  16 x 16 tiles
+ 01 =  32 x 32 tiles
+ 10 =  64 x 64 tiles
+ 11 = 128 x 128 tiles
+```
+
+一些文档使用 text-tiles, char-tiles 表示 charblocks
+
+<br/>
+
+screenblock 相当于一个 tile-index 数组，尺寸大小除了依赖于 REG_DISPCNT 的 tile/map 模式，
+还和对应的 REG_BGxCNT 寄存器相关连，从 128x128 到 1024x1024 像素。
+
+Sprite 的尺寸相对较小在 8x8 到 64x64 像素之间，共 128(1024 / 8字节)个可以自由移动。
+对于 Sprite 只需要提供 tile-index 的第 1 个，就能自动识别剩余的 tile-index，
+因为 Sprite 的 tiles 始终相邻，但受标记位 `REG_DISPCNT(6)` 的影响。
+此外 Sprite 也有额外的 flipping 标志位, 或者 4bpp 的调色板属性，
+但不一样的是这些标志位或属性值将用于整个 Sprite，而不是 screenblock 其中的单个 tile。
+
+（从这里开始一切变得混乱，各文档使用词都不一致）
+
+         Subject            |  一般文档(gbadev.net)  |       libtonc 文档       |     mgba-emu 文档
+    --------------------    |  --------------------  |   --------------------   |  --------------------
+Sprite and bg image data    | tiles                  | tiles                    | tiles?
+Tile-map entries            | tiles (confusion?)     | screenblock entries (SE) | bg map?
+Matrix for transformations  | sca/rot matrix         | affine matrix (P)        |
+Sprite types                | ?? *vs* sca/rot        | regular *vs* affine      |
+Background types            | text bg *vs* sca/rot bg| regular *vs* affine      | text bg *vs* sca/rot bg
+Depository for sprite tiles (0601:0000) | OAMData    | tile_mem_obj             |
+OAM (0700:0000)             | OAMMem                 | oam_mem                  |
+
+<br/>
+
+GBA 硬件除了光栅化外，还负责其它几个操作：
+
+1. 排除某个的指定颜色（color keying），相当于指定某个颜色为透明。
+
+  如果像素值为 0 那么就是透明的（TODO: 到底是像素值还是颜色值为 0 才透明了？）
+
+2. 翻转（flipping），透明混合（alpha-blending）和 仿射变换（affine）。
+
+<br/>
+
+image-data 表示 tiles 和调色板。
+
+单个 tile 是一个 8x8 的 color-index数组(4bpp 或 8bpp 的颜色索引值)。
+4bpp-tile 每个字节能表示 2 个颜色像素点，而 8bpp-tile 则为 1 个颜色像素点。
+假如使用 8bpp 那么 1像素就占用 1 字节, 那么一个 `tile = 8x8` 就是 64 字节,
+对于 4bpp 者只要 32 字节。
+
+**当将 `Width*Height tiles` 复制到 VRAM 时，是以一维数组的形式复制过去**。
+
+> TODO：那么如何显示一个 12 x 12 像素大小的字符了？
+
+如果您想制作自己的转换工具这里有一个小技巧就是：分阶段作业。
+不要直接将位图写成数据文件，而是创建一个平铺函数并将 tile 转换成 1 格宽 H 格高的位图，
+然后正常导出。（？？？如果允许变宽的 tile（非固定8像素宽度的硬编码），也可用于其它目的。
+例如：要创建 16x16 的 Sprite，首先布置宽度=16，然后再 width=8）
+
+每组 tiles(charblocks) 大小为 16KB, (16KB / 32(4bpp) = 512个，16KB / 64(8bpp) = 256个)，
+那么整个 VRAM 刚好可以放下 6个 charblocks，前边4个用于 BG0-BG3, 剩下的2个用于 Sprites。
+
+至于 charblocks 的地址前边已经描述过了，BG0-BG3 参考 REG_BGxCNT 寄存器，
+而 Sprites charblocks 者从第 64KB 开始。
+
+> ??? 对于 tile-indxing，Sprites 使用 32 字节作为偏移量,
+> ??? 而 BG-map 使用的偏移量依赖于其颜色深度(4bp=32偏移，8bpp=64偏移)。
+
+BG-map 和 Sprites 都使用 10bits 作为索引值的宽度，因此可索引 1024 个 tile。
+注意；如果你通过 REG_BGxCNT 越界访问了 Sprite 的 charblocks（REG_BGxCNT 可以从第 0-3
+任意一个块开始，以及索引 1024 明显大于 512/4bpp 或 256/8bpp）代码虽然可以在模拟器中可运行，
+但实机不允许你这样做，这就是为什么要上实机测试。 参看 cbb_demo
+
+
+```c
+// tile 8x8@4bpp: 32bytes; 8 ints
+typedef struct { u32 data[8];  } TILE, TILE4;
+// d-tile: double-sized tile (8bpp)
+typedef struct { u32 data[16]; } TILE8;
+// tile block: 32x16 tiles, 16x16 d-tiles
+typedef TILE  CHARBLOCK[512];
+typedef TILE8 CHARBLOCK8[256];
+
+#define tile_mem  ((CHARBLOCK* )0x06000000)
+#define tile8_mem ((CHARBLOCK8*)0x06000000)
+
+//In code somewhere
+TILE *ptr= &tile_mem[4][12];   // block 4 (== lower object block), tile 12
+
+// Copy a tile from data to sprite-mem, tile 12
+tile_mem[4][12] = *(TILE*)spriteData;
+```
+
+### 常规 Sprite
+
+游戏中提到 Sprite，通常指的是： 一个小的动画对象可以在 BG 上自由移动，
+例如：游戏主角，NPC，怪物，子弹或者别的，可以使用模拟器选择显示或隐藏 OBJ 图层来查看。
+
+使用 Sprite 和 bitmap-BG 起来有点棘手，但不是很多。它要求必须是 8x8 像素点的 tile，
+其三个基本要点分别是：
+
+1. 加载图形和调色板到 Sprites 专用的 VRAM 和调色板空间
+2. 正确设置 OAM，使用合适的 tile 和正确的尺寸。
+3. 在 REG_DISPCNT 中启用 Sprite，和相应的映射模式（mapping-mode）。
+
+Sprite 使用其专属的 32KB VRAM(O-VRAM)用于保存 tiles(charblock) 数据，
+tile 必须是 8x8 像素，有 4bpp 或 8bpp 两种类型。
+Sprite 的计数（Counting）从 O-VRAM 的最低字节开始，并且始终以 32 字节作为偏移量，
+那么对于 Sprite#1 指的是 `O-VRAM + 1 x 32KB` 处的 tiles，无论 4bpp 还是 8bpp。
+
+```c
+// 这里 tonclib 库直接使用了 tile_mem 代被整个 VRAM，而不是单独的 O-VRAM
+// 对于 O-VRAM 中 #123 tiles，可以有：
+tile_mem[4][123];
+// 其地址则为：
+&tile_mem[4][123];
+```
+
+由于每个 charblock 有 16KB，因此有 16KB / 32 = 512个 tiles，那么 2个charblock就是 1024个，
+但如果处于 video bitmap 模式，则只能用最后的 512 个。
+
+<br/>
+
+大多数游戏的 Sprites 使用多个 tiles，而并非单个 tile。
+对于 BG 需要明确地指示每个 tile 的位置，但对于 Sprite 则只需要第一个 tile 位置，
+剩下的将根据 REG_DISPCNT 中 mapping-mode 的标志位（默认为2D方向）自动选择。
+
+#### OAM(Object Attribute Memory)
+
+tile/map 模式时，GBA 具有特殊的硬件绘制 Sprite，但有一个限制是 1 条扫描线最多
+只能绘制大概 960像素的 Sprite对象。
+
+注意，由于 OAM 不支持以字节为单位往上边写数据，不知道 bit-field 的形式可不可以
+
+OAM 具有2种 Sprite 属性结构：(不同文档使用的名字不同)
+
+```c
+// OBJ_ATTR: 用于 regular sprite attr
+typedef struct tagOBJ_ATTR {
+    u16 attr0;
+    u16 attr1;
+    u16 attr2;
+    s16 fill;
+} ALIGN4 OBJ_ATTR;
+
+// OBJ_AFFINE: 包含了 transformation 数据
+typedef struct OBJ_AFFINE
+{
+    u16 fill0[3];
+    s16 pa;
+    u16 fill1[3];
+    s16 pb;
+    u16 fill2[3];
+    s16 pc;
+    u16 fill3[3];
+    s16 pd;
+} ALIGN4 OBJ_AFFINE;
+
+// 由于 devkitARM r19 不再对 struct 4字节对齐，(c 语言标准好像就是对齐最大的字段)
+// 因此这里使用了 GCC 的对齐属性宏 __attribute__((aligned(4)))
+```
+
+上边的结构你会发现 4 个 OBJ_ATTR 刚好能放入 OBJ_AFFINE 之中。
+由于 OAM 的大小为 1KB，因此我们有 128 个 OBJ_ATTR 或 32 个 OBJ_AFFINE 对象。
+
+<br/>
+
+OBJ_ATTR 用于控制 Sprite，由 3个 16位的属性组成，分别为用于：大小，形状，位置，tile 等等。
+
+Attribute 0:
+```
+0-7     Sprite 的 Y 坐标值
+
+8-9     (Affine) object mode
+        00 标记为 regular sprite        (ATTR0_REG)
+        01 标记为 affine sprite         (ATTR0_AFF)
+        10 关闭渲染，用于 隐藏 sprite   (ATTR0_HIDE or ATTR0_AFF_DBL_BIT)
+        11 Double-size affine object    (ATTR0_AFF_DBL)
+
+A-B     GFX 模式
+        00 正常渲染
+        01 启用透明混合  (ATTR0_BLEND)
+        10 Object 为 object windows 的部分，Sprite 本身不会被渲染，但用作 BG 或其它 Sprite 的蒙板。(ATTR0_WINDOW)
+        11 ???禁止(Forbidden)
+
+C       1=启用马赛克效果 (ATTR0_MOSAIC)
+
+D       0=4bpp, 1=8bpp   (ATTR0_4BPP, ATTR0_8BPP)
+
+E-F     Sprite 形状，与 attr1(E-F) 一起决定了 Sprite 的大小。
+        00 (ATTR0_SQUARE)
+        01 (ATTR0_WIDE)
+        10 (ATTR0_TALL)
+        11
+```
+
+GBA sprite sizes:
+
+shape/size->|   00   |   01   |   10   |   11
+----------- | ------ | ------ | ------ | ------
+    00      |  8x8   | 16x16  | 32x32  | 64x64
+    01      | 16x8   | 32x8   | 32x16  | 64x32
+    10      |  8x16  |  8x32  | 16x32  | 32x64
+
+<br/>
+
+Attribute 1: 
+```
+0-8      Sprite 的 X 坐标值
+9-D      Affine index，仅 attr0(8)=1 时才起作用。
+C-D      Horizontal/vertical flipping flags.
+E-F      Sprite size
+```
+
+Attribute 2:
+```
+0-9      the base tile-index. （如果是 video bitmap 模式，那么这个值应该是 512 或更高）
+A-B      优先级（Priority）数字小的将呈现在画面的最前边。
+C-F      Paletee-bank 仅当 4bpp 颜色值时有效。
+```
+
+<br/>
+
+OAM 双缓冲
+
+感觉没什么必要，因为你只能在 VBlank 期间修改 VRAM 和 OAM，但如果你想要在任何时候都能修改 OAM
+可以创建一个 buffer，等到 VBlank 期间复制就行了。
+
+```c
+OBJ_ATTR obj_buffer[128];
+OBJ_AFFINE *const obj_aff_buffer= (OBJ_AFFINE*)obj_buffer;
+```
+
+<br/>
+
+
+
+### 常规 Tile BG
+
+一组独特的 tiles 称之为 tileset。charblocks 和 screenblocks 重叠存放于 64KB of VRAM ，
+`tileset -> charblocks, tilemap -> screenblocks`。
+
+     mem    | 0600:0000h | 0600:4000h | 0600:8000h | 0600:C000h
+----------- | ---------- | ---------- | ---------- | ----------
+charblock   |     0      |      1     |     2      |     3
+screenblock |  0 ... 7   |  8 ... 15  |  16 ... 23 |  24 ... 31
+
+通过 REG_DISPCNT 你可以选择激活相应的图层（BG0-BG3）。
+
+通过 REG_BG0CNT-REG_BG3CNT 设置各图层的 charblock/screenblock 偏移值，
+和 tilemap 的大小。
+每个 charblock 为 16KB, 每个 screenblock 则为 2KB，要注意分配别让数据发生重叠。
+
+此外每个 BG 还有 2个用于滚动的只写寄存器： `REG_BGxHOFS，REG_BGxVOFS` ，用于控制偏移，
+由于是只写，不能读取数据，因此查看它们只能通过 print 输出“屏幕的坐标”，注意是屏幕坐标，而不是地图坐标。
+滚动寄存器只适用于 text(regular) BG，其单位为像素点。
+
+当你增加 scrolling 的值时，你将移动屏幕往地图的右边，现在假设地图坐标 P 和屏幕坐标 Q, 那么有
+
+```
+Q + dx = P
+Q      = P - dx
+```
+
+#### text(regular) BG
+
+text(regular)-BG 的 tile-maps 中元素使用了 2字节作为索引值和其它信息。
+而 sca/rot(affine)-BG 只使用 1 个字节作为索引值但使用 8bpp 的颜色索引值。
+
+bits | desc (仅适用于text(regular)-BG)
+-----| ----- |
+0-9  | tile-index value
+ A   | 水平翻转(flipping)
+ B   | 垂直翻转(flipping)
+C-F  | 调色板索引值（Palette bank）当使用 4bpp 颜色值时
+
+<br/>
+
+VRAM 总共有 32 个 长度为 2KB 的 screenblock 用于保存 tilemap 数据，
+2KB 只能保存 32x32 tiles，对于更大的的地图则需要连续的 screenblock，
+
+`video mode = 0`时, BG0-BG3 的布局可能如下：
+
+32x32 |  64x32  |    32x64    |   64x64
+----- | ------- | ----------- | ---------
+ [0]  | [0][1]  | [0]<br/>[1] | [0][1]<br/>[2][3]
+
+上边 4 个 screenblock-set 在内存上不是连续的，但 screenblock-set 内部内存是连续的，这没什么好说的。
+
+但是还有一个重要问题是：假设我们使用 64x32 模式（通过设置 REG_DISPCNT 的 map-size 为 1）
+这时复制一个 64x32 大小的 tilemap 到 screenblocks 要怎么操作了？
+
+要注意 tilemap(64x32) 和 screenblocks(64x32) 并不是一一对应的，因为每个 screenblock 只有 2KB 大小，
+例如对于 tilemap(64x32) 第一行数据在内存上是连续的，但是 screenblocks(64x32) 逻辑上的第一行则是：
+
+```
+how to copy tilemap(64x1) to screenblock-set(64x1)
+32 tile -> screenblock-set[0]
+32 tile -> screenblock-set[1]
+
+# 我猜这就是为什么文档的前面会有建议：当做 bitmap 转换工具时要求一个 1Width*NHeight 的转换函数。
+# 这样做的原因也许是实现 scroll 的方法会更简单。
+```
+
+> 注: 游戏"缩小帽", 32x32 模式一样可以滚动地图，模式直接使用 x + y * w 即可。
+> 魂斗罗使用了的 BG2 图层用了 64x32 模式，"三角力量" 使用的 64x64
+
+现在需要一个函数用来计算 tilemap(tx, ty) 与 screenblock-set 的关联，
+函数非常适用于动态地在某个位置显示 tile，只要简单地修改 screenblock 中某个 tile-index 的值即可，
+一些简单的单图层动画估计就是使用了这个特性
+
+要写出这个函数，首先我们要清楚 screenblock 只有 2KB，
+2KB对于 text(regular)-BG 一行只能显示 32 个 tiles，全部是 宽32 x 高32 = 1024 个 tile.
+因此当给出坐标 `(36, 0)` ，那么一眼就能看出一定是在第2个 screenblock 上(screenblock-set[1])
+
+把问题简化下，便于思考：
+
+```
+   bitmap    ->   sceen block
+[a][b][c][d]    [a][b] | [c][d]
+[e][f][g][h]    [e][f] | [g][h]
+
+虽然看上去很像,但转换成一维数组后:
+bitmap = 'abcdefgh'; 可以使用 x + y * 4 计算数组索引
+bitmap = 'abefcdgh';     使用 x + y * 4 是错误的
+
+已知 bitmap(2, 0) = bitmap[2] = 'c'
+需要一个函数计算出 n 的值满足 sblock[n] = 'c'
+```
+
+下别给出 c 语言的实现方式，你不用担心除法或取模计算的性能，因为编译器能优化。
+
+```c
+// Get the screen entry index for a tile-coord pair
+// pitch 表示 tilemap 的 tile 宽度，
+uint se_index(uint tx, uint ty, uint pitch)
+{
+	uint sbb = (ty/32) * (pitch/32) + (tx/32);
+	return sbb * 1024 + (ty % 32) * 32 + (tx % 32);
+}
+
+/*! 更快速的实现(但可能不安全)，需要 REG_BGxCNT 寄存器 作参数
+ */
+uint se_index_fast(uint tx, uint ty, u16 bgcnt)
+{
+	uint n = tx + ty * 32;
+	if(tx >= 32)
+		n += 0x03E0; // (h - 1) * w
+	if(ty >= 32 && (bgcnt & BG_REG_64x64) == BG_REG_64x64)
+		n += 0x0400; // (h * w)
+	return n;
+}
+
+// 注意返回的 n 可能需要乘以 2，因为 text(regular)-BG 使用2字节的索引值，
+// 或者使用2字节宽的数组，这只适用于 text(regular)-BG，
+```
+
+注意：对于 sca/rot(affine)-BG，不需要做这些的换算，直接用 `x + y * w` 就好，因为其结构是线性的。
+
+<br/>
+
+2个需要注意到的细节：
+
+首先是我们知道 screenblock 中元素的值为一个指向 charblocks 的索引值，与索引相关联的 offset = index * (4bpp|8bpp)。
+每个 4bpp 的 tile 占用 32字节，8bpp 则为 64 字节。
+
+但对于 Sprite 的 tile-index 值（位于OAM内），4bpp 和 8bpp 使用相同的索引值，即统一以 4bpp 为基准。
+
+然后是 "有多少个 tile 你可以索引？" 对于 regular-BG 有 10bit 的宽度因此为 1024，但是通过计算你可以知道
+单个 charblock 你最多只能放 512个 4bpp 的 tile，这是怎么回事了？总得来说只要你没有跨到 Sprite-charblock 就可以。
+
+<br/>
+
+
+
+## GBA Extended
+
+## Advanced Applications
+
+## text
+
+使用 Bitunpack 可以解压单色字符或单色图形
+
+## Appendixes
+
+### Affine
+
+GBA 在屏幕上获取 Sprites 和 BG 的方式非常类似于纹理映射。
+
+对于定点数，应该使用有符号整数，临时变量使用 32位, 只有在最后一步上传到硬件时才转换成 16位(8.8)
