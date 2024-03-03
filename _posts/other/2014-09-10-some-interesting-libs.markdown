@@ -37,17 +37,6 @@ java -jar "$basedir/jar/yuicompressor.jar" "$@"
 
 选择 ungoogled chromium
 
-- Header Editor
-
-  ```
-  name : reCAPTCHA
-  Rule type : Redirect request
-  match type : URL prefix
-  match rules : https://www.google.com/recaptcha/api.js
-
-  Execute type : normal
-  Redirect to : https://recaptcha.net/recaptcha/api.js
-  ```
 
 ### Tools
 

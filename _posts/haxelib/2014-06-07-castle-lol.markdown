@@ -7,7 +7,8 @@ categories: haxelib
 
 ---
 
-(注：原版由于已经被 hide 所替代因此被弃用了, 因此这是 lol 分支的个人改版)
+这是个人改版，因为原项目已经被新项目 “hide” 所替代弃用了，
+当然 “hide” 项目仍然引用了这个库的 "data" 部分。
 
 castle 看上去像是一个电子表格编辑器，其每一个表格(sheet)都有相应的 "数据模型"。
 
@@ -114,11 +115,15 @@ castle 通过 “数据模型” 来验证用户的数据输入，以避免不�
   }
   ```
 
-- **`List`**: 将会创建一个"隐藏的子表"用于验证输入. (`TList`)(注: 行数据并不会保存在这个"隐藏的子表"中)
+- **`List`**: 一个"隐藏表". (`TList`) 其与普通表的区别为：
 
-- **`Properties`**: 类似于一个可视化的(key/value)的 Object 类型. (`TProperties`)
+  1）多了一个 `hide : true` 的属性
 
-  底层其实与 `List` 一样, 将创建一个隐藏的子表用以验证输入, 不同的是 `Properties` 只有一行数据
+  2）表名格式为 `parent_name@name`
+
+- **`Properties`**:  (`TProperties`) Key/Value 类型.
+
+  数据格式与 `List` 一样, 但多了一个 `isProps : true`的属性, 而且 `Properties` 只有一行数据
 
 - **`Custom`**: 自定义 enum 类型. (`TDynamic( name )`) *(通过点击 IDE 的右下角的 `edit type` 打开一个编辑输入框)*
 
@@ -187,7 +192,7 @@ List              | 多个结构组成的数组, TODO          | `[]`(空数组)
 Properties        | JSON结构                          | 'null'
 Custom            | 多个混合类型, 了解更多... TODOS   | `null`(缺少类型)
 Dynamic           | 自定义的JSON结构数据              | `null`
-Data Layer        | width x height 的字节编码为base64格式 | `""`(空图层)
+Data Layer        | width x height 的编码为base64格式 | `""`(空图层)
 Tile Layer        | 类似于DataLayer, 但底层数据为数组(`Array<Struct>`)| `""`(空图层)
 
 #### 可选字段(Optional Column)
@@ -280,7 +285,23 @@ CastleDB 提供列类型之间的自动转换， 这个经常用于“复制/粘
 
 - **分隔符**, 如果右键单击"行数据", 可以在当前行上前边添加分隔符, 双击这个分隔符可以为其命名.
 
-- **添加分组(Add Group)**, 给"行数据"添加分组值, (需要有分隔符存在), 值将从 0 开始.
+  分隔符用于分组"行数据",
+
+  ```
+  // 以前数组 .separators 仅包含了分隔符的索引值, 其它属性则放置在其它位置
+  // 由于 package cdb 的更新，现在数组 .separators 的元素类型如下：
+  typedef Separator = {
+  	var ?index : Int;     // 在数组 .lines 中的位置
+	var ?title : String;  // 所显示的 label, 对应于旧的 .props.separatorTitle
+
+  	var ?id : String;     // 未知, 虽然 cdb.Parser 有 "sheet.separatorIds", 但 "sheet.separatorIds" 似乎是更早期的旧实现
+  	var ?level : Int;     // 未知 （见 hide/cdb.DataFiles.hx, 似乎是用于分隔符嵌套的深度）
+  	var ?path : String;   // 未知 （见 hide/cdb.DataFiles.hx, ）
+  }
+  // 注: hide 指的是 nicolas 新的 editor
+  ```
+
+- **添加分组(Add Group)**, 给"行数据"添加分组值, (需要有分隔符), 值将从 0 开始.
 
 ### 高级类型
 
@@ -325,13 +346,13 @@ CastleDB 提供列类型之间的自动转换， 这个经常用于“复制/粘
 
 * **Tile Layer** 在创建 level 表后即可通过点击 "Edit" 按钮创建, tile layer 相当于游戏里的某一图层,
 
-  示例中的 "layers" 字段即是是一个 List<Layer>, 比如游戏里可以有背景层, 美化层, 物件层等等。 通过 "New Layer" 创建的层都会自动添加到 "layers" 下.
+  示例中的 "layers" 字段即为一个 List<Layer>, 比如游戏里可以有背景层, 美化层, 物件层等等。 通过 "New Layer" 创建的层都会自动添加到 "layers" 下.
 
   这个字段一般由 IDE 自动创建, tile layer 有三种不同的模式: Tiles, Group, Object
 
 后边的三种类型都是与 Tile Layer 相对的数据层,
 
-* **List Layer**: 允许你在可视地图编辑器上引用另一个表(sheet)中的数据。
+* **List Layer**: 允许你在地图编辑器上引用另一个表(sheet)中的数据。
 
   你需要在 level 表中手动添加一个 `List<{x:Float, y:Float}>` 类型的字段, 参考示例中的 `npcs` 字段
 

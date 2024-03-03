@@ -31,7 +31,49 @@ categories: other
 ### gpg 密钥
 
 
+### c 语言
+
+- 使用 clangd 作为 lsp 服务器, 然后使用 `bear` 配合 `make` 生成 `compile_commands.json`
+
+  ```bash
+  > make clean
+  > bear -- make
+  ```
+
+- 应用的结构 <https://docs.gtk.org/gtk4/getting_started.html#building-applications>
+
+- 查看某个库是否安装, 例如:  `ldconfig -p | grep gtk3.so`
+
+- `pkg-config` 真是简单又好用的计算某一个 lib 编译参数的神器, 不过它依赖的是 lib 本身提供的 lib.pc 文件
+
+- `ld` 并不像 msvc 的那个 link 那么简单, 需要自己指定标准 c 库, 和一个 ctr0.o 文件作为入口
+
+- 如何安装旧的库文件了, 例如: pacman 里只有 neko-2.3 版本的, 如果我想要 neko 2.2 版本的要怎么做了?
+
+  ```bash
+  # 先查看 /var/cache/pacman/pkg 下是否有旧版本, 如果没有那么上哪里下载了?
+  # 使用 pacman 从本地安装某个包, 注: 说明 -U 参数降版本更新(downgrade) 
+  sudo pacman -U /var/cache/pacman/pkg/firefox-64.0.2-1-x86_64.pkg.tar.xz
+
+  # 然后修改 /etc/pacman.conf 防止自动升级
+  # Pacman won't upgrade packages listed in IgnorePkg and members of IgnoreGroup
+  IgnorePkg = firefox
+  ```
+
+- 使用 gcc 链接时通过指定 `-R $ORIGIN` 参数, 使加载的 .so 库与 exe 同目录
+
+- 如果某一个文件依赖的动态库是旧的, 而你想要更新但又不能编译
+
+  ```bash
+  # 查看丢失的库
+  ldd epsxe_x64 | grep "not_found"
+
+  # 使用 patchelf 更新???
+  ```
+
 ### 没有对应的显示分辨率
+
+这个问题主要是使用集成显卡时出现
 
 1. 查询 modeline, 例如: `cvt 1440 900` 或者 `gfx 1440 900 60`
 
@@ -53,17 +95,6 @@ categories: other
   ```
 
 3. 完成后重启,到显示设置里改成 1440x900 的就可以了
-
-------
-
-网上搜到的都是下边几步, 但是每次重启后要重新弄(或者可以)
-
-1. 需要安装 `xrandr` (包管理器里是 xorg-xrandr),
-2. 查询 modeline, 前面已经提过
-3. `sudo xrandr --newmode "1440x900_60.00"  106.50  1440 1528 1672 1904  900 903 909 934 -hsync +vsync`
-4. `xrandr --addmode VGA-0 “1440x900_60.00”`
-5. `xrandr --output VGA=0 --mode "1440x900_60.00"`
-6. 添加到各种"启动"配置里去(晚上)
 
 ### 杂项
 
@@ -89,6 +120,14 @@ categories: other
   1 通过 hostnamectl, 如 hostnamectl set-hostname NEWNAME
   2 再更改 /etc/hosts 文件
   ```
+
+- 运行下载的可执行文件, 例如:
+
+  ```
+  chmod +x melonDS
+  ```
+
+- 创建 manjaro 可用安装包 <https://wiki.manjaro.org/index.php/Create_Manjaro_Packages>
 
 ### 改回英文系统
 
@@ -134,4 +173,10 @@ categories: other
 
 - 对于一些主板 xfce 检测不到机箱的前置耳机是否已经插入
 
+### wine
 
+- `err:mmdevapi:DllGetClassObject Driver initialization failed`
+
+  安装 `lib32-libpulse` 和其附带的包即可
+
+- 一些软件无法输入汉字,包括你复制汉字粘帖进去也是显示 "????"
