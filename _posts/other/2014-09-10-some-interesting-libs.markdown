@@ -37,8 +37,13 @@ java -jar "$basedir/jar/yuicompressor.jar" "$@"
 
 选择 ungoogled chromium
 
-
 ### Tools
+
+* 内存盘 Radeon RAMDisk
+
+  设置浏览器临时文件夹到内存盘, 例如 :
+
+  `mklink /D "%LOCALAPPDATA%\Chromium\User Data\Default\Cache" R:\TEMP\Chromium`
 
 * Trojan
 
