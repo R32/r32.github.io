@@ -36,6 +36,18 @@ git config core.sshCommand "ssh -i ~/.ssh/id_rsa_example -F /dev/null"
 
 另一个人的经验笔记: <http://blog.csdn.net/kangear/article/details/13169395>
 
+#### 下载单个目录
+
+例如下边的下载单个 extensions 目录, (感觉似乎还是下载了整个仓库, 只是提取出了特定目录)
+
+```
+git clone --filter=blob:none --no-checkout https://github.com/microsoft/vscode.git vscode --depth 1
+cd vscode
+git sparse-checkout init --cone
+git sparse-checkout set extensions
+git checkout main  # or the branch you want
+```
+
 #### 克隆
 
  * 首先在 github 上 fork 别人的分支

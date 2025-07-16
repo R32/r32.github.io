@@ -126,10 +126,3 @@ lib_aux.c  lauxlib.h
 
 
 ```
-
-通过查看
-
-
-## 其它
-
-https://blog.csdn.net/mango9126/article/details/77897263

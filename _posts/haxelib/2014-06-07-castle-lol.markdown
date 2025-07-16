@@ -67,6 +67,42 @@ castle 通过 “数据模型” 来验证用户的数据输入，以避免不�
 
 ### 列类型
 
+新版本增加了 3 个枚举是什么了?
+
+```
+// 这 3 个枚举都没有附加数据, 类型可以从 `cdb.Types.hx` 中找到.
+enum ColumnType {
+	...
+	TGradient;  // cdb.Types.Gradient
+	TCurve;
+	TGuid;
+}
+
+
+// hide
+case TGradient:
+	try {
+		var json = haxe.Json.parse(v);
+		var grad : cdb.Types.Gradient = {colors: [], positions: []};
+		if (Reflect.hasField(json, "stops")) {
+			for (i => stop in (json.stops: Array<Dynamic>)) {
+				grad.data.colors[i] = stop.color;
+				grad.data.positions[i] = stop.position;
+			}
+		}
+		else if (Reflect.hasField(json, "colors") && Reflect.hasField(json, "positions")) {
+			grad.data.colors = json.colors;
+			grad.data.positions = json.positions;
+		}
+
+		return grad;
+	} catch (_) {
+		return null;
+	}
+
+
+```
+
 - **`Unique Identifier`**：将作为 “行数据” 的唯一标识符。*后边文字将使用 UID 表示这种类型*
 
   如果同一表格(sheet)出现同名的 UID “行数据”，将会产生一个错误: `#DUP(...)`

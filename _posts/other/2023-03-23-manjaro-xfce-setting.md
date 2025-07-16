@@ -33,6 +33,14 @@ categories: other
 
 ### c 语言
 
+- TIPS :
+
+  ```bash
+  # 查看编译器预定义宏, 可以配合使用 grep, 例如 | grep SIZE
+  gcc -dM -E - < /dev/null | grep SIZE
+
+  ```
+
 - 使用 clangd 作为 lsp 服务器, 然后使用 `bear` 配合 `make` 生成 `compile_commands.json`
 
   ```bash
@@ -52,7 +60,7 @@ categories: other
 
   ```bash
   # 先查看 /var/cache/pacman/pkg 下是否有旧版本, 如果没有那么上哪里下载了?
-  # 使用 pacman 从本地安装某个包, 注: 说明 -U 参数降版本更新(downgrade) 
+  # 使用 pacman 从本地安装某个包, 注: 说明 -U 参数降版本更新(downgrade)
   sudo pacman -U /var/cache/pacman/pkg/firefox-64.0.2-1-x86_64.pkg.tar.xz
 
   # 然后修改 /etc/pacman.conf 防止自动升级
@@ -97,6 +105,8 @@ categories: other
 3. 完成后重启,到显示设置里改成 1440x900 的就可以了
 
 ### 杂项
+
+- 通过 `p10k` 调整 terminal 的 gitstatus
 
 - 字体安装 : 安装字体直接复制到 `/usr/share/fonts` 即可
 
@@ -159,12 +169,15 @@ categories: other
 
   ```
   #hide_dot_files, hide_hid_files
-  UUID=0008A10E000E931B  /data ntfs-3g  defaults,noauto,x-systemd.automount,x-systemd.device-timeout=10,rw,inherit,permissions,streams_interface=windows,windows_names,compression,norecover,big_writes 0 2
+  #UUID=0008A10E000E931B  /data ntfs-3g  defaults,noauto,x-systemd.automount,x-systemd.device-timeout=10,rw,inherit,permissions,streams_interface=windows,windows_names,compression,norecover,big_writes 0 2
+  UUID=0008A10E000E931B  /data ntfs3 defaults,uid=1000,gid=1000,dmask=022,fmask=133,noatime,x-systemd.device-timeout=8 0 0
   ```
 
 5. 刷新 `systemctl daemon-reload`, 执行这一步时确保要挂载的盘处于 unmount 状态
 
   可能需要再执行 `mount /data` 一下
+
+6. 重要 : 一定要使用 `safe-rm` 保护挂载的目录
 
 成功完成之后 xfce 的文件浏览器(Thunar) 里将不会重复出现 fstab 设定的 ntfs 盘
 

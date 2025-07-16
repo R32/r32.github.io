@@ -5,12 +5,6 @@ date:   2014-05-13 12:26:10
 categories: haxe
 ---
 
-一些链接:
-
-[编程参考-旧文档](http://old.haxe.org/doc)
-
-[黑魔法-旧文档](http://old.haxe.org/doc/advanced/magic)
-
 在编译时可以不指定 `-main`, 例: `haxe -js lib.js MyClass`, 但只可以指定一个类.
 
 如果一个 .n 文件是以 haxelib run 来运行的, 那么可以通过检测环境变量 `HAXELIB_RUN` 的值是否为字符串 "1", [更多细节...](http://lib.haxe.org/documentation/using-haxelib/#run)
@@ -35,6 +29,14 @@ categories: haxe
 
 ### 最新改动
 
+
+* abstract 与 self
+
+  ```haxe
+  // 因为在 abstract 中, this 表示的是 MyType 类型, 因此需要另一个表示 MyAbstract 自身的语法
+  // 下边的 self 可以是任何标识符, 因为 self 并不是关键字, as 才是
+  abstract MyAbstract(MyType) as self {}
+  ```
 
 * [所接受的提议 2021-11-13](https://haxe.org/blog/evolution-meeting-2021/)
 

@@ -9,16 +9,31 @@ categories: other
 
 [在线尝试编程](https://try.ocamlpro.com/)
 
-**(现在 ocaml 官网有新的安装包可以尝试下，还有就是对于 fdopen 的安装包可能需要添加仓库作为备选)**
+在 windows 中安装 ocaml, (我已经安装了 cygwin 和 git 了)
 
-  ```bash
-  # 对于 fdopen 添加第二个仓库，作为备选仓库
-  opam repo add <NAME> https://github.com/ocaml/opam-repository.git
+* 按照 ocaml 官方的安装方式, `winget install OCaml.opam`
 
-  # 之后才可以可以 opam upgrade luv 到 0.5.12 版本
-  ```
+* 在执行 `opam init` 之前 cygwin 可能需要先安装一些必须的软件. 例如 `rsync`, `tar`
 
-在 windows 中安装 ocaml
+* 打开 cygwin 命令行, 执行 `opam init` 并根据提示选择 `Use Cygwin installation found in C:\XX\cygwin64`
+
+编译 haxe 源码:
+
+```bash
+# pin the haxe package to the checked out Haxe source directory
+# 这里的 path/to/haxe 应该使用 windows 的路径例如 : D:/path/to/haxe
+opam pin add haxe path/to/haxe --kind=path --no-action
+
+
+# install the haxe package dependencies (as listed in the `opam` file)
+opam install haxe --deps-only
+```
+
+<!-- more -->
+
+### 旧方式
+
+fdopen 的 mingw 版本最高只支持到 `opam 2.0 和 ocaml 4.14`
 
 * 不要使用 cygwin 自带的 ocaml, 因为它不包含 **opam**, 也没法编译一些库。
 
@@ -28,7 +43,14 @@ categories: other
 
   目前我使用: `ocaml-variants.4.07.1+mingw64c` 版本 ocaml-variants.4.07.0+mingw64c
 
-<!-- more -->
+* 对于 fdopen 的安装包可能需要添加仓库作为备选)
+
+  ```bash
+  # 对于 fdopen 添加第二个仓库，作为备选仓库
+  opam repo add <NAME> https://github.com/ocaml/opam-repository.git
+
+  # 之后才可以可以 opam upgrade luv 到 0.5.12 版本
+  ```
 
 编译 haxe 源码:
 
