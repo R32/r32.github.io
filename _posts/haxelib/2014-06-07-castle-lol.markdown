@@ -12,7 +12,7 @@ categories: haxelib
 
 castle 看上去像是一个电子表格编辑器，其每一个表格(sheet)都有相应的 "数据模型"。
 
-castle 通过 “数据模型” 来验证用户的数据输入，以避免不必要的输入失误。
+castle 通过 “数据模型” 来验证用户的数据输入，以避免错误的输入。
 
 非常适合用来保存文本数据，比如一个游戏里所有物品和怪物的名字，描述，逻辑...等等
 
@@ -101,6 +101,7 @@ case TGradient:
 	}
 
 
+// 从 cdb.Parser 去分析整个 cdb.Data
 ```
 
 - **`Unique Identifier`**：将作为 “行数据” 的唯一标识符。*后边文字将使用 UID 表示这种类型*
@@ -174,7 +175,7 @@ case TGradient:
       Poison( time : Float, ?power : Float );
       Check( a : Super2 );
       Monster( m : monsters );
-	  Or( a : Effect2, b : Effect2 );
+      Or( a : Effect2, b : Effect2 );
   }
 
   // "custom" 的构造参数类型如下:
@@ -334,7 +335,7 @@ CastleDB 提供列类型之间的自动转换， 这个经常用于“复制/粘
   	var ?level : Int;     // 未知 （见 hide/cdb.DataFiles.hx, 似乎是用于分隔符嵌套的深度）
   	var ?path : String;   // 未知 （见 hide/cdb.DataFiles.hx, ）
   }
-  // 注: hide 指的是 nicolas 新的 editor
+  // 但是在保存时, 只会保存 sep.id 值.
   ```
 
 - **添加分组(Add Group)**, 给"行数据"添加分组值, (需要有分隔符), 值将从 0 开始.

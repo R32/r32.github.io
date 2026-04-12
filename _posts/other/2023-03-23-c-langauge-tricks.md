@@ -20,6 +20,26 @@ categories: other
 
 <!-- more -->
 
+### CLAMP
+
+通过添加临时变量, 消除条件检测 `data` 时的副作用, 使得编译器能编译成 "无分支" 的语句.
+
+```c
+// 在 msvc, gcc 中都能被优化
+#define CLAMP(data, min, max) do {   \
+	int tmp = data;              \
+	if (tmp < (min)) data = min; \
+	if (tmp > (max)) data = max; \
+} while (0)
+
+// 在 gcc 中能被优化, 但 msvc 不能
+#define CLAMP(data, min, max) data = (data) < (min) ? (min) : ((data) > (max) ? (max) : (data))
+```
+
+### unsigned
+
+在使用无符号数时, 要特别小心减号"-" 的使用, 对于 "+" 要考虑到溢出的情形(虽然很少有溢出的状况).
+
 ### Named initializer, with default values
 
 ```c

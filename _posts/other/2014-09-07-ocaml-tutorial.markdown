@@ -29,6 +29,8 @@ opam pin add haxe path/to/haxe --kind=path --no-action
 opam install haxe --deps-only
 ```
 
+重要: 编译 native, 需要使用开始菜单或快捷方式里的 `mintty`
+
 <!-- more -->
 
 ### 旧方式
@@ -79,7 +81,7 @@ fdopen 的 mingw 版本最高只支持到 `opam 2.0 和 ocaml 4.14`
   perl-IPC-System-Simple
   ```
 
-  代理设置修改 `.bash_profile` 文件, 添加 `export http_proxy=http://127.0.0.1:49308`
+  代理设置修改 `.bash_profile` 文件, 例如: `export http_proxy=http://127.0.0.1:49308`
 
 * 通过 opam 安装 camlp5, *(可用 mintty 来代替 bash 以防止乱码)*.
 
@@ -117,6 +119,72 @@ vscode 安装 `Ocaml Platform` 插件，这个插件需要从 cygwin 控制台�
 你需要一个特殊的浏览器才能快速打开这个页面.
 
 API 文件建议参考 cygwin/lib/ocaml 下的 mli 文件, 一些方法会提示是否为 tail-recursive
+
+* GADT : 是一个非常复杂的概念
+
+  ```ocaml
+  (* 普通的变体类型 *)
+  type value =
+  | Int of int
+  | Bool of bool
+
+  type expr =
+  | Value of value
+  | Eq of expr * expr
+  | Plus of expr * expr
+  | If of expr * expr * expr
+
+  let rec eval = function
+  | Value v -> v
+  | If (c, t, e) -> match eval c with
+	| Bool b -> if b then eval t else eval e
+	| Int _ -> raise (Failure "todo")
+  | Eq (x, y) -> ...
+  | Plus (x, y) -> ...
+
+  ;;
+  (* 普通的泛型变体类型, 实际上这个类型是错误的, 放在这里只是为了作区分 *)
+  type 'a value =
+  | Int of 'a
+  | Bool of 'a
+  ;;
+
+  ;;
+  (* GADT 变体类型 *)
+  type _ value =
+  | Int : int -> int value
+  | Bool : bool -> bool value
+  ;;
+  (*
+   * GADT 使用 ':' 标记, 而不是 'of', 在 '->' 的左边是构造器参数类型, 右边则是构造器值的类型
+   *)
+  type _ expr =
+  | Value : 'a value -> 'a expr
+  | Eq : int expr * int expr -> bool expr
+  | Plus : int expr * int expr -> int expr
+  | If : bool expr * 'a expr * 'a expr -> 'a expr
+  ;;
+
+  let i x = Value (Int x)
+  and b x = Value (Bool x)
+  and ( +: ) x y = Plus (x, y);;
+
+  let eval_value (type a) (v : a value) : a = match v with
+  | Int x -> x
+  | Bool x -> x
+  (*
+   * GADTs 的推断与递归调用不兼容,
+   * 如果下边的 eval 使用上边的方式定义函数, 将会报错
+   *)
+ let rec eval : type a. a expr -> a = function
+  | Value v -> eval_value v
+  | If (c, t, e) -> if eval c then eval t else eval e
+  | Eq (x, y) -> eval x = eval y
+  | Plus (x, y) -> eval x + eval y
+  ;;
+  ```
+
+  感觉不是很有用, 假如文本输入 `true + 101`, 那么解析后在要怎么构造了?
 
 * 和 c 语言一样, 函数参数的传递是从右到左
 
@@ -423,6 +491,40 @@ dune        # ocaml 专用的编译工具
 * ocaml 4.02 之后官方宣传使用 `-ppx` 来代替 camlp4 的语法扩展, [a-guide-to-extension-points-in-ocaml](https://whitequark.org/blog/2014/04/16/a-guide-to-extension-points-in-ocaml/)
 
   > 因为 camlp4 的语法扩展不但缺乏文档, 而且使用非常复杂,
+
+  ```bash
+  # dune 内使用, 用 - 传递参数, 用 -- 分隔 rewriter, 说明自定义 rewriter 时可以接收参数
+  (preprocess
+      (pps
+          (ppx_sexp_conv ppx_expect -inline-test-drop)
+      )
+  )
+
+  ###
+  # 查看 ppx 编译后的所生成的代码方式(1), 虽然不完美
+  ocamlc -dsource _build/default/src/foo.pp.ml
+
+  # 方法 2, (推荐, 因为第一种方式其实也是 dune 所编译的目录)
+  dune describe pp src/lexer.ml
+
+  # 方法 3, 使用 ml 自己打印
+  let dump in_path =
+      let ast = Pparse.read_ast Structure in_path in
+      Format.printf "%a\n" Pprintast.structure ast
+
+  # 方法 4, 自己单独通过 -dsource 的方式单独编译, 例如
+  ocamlfind ocamlc -I _build -c -package sedlex.ppx -dsource lexer.ml -o _build/lexer.cmo
+
+  ####
+  # 使用 ppxlib 的两种方式
+  # 1. 使用 "[%my_ext ...]"
+  # 感觉有点像 haxe 的宏函数
+
+  # 2. 在 类型, 模块, 或异常声明 的地方使用 [@@deriving my_deriver]
+  # 感觉有点像 haxe 的 "@:build"
+
+  # 使用 https://astexplorer.net/ 大致熟悉下 ocaml 的 AST 结构
+  ```
 
 * lexer
   - genlex: (标准库) 一个简单快速的 lexer 生成器, 自带了几个简单的 token。 依赖 camlp4

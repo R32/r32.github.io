@@ -33,7 +33,7 @@ http://wenku.baidu.com/link?url=FAy226htPhXpU_7r_WUMvNCOtUjhf90KJpYRmTY449cEkxxS
 
 https://wow.gamepedia.com/AddOn_Studio
 
-* 开发环境 - ?? 只能使用 `/dump` 来调试各种 API
+# * 开发环境 - ?? 使用 `/dump` 或 `DevTools_Dump(...)` 来调试各种 API,
 
   一些常用SLASH调试命令:
 
@@ -57,7 +57,7 @@ https://wow.gamepedia.com/AddOn_Studio
 
   - 手动计算 texcoord https://wowwiki.fandom.com/wiki/XML/TexCoords
 
-* [mpq 解压工具 C#](https://github.com/WoW-Tools/MpqTool), 用于导出 FrameXML, 针对旧的 WOW版本没有 `exportInterfaceFiles` 命令
+* (WDBXEditor)[https://github.com/WowDevTools/WDBXEditor/releases]
 
 * .....
 
@@ -65,6 +65,7 @@ https://wow.gamepedia.com/AddOn_Studio
   # 显示 lua 错误
   /console scriptErrors 1
   ```
+
 
 ### Extracting interface files
 
@@ -125,7 +126,6 @@ Bob.lua
 2. 仅写有文件名的行, 指示在加载时需要加载的文件名, 并且按照出现的先后顺序加载. 通常放在 标记`##` 结束行后
 
 3. `#` 用于注释
-
 
 下边是官方标记名称的说明(GetAddOnMetadata)
 

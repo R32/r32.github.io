@@ -26,6 +26,8 @@ categories: other
 
   `sin(R * x)`  : 改变频率(frequency)
 
+  [数学乐在线函数绘图器](https://mathsisfun.com/data/function-grapher.html)
+
 <!-- more -->
 
 **音调**(频率)，**音量**(振幅)，**音色**(波形) 是声音的三个主要特征：
@@ -58,7 +60,7 @@ categories: other
 
   ```haxe
   // Noise
-  for(p in 0...2048){
+  for(p in 0...2048) {
     var n = Math.random() * 2.0 - 1.0;
     event.data.writeFloat(n * 0.25); // 左声道
     event.data.writeFloat(n * 0.25); // 右, 0.25 表示假设峰值为 1.0 ，这里缩放 1/4
