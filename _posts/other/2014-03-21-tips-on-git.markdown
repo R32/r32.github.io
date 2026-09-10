@@ -30,6 +30,20 @@ git config core.sshCommand "ssh -i ~/.ssh/id_rsa_example -F /dev/null"
 # 使用 -F /dev/null 是为了防止将配置保存到 .git/config 中去
 ```
 
+如果 remote 使用了 force 更新, 本地通过 : `git reset --hard origin/<分支名>` 同步
+如果本地有重要的新提交（需要保留) :
+```bash
+# 1. 获取远程最新状态
+git fetch origin
+
+# 2. 使用 rebase 将本地提交应用到远程最新代码之上
+git rebase origin/<分支名>
+
+# 例如：将当前分支变基到 origin/main
+git rebase origin/main
+```
+
+
 ### 简单
 
 中文 git文档: <https://git-scm.com/book/zh/v2>
@@ -304,7 +318,7 @@ squash 396b4a3 Tests pass
   # 更多参考 http://gitbook.liuhui998.com/5_4.html
   ```
 
-* 将改动做成补丁, [这个链接有些其它内容](http://blog.csdn.net/xzongyuan/article/details/9425739)
+* 将改动做成补丁
 
   ```bash
   # 首先创建一个新分支如 patch-1,然后 checkout,

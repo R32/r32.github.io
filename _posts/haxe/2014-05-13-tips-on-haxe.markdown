@@ -46,7 +46,11 @@ categories: haxe
 
 * `@:semantics(variable|reference|value)`: [#7463](https://github.com/HaxeFoundation/haxe/pull/7463)
 
-* `@:astSource`: [#3285](https://github.com/HaxeFoundation/haxe/issues/3285) 不过其实没什么用, 因为是个半成品
+  - `@:semantics(variable)` : Replaces @:analyzer(as_var)
+  - `@:semantics(reference)` : Used on the previously hardcoded reference types for C#, HL and PHP
+  - `@:semantics(value)` : Indicates that the type has value semantics and should not be assigned to temp vars because that would create a copy. Currently only used on PHP's NativeIndexedArray
+
+* `@:astSource`: [#3285](https://github.com/HaxeFoundation/haxe/issues/3285) 感觉没什么用, 像是是个半成品
 
 * `@:noClosure`: 作用在类或字段上, 用于禁止将方法作为值传递
 

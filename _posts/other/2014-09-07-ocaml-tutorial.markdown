@@ -17,6 +17,8 @@ categories: other
 
 * 打开 cygwin 命令行, 执行 `opam init` 并根据提示选择 `Use Cygwin installation found in C:\XX\cygwin64`
 
+  为了避免冲突, 我选择了 "5. no I'll remember to run `eval $(opam env)` when i need opam"
+
 编译 haxe 源码:
 
 ```bash
